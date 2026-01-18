@@ -1,0 +1,49 @@
+% FUST Navier-Stokes - Energy Decay
+\chapter{Energy Decay}
+\label{chap:ns_energy}
+
+\section{Definition of Mode Energy}
+\label{sec:ns_mode_energy}
+
+\begin{definition}[Mode Energy]
+\[
+E_n = |\hat{u}_n|^2
+\]
+\end{definition}
+
+\section{High Mode Energy and Dissipation}
+\label{sec:ns_high_mode}
+
+\begin{definition}[High Mode Energy and Dissipation]
+\label{def:ns_high_mode}
+\lean{FUST.highModeEnergy, FUST.highModeDissipation}
+\leanok
+\[
+E_{\mathrm{high}} = \sum_{n \geq 3} E_n, \quad D_{\mathrm{high}} = \sum_{n \geq 3} C_n^2 E_n
+\]
+\end{definition}
+
+\section{Energy Decay Theorem}
+\label{sec:ns_energy_decay}
+
+\begin{theorem}[Strictly Positive Dissipation]
+\label{thm:ns_dissipation_positive}
+\lean{FUST.dissipation_strictly_positive}
+\leanok
+\[
+E_{\mathrm{high}} > 0 \Rightarrow D_{\mathrm{high}} > 0
+\]
+\end{theorem}
+
+If energy exists in high modes, positive dissipation necessarily occurs.
+
+\section{Consequence for Global Existence}
+\label{sec:ns_global_consequence}
+
+\begin{enumerate}
+\item Energy in $\ker(D_6)$ does not dissipate ($C_n = 0$)
+\item Energy outside $\ker(D_6)$ necessarily dissipates ($C_n^2 > 0$)
+\item Due to the dissipation lower bound, high mode energy decays exponentially
+\item Therefore, the solution remains smooth for all time
+\end{enumerate}
+

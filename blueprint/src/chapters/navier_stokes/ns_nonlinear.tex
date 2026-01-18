@@ -1,0 +1,53 @@
+% FUST Navier-Stokes - Nonlinear Terms
+\chapter{Nonlinear Terms}
+\label{chap:ns_nonlinear}
+
+\section{Nonlinear Term as Leibniz Deviation}
+\label{sec:ns_leibniz}
+
+The deviation from the Leibniz rule of $D_6$ gives the nonlinear term:
+
+\begin{definition}[Nonlinear Coefficient]
+\label{def:ns_nonlinear}
+\lean{FUST.nonlinearCoeff}
+\leanok
+\[
+N_{m,n} = C_{m+n} - C_m - C_n
+\]
+\end{definition}
+
+\begin{theorem}[Existence of Nonlinear Term]
+\label{thm:ns_nonlinear_exists}
+\lean{FUST.nonlinearCoeff_1_2_ne_zero}
+\leanok
+\[
+N_{1,2} = C_3 \neq 0
+\]
+\end{theorem}
+
+\section{Growth Estimate of Nonlinear Term}
+\label{sec:ns_nonlinear_growth}
+
+\begin{theorem}[Nonlinear Coefficient Growth]
+\label{thm:ns_nonlinear_growth}
+\lean{FUST.nonlinear_coeff_growth}
+\leanok
+\[
+|N_{m,n}| \leq 30 \cdot \varphi^{3(m+n)}
+\]
+\end{theorem}
+
+\section{Dissipation Dominance}
+\label{sec:ns_dominance}
+
+\begin{theorem}[Dissipation Dominates Nonlinearity]
+\label{thm:ns_dominance}
+At high modes:
+\begin{itemize}
+\item Dissipation: $C_n^2 \sim \varphi^{6n}$
+\item Nonlinear: $N_{m,n}^2 \lesssim \varphi^{6(m+n)}$
+\end{itemize}
+\end{theorem}
+
+The square of the dissipation coefficient has the same scaling as the square of the nonlinear coefficient, but dissipation is certainly positive (with a lower bound), while the nonlinear term only redistributes energy without generating it.
+

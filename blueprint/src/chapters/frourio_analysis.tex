@@ -1,0 +1,88 @@
+% Chapter 2: Foundations of Frourio Analysis
+\chapter{Foundations of Frourio Analysis}
+\label{chap:frourio_analysis}
+
+\section{The Golden Ratio}
+\label{sec:golden_ratio}
+
+\begin{definition}[Golden Ratio]
+\label{def:golden_ratio}
+\lean{FUST.phi, FUST.psi}
+\leanok
+\[
+\varphi = \frac{1+\sqrt{5}}{2}, \quad \psi = \frac{1-\sqrt{5}}{2}
+\]
+\end{definition}
+
+\section{Frourio Exponential Function}
+\label{sec:frourio_exp}
+
+\begin{definition}[Fibonacci Factorial]
+\label{def:fib_factorial}
+Define the Fibonacci factorial as $n!_{\mathsf{F}} := \prod_{k=1}^{n} F_k$.
+\end{definition}
+
+\begin{definition}[Frourio Exponential]
+\label{def:frourio_exp}
+\[
+\exp_{\mathsf{F}}(x) = \sum_{n=0}^{\infty} \frac{x^n}{n!_{\mathsf{F}}}
+\]
+\end{definition}
+
+\section{Frourio Constant}
+\label{sec:frourio_constant}
+
+\begin{definition}[Frourio Constant]
+\label{def:frourio_constant}
+\[
+\mathfrak{f} := \exp_{\mathsf{F}}(1) = \sum_{n=0}^{\infty} \frac{1}{n!_{\mathsf{F}}} \approx 3.7045
+\]
+\end{definition}
+
+\textbf{Alternative representation} (Binet type):
+\[
+\mathfrak{f} = \frac{\exp_{\mathsf{F}}(\varphi) - \exp_{\mathsf{F}}(\psi)}{\sqrt{5}} = \frac{D_2[\exp_{\mathsf{F}}](1)}{\sqrt{5}}
+\]
+
+This is a constant that gives a natural scale to the golden ratio.
+
+\section{Fibonacci Decomposition}
+\label{sec:fib_decomposition}
+
+\begin{theorem}[Fibonacci Decomposition]
+\label{thm:fib_decomposition}
+\lean{FUST.phi_pow_fib}
+\leanok
+For any integer $k$,
+\[
+\varphi^k = F_k\varphi + F_{k-1}, \quad \psi^k = F_k\psi + F_{k-1}
+\]
+where $F_k$ is the Fibonacci sequence.
+\end{theorem}
+
+\begin{proof}
+By induction.
+\begin{itemize}
+\item $k=0$: $\varphi^0 = 1 = 0 \cdot \varphi + 1$.
+\item $k=1$: $\varphi^1 = 1 \cdot \varphi + 0$.
+\item $k \to k+1$: $\varphi^{k+1} = \varphi(F_k\varphi + F_{k-1}) = F_k(\varphi+1) + F_{k-1}\varphi = F_{k+1}\varphi + F_k$.
+\end{itemize}
+\end{proof}
+
+\section{Binet Formula}
+\label{sec:binet}
+
+\begin{theorem}[Binet Formula]
+\label{thm:binet}
+\lean{FUST.binet_formula}
+\leanok
+For any integer $k$,
+\[
+\varphi^k - \psi^k = F_k \cdot \sqrt{5}
+\]
+\end{theorem}
+
+\begin{proof}
+From $\varphi^k = F_k\varphi + F_{k-1}$ and $\psi^k = F_k\psi + F_{k-1}$, we have
+$\varphi^k - \psi^k = F_k(\varphi - \psi) = F_k \sqrt{5}$.
+\end{proof}

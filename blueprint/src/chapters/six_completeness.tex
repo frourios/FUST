@@ -1,0 +1,153 @@
+% Chapter 5: Six-Element Completeness Theorem
+\chapter{Six-Element Completeness Theorem}
+\label{chap:six_completeness}
+
+\section{Completeness of FUST Function Classes}
+\label{sec:fust_completeness}
+
+\textbf{Important}: FUST \textbf{does not use arbitrary transcendental functions}. FUST deals only with the \textbf{specific function classes $\mathcal{F}_n$} defined in Chapter~\ref{chap:function_classes}.
+
+\subsection{Completeness in Polynomial Space (Lean4 Proven)}
+
+\begin{theorem}[Kernel Equality]
+\label{thm:kernel_equality}
+\lean{FUST.D7_kernel_equals_D6_kernel}
+\leanok
+\[
+\ker(D_n)|_{\mathbb{R}[x]} = \ker(D_6)|_{\mathbb{R}[x]} = \mathrm{span}\{1, x, x^2\} \quad \text{for } n \ge 7
+\]
+\end{theorem}
+
+This is formally proven in Lean4 as \texttt{D7\_kernel\_equals\_D6\_kernel}.
+
+\subsection{Completeness of FUST Function Classes (Lean4 Proven)}
+
+For FUST function classes $\mathcal{F}_n = e^{in\pi x} \cdot \varphi^{n\mathfrak{f} - n|x|^2}$:
+
+\begin{enumerate}
+\item \textbf{Multiplicative finite generation}: $\mathcal{F}_n$ for $n \ge 2$ is multiplicatively generated from $\mathcal{F}_2$ (\texttt{FUST\_class\_multiplicative})
+\item \textbf{Saturation of $D_6$-visible structure}: $D_6$ detects all polynomial components of degree 3 or higher (\texttt{FUST\_class\_D6\_completeness})
+\item \textbf{Redundancy of $D_7$ and higher}: From $\ker(D_7) = \ker(D_6)$, no new independent structure for $n \ge 7$
+\end{enumerate}
+
+\section{Elimination Conditions}
+\label{sec:elimination}
+
+Let $K_n$ denote the set of $k$ such that $D_n[x^k] = 0$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Operator & Coefficient sum & Eliminated monomials $K_n$ & $\dim \ker(D_n)$ \\
+\hline
+$D_2$ & $0$ & $\{0\}$ (constant) & 1 \\
+$D_3$ & $0$ & $\{0\}$ (constant) & 1 \\
+$D_4$ & $-\sqrt{5}$ & $\{2\}$ ($x^2$ only) & 1 \\
+$D_5$ & $0$ & $\{0, 1\}$ (constant and $x$) & 2 \\
+$D_6$ & $0$ & $\{0, 1, 2\}$ (constant, $x$, $x^2$) & 3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Gauge invariance}: When coefficient sum $\sigma(D) = 0$, we have $D[1] = 0$. $D_2, D_3, D_5, D_6$ are gauge invariant; $D_4$ breaks gauge invariance.
+
+\textbf{Important}: $D_5, D_6$ have kernel dimensions greater than 1, which forms the basis for deriving gauge groups (Chapter~\ref{chap:gauge_groups}).
+
+\section{Reduction of Integer Orders}
+\label{sec:integer_reduction}
+
+\begin{proposition}[Integer orders $n\ge7$ have no new structure]
+\label{prop:n_ge_7}
+\lean{FUST.D7_kernel_equals_D6_kernel}
+\leanok
+For any integer $n\ge7$, $\ker(D_n) = \ker(D_6)$.
+\end{proposition}
+
+\textbf{Important note}: This proposition asserts ``\textbf{identity of kernels},'' not ``linear combinations of function values.''
+
+\subsection{Avoiding Misunderstanding}
+
+$\varphi^k = F_k \varphi + F_{k-1}$ is a \textbf{relation between points (arguments)}, and for a general function $f$, $f(\varphi^k x) = F_k f(\varphi x) + F_{k-1} f(x)$ \textbf{does not hold} (unless $f$ is linear).
+
+However, what this proposition asserts is:
+\begin{itemize}
+\item When $D_n$ coefficients are determined so that $\ker(D_n) \supseteq \ker(D_6)$
+\item The result is $\ker(D_n) = \ker(D_6)$, and no new kernel elements appear
+\end{itemize}
+
+\section{Collapse of Half-Order Hierarchies}
+\label{sec:half_collapse}
+
+\begin{proposition}[Half-orders for $n\ge6$ collapse]
+\label{prop:half_collapse}
+For $n \ge 6$, half-order structures are absorbed into integer orders: $D_{n+0.5} \sim D_n$
+\end{proposition}
+
+\begin{proof}
+By Binet's formula, antisymmetric components $f(\varphi^k x) - f(\psi^k x)$ are isomorphic to the structure of $D_2$ (including scaling). Since $D_6$ saturates elimination conditions, additional $D_2$ components are redundant.
+\end{proof}
+
+\section{Independence and Uniqueness of D5.5 (Lean4 Formal Proof)}
+\label{sec:d55_uniqueness}
+
+\begin{proposition}[Algebraic Independence of $D_{5.5}$]
+\label{prop:d55_independence}
+\lean{FUST.D5half_independence}
+\leanok
+$D_{5.5}$ is algebraically non-equivalent to $D_5$ and $D_6$:
+\[
+D_5[x] = D_6[x] = 0, \quad \text{but} \quad D_{5.5}[x] \neq 0
+\]
+\end{proposition}
+
+\textbf{Important structural interpretation}:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Operator & Polynomials in $\ker$ & Symmetry \\
+\hline
+$D_5$ & $\{1, x\}$ & Symmetric \\
+$D_6$ & $\{1, x, x^2\}$ & Symmetric \\
+$D_{5.5}$ & $\{1\}$ only & \textbf{Contains antisymmetric term} \\
+\hline
+\end{tabular}
+\end{center}
+
+$D_{5.5}$ does not ``break'' the symmetric structure of $D_5$ but \textbf{adds an orthogonal antisymmetric direction}. This shrinks the kernel of $D_5$ ($\{1,x\} \to \{1\}$), but $D_5$ itself is preserved.
+
+\begin{proposition}[Uniqueness of $D_{5.5}$]
+\label{prop:d55_unique}
+The only algebraically non-equivalent half-order difference operator is $D_{5.5}$.
+\end{proposition}
+
+\begin{proof}
+\begin{itemize}
+\item $n < 5$: Half-order terms are absorbed into $D_{n+1}$
+\item $n = 5$: There is a gap between $D_5$ and $D_6$, and the antisymmetric direction is independent
+\item $n \ge 6$: Collapses by the above proposition
+\end{itemize}
+Therefore $D_{5.5}$ is the unique exception.
+\end{proof}
+
+\section{Six-Element Completeness Theorem}
+\label{sec:main_theorem}
+
+\begin{theorem}[Six-Element Completeness Theorem]
+\label{thm:six_completeness}
+\lean{FUST.six_element_completeness}
+\leanok
+In the Frourio difference hierarchy, the algebraically non-equivalent difference operators are limited to the \textbf{6 types}:
+\[
+\boxed{\{D_2, D_3, D_4, D_5, D_{5.5}, D_6\}}
+\]
+\end{theorem}
+
+\begin{proof}[Proof outline]
+\begin{enumerate}
+\item \textbf{Integer orders $n \le 6$}: $D_2, D_3, D_4, D_5, D_6$ have different elimination patterns $K_n$ and are non-equivalent
+\item \textbf{Integer orders $n \ge 7$}: Reduced to $D_6$ or lower by Fibonacci closure
+\item \textbf{Half-integer orders $n \ge 6$}: Collapse to $D_n$ by Binet's formula
+\item \textbf{Half-integer order $n = 5$}: Only $D_{5.5}$ is exceptional
+\end{enumerate}
+\end{proof}

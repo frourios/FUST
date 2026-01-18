@@ -1,0 +1,67 @@
+% Chapter 4: Function Classes and Elimination Structure
+\chapter{Function Classes and Elimination Structure}
+\label{chap:function_classes}
+
+\section{Definition of Function Classes}
+\label{sec:fn_definition}
+
+\textbf{Core principle}: FUST \textbf{does not use arbitrary transcendental functions}. FUST deals only with the \textbf{specific function classes $\mathcal{F}_n$} defined below.
+
+$D_n$ is not a ``tester that acts on arbitrary functions,'' but an \textbf{existence condition that specifies the function class $\mathcal{F}_n$} for which $D_n$ is well-defined and non-trivial. With this restriction, 6-element completeness holds for the entire FUST function class.
+
+Define the basis function $F_2$ as:
+\[
+F_2(x) = \varphi^{\left(\frac{i\pi x}{\log\varphi} + \mathfrak{f} - |x|^2\right)} = e^{i\pi x} \cdot \varphi^{\mathfrak{f}} \cdot \varphi^{-|x|^2}
+\]
+
+This is a product of an \textbf{oscillation term} $e^{i\pi x}$, an \textbf{amplification term} $\varphi^{\mathfrak{f}}$, and a \textbf{Gaussian decay term} $\varphi^{-|x|^2}$.
+
+\textbf{Sign pattern $(+,+,-)$} is the unique pattern among 8 that ``satisfies $D_n[F_n] \ne 0$ for all $n$.''
+
+\textbf{Structural meaning} ($\mathfrak{f} = \exp_{\mathsf{F}}(1) \approx 3.7045$):
+\begin{itemize}
+\item $|x| < \sqrt{\mathfrak{f}} \approx 1.92$: Amplification term dominant (center of wave packet)
+\item $|x| = \sqrt{\mathfrak{f}} \approx 1.92$: Critical radius (balance point)
+\item $|x| > \sqrt{\mathfrak{f}} \approx 1.92$: Decay term dominant (tail of wave packet)
+\end{itemize}
+
+\section{Generation Rules}
+\label{sec:generation_rules}
+
+\begin{align}
+\mathcal{F}_2 &:= \mathrm{Span}\{F_2\} \\
+\mathcal{F}_3 &:= \mathcal{F}_2 \cdot \mathcal{F}_2, \quad F_3 = F_2^2 = e^{2i\pi x} \cdot \varphi^{2\mathfrak{f} - 2|x|^2} \\
+\mathcal{F}_4 &:= \mathcal{F}_2 \cdot \mathcal{F}_3, \quad F_4 = F_2 \cdot F_3 = e^{3i\pi x} \cdot \varphi^{3\mathfrak{f} - 3|x|^2} \\
+\mathcal{F}_5 &:= \mathcal{F}_3 \cdot \mathcal{F}_3, \quad F_5 = F_3^2 = e^{4i\pi x} \cdot \varphi^{4\mathfrak{f} - 4|x|^2} \\
+\mathcal{F}_6 &:= \mathcal{F}_5 \cdot \mathcal{F}_5, \quad F_6 = F_5^2 = e^{8i\pi x} \cdot \varphi^{8\mathfrak{f} - 8|x|^2}
+\end{align}
+
+\textbf{Structural features}:
+\begin{itemize}
+\item Oscillation term $e^{in\pi x}$ determines phase structure
+\item Exponent part $n\mathfrak{f} - n|x|^2$ forms a Gaussian wave packet with critical radius $\sqrt{\mathfrak{f}}$
+\end{itemize}
+
+\section{Half-Order Function Class F5.5}
+\label{sec:f55}
+
+Define the half-order function $F_{5.5}$ as:
+\[
+F_{5.5}(x) := F_5(x) + \lambda \cdot \Delta_2 F_5(x) = F_5(x) + \lambda\bigl(F_5(\varphi x) - F_5(\psi x)\bigr)
+\]
+where $\Delta_2 F_5(x) = F_5(\varphi x) - F_5(\psi x)$ is the antisymmetric difference (see Definition~\ref{def:D5half}).
+
+\textbf{Special parameter}: In the eigenvalue problem $D_{5.5}[F_{5.5}] = c \cdot F_{5.5}$, the \textbf{special} parameter that realizes eigenvalue $c = 0$ is
+\[
+\lambda_* = \frac{2}{\varphi + 2} = \frac{2}{\varphi^2 + 1} \approx 0.5528
+\]
+(value at $x = 1$). Hereafter, we call $\lambda=\lambda_*$ the ``standard half-order'' when necessary.
+
+The half-order function class is (with arbitrary $\lambda$):
+\[
+\mathcal{F}_{5.5} := \left\{ F_5(x) + \lambda\bigl(F_5(\varphi x) - F_5(\psi x)\bigr) \,\middle|\, \lambda \in \mathbb{R} \right\}
+\]
+
+This is a class that \textbf{permits self-referential difference exactly once}.
+
+\textbf{Important}: $\mathcal{F}_{5.5} \cdot \mathcal{F}_{5.5} \not\subset \mathcal{F}_{5.5}$ (not closed under multiplication)

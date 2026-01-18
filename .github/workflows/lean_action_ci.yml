@@ -1,0 +1,221 @@
+name: Lean Action CI with OTS Timestamping
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read # Read access to repository contents
+  pages: write # Write access to GitHub Pages
+  id-token: write # Write access to ID tokens
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for forbidden keywords (axiom/admit)
+        run: |
+          if grep -r -n -E '\b(axiom|admit)\b' **/*.lean; then
+            echo "Error: Found forbidden keywords (axiom, admit) in Lean files"
+            echo "All proofs must be complete without shortcuts"
+            exit 1
+          fi
+          echo "✓ No forbidden keywords found"
+
+      - uses: leanprover/lean-action@v1
+      # - uses: leanprover-community/docgen-action@v1
+
+  timestamp:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+      S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+      S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}
+      S3_REGION: ${{ secrets.S3_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get commit information
+        id: commit
+        run: |
+          echo "hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "short_hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install OpenTimestamps CLI
+        run: |
+          npm install -g opentimestamps
+          ots-cli.js --version
+
+      - name: Create commit hash file
+        run: |
+          mkdir -p ots-proofs
+          echo "${{ steps.commit.outputs.hash }}" > ots-proofs/commit-hash.txt
+          echo "Repository: ${{ github.repository }}" >> ots-proofs/metadata.txt
+          echo "Commit: ${{ steps.commit.outputs.hash }}" >> ots-proofs/metadata.txt
+          echo "Timestamp: ${{ steps.commit.outputs.timestamp }}" >> ots-proofs/metadata.txt
+          echo "Workflow Run: ${{ github.run_id }}" >> ots-proofs/metadata.txt
+          echo "Build Status: ✅ Passed" >> ots-proofs/metadata.txt
+
+      - name: Create OpenTimestamps proof
+        run: |
+          cd ots-proofs
+          echo "Creating timestamp proof for commit: ${{ steps.commit.outputs.hash }}"
+          ots-cli.js stamp commit-hash.txt
+
+          if [ -f commit-hash.txt.ots ]; then
+            echo "✅ OTS proof file created successfully"
+            ls -la commit-hash.txt.ots
+            ots-cli.js info commit-hash.txt.ots || echo "Info command failed (normal for pending timestamps)"
+          else
+            echo "❌ Failed to create OTS proof file"
+            exit 1
+          fi
+
+      - name: Configure AWS CLI
+        run: |
+          aws configure set aws_access_key_id "${{ env.S3_ACCESS_KEY_ID }}"
+          aws configure set aws_secret_access_key "${{ env.S3_SECRET_ACCESS_KEY }}"
+          aws configure set region "${{ env.S3_REGION }}"
+
+          echo "AWS CLI Configuration:"
+          aws configure list
+
+      - name: Upload to S3
+        run: |
+          S3_PATH="s3://${S3_BUCKET_NAME}/ots/$(date +%Y)/$(date +%m)/${{ steps.commit.outputs.short_hash }}"
+
+          echo "Uploading OTS proofs to: ${S3_PATH}"
+
+          aws s3 cp ots-proofs/commit-hash.txt "${S3_PATH}/commit-hash.txt" --endpoint-url ${{ env.S3_ENDPOINT_URL }} \
+            --metadata "commit=${{ steps.commit.outputs.hash }},timestamp=${{ steps.commit.outputs.timestamp }}"
+
+          aws s3 cp ots-proofs/commit-hash.txt.ots "${S3_PATH}/commit-hash.txt.ots" --endpoint-url ${{ env.S3_ENDPOINT_URL }} \
+            --metadata "commit=${{ steps.commit.outputs.hash }},timestamp=${{ steps.commit.outputs.timestamp }}"
+
+          aws s3 cp ots-proofs/metadata.txt "${S3_PATH}/metadata.txt" --endpoint-url ${{ env.S3_ENDPOINT_URL }} \
+            --metadata "commit=${{ steps.commit.outputs.hash }},timestamp=${{ steps.commit.outputs.timestamp }}"
+
+          echo "✅ Files uploaded successfully to S3:"
+          aws s3 ls "${S3_PATH}/" --recursive --endpoint-url ${{ env.S3_ENDPOINT_URL }}
+
+      - name: Verification instructions
+        run: |
+          echo "🔍 Verification Instructions:"
+          echo "1. Download the files from S3:"
+          echo "   aws s3 cp s3://${S3_BUCKET_NAME}/ots/$(date +%Y)/$(date +%m)/${{ steps.commit.outputs.short_hash }}/commit-hash.txt ."
+          echo "   aws s3 cp s3://${S3_BUCKET_NAME}/ots/$(date +%Y)/$(date +%m)/${{ steps.commit.outputs.short_hash }}/commit-hash.txt.ots ."
+          echo ""
+          echo "2. Verify the timestamp (after Bitcoin confirmation):"
+          echo "   ots-cli.js verify commit-hash.txt.ots"
+          echo ""
+          echo "3. Check commit hash matches:"
+          echo "   cat commit-hash.txt"
+          echo "   Expected: ${{ steps.commit.outputs.hash }}"
+
+      - name: Upload to GitHub Artifacts (backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: timestamp-proof-${{ steps.commit.outputs.short_hash }}-${{ steps.commit.outputs.timestamp }}
+          path: ots-proofs/
+          retention-days: 90
+          if-no-files-found: error
+
+  blueprint:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+
+      - name: Build the project
+        uses: leanprover/lean-action@f807b338d95de7813c5c50d018f1c23c9b93b4ec # v1.2.0
+
+      - name: Cache API docs
+        uses: actions/cache@v4
+        with:
+          path: |
+            .lake/build/doc/Aesop
+            .lake/build/doc/Batteries
+            .lake/build/doc/find
+            .lake/build/doc/Init
+            .lake/build/doc/Lake
+            .lake/build/doc/Lean
+            .lake/build/doc/Mathlib
+            .lake/build/doc/Std
+          key: Docs-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Build project API documentation
+        run: ~/.elan/bin/lake -R -Kenv=dev build FUST:docs
+
+      - name: Setup Node.js for home_page
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build home_page with Vite
+        working-directory: home_page
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build blueprint and copy to `home_page/blueprint`
+        uses: xu-cheng/texlive-action@v2
+        with:
+          docker_image: ghcr.io/xu-cheng/texlive-full:20250101
+          run: |
+            # Install necessary dependencies and build the blueprint
+            apk update
+            apk add --update make py3-pip git pkgconfig graphviz graphviz-dev gcc musl-dev
+            git config --global --add safe.directory $GITHUB_WORKSPACE
+            git config --global --add safe.directory `pwd`
+            python3 -m venv env
+            source env/bin/activate
+            pip install --upgrade pip==25.2 requests wheel
+            pip install pygraphviz --global-option=build_ext --global-option="-L/usr/lib/graphviz/" --global-option="-R/usr/lib/graphviz/"
+            pip install leanblueprint
+            leanblueprint pdf
+            cp blueprint/print/print.pdf home_page/dist/blueprint.pdf
+            leanblueprint web
+            cp -r blueprint/web home_page/dist/blueprint
+
+      # - name: Check declarations mentioned in the blueprint exist in Lean code
+      #   run: |
+      #       ~/.elan/bin/lake exe checkdecls blueprint/lean_decls
+
+      - name: Copy API documentation to `home_page/dist/docs`
+        run: cp -r .lake/build/doc home_page/dist/docs
+
+      - name: Remove unnecessary lake files from documentation in `home_page/dist/docs`
+        run: |
+          find home_page/dist/docs -name "*.trace" -delete
+          find home_page/dist/docs -name "*.hash" -delete
+
+      - name: "Upload website (API documentation, blueprint and home page)"
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: home_page/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Make sure the API documentation cache works
+        run: mv home_page/dist/docs .lake/build/doc

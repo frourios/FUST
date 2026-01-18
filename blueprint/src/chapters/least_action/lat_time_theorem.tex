@@ -1,0 +1,84 @@
+% FUST Least Action Theorem - Time Existence Theorem
+\chapter{Time Existence Theorem}
+\label{chap:mat_time_theorem}
+
+\section{Time Existence Theorem}
+\label{sec:mat_time_existence}
+
+\begin{theorem}[Time Existence Theorem]
+\label{thm:mat_time_existence}
+\lean{FUST.time_existence_theorem}
+\leanok
+For a state function $f : \mathbb{R} \to \mathbb{R}$, the following are equivalent:
+\begin{enumerate}
+\item $f \in \ker(D_6)$ (i.e., $f$ is a polynomial of degree 2 or less)
+\item $\forall x \neq 0, D_6 f(x) = 0$
+\item Time does not exist
+\end{enumerate}
+\end{theorem}
+
+\textbf{Contrapositive}: $f \notin \ker(D_6) \iff \exists x \neq 0, D_6 f(x) \neq 0 \iff$ Time exists
+
+\begin{proof}
+$(1) \Rightarrow (2)$: Proven by \texttt{D6\_polynomial\_deg2}. When $f = a_0 + a_1 x + a_2 x^2$, by linearity of $D_6$ and annihilation of each basis element, $D_6 f = 0$.
+
+$(2) \Rightarrow (1)$: Proven in the second part of \texttt{causal\_boundary\_theorem}. If perpProjection is identically zero, then $f \in \ker(D_6)$.
+\end{proof}
+
+\begin{corollary}[Relation Between Action Theorem and Time]
+\label{cor:mat_action_time}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Condition & Time & Action \\
+\hline
+$f \in \ker(D_6)$ & Does not exist & $\mathcal{A}[f] = 0$ \\
+$f \notin \ker(D_6)$ & Exists & $\mathcal{A}[f] > 0$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{corollary}
+
+\textbf{Interpretation}: The action being positive is equivalent to proper time existing.
+
+\begin{corollary}[Gauge Invariance of Time Existence]
+\label{cor:mat_time_gauge}
+\lean{FUST.time_differential_zero_gauge_invariant}
+\leanok
+The time existence condition ``$f \in \ker(D_6)$'' does not depend on:
+\begin{itemize}
+\item Choice of gauge parameter $x$
+\item Choice of interpolation points
+\end{itemize}
+\end{corollary}
+
+This is because $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ is a fixed algebraic structure.
+
+\section{Interpolation Uniqueness Theorem}
+\label{sec:mat_interpolation}
+
+\subsection{Problem Setting}
+
+To define the projection onto $\ker(D_6)$, function values at 3 points must be evaluated. This ``choice of 3 points'' appears arbitrary.
+
+\subsection{Uniqueness Theorem}
+
+\begin{theorem}[Interpolation Uniqueness]
+\label{thm:mat_interpolation_unique}
+\lean{FUST.kernel_interpolation_unique}
+\leanok
+If two polynomials $p, q$ in $\ker(D_6)$ agree at any 3 distinct points $t_0, t_1, t_2$, then $p = q$.
+\end{theorem}
+
+\begin{proof}[Proof outline]
+\begin{enumerate}
+\item The difference $p - q$ also belongs to $\ker(D_6)$ (polynomial of degree 2 or less)
+\item Agreement at 3 points yields a linear system for the coefficient differences
+\item Since the points are distinct, all coefficient differences are zero
+\end{enumerate}
+\end{proof}
+
+\subsection{Significance}
+
+This theorem guarantees that the choice of interpolation points $\{0, 1, -1\}$ is not arbitrary, and \textbf{the same result is obtained for any 3 points}. The choice $\{0, 1, -1\}$ is a natural selection for symmetry and computational convenience.
+

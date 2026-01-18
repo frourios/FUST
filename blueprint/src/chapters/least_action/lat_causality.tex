@@ -1,0 +1,74 @@
+% FUST Least Action Theorem - Causality and Light Cone
+\chapter{Causal Boundary and Speed of Light}
+\label{chap:mat_causality}
+
+\section{D6 as Causal Boundary (Light Cone) Identification}
+\label{sec:mat_light_cone}
+
+\subsection{Light Cone in Relativity}
+
+In relativity, the speed of light $c$ is not merely a numerical value but \textbf{the boundary of causal structure}:
+\[
+ds^2 = 0
+\]
+
+\begin{itemize}
+\item $ds^2 > 0$ (timelike): Causally connectable, proper time $d\tau > 0$
+\item $ds^2 = 0$ (null): On the light cone, proper time $d\tau = 0$
+\item $ds^2 < 0$ (spacelike): Causally disconnectable
+\end{itemize}
+
+\subsection{Correspondence with D6 Structure}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Relativity & FUST \\
+\hline
+null ($ds^2 = 0$) & $\ker(D_6)$ \\
+timelike ($ds^2 > 0$) & $\ker(D_6)^\perp$ \\
+proper time $d\tau = 0$ & $D_6 f = 0$ \\
+proper time $d\tau > 0$ & $D_6 f \neq 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Causal Boundary Theorem}
+
+\begin{theorem}[Causal Boundary Theorem]
+\label{thm:mat_causal_boundary}
+\lean{FUST.causal_boundary_theorem}
+\leanok
+\begin{align*}
+&(\forall f, f \in \ker(D_6) \Rightarrow \forall x \neq 0, D_6 f(x) = 0) \\
+&\land (\forall f, (\forall t, \mathrm{perpProjection}\, f(t) = 0) \Rightarrow f \in \ker(D_6))
+\end{align*}
+\end{theorem}
+
+\section{Structural Definition of the Speed of Light}
+\label{sec:mat_speed_of_light}
+
+\subsection{Essence of the Speed of Light}
+
+In relativity, the speed of light $c$ is:
+\begin{itemize}
+\item Not merely a numerical constant
+\item \textbf{A boundary condition that separates causal structure}
+\end{itemize}
+
+\subsection{Speed of Light in FUST}
+
+\begin{quote}
+\textbf{The speed of light in FUST is: ``Different homogeneous degrees must not be physically compared'' --- a normalization condition imposed by $D_6$.}
+\end{quote}
+
+This implies:
+\begin{itemize}
+\item The speed of light is automatically normalized to 1 within the theory
+\item It does not depend on human unit systems like seconds or meters
+\end{itemize}
+
+\subsection{Derivation of Natural Units}
+
+FUST does not assume a unit system but defines the causal boundary from $D_6$ structure. Therefore, $c = 1$ is not a ``choice'' but a ``structural consequence.''
+

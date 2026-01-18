@@ -1,0 +1,172 @@
+% FUST Least Action Theorem - Photon and Mass States
+\chapter{Derivation of Photon and Mass States}
+\label{chap:mat_photon_mass}
+
+\section{Separation of Constant and Non-constant Functions}
+\label{sec:mat_constant}
+
+\begin{definition}[IsConstant]
+$f$ is constant $\iff \exists c, \forall t, f(t) = c$
+\end{definition}
+
+\begin{definition}[HasEnergy]
+$f$ is non-constant $\iff \neg\mathrm{IsConstant}\, f$
+\end{definition}
+
+\begin{theorem}[Constant Functions in Kernel]
+\label{thm:mat_constant_kernel}
+\lean{FUST.constant_in_kernel}
+\leanok
+Constant functions belong to $\ker(D_6)$.
+\end{theorem}
+
+\begin{theorem}[Kernel Decomposition]
+\label{thm:mat_kernel_decomp}
+\lean{FUST.kernel_decomposition}
+\leanok
+$\ker(D_6) = \text{Constant functions} \lor \text{Non-constant functions}$
+\end{theorem}
+
+\section{Derivation of Photon States}
+\label{sec:mat_photon}
+
+\textbf{The definition of photon states is not arbitrary, but derived from the following physical correspondence:}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Physical property & Correspondence in $D_6$ structure \\
+\hline
+Mass $m = 0$ & No components of degree 3 or higher (belongs to $\ker(D_6)$) \\
+Energy $E \neq 0$ & Non-constant ($a_1 \neq 0$ or $a_2 \neq 0$) \\
+Proper time $d\tau = 0$ & $D_6 f = 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{definition}[Photon State]
+\label{def:mat_photon}
+\lean{FUST.IsPhotonState}
+\leanok
+$\mathrm{IsPhotonState}\, f \iff \mathrm{IsInKerD6}\, f \land \mathrm{HasEnergy}\, f$
+\end{definition}
+
+\begin{theorem}[Photon State Characterization]
+\label{thm:mat_photon_char}
+\lean{FUST.photon_state_iff_points}
+\leanok
+\[
+\mathrm{IsPhotonState}\, f \iff f \in \ker(D_6) \land (f(1) \neq f(0) \lor f(-1) \neq f(0))
+\]
+\end{theorem}
+
+\begin{theorem}[Non-constant Kernel Has Energy]
+\label{thm:mat_nonconstant_energy}
+\lean{FUST.nonconstant_ker_has_energy}
+\leanok
+Photon states have non-trivial linear or quadratic components.
+\end{theorem}
+
+\section{Derivation of Mass States}
+\label{sec:mat_mass}
+
+\textbf{The definition of mass states is not arbitrary, but derived as deviation from $\ker(D_6)$:}
+
+\begin{definition}[HasHigherDegree]
+$\mathrm{HasHigherDegree}\, f \iff f$ cannot be written as a polynomial of degree 2 or less
+\end{definition}
+
+\begin{definition}[Massive State]
+\label{def:mat_massive}
+\lean{FUST.IsMassiveState}
+\leanok
+$\mathrm{IsMassiveState}\, f \iff \mathrm{HasHigherDegree}\, f$
+\end{definition}
+
+\begin{theorem}[Massive State Equivalence]
+\label{thm:mat_massive_time}
+\lean{FUST.massive_iff_time_exists}
+\leanok
+\[
+\mathrm{IsMassiveState}\, f \iff \mathrm{TimeExists}\, f
+\]
+\end{theorem}
+
+\begin{theorem}[Massive State via Perpendicular Projection]
+\label{thm:mat_massive_perp}
+\lean{FUST.massive_iff_nonzero_perp}
+\leanok
+\[
+\mathrm{IsMassiveState}\, f \iff \exists t, \mathrm{perpProjection}\, f(t) \neq 0
+\]
+\end{theorem}
+
+\section{Physical Interpretation}
+\label{sec:mat_physical_interp}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+State & $D_6$ structure & Physical meaning \\
+\hline
+Vacuum & Constant function $\in \ker(D_6)$ & No energy, no mass \\
+Photon & Non-constant $\in \ker(D_6)$ & Has energy, no mass, no proper time \\
+Matter & $f \notin \ker(D_6)$ & Has energy, has mass, has proper time \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Homogeneous Decomposition and Time Delay Ratio}
+\label{sec:mat_homogeneous}
+
+\subsection{Homogeneous Decomposition Theorem}
+
+Any analytic state function $f$ decomposes into homogeneous components:
+\[
+f(t) = \sum_{n=0}^{\infty} a_n t^n
+\]
+
+By linearity of $D_6$ and the scaling law:
+\[
+D_6[f](x) = \sum_{n \geq 3} a_n D_6[t^n](x)
+\]
+
+\subsection{Gauge Invariance of Time Delay Ratio}
+
+\begin{theorem}[Same Degree Ratio Gauge Invariance]
+\label{thm:mat_same_degree}
+\lean{FUST.same_degree_ratio_gauge_invariant}
+\leanok
+For $f_A = a \cdot f$, $f_B = b \cdot f$ (scalar multiples of the same function),
+\[
+\frac{|D_6 f_A(x)|}{|D_6 f_B(x)|} = \frac{|a|}{|b|}
+\]
+This is independent of $x$ $\Rightarrow$ \textbf{gauge-invariant}
+\end{theorem}
+
+\begin{theorem}[Different Degrees]
+\label{thm:mat_diff_degree}
+For $f_A = t^n$, $f_B = t^m$ ($n \neq m$),
+\[
+\frac{|D_6 f_A(x)|}{|D_6 f_B(x)|} \propto x^{n-m}
+\]
+This depends on $x$ $\Rightarrow$ \textbf{gauge-dependent}
+\end{theorem}
+
+\subsection{Physical Interpretation}
+
+``The time delay ratio cannot be defined between different degrees'' is not a defect.
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Relativity & FUST \\
+\hline
+spacelike (causally incomparable) & Different degrees (incomparable) \\
+timelike (causally comparable) & Same degree (comparable) \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Conclusion}: The incomparability between different degrees reflects causal structure.
+

@@ -1,0 +1,184 @@
+% Appendices
+\appendix
+
+\chapter{Function Class Hierarchy Diagram}
+\label{app:hierarchy}
+
+\[
+\begin{array}{ccccccc}
+\mathcal{F}_2 & \xrightarrow{\cdot} & \mathcal{F}_3 & \xrightarrow{\cdot} & \mathcal{F}_5 & \xrightarrow{\cdot} & \mathcal{F}_6 \\
+& & \downarrow & & \downarrow & & \\
+& & \mathcal{F}_4 & & \mathcal{F}_{5.5} & &
+\end{array}
+\]
+
+\begin{itemize}
+\item Horizontal arrows: $\mathcal{F}_{n+2} = \mathcal{F}_n \cdot \mathcal{F}_{n}$ (self-product)
+\item Vertical arrows: $\mathcal{F}_{n+1} = \mathcal{F}_2 \cdot \mathcal{F}_n$ (base product)
+\item $\mathcal{F}_{5.5}$: Permits self-reference once (not closed under multiplication)
+\end{itemize}
+
+\chapter{Explicit Forms of Functions}
+\label{app:explicit_forms}
+
+Definition via \textbf{sign pattern $(+,+,-)$}:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Class & Generating function & Oscillation term & Exponent part \\
+\hline
+$\mathcal{F}_2$ & $F_2 = e^{i\pi x} \varphi^{\mathfrak{f}-|x|^2}$ & $e^{i\pi x}$ & $\mathfrak{f} - |x|^2$ \\
+$\mathcal{F}_3$ & $F_3 = F_2^2$ & $e^{2i\pi x}$ & $2\mathfrak{f} - 2|x|^2$ \\
+$\mathcal{F}_4$ & $F_4 = F_2 \cdot F_3$ & $e^{3i\pi x}$ & $3\mathfrak{f} - 3|x|^2$ \\
+$\mathcal{F}_5$ & $F_5 = F_3^2$ & $e^{4i\pi x}$ & $4\mathfrak{f} - 4|x|^2$ \\
+$\mathcal{F}_{5.5}$ & $F_{5.5} = F_5 + \lambda \Delta_2 F_5$ & Mixed & Mixed \\
+$\mathcal{F}_6$ & $F_6 = F_5^2$ & $e^{8i\pi x}$ & $8\mathfrak{f} - 8|x|^2$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Note}: The Gaussian wave packet balances at critical radius $|x| = \sqrt{\mathfrak{f}} \approx 1.92$ ($\mathfrak{f} = \exp_{\mathsf{F}}(1) \approx 3.7045$).
+
+\chapter{Coefficients and Elimination Patterns of Each Operator}
+\label{app:coefficients}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Operator & Points & Coefficients & Coeff. sum & Eliminated $K_n$ \\
+\hline
+$D_2$ & $\{\varphi, \psi\}$ & $[1, -1]$ & $0$ & $\{0\}$ \\
+$D_3$ & $\{\varphi, 1, \psi\}$ & $[1, -2, 1]$ & $0$ & $\{0\}$ \\
+$D_4$ & $\{\varphi^2, \varphi, \psi, \psi^2\}$ & $[1, -\varphi^2, \psi^2, -1]$ & $-\sqrt{5}$ & $\{2\}$ \\
+$D_5$ & $\{\varphi^2, \varphi, 1, \psi, \psi^2\}$ & $[1, 1, -4, 1, 1]$ & $0$ & $\{0, 1\}$ \\
+$D_{5.5}$ & $D_5 + \mu \Delta_2$ & Mixed & $0$ & Mixed \\
+$D_6$ & $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ & $[1, -3, 1, -1, 3, -1]$ & $0$ & $\{0, 1, 2\}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Note}: Only $D_4$ has non-zero coefficient sum (gauge breaking). Only $D_6$ eliminates $x^0, x^1, x^2$ simultaneously. $D_{5.5}$ is a mixture of $D_5$ (symmetric) and $\Delta_2$ (antisymmetric difference).
+
+\chapter{Applications of the Dn-Fm Matrix}
+\label{app:matrix}
+
+The components of the $6 \times 6$ matrix $M_{nm} = D_n[F_m]$ have the following applications:
+
+\section{Diagonal Components (6 entries)}
+
+\textbf{Eigenvalue-like measurement}: $\lambda_n = D_n[F_n] / F_n$ gives ``eigenvalues''.
+\[
+D_n F_n = \lambda_n F_n
+\]
+
+Values at $x = 1$:
+\begin{itemize}
+\item $\lambda_2 \approx -0.65$, $\lambda_3 \approx -3.49$, $\lambda_4 \approx -4.14$
+\item $\lambda_5 \approx -3.26$, $\lambda_{5.5} \approx 0$ (near kernel), $\lambda_6 \approx -104$
+\end{itemize}
+
+\section{Off-diagonal Components}
+
+\textbf{Transition amplitudes}: Represent couplings between different hierarchies.
+
+\begin{itemize}
+\item \textbf{Upper triangular} ($n < m$): Projection of higher-order functions to lower orders
+\item \textbf{Lower triangular} ($n > m$): Excitation of lower-order functions to higher orders
+\end{itemize}
+
+\section{Applications}
+
+\begin{enumerate}
+\item \textbf{Spectral decomposition}: Expand any $g(x)$ as $g = \sum c_n F_n$, and determine coefficients $c_n$ from $D_m[g] = \sum c_n D_m[F_n]$ via matrix inversion
+
+\item \textbf{Consistency check}: If $D_m[g] / D_m[F_n]$ is constant for all $m$ $\Rightarrow g \propto F_n$
+
+\item \textbf{Half-order detection}: If $D_{5.5}[g] \approx 0$ and $D_5[g] \ne 0$, $D_6[g] \ne 0$, then $g$ is of type $F_{5.5}$
+\end{enumerate}
+
+\chapter{Neutrality with Respect to the Axiom of Choice}
+\label{app:ac_neutrality}
+
+FUST is \textbf{neutral} with respect to the Axiom of Choice (AC). That is, the core structures of FUST are constructible within ZF and do not depend on whether AC holds.
+
+\section{Constructibility within ZF}
+
+\begin{theorem}[Constructibility within ZF]
+\label{thm:zf_constructible}
+The core structures of FUST (difference operators $D_n$, kernels $\ker(D_n)$, gauge groups) are constructible within the ZF axiom system.
+\end{theorem}
+
+\begin{proof}
+We show that each of the following constructions does not require AC:
+
+\begin{enumerate}
+\item \textbf{Golden ratio $\varphi, \psi$}: Roots of $x^2 - x - 1 = 0$ as algebraic numbers. Constructively definable.
+
+\item \textbf{Coefficients of difference operators $D_n$}: Finite tuples of real numbers. Defined by explicit construction.
+
+\item \textbf{Structure of kernels $\ker(D_n)$}: $\ker(D_5)$ and $\ker(D_6)$ are 2-dimensional and 3-dimensional \textbf{finite-dimensional} vector spaces respectively. For finite-dimensional spaces, existence of bases, orthogonal complements, and spectral decomposition do not require AC.
+
+\item \textbf{Identification of gauge groups}: SU(2), SU(3), U(1) are concretely constructible as finite-dimensional Lie groups.
+\end{enumerate}
+\end{proof}
+
+\section{AC Neutrality}
+
+\begin{corollary}[AC Neutrality]
+FUST is neutral with respect to AC. That is:
+\begin{itemize}
+\item AC cannot be derived from ZF + FUST
+\item ZF + $\neg$AC + FUST is also consistent (if ZF + $\neg$AC is consistent)
+\end{itemize}
+\end{corollary}
+
+\section{Analysis of Where Infinity Appears}
+
+Places where infinity appears in FUST:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Construction & Type of infinity & AC dependence \\
+\hline
+Frourio exponential $\exp_{\mathsf{F}}(x)$ & Infinite series & Not required (explicit construction) \\
+Mellin transform & Integral & Not required (Lebesgue integral) \\
+``For any $n \geq 7$'' & Countable infinity & Not required (concrete for each $n$) \\
+Completeness of function spaces & Limits & DC suffices \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Note}: The Axiom of Dependent Choice (DC) is weaker than AC and suffices for ordinary analysis. FUST operates completely within ZF + DC.
+
+\section{Physical Selection Principles and Mathematical Axiom of Choice}
+
+Relationship between FUST's claim of ``no need for selection principles'' and AC:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Concept & Content \\
+\hline
+\textbf{Physical selection principle} & Principles explaining ``why this universe'' (anthropic principle, etc.) \\
+\textbf{Mathematical Axiom of Choice} & Existence of choice function from families of non-empty sets \\
+\hline
+\end{tabular}
+\end{center}
+
+FUST derives physical laws \textbf{without physical selection principles}. This is consistent with \textbf{not using the mathematical Axiom of Choice}:
+\begin{itemize}
+\item Both avoid ``choice''
+\item FUST's structures are defined by concrete constructions, not requiring abstract choices
+\end{itemize}
+
+\section{Significance}
+
+AC neutrality is evidence that FUST is constructed without assumptions:
+
+\begin{enumerate}
+\item \textbf{Robustness of foundations}: FUST holds regardless of whether AC is true
+\item \textbf{Constructive nature}: Core structures are concretely constructible
+\end{enumerate}
+

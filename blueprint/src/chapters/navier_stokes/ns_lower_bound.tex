@@ -1,0 +1,57 @@
+% FUST Navier-Stokes - Lower Bound on Dissipation (Core Theorem)
+\chapter{Lower Bound on Dissipation (Core Theorem)}
+\label{chap:ns_lower_bound}
+
+\section{Upper and Lower Bounds}
+\label{sec:ns_bounds}
+
+Upper bound on dissipation coefficient:
+\[
+|C_n| \leq 10 \cdot \varphi^{3n}
+\]
+
+For proving global existence, the upper bound alone is insufficient; the \textbf{lower bound} is essentially important.
+
+\begin{theorem}[Dissipation Lower Bound]
+\label{thm:ns_lower_bound}
+\lean{FUST.dissipation_lower_bound}
+\leanok
+\[
+n \geq 4 \Rightarrow C_n \geq \frac{1}{3} \varphi^{3n}
+\]
+\end{theorem}
+
+\section{Proof Outline}
+\label{sec:ns_lower_proof}
+
+\begin{proof}[Proof outline]
+\begin{enumerate}
+\item Decomposition of the leading term:
+\[
+C_n = \varphi^{3n}(1 - 3\varphi^{-n} + \varphi^{-2n}) + (\psi\text{-terms})
+\]
+
+\item Lower bound on the leading factor for $n \geq 4$:
+\[
+1 - 3\varphi^{-n} + \varphi^{-2n} > \frac{1}{2}
+\]
+
+\item The $\psi$-terms decay exponentially since $|\psi| < 1$, and are negligible compared to $\varphi^{3n}$
+
+\item Combining:
+\[
+C_n > \frac{1}{2}\varphi^{3n} - 5 > \frac{1}{3}\varphi^{3n}
+\]
+\end{enumerate}
+\end{proof}
+
+\section{Physical Meaning}
+\label{sec:ns_lower_physics}
+
+The existence of a dissipation lower bound guarantees:
+\begin{itemize}
+\item Dissipation at high modes does not vanish
+\item Energy accumulating at high modes is necessarily dissipated
+\item Energy concentration in finite time (blowup) is impossible
+\end{itemize}
+

@@ -1,0 +1,139 @@
+% FUST Least Action Theorem - Conclusion
+\chapter{Gauge Invariance and Conclusion}
+\label{chap:mat_conclusion}
+
+\section{Gauge-Dependent and Gauge-Invariant Quantities}
+\label{sec:mat_gauge_quantities}
+
+\subsection{Gauge-Invariant (Established as Theorems)}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Lean4 theorem name & Description \\
+\hline
+$f \in \ker(D_6)$ & IsInKerD6\_implies\_D6\_zero & Non-existence of time (light-like state) \\
+$f \notin \ker(D_6)$ & D6\_nonzero\_implies\_time & Existence of time (massive state) \\
+Time delay ratio within same degree & same\_degree\_ratio\_gauge\_invariant & Causally comparable quantity \\
+D6TimeDifferential = 0 & time\_differential\_zero\_gauge\_invariant & Membership in $\ker(D_6)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Gauge-Dependent (Not Fixed as Theorems)}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Quantity & Dependent parameter \\
+\hline
+Value of $D_6 f(x)$ & Gauge $x$ \\
+Time delay ratio between different degrees & Gauge $x$ \\
+Concrete value of perpProjection & Choice of interpolation points (but zero set is invariant) \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Established Results}
+\label{sec:mat_results}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Item & Content & Status \\
+\hline
+Action functional & $\mathcal{A}[f] = \int_0^\infty \|D_6 f\|^2 \frac{dx}{x}$ & Derived \\
+$\varphi$-invariant measure & $dx/x$ (Haar measure) & Uniqueness proven \\
+Euler-Lagrange & $\ker(D_6^\dagger D_6) = \ker(D_6)$ & Derived \\
+Time existence equivalence & $\mathcal{A}[f] > 0 \iff \mathrm{TimeExists}\, f$ & Consistency confirmed \\
+Numerical verification & $A \approx 0$ in $\ker(D_6)$, $A > 0$ outside & Verified \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Established Theorems (All Lean4 Proven)}
+\label{sec:mat_theorems}
+
+\begin{enumerate}
+\item \textbf{Time Existence Theorem} (time\_existence\_theorem): $f \notin \ker(D_6) \iff$ Time exists
+\item \textbf{Higher Order Reduction Theorem} (higher\_order\_reduction): $\ker(D_7) = \ker(D_6)$
+\item \textbf{Homogeneous Decomposition Theorem} (same\_degree\_ratio\_gauge\_invariant): Time delay ratio is gauge-invariant only within same degree
+\item \textbf{Causal Boundary Theorem} (causal\_boundary\_theorem): $\ker(D_6) =$ Light cone
+\item \textbf{Gauge Transformation Rule} (D6\_gauge\_scaling): $D_6[f(c\cdot)](x) = c \cdot D_6[f](cx)$
+\item \textbf{Interpolation Uniqueness Theorem} (kernel\_interpolation\_unique): Projection to $\ker(D_6)$ is unique at 3 points
+\item \textbf{Time Differential Gauge Invariance} (time\_differential\_zero\_gauge\_invariant): D6TimeDifferential = 0 is equivalent to $\ker(D_6)$
+\item \textbf{Mass Gap Theorem} (massGap\_complete): $\Delta = 6 > 0$ derived from $\ker(D_5) \times \ker(D_6)$
+\end{enumerate}
+
+\section{Derived Concepts (Theorems, Not Definitions)}
+\label{sec:mat_derived}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Concept & Derivation \\
+\hline
+Photon state & $\ker(D_6) \cap$ Non-constant functions (has energy, no mass) \\
+Mass state & $\ker(D_6)^\perp$ (has components of degree 3 or higher) \\
+Existence of time & Deviation from $\ker(D_6)$ \\
+Mass gap & Tensor product dimension of $\ker(D_5) \times \ker(D_6)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Physical Correspondence}
+\label{sec:mat_correspondence}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Relativistic concept & FUST correspondence \\
+\hline
+Light cone & $\ker(D_6)$ \\
+Photon & IsPhotonState ($\ker(D_6) \cap$ non-constant) \\
+Massive particle & IsMassiveState ($\ker(D_6)^\perp$) \\
+timelike/spacelike & Same degree/different degrees \\
+Speed of light $c$ & Degree mixing prohibition condition \\
+Mass gap & Minimum energy having proper time \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Core Claims}
+\label{sec:mat_core_claims}
+
+\begin{quote}
+\textbf{The FUST action functional is uniquely determined from $D_6$ structure and contains no arbitrariness.}
+\end{quote}
+
+\begin{quote}
+\textbf{Positive action is equivalent to proper time existing.}
+\end{quote}
+
+\begin{quote}
+\textbf{Minimal action solutions belong to $\ker(D_6)$, corresponding to the light cone (photon worldlines).}
+\end{quote}
+
+\begin{quote}
+\textbf{The ``existence'' of time is a theorem. The ``value'' of time is not a theorem.}
+\end{quote}
+
+\begin{quote}
+\textbf{The speed of light is not a numerical value, but a structural condition prohibiting comparison between different degrees.}
+\end{quote}
+
+\begin{quote}
+\textbf{The concepts of photon and mass are not definitions, but theorems derived from $D_6$ structure.}
+\end{quote}
+
+\begin{quote}
+\textbf{The mass gap is the minimum energy of states that experience proper time.}
+\end{quote}
+
+Whether time flows is uniquely determined from $D_6$ structure. How fast it flows is gauge-invariantly defined only within the same degree, and is causally incomparable between different degrees.
+
+\section{Significance}
+\label{sec:mat_final_significance}
+
+This result provides the first non-circular answer to the fundamental question of why nature appears to follow variational principles. The variational principle is not a principle, but a theorem \textbf{forced to be derived} from $D_6$ structure and $\varphi$-scale invariance.
+

@@ -1,0 +1,32 @@
+% FUST Navier-Stokes - Time Structure and Kernel Invariance
+\chapter{Time Structure and Kernel Invariance}
+\label{chap:ns_time_structure}
+
+\section{Arrow of Time}
+\label{sec:ns_arrow_time}
+
+\begin{theorem}[Golden Ratio Asymmetry]
+\label{thm:ns_phi_psi}
+\lean{FUST.phi_gt_one, FUST.abs_psi_lt_one}
+\leanok
+\[
+\varphi > 1, \quad |\psi| < 1
+\]
+\end{theorem}
+
+$\varphi > 1$ causes scale expansion toward the future direction, while $|\psi| < 1$ causes contributions from the past direction to decay exponentially.
+
+\section{Time Invariance of Kernel}
+\label{sec:ns_kernel_invariant}
+
+\begin{theorem}[Kernel Invariance under Time Evolution]
+\label{thm:ns_kernel_invariant}
+\lean{FUST.ker_D6_invariant_timeEvolution}
+\leanok
+\[
+f \in \ker(D_6) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(D_6)
+\]
+\end{theorem}
+
+Smooth states are preserved as smooth under time evolution.
+

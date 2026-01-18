@@ -1,0 +1,147 @@
+% Chapter 3: Difference Operators
+\chapter{Difference Operators}
+\label{chap:difference_operators}
+
+\section{Definition of Difference Operators (ZF)}
+\label{sec:diff_op_def}
+
+\begin{definition}[$D_2$: Frourio Golden 2-Point Derivative]
+\label{def:D2}
+\lean{FUST.D2}
+\leanok
+\[
+D_2 f(x) = \frac{f(\varphi x)-f(\psi x)}{(\varphi-\psi)x}
+\]
+\end{definition}
+
+\begin{definition}[$D_3$: Frourio Golden 3-Point Derivative]
+\label{def:D3}
+\[
+D_3 f(x) = \frac{f(\varphi^2 x) - f(\varphi x) + f(\psi x)}{(\varphi-\psi)^2 x}
+\]
+\end{definition}
+
+\begin{definition}[$D_4$: Frourio Golden 4-Point Derivative]
+\label{def:D4}
+\[
+D_4 f(x) = \frac{f(\varphi^2 x) - \varphi^2 f(\varphi x) + \psi^2 f(\psi x) - f(\psi^2 x)}{(\varphi-\psi)^3 x}
+\]
+\end{definition}
+
+\begin{definition}[$D_5$: Frourio Golden 5-Point Derivative]
+\label{def:D5}
+\lean{FUST.D5}
+\leanok
+\[
+D_5 f(x) = \frac{f(\varphi^2 x) - a f(\varphi x) + b f(x) - a f(\psi x) + f(\psi^2 x)}{(\varphi-\psi)^4 x}
+\]
+\end{definition}
+
+\begin{definition}[$D_6$: Frourio Golden 6-Point Derivative]
+\label{def:D6}
+\lean{FUST.D6}
+\leanok
+\[
+D_6 f(x) = \frac{f(\varphi^3 x) - A f(\varphi^2 x) + B f(\varphi x) - B f(\psi x) + A f(\psi^2 x) - f(\psi^3 x)}{(\varphi-\psi)^5 x}
+\]
+\end{definition}
+
+\begin{definition}[$D_{5.5}$: Half-Order Difference Operator]
+\label{def:D5half}
+\lean{FUST.D5half}
+\leanok
+Define the half-order operator $D_{5.5}$ as:
+\[
+D_{5.5} f(x) := D_5 f(x) + \mu \cdot \Delta_2 f(x)
+\]
+where $\Delta_2 f(x) := f(\varphi x) - f(\psi x)$ is the \textbf{antisymmetric difference} (the numerator part of $D_2$).
+\end{definition}
+
+\textbf{Note}: $\Delta_2$ is different from $D_2$. We have $D_2 f(x) = \Delta_2 f(x) / ((\varphi - \psi) x)$, and $\Delta_2$ is the unnormalized raw difference.
+
+\textbf{Parameter determination}: Solving the eigenvalue problem $D_{5.5}[F_{5.5}] = c \cdot F_{5.5}$, for eigenvalue $c = 0$ we obtain
+\[
+\mu = \frac{2}{\varphi + 2} = \frac{2}{\varphi^2 + 1} \approx 0.5528
+\]
+(value at $x = 1$). $D_{5.5}$ is a linear combination of $D_5$ (symmetric) and $\Delta_2$ (antisymmetric).
+
+\section{Uniqueness Theorem for D5 and D6 Coefficients}
+\label{sec:coeff_uniqueness}
+
+\subsection{Determination of D5 Coefficients}
+\label{subsec:D5_coeff}
+
+$D_5$ is the critical hierarchy that ``permits structural fluctuations but not translations.'' Since there are 2 unknowns $(a,b)$, we impose the following \textbf{minimal 2 conditions}:
+
+\begin{itemize}
+\item \textbf{C0} Constant drift elimination: $D_5[1]=0$
+\item \textbf{C1} Linear drift elimination: $D_5[x]=0$
+\end{itemize}
+
+\textbf{Calculation}:
+
+\textbf{C0} $(f(x)=1)$:
+$2-2a+b=0 \Rightarrow b=2a-2$
+
+\textbf{C1} $(f(x)=x)$:
+$(\varphi^2+\psi^2)-a(\varphi+\psi)+b=0$, so $3-a+b=0 \Rightarrow b=a-3$
+
+Solving simultaneously:
+\[
+\boxed{a=-1,\quad b=-4}
+\]
+
+\textbf{Final form of $D_5$}:
+\[
+D_5 f(x)=\frac{f(\varphi^2x)+f(\varphi x)-4f(x)+f(\psi x)+f(\psi^2x)}{(\varphi-\psi)^4 x}
+\]
+
+\subsection{Determination of D6 Coefficients}
+\label{subsec:D6_coeff}
+
+$D_6$ needs to \textbf{completely eliminate} both translation (linear) and curvature drift (quadratic).
+
+\begin{itemize}
+\item \textbf{D1} $D_6[x]=0$
+\item \textbf{D2} $D_6[x^2]=0$
+\end{itemize}
+
+\textbf{Justification of coefficient determination}:
+
+These conditions are not ``physical selection principles'' but \textbf{mathematical requirements for difference operators}:
+
+\begin{enumerate}
+\item \textbf{$D_6[1] = 0$}: Automatically satisfied from the antisymmetric form $[1, -A, B, -B, A, -1]$
+\item \textbf{$D_6[x] = 0$}: Eliminates linear functions (translations) --- analogous to differential operators
+\item \textbf{$D_6[x^2] = 0$}: Eliminates quadratic functions (curvature) --- realizes the maximum kernel dimension for 6-point operators
+\end{enumerate}
+
+\textbf{Calculation} (using Fibonacci identities):
+
+In general: $D_6[x^n] \propto F_{3n}-A F_{2n}+B F_n$
+
+\textbf{n=1}: $2-A+B=0 \Rightarrow B=A-2$
+
+\textbf{n=2}: $8-3A+B=0 \Rightarrow B=3A-8$
+
+Solving simultaneously:
+\[
+\boxed{A=3,\quad B=1}
+\]
+
+\textbf{Final form of $D_6$}:
+\[
+D_6 f(x)=\frac{f(\varphi^3x)-3f(\varphi^2x)+f(\varphi x)-f(\psi x)+3f(\psi^2x)-f(\psi^3x)}{(\varphi-\psi)^5 x}
+\]
+
+\begin{theorem}[$D_5$ and $D_6$ Coefficient Uniqueness Theorem]
+\label{thm:coeff_uniqueness}
+\lean{FUST.D5_coefficients_unique, FUST.D6_coefficients_unique}
+\leanok
+In FUST, no other difference coefficients for $D_5$ and $D_6$ exist except
+\[
+a=-1,\quad b=-4,\quad A=3,\quad B=1
+\]
+\end{theorem}
+
+This is not an empirical claim but a \textbf{necessary consequence derived only from hierarchical structure, zeros, and criticality}.

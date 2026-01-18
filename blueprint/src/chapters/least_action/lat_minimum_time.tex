@@ -1,0 +1,90 @@
+% FUST Least Action Theorem - Minimum Time Gap
+\chapter{Minimum Time Gap (FUST Planck Time)}
+\label{chap:mat_minimum_time}
+
+\section{Structural Derivation}
+\label{sec:mat_min_time_derivation}
+
+The minimum time is not derived from numerical fitting, but necessarily from the $D_6$ structure.
+
+\textbf{Core facts}:
+\begin{itemize}
+\item In $\ker(D_6) = \{1, x, x^2\}$, time is not defined ($D_6 = 0$)
+\item $n = 3$ is the minimum degree at which ``time begins to exist''
+\item $C_3$ is the minimum non-zero dissipation coefficient
+\end{itemize}
+
+\begin{theorem}[$C_3$ Value]
+\label{thm:mat_C3}
+\lean{FUST.C3_eq_12_sqrt5}
+\leanok
+\[
+C_3 = \varphi^9 - 3\varphi^6 + \varphi^3 - \psi^3 + 3\psi^6 - \psi^9 = 12\sqrt{5}
+\]
+\end{theorem}
+
+\section{Definition of Structural Minimum Time}
+\label{sec:mat_structural_min_time}
+
+The minimum scale at which $D_6$ begins to detect temporal change:
+
+\begin{definition}[Structural Minimum Time]
+\label{def:mat_min_time}
+\lean{FUST.structuralMinTime}
+\leanok
+\[
+t_{\mathrm{FUST}} = \frac{(\sqrt{5})^5}{C_3} = \frac{(\sqrt{5})^5}{12\sqrt{5}} = \frac{(\sqrt{5})^4}{12} = \frac{25}{12}
+\]
+\end{definition}
+
+\begin{theorem}[Structural Minimum Time Value]
+\label{thm:mat_min_time_value}
+\lean{FUST.structuralMinTime_eq}
+\leanok
+$t_{\mathrm{FUST}} = 25/12$
+\end{theorem}
+
+\begin{theorem}[Structural Minimum Time Positivity]
+\label{thm:mat_min_time_pos}
+\lean{FUST.structuralMinTime_positive}
+\leanok
+$t_{\mathrm{FUST}} > 0$
+\end{theorem}
+
+\section{Why It Cannot Be Further Divided}
+\label{sec:mat_indivisible}
+
+\begin{theorem}[Structural Reason for Minimum Time]
+\label{thm:mat_min_time_reason}
+\lean{FUST.minimum_time_structural_reason}
+\leanok
+\begin{enumerate}
+\item $\ker(D_6) = \{1, x, x^2\}$ is not detected by $D_6$
+\item Functions with $n \leq 2$ ``do not experience time''
+\item $n = 3$ is the minimum degree for temporal change
+\item $t_{\mathrm{FUST}} = 25/12$ is derived from this boundary
+\end{enumerate}
+\end{theorem}
+
+\section{Physical Interpretation}
+\label{sec:mat_min_time_physics}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Scale & $D_6$ behavior & Physical meaning \\
+\hline
+$\ker(D_6)$ & $D_6 = 0$ & No time (light-like) \\
+$n = 3$ & $C_3 = 12\sqrt{5}$ & Minimum temporal change \\
+$n \geq 4$ & $C_n > C_3$ & Stronger dissipation \\
+\hline
+\end{tabular}
+\end{center}
+
+$t_{\mathrm{FUST}} = 25/12$ is:
+\begin{itemize}
+\item The minimum time interval that $D_6$ can ``resolve''
+\item A structural consequence from the $\ker(D_6)$ boundary
+\item A purely algebraic derivation, not numerical fitting
+\end{itemize}
+

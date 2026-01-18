@@ -1,0 +1,64 @@
+% FUST Navier-Stokes - D6 Operator and Dissipation Structure
+\chapter{D6 Operator and Dissipation Structure}
+\label{chap:ns_d6_dissipation}
+
+\section{Definition of the D6 Operator}
+\label{sec:ns_d6_def}
+
+For the golden ratio $\varphi = (1+\sqrt{5})/2$ and $\psi = (1-\sqrt{5})/2$:
+
+\begin{definition}[$D_6$ Operator]
+\label{def:ns_D6}
+\lean{FUST.D6}
+\leanok
+\[
+D_6[f](x) = \frac{f(\varphi^3 x) - 3f(\varphi^2 x) + f(\varphi x) - f(\psi x) + 3f(\psi^2 x) - f(\psi^3 x)}{(\varphi - \psi)^5 x}
+\]
+\end{definition}
+
+\section{Kernel Structure (Smooth Stationary States)}
+\label{sec:ns_kernel}
+
+\begin{theorem}[Kernel of $D_6$]
+\label{thm:ns_kernel}
+\lean{FUST.D6_const, FUST.D6_linear, FUST.D6_quadratic}
+\leanok
+\[
+\ker(D_6) = \mathrm{span}\{1, x, x^2\}
+\]
+\end{theorem}
+
+$\ker(D_6)$ is 3-dimensional, and its elements are infinitely differentiable polynomials. This constitutes the space of ``smooth initial conditions.''
+
+\section{Dissipation Coefficients}
+\label{sec:ns_dissipation_coeff}
+
+The dissipation coefficient for the $n$-th mode:
+
+\begin{definition}[Dissipation Coefficient]
+\label{def:ns_dissipation}
+\lean{FUST.dissipationCoeff}
+\leanok
+\[
+C_n = \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}
+\]
+\end{definition}
+
+\begin{theorem}[Vanishing in Kernel]
+\label{thm:ns_kernel_vanish}
+\lean{FUST.dissipationCoeff_zero, FUST.dissipationCoeff_one, FUST.dissipationCoeff_two}
+\leanok
+\[
+C_0 = C_1 = C_2 = 0
+\]
+\end{theorem}
+
+\begin{theorem}[Dissipation Outside Kernel]
+\label{thm:ns_dissipation_outside}
+\lean{FUST.dissipation_positive_outside_kernel}
+\leanok
+\[
+n \geq 3 \Rightarrow C_n^2 > 0
+\]
+\end{theorem}
+
