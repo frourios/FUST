@@ -1,0 +1,143 @@
+% FUST Physics Discoveries - Particle Spectrum
+\chapter{Particle Spectrum from D-Structure}
+\label{chap:pd_particle}
+
+\section{Generation Constraint}
+\label{sec:particle_generations}
+
+\begin{theorem}[Maximum Generations]
+\label{thm:particle_max_generations}
+\lean{FUST.ParticleSpectrum.maxGenerations_from_kernel_transition}
+\leanok
+Maximum generations = 3, derived from kernel dimension transition:
+\[
+\text{maxGenerations} = (C(3,2) - C(2,2)) + 1 = (3 - 1) + 1 = 3
+\]
+\end{theorem}
+
+\begin{theorem}[$D_3$, $D_4$ Selection]
+\label{thm:particle_d3_d4_selection}
+\lean{FUST.ParticleSpectrum.selected_D_structures_kernel_dim_1}
+\leanok
+$D_3$ and $D_4$ are selected because they have kernel dimension 1:
+\begin{itemize}
+\item $D_3$ does NOT annihilate linear: $\exists x \neq 0: D_3[x](x) \neq 0$
+\item $D_4$ does NOT annihilate linear: $\exists x \neq 0: D_4[x](x) \neq 0$
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[Fourth Generation Forbidden]
+\label{thm:particle_4th_gen_forbidden}
+\lean{FUST.ParticleSpectrum.fourth_generation_forbidden}
+\leanok
+4th generation would require $D_7$, which projects to $D_6$.
+\end{theorem}
+
+\section{Charge Constraint}
+\label{sec:particle_charges}
+
+\begin{theorem}[Allowed Charges]
+\label{thm:particle_allowed_charges}
+\lean{FUST.ParticleSpectrum.allowedChargeCount_eq}
+\leanok
+Allowed charge count from $D_3$ structure:
+\[
+2 \times C(3,2) + 1 = 7
+\]
+Allowed charges: $Q = n/3$ for $n \in \{-3, -2, -1, 0, 1, 2, 3\}$.
+\end{theorem}
+
+\begin{theorem}[Exotic Charges Forbidden]
+\label{thm:particle_exotic_forbidden}
+\lean{FUST.ParticleSpectrum.charge_one_fifth_forbidden}
+\leanok
+Charge $Q = 1/5$ is not representable as $n/3$ and is therefore forbidden.
+\end{theorem}
+
+\section{Spin Constraint}
+\label{sec:particle_spins}
+
+\begin{theorem}[Maximum Spin]
+\label{thm:particle_max_spin}
+\lean{FUST.ParticleSpectrum.spin_ceiling}
+\leanok
+Spin count = spacetime dimension = 4. Allowed spins: $0, 1/2, 1, 2$.
+
+Spin $> 2$ would require $D_7$+, which projects to $D_6$.
+\end{theorem}
+
+\section{Colored Leptons Forbidden}
+\label{sec:particle_colored_leptons}
+
+\begin{theorem}[Colored Leptons Forbidden]
+\label{thm:particle_colored_lepton}
+\lean{FUST.ParticleSpectrum.colored_lepton_forbidden}
+\leanok
+Colored lepton (hypercharge $Y = -1$, color = triplet) is forbidden by $D_3$-$D_4$ embedding.
+\end{theorem}
+
+\section{SM Particle Count}
+\label{sec:particle_count}
+
+\begin{theorem}[Fermion Count]
+\label{thm:particle_fermion_count}
+\lean{FUST.ParticleSpectrum.SM_fermion_count_eq}
+\leanok
+\begin{align}
+\text{Leptons} &= 2 \times 3 = 6 \\
+\text{Quarks} &= 2 \times 3 \times C(3,2) = 18 \\
+\text{Total fermions} &= 24
+\end{align}
+\end{theorem}
+
+\begin{theorem}[Boson Count]
+\label{thm:particle_boson_count}
+\lean{FUST.ParticleSpectrum.SM_boson_count_eq}
+\leanok
+\begin{align}
+\text{Gluons} &= C(3,2)^2 - 1 = 8 \\
+\text{Weak bosons (W}^\pm\text{, Z)} &= C(3,2) = 3 \\
+\text{Photon} &= 1 \\
+\text{Higgs} &= 1 \\
+\text{Total bosons} &= 13
+\end{align}
+\end{theorem}
+
+\begin{theorem}[Total SM Particles]
+\label{thm:particle_sm_count}
+\lean{FUST.ParticleSpectrum.SM_count}
+\leanok
+\[
+\text{SM particles} = 24 + 13 = 37
+\]
+Including graviton: 38.
+\end{theorem}
+
+\section{Predicted Particles}
+\label{sec:particle_predictions}
+
+\subsection{Graviton at \texorpdfstring{$D_6$}{D6}}
+Spin-2, massless gauge boson from $D_6$ structure.
+
+\subsection{Right-Handed Neutrinos at \texorpdfstring{$D_5$}{D5}}
+Spin-1/2 fermions with extended kernel structure.
+
+\subsection{\texorpdfstring{$D_{5\frac{1}{2}}$}{D5.5} Dark Matter}
+Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi^{-3/2}$.
+
+\section{Summary}
+\label{sec:particle_summary}
+
+\begin{theorem}[Particle Spectrum Summary]
+\label{thm:particle_summary}
+\lean{FUST.ParticleSpectrum.particle_spectrum_summary}
+\leanok
+\begin{enumerate}
+\item SM particle count = 37 (derived from D-structure)
+\item Maximum generations = 3 (from kernel dimension transition)
+\item $D_6$ ceiling prevents 4th generation and spin $> 2$
+\item Allowed spins = spacetime dimension = 4
+\item Allowed charges from $D_3$ structure
+\end{enumerate}
+\end{theorem}
+

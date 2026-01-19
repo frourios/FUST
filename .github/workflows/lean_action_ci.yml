@@ -18,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for forbidden keywords (axiom/admit)
+      - name: Check for forbidden keywords (axiom/sorry/admit)
         run: |
-          if grep -r -n -E '\b(axiom|admit)\b' **/*.lean; then
-            echo "Error: Found forbidden keywords (axiom, admit) in Lean files"
+          if grep -r -n -E '\b(axiom|sorry|admit)\b' FUST/**/*.lean; then
+            echo "Error: Found forbidden keywords (axiom, sorry, admit) in Lean files"
             echo "All proofs must be complete without shortcuts"
             exit 1
           fi
@@ -191,6 +191,9 @@ jobs:
             pip install --upgrade pip==25.2 requests wheel
             pip install pygraphviz --global-option=build_ext --global-option="-L/usr/lib/graphviz/" --global-option="-R/usr/lib/graphviz/"
             pip install leanblueprint
+            mkdir -p blueprint/print/chapters/physics_discoveries
+            mkdir -p blueprint/print/chapters/least_action
+            mkdir -p blueprint/print/chapters/navier_stokes
             leanblueprint pdf
             cp blueprint/print/print.pdf home_page/dist/blueprint.pdf
             leanblueprint web

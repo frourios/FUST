@@ -1,0 +1,131 @@
+% FUST Physics Discoveries - Weinberg Angle
+\chapter{Weinberg Angle from D-Structure}
+\label{chap:pd_weinberg}
+
+\section{Kernel Dimension Transition}
+\label{sec:weinberg_kernel_transition}
+
+The Weinberg mixing angle is derived from the kernel structure of difference operators.
+
+\begin{theorem}[$D_3$ Gauge Invariance]
+\label{thm:weinberg_d3_gauge}
+\lean{FUST.WeinbergAngle.D3_gauge}
+\leanok
+$D_3$ annihilates constants (kernel dimension 1):
+\[
+\forall x \neq 0: D_3[1](x) = 0
+\]
+\end{theorem}
+
+\begin{theorem}[$D_5$ Extended Kernel]
+\label{thm:weinberg_d5_extended}
+\lean{FUST.WeinbergAngle.D5_extended_kernel}
+\leanok
+$D_5$ has extended kernel (dimension $\geq 2$):
+\[
+\forall x \neq 0: D_5[1](x) = 0 \text{ and } D_5[x](x) = 0
+\]
+\end{theorem}
+
+\begin{theorem}[Kernel Dimension Transition]
+\label{thm:weinberg_kernel_transition}
+\lean{FUST.WeinbergAngle.kernel_dim_transition}
+\leanok
+$D_3 \to D_5$ is the unique transition where kernel dimension increases from 1 to $\geq 2$:
+\begin{itemize}
+\item $D_3$: kernel dim = 1 (annihilates only constants)
+\item $D_3$ does NOT annihilate linear: $\exists x \neq 0: D_3[x](x) \neq 0$
+\item $D_5$: kernel dim $\geq 2$ (annihilates constants AND linear)
+\end{itemize}
+\end{theorem}
+
+\section{Pair Count Formula}
+\label{sec:weinberg_pair_count}
+
+\begin{theorem}[$D_3$ Pair Count]
+\label{thm:weinberg_d3_pairs}
+\lean{FUST.WeinbergAngle.D3_pair_count}
+\leanok
+$D_3$ uses 3 evaluation points ($\varphi x$, $x$, $\psi x$):
+\[
+C(3,2) = 3 \text{ pairs}
+\]
+\end{theorem}
+
+\begin{theorem}[$D_5$ Pair Count]
+\label{thm:weinberg_d5_pairs}
+\lean{FUST.WeinbergAngle.D5_pair_count}
+\leanok
+$D_5$ uses 5 evaluation points ($\varphi^2 x$, $\varphi x$, $x$, $\psi x$, $\psi^2 x$):
+\[
+C(5,2) = 10 \text{ pairs}
+\]
+\end{theorem}
+
+\section{Weinberg Angle Formula}
+\label{sec:weinberg_formula}
+
+\begin{theorem}[Weinberg Angle]
+\label{thm:weinberg_formula}
+\lean{FUST.WeinbergAngle.weinberg_angle_formula}
+\leanok
+\[
+\sin^2\theta_W = \frac{C(3,2)}{C(3,2) + C(5,2)} = \frac{3}{13} \approx 0.2308
+\]
+Experimental value: $0.231$ (error $< 1\%$).
+\end{theorem}
+
+\section{Physical Interpretation}
+\label{sec:weinberg_interpretation}
+
+The electroweak mixing arises from the interplay between:
+\begin{itemize}
+\item $D_3$: $\mathrm{SU}(2)_L$ weak isospin (minimal gauge structure)
+\item $D_5$: First structure with extended kernel (unified structure)
+\end{itemize}
+
+The ratio of pair counts determines the mixing strength.
+
+\section{Derivation Chain}
+\label{sec:weinberg_derivation}
+
+\begin{theorem}[Complete Derivation Chain]
+\label{thm:weinberg_derivation_chain}
+\lean{FUST.WeinbergAngle.weinberg_derivation_chain}
+\leanok
+\begin{enumerate}
+\item $D_3$ has kernel dim 1 (gauge invariance only)
+\item $D_5$ has kernel dim $\geq 2$ (first extended)
+\item Pair counts from evaluation points: $C(3,2) = 3$, $C(5,2) = 10$
+\item Mixing ratio: $3/13$
+\end{enumerate}
+\end{theorem}
+
+\section{\texorpdfstring{$D_5$}{D5} Coefficient Uniqueness}
+\label{sec:weinberg_d5_uniqueness}
+
+\begin{theorem}[$D_5$ Coefficient Uniqueness]
+\label{thm:weinberg_d5_coefficients}
+\lean{FUST.WeinbergAngle.D5_coefficient_uniqueness_needs_two_conditions}
+\leanok
+$D_5$ coefficients are uniquely determined by requiring both $D_5[1] = 0$ and $D_5[x] = 0$:
+\[
+a = -1, \quad b = -4
+\]
+\end{theorem}
+
+\section{Summary}
+\label{sec:weinberg_summary}
+
+\begin{theorem}[Weinberg Summary]
+\label{thm:weinberg_summary}
+\lean{FUST.WeinbergAngle.weinberg_summary}
+\leanok
+\begin{enumerate}
+\item $D_3$ gauge invariant (kernel dim 1)
+\item $D_5$ has extended kernel (kernel dim $\geq 2$)
+\item $D_3 \to D_5$ is kernel dimension transition
+\item $\sin^2\theta_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13$
+\end{enumerate}
+\end{theorem}
+

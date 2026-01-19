@@ -1,0 +1,192 @@
+% FUST Physics Discoveries - Mass Ratios
+\chapter{Mass Ratio Predictions}
+\label{chap:pd_mass_ratios}
+
+\section{Quark Mass Ratios}
+\label{sec:mass_quark}
+
+\begin{theorem}[Up/Down Ratio]
+\label{thm:mass_mu_md}
+\lean{FUST.QuarkMassRatios.mu_md_from_D2}
+\leanok
+\[
+\frac{m_u}{m_d} = \frac{1}{2}
+\]
+from $D_2$ isospin structure. Experimental: 0.47 (error 6.4\%).
+\end{theorem}
+
+\begin{theorem}[Strange/Down Ratio]
+\label{thm:mass_ms_md}
+\lean{FUST.QuarkMassRatios.ms_md_structural_eq}
+\leanok
+\[
+\frac{m_s}{m_d} = \varphi^{T(3)} = \varphi^6 \approx 17.94
+\]
+where $T(3) = C(4,2) = 6$. Experimental: 19.5 (error $\sim 8\%$).
+\end{theorem}
+
+\begin{theorem}[Charm/Strange Ratio]
+\label{thm:mass_mc_ms}
+\lean{FUST.QuarkMassRatios.mc_ms_value}
+\leanok
+\[
+\frac{m_c}{m_s} = C(5,2) + 2 = 10 + 2 = 12
+\]
+Experimental: 11.7 (error 2.6\%).
+\end{theorem}
+
+\begin{theorem}[Bottom/Charm Ratio]
+\label{thm:mass_mb_mc}
+\lean{FUST.QuarkMassRatios.mb_mc_value}
+\leanok
+\[
+\frac{m_b}{m_c} = C(3,2) = 3
+\]
+Experimental: 3.0 (error 0\%, exact match).
+\end{theorem}
+
+\begin{theorem}[Top/Bottom Ratio]
+\label{thm:mass_mt_mb}
+\lean{FUST.QuarkMassRatios.mt_mb_structural_eq}
+\leanok
+\[
+\frac{m_t}{m_b} = \varphi^7 + \varphi^5 \approx 40.12
+\]
+where $7 = C(4,2) + C(2,2)$ and $5 = C(4,2) - C(2,2)$. Experimental: 40.8 (error 1.7\%).
+\end{theorem}
+
+\section{Lepton Mass Ratios}
+\label{sec:mass_lepton}
+
+\begin{theorem}[Tau/Mu Ratio]
+\label{thm:mass_tau_mu}
+\lean{FUST.MassRatioDerivation.tau_mu_ratio}
+\leanok
+\[
+\frac{m_\tau}{m_\mu} = \varphi^{T(3)+0} = \varphi^6
+\]
+where correction $\delta = 0$ for same-level transition.
+\end{theorem}
+
+\begin{theorem}[Mu/Electron Ratio]
+\label{thm:mass_mu_e}
+\lean{FUST.MassRatioDerivation.mu_e_ratio}
+\leanok
+\[
+\frac{m_\mu}{m_e} = \varphi^{T(4)+1} = \varphi^{11}
+\]
+where correction $\delta = 1$ for $D_4 \to D_3$ descent.
+\end{theorem}
+
+\begin{theorem}[Tau/Electron Ratio]
+\label{thm:mass_tau_e}
+\lean{FUST.MassRatioDerivation.tau_e_ratio}
+\leanok
+\[
+\frac{m_\tau}{m_e} = \varphi^{17}
+\]
+\end{theorem}
+
+\section{Coefficient Corrections}
+\label{sec:mass_corrections}
+
+\begin{theorem}[$D_6$ Correction Factor]
+\label{thm:mass_d6_correction}
+\lean{FUST.MassRatioDerivation.D6_correction_6pt}
+\leanok
+\[
+\kappa_6 = \frac{B}{6A} = \frac{C(2,2)}{6 \times C(3,2)} = \frac{1}{18}
+\]
+\end{theorem}
+
+\begin{theorem}[$D_5$ Correction Factor]
+\label{thm:mass_d5_correction}
+\lean{FUST.MassRatioDerivation.D5_correction_11pt}
+\leanok
+\[
+\eta_{11} = \frac{|a|}{11|b|} = \frac{1}{44}
+\]
+\end{theorem}
+
+\section{Beyond SM Mass Ratios}
+\label{sec:mass_beyond_sm}
+
+\begin{theorem}[Higgs/W Ratio]
+\label{thm:mass_higgs_w}
+\lean{FUST.MassRatioPredictions.higgsWRatio_structure}
+\leanok
+\[
+\frac{m_H}{m_W} = \varphi - \frac{1}{C(5,2)} = \varphi - \frac{1}{10} \approx 1.518
+\]
+Experimental: 1.559 (error 2.6\%).
+\end{theorem}
+
+\begin{theorem}[Dark Matter/Electron Ratio]
+\label{thm:mass_dm_e}
+\lean{FUST.MassRatioPredictions.darkMatterElectronRatio_eq}
+\leanok
+\[
+\frac{m_{DM}}{m_e} = \varphi^{C(5,2)+C(6,2)} = \varphi^{25} \approx 1.68 \times 10^5
+\]
+(WIMP scale $\sim 100$ GeV).
+\end{theorem}
+
+\begin{theorem}[W/Z Ratio]
+\label{thm:mass_w_z}
+\lean{FUST.MassRatioPredictions.WZRatio_from_kernel_structure}
+\leanok
+\[
+\frac{m_W}{m_Z} = \sqrt{\frac{C(5,2)}{C(3,2)+C(5,2)}} = \sqrt{\frac{10}{13}} \approx 0.877
+\]
+Experimental: 0.881 (error 0.5\%).
+\end{theorem}
+
+\section{Neutrino Mass Hierarchy}
+\label{sec:mass_neutrino}
+
+\begin{theorem}[Neutrino Mass Squared Ratio]
+\label{thm:mass_neutrino}
+\lean{FUST.MassRatioPredictions.neutrinoMassSqRatio_eq}
+\leanok
+\[
+\frac{\Delta m^2_{21}}{\Delta m^2_{31}} = \frac{1}{2 \times C(6,2)} = \frac{1}{30}
+\]
+Experimental: $\sim 1/33$ (error $\sim 10\%$).
+\end{theorem}
+
+\section{Baryon Asymmetry}
+\label{sec:mass_baryon}
+
+\begin{theorem}[Baryon Asymmetry Parameter]
+\label{thm:mass_baryon}
+\lean{FUST.MassRatioPredictions.baryonAsymmetry_structure}
+\leanok
+\[
+\eta = \varphi^{-44} \times \sin\left(\frac{2\pi}{5}\right) \approx 6 \times 10^{-10}
+\]
+where $44 = T(4) \times 4 + 4$ and $5$ = active D-levels.
+Experimental: $\sim 6 \times 10^{-10}$ (error $\sim 1\%$).
+\end{theorem}
+
+\section{Summary}
+\label{sec:mass_summary}
+
+\begin{theorem}[All Exponents from Pair Counts]
+\label{thm:mass_all_exponents}
+\lean{FUST.QuarkMassRatios.all_exponents_from_pair_counts}
+\leanok
+All mass ratio exponents are derived from D-structure pair counts:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Ratio & Formula & D-structure origin \\
+\hline
+$m_s/m_d$ & $\varphi^6$ & $T(3) = C(4,2)$ \\
+$m_c/m_s$ & 12 & $C(5,2) + 2$ \\
+$m_b/m_c$ & 3 & $C(3,2)$ \\
+$m_t/m_b$ & $\varphi^7 + \varphi^5$ & $C(4,2) \pm C(2,2)$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{theorem}
+

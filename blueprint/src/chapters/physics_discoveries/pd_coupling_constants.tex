@@ -1,0 +1,124 @@
+% FUST Physics Discoveries - Coupling Constants
+\chapter{Coupling Constants from D-Structure}
+\label{chap:pd_coupling}
+
+\section{D-Level Bounds}
+\label{sec:coupling_d_levels}
+
+\begin{theorem}[D-Level Bounds]
+\label{thm:coupling_d_levels}
+\lean{FUST.CouplingConstants.active_level_count_derivation}
+\leanok
+\begin{itemize}
+\item $D_{\min} = 2$: minimum for pairwise interaction ($C(1,2) = 0$, $C(2,2) = 1$)
+\item $D_{\max} = 6$: from $D_6$ completeness ($\ker(D_6)$ has dimension 3)
+\item Active D-levels: $6 - 2 + 1 = 5$ ($D_2$ through $D_6$)
+\end{itemize}
+\end{theorem}
+
+\section{Strong Coupling Constant}
+\label{sec:coupling_strong}
+
+\begin{theorem}[Strong Coupling]
+\label{thm:coupling_strong}
+\lean{FUST.CouplingConstants.strong_coupling_formula}
+\leanok
+\[
+\alpha_s = \frac{C(3,2)}{C(5,2) + C(6,2)} = \frac{3}{25} = 0.12
+\]
+This uses $D_3$ (weak sector) vs $D_5$+$D_6$ (unified sector).
+\end{theorem}
+
+\section{Cabibbo Angle}
+\label{sec:coupling_cabibbo}
+
+\begin{theorem}[Cabibbo Angle]
+\label{thm:coupling_cabibbo}
+\lean{FUST.CouplingConstants.cabibbo_from_phi}
+\leanok
+\[
+\theta_C = \arctan(1/\varphi^3) \approx 13.28°
+\]
+The exponent 3 = $C(3,2)$ from $D_3$ pair count.
+\end{theorem}
+
+\section{PMNS Mixing Angles}
+\label{sec:coupling_pmns}
+
+\begin{theorem}[Solar Angle]
+\label{thm:coupling_pmns_solar}
+\lean{FUST.CouplingConstants.pmns_solar_from_D3_symmetry}
+\leanok
+\[
+\sin^2\theta_{12} = \frac{1}{3}
+\]
+from $D_3$ three-fold symmetry.
+\end{theorem}
+
+\begin{theorem}[Reactor Angle]
+\label{thm:coupling_pmns_reactor}
+\lean{FUST.CouplingConstants.pmns_reactor_structural}
+\leanok
+\[
+\sin^2\theta_{13} = \frac{C(2,2)}{C(6,2)} = \frac{1}{15}
+\]
+\end{theorem}
+
+\section{CP Phase}
+\label{sec:coupling_cp_phase}
+
+\begin{theorem}[CP Phase]
+\label{thm:coupling_cp_phase}
+\lean{FUST.CouplingConstants.cp_phase_from_active_levels}
+\leanok
+\[
+\delta_{CKM} = \frac{2\pi}{5}
+\]
+where 5 = number of active D-levels ($D_2$ through $D_6$).
+\end{theorem}
+
+\section{Fine Structure Constant}
+\label{sec:coupling_fine_structure}
+
+\begin{theorem}[Fine Structure Constant]
+\label{thm:coupling_fine_structure}
+\lean{FUST.CouplingConstants.fine_structure_from_active_levels}
+\leanok
+\[
+\alpha = \frac{\varphi^{-5}}{4\pi}
+\]
+where 5 = number of active D-levels.
+\end{theorem}
+
+\section{CKM Decay Structure}
+\label{sec:coupling_ckm}
+
+\begin{theorem}[CKM Geometric Decay]
+\label{thm:coupling_ckm_decay}
+\lean{FUST.CouplingConstants.ckm_geometric_decay}
+\leanok
+CKM matrix elements decay as $\varphi^{-3n}$ where $n$ is the D-structure step distance:
+\begin{align}
+|V_{us}| &\propto \varphi^{-3} \\
+|V_{cb}| &\propto \varphi^{-6} \\
+|V_{ub}| &\propto \varphi^{-9}
+\end{align}
+The exponent 3 = $C(3,2)$ comes from $D_3$ pair count.
+\end{theorem}
+
+\section{Summary}
+\label{sec:coupling_summary}
+
+\begin{theorem}[Coupling Constants from Kernel Structure]
+\label{thm:coupling_summary}
+\lean{FUST.CouplingConstants.coupling_constants_from_kernel_structure}
+\leanok
+\begin{enumerate}
+\item Strong coupling: $\alpha_s = C(3,2)/25 = 3/25$
+\item PMNS reactor angle: $\sin^2\theta_{13} = C(2,2)/C(6,2) = 1/15$
+\item Active levels = 5
+\item $D_3$ gauge invariance: $D_3[1] = 0$
+\item $D_5$ extended kernel: $D_5[1] = D_5[x] = 0$
+\end{enumerate}
+\end{theorem}
+

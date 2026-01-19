@@ -362,7 +362,7 @@ theorem fust_gauge_group_exclusion :
 
 To get SU(N≥4), SO(N), Sp(N), G₂, F₄, E₆, E₇, E₈ from FUST, one would need to
 embed additional structure into x (components, multiplicity, internal degrees of freedom).
-But this breaks the "universal x" axiom and becomes equivalent to Standard Model fitting. -/
+But this breaks the "universal x" and becomes equivalent to Standard Model fitting. -/
 theorem structural_no_go_meaning :
     -- Universal x means: no special function form, no special representation assumed
     -- Only polynomial degree structure matters

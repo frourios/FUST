@@ -1,0 +1,151 @@
+% FUST Physics Discoveries - Cosmological Structure
+\chapter{Cosmological Scale Structure}
+\label{chap:pd_cosmology}
+
+\section{Time Asymmetry from FUST}
+\label{sec:cosmo_time_asymmetry}
+
+\begin{theorem}[Time Asymmetry]
+\label{thm:cosmo_time_asymmetry}
+\lean{FUST.Cosmology.fust_time_asymmetry}
+\leanok
+\[
+\varphi > 1, \quad |\psi| < 1
+\]
+$\varphi > 1$ causes expansion toward the future, $|\psi| < 1$ causes past contributions to decay.
+\end{theorem}
+
+\begin{theorem}[Scale Evolution]
+\label{thm:cosmo_scale_evolution}
+\lean{FUST.Cosmology.fust_scale_evolution}
+\leanok
+Time evolution in FUST is $f \mapsto f(\varphi \cdot)$.
+\end{theorem}
+
+\section{Scale Lattice}
+\label{sec:cosmo_scale_lattice}
+
+\begin{theorem}[Scale Lattice Shift]
+\label{thm:cosmo_scale_lattice_shift}
+\lean{FUST.Cosmology.scaleLattice_shift}
+\leanok
+The scale lattice $\{\varphi^n : n \in \mathbb{Z}\}$ satisfies:
+\[
+\varphi^{n+1} = \varphi \cdot \varphi^n
+\]
+\end{theorem}
+
+\begin{theorem}[Inverse Scale from Duality]
+\label{thm:cosmo_inverse_scale}
+\lean{FUST.Cosmology.inverseScale_from_psi}
+\leanok
+\[
+\varphi^{-1} = |\psi|
+\]
+\end{theorem}
+
+\section{Hierarchical Suppression}
+\label{sec:cosmo_hierarchy}
+
+\begin{theorem}[Hierarchy Suppression Factor]
+\label{thm:cosmo_hierarchy}
+\lean{FUST.Cosmology.hierarchy_suppression_factor}
+\leanok
+For $n < m$:
+\[
+\varphi^n < \varphi^m
+\]
+\end{theorem}
+
+\begin{theorem}[Adjacent Level Ratio]
+\label{thm:cosmo_adjacent_ratio}
+\lean{FUST.Cosmology.adjacent_level_ratio}
+\leanok
+\[
+\frac{\varphi^{n+1}}{\varphi^n} = \varphi
+\]
+\end{theorem}
+
+\section{Golden Ratio Identities}
+\label{sec:cosmo_golden_identities}
+
+\begin{theorem}[Golden Partition]
+\label{thm:cosmo_golden_partition}
+\lean{FUST.Cosmology.golden_partition}
+\leanok
+\[
+\varphi^{-1} + \varphi^{-2} = 1
+\]
+\end{theorem}
+
+\begin{theorem}[Sum Identity]
+\label{thm:cosmo_phi_sum}
+\lean{FUST.Cosmology.phi_plus_phi_inv}
+\leanok
+\[
+\varphi + \varphi^{-1} = \sqrt{5}
+\]
+\end{theorem}
+
+\section{Energy Density Scaling}
+\label{sec:cosmo_energy_density}
+
+\begin{theorem}[Spacetime Dimension]
+\label{thm:cosmo_spacetime_dim}
+\lean{FUST.Cosmology.energyDensity_exponent_derivation}
+\leanok
+The spacetime dimension 4 is derived from:
+\begin{enumerate}
+\item $\ker(D_6)$ has dimension 3 (spatial)
+\item Time dimension = 1 (unique expansion $\varphi > 1$)
+\item Total: $3 + 1 = 4$
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Energy Density Scale]
+\label{thm:cosmo_energy_density_scale}
+\lean{FUST.Cosmology.energyDensityScale_eq}
+\leanok
+Energy density at level $k$:
+\[
+\rho_k = \varphi^{-4k}
+\]
+where the exponent 4 is the spacetime dimension.
+\end{theorem}
+
+\begin{theorem}[Energy Density Ratio]
+\label{thm:cosmo_energy_ratio}
+\lean{FUST.Cosmology.energyDensityScale_ratio}
+\leanok
+\[
+\frac{\rho_{k+1}}{\rho_k} = \varphi^{-4}
+\]
+\end{theorem}
+
+\section{Kernel Preservation}
+\label{sec:cosmo_kernel_preserved}
+
+\begin{theorem}[Kernel Preserved under Time Evolution]
+\label{thm:cosmo_kernel_preserved}
+\lean{FUST.Cosmology.kernel_preserved_time}
+\leanok
+\[
+f \in \ker(D_6) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(D_6)
+\]
+\end{theorem}
+
+\section{Summary}
+\label{sec:cosmo_summary}
+
+\begin{theorem}[FUST Scale Structure]
+\label{thm:cosmo_scale_structure}
+\lean{FUST.Cosmology.fust_scale_structure}
+\leanok
+\begin{enumerate}
+\item $\varphi > 1$, $|\psi| < 1$ (time asymmetry)
+\item $\varphi^{n+1} = \varphi \cdot \varphi^n$ (lattice structure)
+\item $n < m \Rightarrow \varphi^n < \varphi^m$ (hierarchy)
+\item $\ker(D_6)$ is invariant under time evolution
+\end{enumerate}
+\end{theorem}
+

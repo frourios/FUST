@@ -6,29 +6,29 @@ namespace FUST
 
 variable {α : Type*} [Field α]
 
-/-- D2: Frourio golden 2-point derivative
+/-- D2: Frourio golden 2-point difference
     D₂ f(x) = (f(φx) - f(ψx)) / ((φ - ψ)x) -/
 noncomputable def D2 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else (f (φ * x) - f (ψ * x)) / ((φ - ψ) * x)
 
-/-- D3: Frourio golden 3-point derivative (points: φ, 1, ψ, coefficients: [1, -2, 1])
+/-- D3: Frourio golden 3-point difference (points: φ, 1, ψ, coefficients: [1, -2, 1])
     D₃ f(x) = (f(φx) - 2f(x) + f(ψx)) / ((φ - ψ)²x) -/
 noncomputable def D3 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else (f (φ * x) - 2 * f x + f (ψ * x)) / ((φ - ψ)^2 * x)
 
-/-- D4: Frourio golden 4-point derivative
+/-- D4: Frourio golden 4-point difference
     D₄ f(x) = (f(φ²x) - φ²f(φx) + ψ²f(ψx) - f(ψ²x)) / ((φ - ψ)³x) -/
 noncomputable def D4 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else
     (f (φ^2 * x) - φ^2 * f (φ * x) + ψ^2 * f (ψ * x) - f (ψ^2 * x)) / ((φ - ψ)^3 * x)
 
-/-- D5: Frourio golden 5-point derivative with coefficients a=-1, b=-4
+/-- D5: Frourio golden 5-point difference with coefficients a=-1, b=-4
     D₅ f(x) = (f(φ²x) + f(φx) - 4f(x) + f(ψx) + f(ψ²x)) / ((φ - ψ)⁴x) -/
 noncomputable def D5 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else
     (f (φ^2 * x) + f (φ * x) - 4 * f x + f (ψ * x) + f (ψ^2 * x)) / ((φ - ψ)^4 * x)
 
-/-- D6: Frourio golden 6-point derivative with coefficients A=3, B=1
+/-- D6: Frourio golden 6-point difference with coefficients A=3, B=1
     D₆ f(x) = (f(φ³x) - 3f(φ²x) + f(φx) - f(ψx) + 3f(ψ²x) - f(ψ³x)) / ((φ - ψ)⁵x) -/
 noncomputable def D6 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else
