@@ -16,8 +16,12 @@ import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
 
+import FUST.Problems.ABC
 import FUST.Problems.BSD
+import FUST.Problems.Collatz
+import FUST.Problems.Goldbach
 import FUST.Problems.Hodge
+import FUST.Problems.Langlands
 import FUST.Problems.NavierStokes
 import FUST.Problems.PvsNP
 import FUST.Problems.RiemannHypothesis
@@ -25,3 +29,4 @@ import FUST.Problems.YangMills
 
 import FUST.Basic
 import FUST.DifferenceOperators
+import FUST.FrourioLogarithm

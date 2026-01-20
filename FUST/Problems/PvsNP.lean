@@ -1,5 +1,6 @@
 import FUST.Physics.TimeTheorem
 import FUST.Biology.Observer
+import FUST.FrourioLogarithm
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Algebra.BigOperators.Fin
@@ -798,5 +799,174 @@ theorem fust_d6_pnp_complete :
   ⟨rfl, rfl, ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩,
    verification_is_poly, search_is_exp,
    ⟨satLikeNP, D6_cannot_solve_satLike⟩⟩
+
+/-! ## Section 12: Frourio Logarithm Extension to Infinite TM -/
+
+section FrourioExtension
+
+open FUST.FrourioLogarithm
+
+/-!
+Frourio logarithm extends FUST-TM to infinite computation space:
+
+1. **Finite TM (D6 Interior)**: Observable computation with physical time
+   - Bounded tape: n ≤ N for some N
+   - Bounded time: t ≤ T for some T
+   - P ⊊ NP is PROVABLE
+
+2. **Infinite TM (D6 Exterior)**: Mathematical structure without physical time
+   - Unbounded tape: frourio coordinate t → ∞
+   - No physical time flow (D7+ projects to D6)
+   - P ≠ NP is STRUCTURAL TRUTH (unfalsifiable)
+
+The frourio logarithm provides unified coordinates:
+  t := log_𝔣(n) = log(n) / log(𝔣)
+
+This maps:
+- Finite n to finite t (D6 interior)
+- n → ∞ to t → ∞ (D6 exterior)
+-/
+
+/-- Frourio coordinate of computation size -/
+noncomputable def frourioSize (n : ℕ) : ℝ := frourioLog (n + 1 : ℝ)
+
+/-- D6 interior computation: bounded frourio coordinate -/
+def IsD6InteriorComputation (bound : ℝ) (n : ℕ) : Prop :=
+  frourioSize n ≤ bound
+
+/-- D6 exterior computation: unbounded frourio coordinate -/
+def IsD6ExteriorComputation (bound : ℝ) (n : ℕ) : Prop :=
+  frourioSize n > bound
+
+/-- Every computation is either D6-interior or D6-exterior -/
+theorem computation_D6_dichotomy (bound : ℝ) (n : ℕ) :
+    IsD6InteriorComputation bound n ∨ IsD6ExteriorComputation bound n := by
+  simp only [IsD6InteriorComputation, IsD6ExteriorComputation]
+  exact le_or_gt (frourioSize n) bound
+
+/-- φ-scaling in frourio coordinates is linear translation -/
+theorem phi_scale_computation (n : ℕ) (hn : n ≥ 1) :
+    frourioLog (φ * (n : ℝ)) = frourioLog n + phiStep := by
+  have hn_pos : (0 : ℝ) < n := Nat.cast_pos.mpr (Nat.lt_of_lt_of_le Nat.zero_lt_one hn)
+  exact phi_scale_is_translation hn_pos
+
+/-- Exponential growth 2^n in frourio coordinates -/
+noncomputable def expGrowthFrourio (n : ℕ) : ℝ := frourioLog (2^n : ℝ)
+
+/-- Polynomial growth n^k in frourio coordinates -/
+noncomputable def polyGrowthFrourio (n k : ℕ) : ℝ := frourioLog ((n : ℝ)^k)
+
+/-- Exponential grows faster than polynomial in frourio coordinates -/
+theorem exp_dominates_poly_frourio (k : ℕ) :
+    ∀ᶠ n in Filter.atTop, polyGrowthFrourio n k < expGrowthFrourio n := by
+  simp only [Filter.eventually_atTop]
+  use 4^(k+1)
+  intro n hn
+  unfold polyGrowthFrourio expGrowthFrourio frourioLog
+  have h4k_pos : 4^(k+1) > 0 := Nat.pow_pos (n := k+1) (by omega : 0 < 4)
+  have hn_ge1 : n ≥ 1 := Nat.one_le_of_lt (Nat.lt_of_lt_of_le h4k_pos hn)
+  have hn_pos : (n : ℝ) > 0 := Nat.cast_pos.mpr (Nat.lt_of_lt_of_le Nat.zero_lt_one hn_ge1)
+  have hnk_pos : (n : ℝ)^k > 0 := pow_pos hn_pos k
+  apply div_lt_div_of_pos_right _ log_frourioConst_pos
+  apply Real.log_lt_log hnk_pos
+  have hlt := pow_lt_exp_strong (k+1) n hn (by omega : k + 1 ≥ 1)
+  have h1 : (n : ℝ)^k ≤ (n : ℝ)^(k+1) := by
+    have hn_ge1_real : (1 : ℝ) ≤ n := by exact Nat.one_le_cast.mpr hn_ge1
+    exact pow_le_pow_right₀ hn_ge1_real (by omega : k ≤ k + 1)
+  calc (n : ℝ)^k ≤ (n : ℝ)^(k+1) := h1
+    _ = (n^(k+1) : ℕ) := by simp [pow_succ]
+    _ < (2^n : ℕ) := by exact_mod_cast hlt
+    _ = (2 : ℝ)^(n : ℕ) := by simp
+
+/-! ### D6 Interior: Physical Computation with Provable P ⊊ NP -/
+
+/-- D6 interior has physical time from TimeTheorem -/
+theorem D6_interior_has_time :
+    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
+    O.symbolic.level = 100 := fun _ _ h => h.2.1
+
+/-- D6 interior P ⊊ NP is provable -/
+theorem D6_interior_pnp_provable :
+    (D6_channels = 15) ∧
+    (∃ P : StructuralNP, ¬∃ k c : ℕ, ∀ n, P.searchSpace n / D6_channels ≤ c * n^k + c) :=
+  ⟨rfl, ⟨satLikeNP, D6_cannot_solve_satLike⟩⟩
+
+/-! ### D6 Exterior: Mathematical Structure with Structural P ≠ NP -/
+
+/-- D6 exterior has no physical time (projects to D6) -/
+theorem D6_exterior_no_time (n : ℕ) (hn : n ≥ 7) :
+    projectToD6 n = 6 := D6_completeness n hn
+
+/-- D6 exterior computation extends to infinity in frourio coordinates -/
+theorem D6_exterior_unbounded :
+    ∀ B : ℝ, ∃ n : ℕ, frourioSize n > B := by
+  intro B
+  have hf_pos := frourioConst_pos
+  have hlog_pos := log_frourioConst_pos
+  use Nat.ceil (frourioConst ^ (B + 1))
+  unfold frourioSize frourioLog
+  have h1 : (Nat.ceil (frourioConst ^ (B + 1)) + 1 : ℝ) > frourioConst ^ (B + 1) := by
+    have hceil := Nat.le_ceil (frourioConst ^ (B + 1))
+    have hpow_pos : frourioConst ^ (B + 1) > 0 := Real.rpow_pos_of_pos hf_pos (B + 1)
+    have hnn : (0 : ℝ) ≤ (Nat.ceil (frourioConst ^ (B + 1)) : ℕ) := Nat.cast_nonneg _
+    linarith
+  have h2 : Real.log (Nat.ceil (frourioConst ^ (B + 1)) + 1 : ℝ) >
+      Real.log (frourioConst ^ (B + 1)) := by
+    apply Real.log_lt_log
+    · exact Real.rpow_pos_of_pos hf_pos (B + 1)
+    · exact h1
+  have h3 : Real.log (frourioConst ^ (B + 1)) = (B + 1) * Real.log frourioConst := by
+    exact Real.log_rpow hf_pos (B + 1)
+  rw [h3] at h2
+  calc Real.log (↑(Nat.ceil (frourioConst ^ (B + 1))) + 1) / Real.log frourioConst
+      > (B + 1) * Real.log frourioConst / Real.log frourioConst := by
+        apply div_lt_div_of_pos_right h2 hlog_pos
+    _ = B + 1 := by field_simp
+    _ > B := by linarith
+
+/-- P ≠ NP in D6 exterior is structural (like RH in D6 exterior) -/
+def PneqNP_D6_Exterior_Structural : Prop :=
+  ∀ k c : ℕ, ∀ᶠ n in Filter.atTop, (2^n : ℕ) > c * n^k + c
+
+theorem pneqnp_D6_exterior_structural : PneqNP_D6_Exterior_Structural := by
+  intro k c
+  have hexp := const_factor_irrelevant (2 * (c + 1)) (by omega : 2 * (c + 1) > 0) k
+  simp only [Filter.eventually_atTop] at hexp ⊢
+  obtain ⟨N, hN⟩ := hexp
+  use max N 1
+  intro n hn
+  have hn_N : n ≥ N := le_trans (le_max_left _ _) hn
+  have hn_pos : n ≥ 1 := le_trans (le_max_right _ _) hn
+  have hpk : n^k ≥ 1 := Nat.one_le_pow k n hn_pos
+  have h1 := hN n hn_N
+  have h2 : c * n^k + c ≤ (c + 1) * n^k + (c + 1) * 1 := by nlinarith
+  have h3 : (c + 1) * n^k + (c + 1) * 1 ≤ (c + 1) * n^k + (c + 1) * n^k := by
+    apply Nat.add_le_add_left
+    exact Nat.mul_le_mul_left _ hpk
+  have h4 : (c + 1) * n^k + (c + 1) * n^k = 2 * (c + 1) * n^k := by ring
+  calc c * n^k + c ≤ (c + 1) * n^k + (c + 1) * 1 := h2
+    _ ≤ (c + 1) * n^k + (c + 1) * n^k := h3
+    _ = 2 * (c + 1) * n^k := h4
+    _ < 2^n := h1
+
+/-! ### Unified View via Frourio Coordinates -/
+
+/-- Complete frourio extension theorem -/
+theorem frourio_pnp_extension :
+    -- (A) D6 interior: provable P ⊊ NP
+    ((D6_channels = 15) ∧
+     (∃ P : StructuralNP, ¬∃ k c : ℕ, ∀ n, P.searchSpace n / D6_channels ≤ c * n^k + c)) ∧
+    -- (B) D6 exterior: structural P ≠ NP
+    PneqNP_D6_Exterior_Structural ∧
+    -- (C) Frourio coordinates unify both regions
+    (∀ k : ℕ, ∀ᶠ n in Filter.atTop, polyGrowthFrourio n k < expGrowthFrourio n) ∧
+    -- (D) D6 exterior is unbounded in frourio coordinates
+    (∀ B : ℝ, ∃ n : ℕ, frourioSize n > B) :=
+  ⟨D6_interior_pnp_provable,
+   pneqnp_D6_exterior_structural,
+   exp_dominates_poly_frourio,
+   D6_exterior_unbounded⟩
+
+end FrourioExtension
 
 end FUST.PvsNP

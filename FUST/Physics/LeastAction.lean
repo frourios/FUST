@@ -1,4 +1,5 @@
 import FUST.DifferenceOperators
+import FUST.FrourioLogarithm
 import Mathlib.Tactic
 
 /-!
@@ -6,6 +7,15 @@ import Mathlib.Tactic
 
 In FUST, "least action" is not a principle (external assumption) but a theorem
 derived from D6 structure: D6 structure → Least Action Theorem → Time Theorem
+
+## Frourio Logarithm Formulation
+
+The action integral in frourio coordinates becomes elegantly simple:
+
+**Real Space**: A[f] = ∫ (D6 f)² dx/x  (Haar measure)
+**Frourio Space**: A[f] = ∫ (D6 f)² dt  (uniform measure)
+
+where t = log_𝔣(x). The Haar measure dx/x becomes uniform dt in frourio space.
 -/
 
 namespace FUST.LeastAction
@@ -500,5 +510,178 @@ theorem fust_least_action_complete :
     (∀ f, IsInKerD6 f ↔ ¬TimeExists f) ∧
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) :=
   ⟨lagrangian_nonneg, lagrangian_ker_zero, ker_iff_not_time, IsInKerD6_implies_D6_zero⟩
+
+/-! ## Part 12: Frourio Logarithm Formulation
+
+The frourio logarithm provides a beautiful reformulation of the action principle:
+
+### Coordinate Transformation
+- Real space: x ∈ ℝ₊
+- Frourio space: t = log_𝔣(x) ∈ ℝ
+
+### Measure Transformation
+- dx/x (Haar measure) → log(𝔣) dt (uniform)
+- φ-scaling: x → φx becomes t → t + phiStep
+
+### Physical Interpretation
+- Lagrangian L = (D6 f)² is the "energy density" in frourio time
+- Action A = ∫ L dt is the total "cost" of deviation from ker(D6)
+- ker(D6) states: A = 0 (timeless, light-like)
+- Massive states: A > 0 (proper time exists)
+-/
+
+section FrourioFormulation
+
+open FUST.FrourioLogarithm
+
+/-- Frourio time coordinate -/
+noncomputable def frourioTime (x : ℝ) : ℝ := frourioLog x
+
+/-- Lagrangian in frourio coordinates: L(t) = (D6 f (𝔣^t))² -/
+noncomputable def FrourioLagrangian (f : ℝ → ℝ) (t : ℝ) : ℝ :=
+  (D6 f (frourioExp t))^2
+
+/-- Frourio Lagrangian is non-negative -/
+theorem frourio_lagrangian_nonneg (f : ℝ → ℝ) (t : ℝ) : FrourioLagrangian f t ≥ 0 :=
+  sq_nonneg _
+
+/-- Frourio Lagrangian zero iff D6 = 0 at that frourio time -/
+theorem frourio_lagrangian_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    FrourioLagrangian f t = 0 ↔ D6 f (frourioExp t) = 0 := sq_eq_zero_iff
+
+/-- Coordinate change: FUSTLagrangian at x = FrourioLagrangian at log_𝔣(x) -/
+theorem lagrangian_coordinate_change (f : ℝ → ℝ) (x : ℝ) (hx : 0 < x) :
+    FUSTLagrangian f x = FrourioLagrangian f (frourioLog x) := by
+  unfold FUSTLagrangian FrourioLagrangian
+  rw [frourioExp_frourioLog hx]
+
+/-- For ker(D6) states, Frourio Lagrangian is identically zero -/
+theorem frourio_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (t : ℝ) :
+    FrourioLagrangian f t = 0 := by
+  rw [frourio_lagrangian_zero_iff]
+  have hexp_pos : frourioExp t > 0 := by
+    unfold frourioExp
+    exact Real.rpow_pos_of_pos frourioConst_pos t
+  have hexp_ne : frourioExp t ≠ 0 := ne_of_gt hexp_pos
+  exact IsInKerD6_implies_D6_zero f hf (frourioExp t) hexp_ne
+
+/-- Haar measure transformation: dx/x = log(𝔣) dt -/
+theorem haar_to_frourio_measure (a b : ℝ) :
+    Real.log b - Real.log a = Real.log frourioConst * (frourioLog b - frourioLog a) := by
+  unfold frourioLog
+  have hlog_ne : Real.log frourioConst ≠ 0 := log_frourioConst_ne_zero
+  field_simp [hlog_ne]
+
+/-- φ-scaling in frourio coordinates is time translation -/
+theorem phi_scale_is_time_shift (x : ℝ) (hx : 0 < x) :
+    frourioTime (φ * x) = frourioTime x + phiStep := by
+  unfold frourioTime
+  exact phi_scale_is_translation hx
+
+/-- Time evolution preserves Lagrangian structure -/
+theorem time_evolution_lagrangian (f : ℝ → ℝ) (t : ℝ) :
+    FrourioLagrangian (fun s => f (φ * s)) t =
+    (D6 (fun s => f (φ * s)) (frourioExp t))^2 := rfl
+
+/-! ### Action as Path Integral in Frourio Time
+
+The action integral ∫ L dx/x becomes ∫ L dt in frourio coordinates.
+
+Key insight: In frourio space, the φ-scaling symmetry becomes translation symmetry,
+and the action integral is translation-invariant.
+-/
+
+/-- Action density at frourio time t -/
+noncomputable def actionDensity (f : ℝ → ℝ) (t : ℝ) : ℝ := FrourioLagrangian f t
+
+/-- Action density is non-negative -/
+theorem action_density_nonneg (f : ℝ → ℝ) (t : ℝ) : actionDensity f t ≥ 0 :=
+  frourio_lagrangian_nonneg f t
+
+/-- ker(D6) states have zero action density everywhere -/
+theorem ker_zero_action_density (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+    ∀ t, actionDensity f t = 0 := frourio_lagrangian_ker_zero f hf
+
+/-- Positive action density implies TimeExists -/
+theorem positive_action_density_implies_time (f : ℝ → ℝ) (t : ℝ)
+    (hpos : actionDensity f t > 0) : TimeExists f := by
+  intro hker
+  have hzero := ker_zero_action_density f hker t
+  linarith
+
+/-! ### The Beautiful Reformulation
+
+In frourio coordinates, the least action theorem becomes:
+
+1. **Time = Frourio coordinate**: t = log_𝔣(x)
+2. **Lagrangian** L(t) = (D6 f(𝔣^t))² is uniform in t
+3. **Action** A = ∫ L(t) dt measures deviation from timelessness
+4. **Timeless states**: L(t) = 0 for all t ⟺ f ∈ ker(D6)
+5. **Massive states**: ∃t, L(t) > 0 ⟺ proper time exists
+-/
+
+/-- Complete frourio formulation of least action -/
+theorem frourio_least_action_formulation :
+    -- (A) Coordinate change preserves Lagrangian
+    (∀ f x, 0 < x → FUSTLagrangian f x = FrourioLagrangian f (frourioLog x)) ∧
+    -- (B) ker(D6) states have zero action density
+    (∀ f, IsInKerD6 f → ∀ t, FrourioLagrangian f t = 0) ∧
+    -- (C) Positive action density implies time exists
+    (∀ f t, FrourioLagrangian f t > 0 → TimeExists f) ∧
+    -- (D) φ-scaling becomes time translation
+    (∀ x, 0 < x → frourioTime (φ * x) = frourioTime x + phiStep) :=
+  ⟨lagrangian_coordinate_change,
+   frourio_lagrangian_ker_zero,
+   fun f t h => positive_action_density_implies_time f t h,
+   phi_scale_is_time_shift⟩
+
+/-- The essence: Time is the logarithmic deviation from scale invariance -/
+theorem time_is_log_deviation :
+    -- (A) Frourio time is logarithmic
+    (∀ x, 0 < x → frourioTime x = frourioLog x) ∧
+    -- (B) Time step is uniform in frourio space
+    (∀ x, 0 < x → frourioTime (φ * x) - frourioTime x = phiStep) ∧
+    -- (C) Timeless states have zero Lagrangian
+    (∀ f, IsInKerD6 f → ∀ t, FrourioLagrangian f t = 0) :=
+  ⟨fun _ _ => rfl,
+   fun x hx => by rw [phi_scale_is_time_shift x hx]; ring,
+   frourio_lagrangian_ker_zero⟩
+
+/-- TimeExists is equivalent to having nonzero D6 somewhere -/
+def TimeExistsAtPoint (f : ℝ → ℝ) : Prop := ∃ x : ℝ, x ≠ 0 ∧ D6 f x ≠ 0
+
+/-- TimeExistsAtPoint implies TimeExists -/
+theorem time_exists_at_point_implies_time (f : ℝ → ℝ) (h : TimeExistsAtPoint f) :
+    TimeExists f := by
+  obtain ⟨x, hx_ne, hD6_ne⟩ := h
+  exact D6_nonzero_implies_time f x hx_ne hD6_ne
+
+/-- TimeExistsAtPoint implies positive Lagrangian -/
+theorem time_exists_at_point_positive_lagrangian (f : ℝ → ℝ) (h : TimeExistsAtPoint f) :
+    ∃ x : ℝ, x ≠ 0 ∧ FUSTLagrangian f x > 0 := by
+  obtain ⟨x, hx_ne, hD6_ne⟩ := h
+  exact ⟨x, hx_ne, D6_nonzero_implies_positive_lagrangian f x hD6_ne⟩
+
+/-- Positive Lagrangian implies TimeExistsAtPoint -/
+theorem positive_lagrangian_time_exists_at_point (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0)
+    (hpos : FUSTLagrangian f x > 0) : TimeExistsAtPoint f := by
+  use x, hx
+  intro hD6_eq
+  simp only [FUSTLagrangian, hD6_eq, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+    zero_pow, gt_iff_lt, lt_self_iff_false] at hpos
+
+/-- Complete equivalence in frourio formulation -/
+theorem frourio_time_equivalence :
+    -- (A) TimeExistsAtPoint implies TimeExists
+    (∀ f, TimeExistsAtPoint f → TimeExists f) ∧
+    -- (B) TimeExistsAtPoint implies positive Lagrangian
+    (∀ f, TimeExistsAtPoint f → ∃ x, x ≠ 0 ∧ FUSTLagrangian f x > 0) ∧
+    -- (C) Positive Lagrangian implies TimeExistsAtPoint
+    (∀ f x, x ≠ 0 → FUSTLagrangian f x > 0 → TimeExistsAtPoint f) :=
+  ⟨time_exists_at_point_implies_time,
+   time_exists_at_point_positive_lagrangian,
+   positive_lagrangian_time_exists_at_point⟩
+
+end FrourioFormulation
 
 end FUST.LeastAction

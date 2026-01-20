@@ -191,9 +191,10 @@ jobs:
             pip install --upgrade pip==25.2 requests wheel
             pip install pygraphviz --global-option=build_ext --global-option="-L/usr/lib/graphviz/" --global-option="-R/usr/lib/graphviz/"
             pip install leanblueprint
-            mkdir -p blueprint/print/chapters/physics_discoveries
+            mkdir -p blueprint/print/chapters/frourio_logarithm
             mkdir -p blueprint/print/chapters/least_action
             mkdir -p blueprint/print/chapters/navier_stokes
+            mkdir -p blueprint/print/chapters/physics_discoveries
             leanblueprint pdf
             cp blueprint/print/print.pdf home_page/dist/blueprint.pdf
             leanblueprint web

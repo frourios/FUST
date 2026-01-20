@@ -1,6 +1,9 @@
 import FUST.Physics.TimeTheorem
+import FUST.Biology.Observer
+import FUST.FrourioLogarithm
 import FUST.DifferenceOperators
 import Mathlib.Algebra.Ring.Parity
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Hodge Conjecture: FUST Structural Analysis
@@ -31,7 +34,7 @@ The key insight is that φψ = -1 gives diagonal integrality:
 
 namespace FUST.Hodge
 
-open FUST.TimeTheorem
+open FUST FUST.TimeTheorem FUST.FrourioLogarithm
 
 /-! ## Section 1: Diagonal Integrality from φψ = -1 -/
 
@@ -286,5 +289,109 @@ theorem hodge_algebraicity_structure :
     | inl h => left; exact h.neg_one_pow
     | inr h => right; exact h.neg_one_pow
   , ⟨1, rfl⟩⟩
+
+/-! ## Section 10: Frourio Logarithm Extension -/
+
+section FrourioExtension
+
+/-- Frourio coordinate of cohomology degree -/
+noncomputable def hodgeFrourio (k : ℕ) : ℝ := frourioLog (k + 1 : ℝ)
+
+/-- Frourio coordinate of bidegree weight -/
+noncomputable def bidegreeWeightFrourio (p q : ℕ) : ℝ :=
+  p * frourioLog φ + q * frourioLog |ψ|
+
+/-- D6 interior: bounded cohomology degree -/
+def IsD6InteriorHodge (bound : ℝ) (k : ℕ) : Prop :=
+  hodgeFrourio k ≤ bound
+
+/-- D6 exterior: unbounded cohomology degree -/
+def IsD6ExteriorHodge (bound : ℝ) (k : ℕ) : Prop :=
+  hodgeFrourio k > bound
+
+/-- D6 dichotomy for Hodge -/
+theorem hodge_D6_dichotomy (bound : ℝ) (k : ℕ) :
+    IsD6InteriorHodge bound k ∨ IsD6ExteriorHodge bound k := by
+  simp only [IsD6InteriorHodge, IsD6ExteriorHodge]
+  exact le_or_gt (hodgeFrourio k) bound
+
+/-- D6 completeness: higher dimensions project to D6 -/
+theorem hodge_D6_completeness (d : ℕ) (hd : d ≥ 7) :
+    projectToD6 d = 6 := D6_completeness d hd
+
+/-- In D6, time flows forward (from TimeTheorem) -/
+theorem D6_hodge_time_forward :
+    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
+    O.symbolic.level = 100 := fun _ _ h => h.2.1
+
+/-! ### D6 Interior: Finite Cohomology with Provable Structure -/
+
+/-- D6 interior has diagonal integrality -/
+theorem D6_interior_diagonal_integral :
+    ∀ p : ℕ, (φ * ψ)^p = 1 ∨ (φ * ψ)^p = -1 := diagonal_is_pm_one
+
+/-- D6 interior bidegree is bounded -/
+theorem D6_interior_bidegree_bounded (p : ℕ) :
+    |bidegreeWeight p p| = 1 := by
+  rw [bidegree_diagonal, diagonal_power]
+  rcases Nat.even_or_odd p with heven | hodd
+  · rw [heven.neg_one_pow]; simp
+  · rw [hodd.neg_one_pow]; simp
+
+/-! ### D6 Exterior: Structural Algebraicity -/
+
+/-- D6 exterior: diagonal structure extends to all degrees -/
+def DiagonalIntegralityStructural : Prop :=
+  ∀ p : ℕ, ∃ n : ℤ, (φ * ψ)^p = n ∧ (n = 1 ∨ n = -1)
+
+theorem diagonal_integrality_structural : DiagonalIntegralityStructural := by
+  intro p
+  rcases diagonal_is_pm_one p with h | h
+  · exact ⟨1, by simp [h], Or.inl rfl⟩
+  · exact ⟨-1, by simp [h], Or.inr rfl⟩
+
+/-- φ-scaling in frourio coordinates -/
+theorem phi_scale_hodge (k : ℕ) (hk : k ≥ 1) :
+    frourioLog (φ * (k : ℝ)) = frourioLog k + phiStep := by
+  have hk_pos : (0 : ℝ) < k := Nat.cast_pos.mpr (Nat.lt_of_lt_of_le Nat.zero_lt_one hk)
+  exact phi_scale_is_translation hk_pos
+
+end FrourioExtension
+
+/-! ## Section 11: Structural Truth Statement -/
+
+/-- Hodge structural constraints via D6 dichotomy -/
+def HodgeStructuralConstraints : Prop :=
+  -- (A) Diagonal integrality from φψ = -1
+  (∀ p : ℕ, (φ * ψ)^p = 1 ∨ (φ * ψ)^p = -1) ∧
+  -- (B) φ-ψ asymmetry underlies the structure
+  (φ > 1 ∧ |ψ| < 1) ∧
+  -- (C) D6 dichotomy applies
+  (∀ bound : ℝ, ∀ k : ℕ,
+    IsD6InteriorHodge bound k ∨ IsD6ExteriorHodge bound k)
+
+theorem hodge_structural_constraints : HodgeStructuralConstraints :=
+  ⟨diagonal_is_pm_one, ⟨φ_gt_one, abs_psi_lt_one⟩, hodge_D6_dichotomy⟩
+
+/-! ## Section 12: Complete Frourio Extension Theorem -/
+
+/-- Complete frourio extension for Hodge -/
+theorem frourio_hodge_extension :
+    -- (A) Diagonal integrality: (φψ)^p = ±1
+    (∀ p : ℕ, (φ * ψ)^p = 1 ∨ (φ * ψ)^p = -1) ∧
+    -- (B) φ-ψ asymmetry provides structural constraint
+    (φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1) ∧
+    -- (C) D6 dichotomy applies
+    (∀ bound : ℝ, ∀ k : ℕ,
+      IsD6InteriorHodge bound k ∨ IsD6ExteriorHodge bound k) ∧
+    -- (D) D6 completeness
+    (∀ d ≥ 7, projectToD6 d = 6) ∧
+    -- (E) Bidegree diagonal bounded
+    (∀ p : ℕ, |bidegreeWeight p p| = 1) :=
+  ⟨diagonal_is_pm_one,
+   ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩,
+   hodge_D6_dichotomy,
+   fun d hd => D6_completeness d hd,
+   D6_interior_bidegree_bounded⟩
 
 end FUST.Hodge

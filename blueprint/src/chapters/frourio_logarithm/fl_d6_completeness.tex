@@ -1,0 +1,75 @@
+\section{\texorpdfstring{D$_6$}{D6} Physical Completeness}
+\label{sec:d6-completeness}
+
+\subsection{The \texorpdfstring{D$_6$}{D6} Kernel}
+
+In FUST, D$_6$ is the ``completion'' level where observable physics is fully determined.
+
+\begin{definition}[D$_6$ Kernel Dimension]
+\label{def:d6-kernel-dim}
+\lean{FUST.FrourioLogarithm.D6_kernel_dim}
+\leanok
+\[
+\dim(\ker(D_6)) = 3
+\]
+corresponding to the three spatial dimensions.
+\end{definition}
+
+\begin{definition}[Time Dimension]
+\label{def:time-dim}
+\lean{FUST.FrourioLogarithm.time_dim}
+\leanok
+\[
+\dim_{\mathrm{time}} = 1
+\]
+from the unique expansion factor $\varphi > 1$.
+\end{definition}
+
+\begin{theorem}[Spacetime Dimension]
+\label{thm:spacetime-dim}
+\lean{FUST.FrourioLogarithm.spacetime_dim}
+\leanok
+\[
+\dim(\ker(D_6)) + \dim_{\mathrm{time}} = 3 + 1 = 4
+\]
+\end{theorem}
+
+\subsection{Higher-Level Projection}
+
+\begin{definition}[Projection to D$_6$]
+\label{def:project-d6}
+\lean{FUST.FrourioLogarithm.projectToD6}
+\leanok
+\[
+\mathrm{projectToD6}(n) := \begin{cases} n & \text{if } n \le 6 \\ 6 & \text{if } n > 6 \end{cases}
+\]
+\end{definition}
+
+\begin{theorem}[D$_6$ Completeness]
+\label{thm:d6-completeness}
+\lean{FUST.FrourioLogarithm.D6_completeness}
+\leanok
+For $n \ge 7$:
+\[
+\mathrm{projectToD6}(n) = 6
+\]
+\end{theorem}
+
+\begin{theorem}[Physical Completeness]
+\label{thm:physical-completeness}
+\lean{FUST.FrourioLogarithm.physical_completeness}
+\leanok
+For all $n \ge 7$:
+\[
+\mathrm{projectToD6}(n) = \mathrm{projectToD6}(6)
+\]
+Higher-level operators do not introduce new observable structures.
+\end{theorem}
+
+\subsection{Physical Interpretation}
+
+\begin{enumerate}
+    \item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ represents the light cone (null structure)
+    \item D$_7$, D$_8$, $\ldots$ project down to D$_6$ for physical observables
+    \item The ``6'' in D$_6$ connects to the 6-point difference operator structure
+\end{enumerate}

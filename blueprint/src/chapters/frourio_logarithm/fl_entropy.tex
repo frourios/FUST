@@ -1,0 +1,142 @@
+\section{Frourio Entropy and Information}
+\label{sec:frourio-entropy}
+
+\subsection{Information in Frourio Units}
+
+The Frourio logarithm provides a natural framework for entropy and information theory.
+
+\begin{definition}[Frourio Information]
+\label{def:frourio-info}
+\lean{FUST.FrourioLogarithm.frourioInfo}
+\leanok
+For probability $p \in (0, 1]$:
+\[
+I_{\mathfrak{f}}(p) := -\log_{\mathfrak{f}}(p)
+\]
+\end{definition}
+
+\begin{theorem}[Information Positivity]
+\label{thm:info-positive}
+\lean{FUST.FrourioLogarithm.frourioInfo_pos}
+\leanok
+For $0 < p < 1$:
+\[
+I_{\mathfrak{f}}(p) > 0
+\]
+\end{theorem}
+
+\begin{theorem}[Certainty Has Zero Information]
+\label{thm:info-one}
+\lean{FUST.FrourioLogarithm.frourioInfo_one}
+\leanok
+\[
+I_{\mathfrak{f}}(1) = 0
+\]
+\end{theorem}
+
+\subsection{Frourio Entropy}
+
+\begin{definition}[Uniform Frourio Entropy]
+\label{def:frourio-entropy-uniform}
+\lean{FUST.FrourioLogarithm.frourioEntropyUniform}
+\leanok
+For a uniform distribution over $n$ states:
+\[
+H_{\mathfrak{f}}(n) := \log_{\mathfrak{f}}(n)
+\]
+\end{definition}
+
+\begin{theorem}[Entropy Positivity]
+\label{thm:entropy-positive}
+\lean{FUST.FrourioLogarithm.frourioEntropyUniform_pos}
+\leanok
+For $n \ge 2$:
+\[
+H_{\mathfrak{f}}(n) > 0
+\]
+\end{theorem}
+
+\begin{theorem}[Entropy Additivity]
+\label{thm:entropy-additive}
+\lean{FUST.FrourioLogarithm.frourio_entropy_additive}
+\leanok
+For $n, m \ge 1$:
+\[
+H_{\mathfrak{f}}(n \cdot m) = H_{\mathfrak{f}}(n) + H_{\mathfrak{f}}(m)
+\]
+\end{theorem}
+
+\subsection{Conversion to Bits}
+
+\begin{definition}[Bit to Frourio Conversion]
+\label{def:bit-frourio}
+\lean{FUST.FrourioLogarithm.bitToFrourio}
+\leanok
+\[
+\mathrm{bitToFrourio} := \log_{\mathfrak{f}}(2)
+\]
+\end{definition}
+
+\begin{theorem}[Shannon to Frourio Conversion]
+\label{thm:shannon-frourio}
+\lean{FUST.FrourioLogarithm.shannon_to_frourio}
+\leanok
+For $p > 0$:
+\[
+I_{\mathfrak{f}}(p) = \left( -\frac{\log p}{\log 2} \right) \cdot \mathrm{bitToFrourio}
+\]
+Shannon information (in bits) converts to Frourio units by multiplication.
+\end{theorem}
+
+\subsection{Information-Time Duality}
+
+\begin{theorem}[Information-Time Duality]
+\label{thm:info-time-duality}
+\lean{FUST.FrourioLogarithm.information_time_duality}
+\leanok
+\[
+\mathrm{phiStep} = I_{\mathfrak{f}}\left(\frac{1}{\varphi}\right)
+\]
+One time step equals the information content of probability $1/\varphi$.
+\end{theorem}
+
+\begin{theorem}[Time Increases Entropy]
+\label{thm:time-increases-entropy}
+\lean{FUST.FrourioLogarithm.time_increases_entropy}
+\leanok
+For $x > 0$:
+\[
+I_{\mathfrak{f}}\left(\frac{1}{\varphi \cdot x}\right) = I_{\mathfrak{f}}\left(\frac{1}{x}\right) + \mathrm{phiStep}
+\]
+Time evolution increases information by one step per $\varphi$-scaling.
+\end{theorem}
+
+\begin{theorem}[Entropy from Time Steps]
+\label{thm:entropy-time-steps}
+\lean{FUST.FrourioLogarithm.entropy_from_time_steps}
+\leanok
+\[
+n \cdot \mathrm{phiStep} = \log_{\mathfrak{f}}(\varphi^n)
+\]
+\end{theorem}
+
+\subsection{Physical Meaning}
+
+\begin{enumerate}
+    \item \textbf{Entropy increase} corresponds to \textbf{time flow} in Frourio space
+    \item \textbf{One bit} = $\log_{\mathfrak{f}}(2)$ Frourio units
+    \item \textbf{Maximum entropy} for $n$ states = $\log_{\mathfrak{f}}(n)$
+    \item \textbf{Time step} $\mathrm{phiStep} = \log_{\mathfrak{f}}(\varphi)$ = fundamental entropy unit
+\end{enumerate}
+
+\begin{theorem}[Frourio Entropy Properties]
+\label{thm:frourio-entropy-properties}
+\lean{FUST.FrourioLogarithm.frourio_entropy_properties}
+\leanok
+\begin{enumerate}
+    \item[(A)] Information is positive for $p \in (0, 1)$
+    \item[(B)] Certainty has zero information
+    \item[(C)] Time step = fundamental entropy unit
+    \item[(D)] Entropy is additive for independent systems
+\end{enumerate}
+\end{theorem}

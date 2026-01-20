@@ -1,0 +1,127 @@
+\section{Derivation of Integers and Primes}
+\label{sec:integers-primes}
+
+\subsection{Integers as Orbit Labels}
+
+In FUST, integers are NOT primitive objects. They emerge as discrete labels of $\varphi$-scale orbits in Frourio logarithm space.
+
+\begin{definition}[$\varphi$-Orbit]
+\label{def:phi-orbit}
+\lean{FUST.FrourioLogarithm.phiOrbit}
+\leanok
+For $x_0 > 0$, the $\varphi$-orbit is:
+\[
+\mathrm{Orbit}_\varphi(x_0) := \{ y \mid \exists k \in \mathbb{Z},\, y = x_0 \cdot \varphi^k \}
+\]
+\end{definition}
+
+\begin{definition}[Orbit Label]
+\label{def:orbit-label}
+\lean{FUST.FrourioLogarithm.OrbitLabel}
+\leanok
+An orbit label consists of:
+\begin{itemize}
+    \item A base point $x_0 > 0$
+    \item An integer index $k \in \mathbb{Z}$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Orbit Label Additivity]
+\label{thm:orbit-label-additive}
+\lean{FUST.FrourioLogarithm.orbit_label_additive}
+\leanok
+The Frourio coordinate of an orbit label is:
+\[
+t(x_0, k) = \log_{\mathfrak{f}}(x_0) + k \cdot \mathrm{phiStep}
+\]
+This is additive in the index $k$.
+\end{theorem}
+
+The key insight: integers $k$ index positions along the $\varphi$-orbit, forming a $\mathbb{Z}$-torsor in Frourio space.
+
+\subsection{Primes in FUST}
+
+Primes are defined NOT by divisibility, but by structural irreducibility under three criteria:
+
+\begin{definition}[Fibonacci Convolution Irreducibility]
+\label{def:fib-conv-irred}
+\lean{FUST.FrourioLogarithm.FibConvIrreducible}
+\leanok
+$n \ge 2$ is Fibonacci-convolution irreducible if:
+\[
+\forall a, b \ge 1: F(a) \cdot F(b) = F(n) \Rightarrow a = 1 \lor b = 1
+\]
+where $F$ is the FUST structure constant.
+\end{definition}
+
+\begin{definition}[D$_6$ Irreducibility]
+\label{def:d6-irred}
+\lean{FUST.FrourioLogarithm.D6Irreducible}
+\leanok
+$n \ge 2$ is D$_6$-irreducible if it cannot be decomposed in the D$_6$ kernel:
+\[
+\nexists (c_0, c_1, c_2) \in \mathbb{Z}^3 \setminus \{(0,0,0)\}: n = c_0 + c_1 \varphi + c_2 \varphi^2
+\]
+with all $c_i \neq 0$.
+\end{definition}
+
+\begin{definition}[$\varphi/\psi$ Resonance]
+\label{def:phi-psi-resonance}
+\lean{FUST.FrourioLogarithm.PhiPsiResonant}
+\leanok
+$n$ resonates if it is fixed under $\varphi \leftrightarrow \psi$ exchange:
+\[
+\frac{\varphi^n - \psi^n}{\sqrt{5}} = \frac{\psi^n - \varphi^n}{\sqrt{5}}
+\]
+\end{definition}
+
+\begin{theorem}[No $\varphi/\psi$ Resonance]
+\label{thm:no-resonance}
+\lean{FUST.FrourioLogarithm.no_phi_psi_resonance}
+\leanok
+For $n \ge 1$: $n$ does NOT resonate.
+\end{theorem}
+
+\begin{proof}
+Since $\varphi > \psi$ (in fact, $\varphi^n > \psi^n$ for all $n \ge 1$), we have $\varphi^n - \psi^n \neq 0$, so the resonance condition cannot hold.
+\end{proof}
+
+\begin{definition}[FUST Prime]
+\label{def:fust-prime}
+\lean{FUST.FrourioLogarithm.FUSTPrime}
+\leanok
+$n$ is a FUST prime if it satisfies all three irreducibility criteria:
+\begin{enumerate}
+    \item Fibonacci-convolution irreducible
+    \item D$_6$-irreducible
+    \item Not $\varphi/\psi$-resonant
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Standard Primes are Non-Resonant]
+\label{thm:nat-prime-non-resonant}
+\lean{FUST.FrourioLogarithm.nat_prime_not_resonant}
+\leanok
+If $p$ is a standard prime, then $p$ is not $\varphi/\psi$-resonant.
+\end{theorem}
+
+\subsection{Summary}
+
+\begin{theorem}[Frourio Logarithm Properties]
+\label{thm:frourio-log-properties}
+\lean{FUST.FrourioLogarithm.frourio_log_properties}
+\leanok
+\begin{enumerate}
+    \item $\forall x > 0$: $\mathrm{frourioExp}(\mathrm{frourioLog}(x)) = x$
+    \item $\forall t$: $\mathrm{frourioLog}(\mathrm{frourioExp}(t)) = t$
+    \item $\forall x > 0$: $\mathrm{frourioLog}(\varphi \cdot x) = \mathrm{frourioLog}(x) + \mathrm{phiStep}$
+\end{enumerate}
+\end{theorem}
+
+The Frourio logarithm provides:
+\begin{enumerate}
+    \item \textbf{Linearization} of $\varphi$-scale generator
+    \item \textbf{D$_6$ completeness} bounding observable physics
+    \item \textbf{Integers} as orbit labels, not primitives
+    \item \textbf{Primes} as structurally irreducible, not divisibility-defined
+\end{enumerate}
