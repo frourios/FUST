@@ -1,0 +1,88 @@
+% Empirical Distribution and FUST Probability
+
+\chapter{Empirical Distribution}
+\label{chap:distribution}
+
+\section{Empirical Distribution Function}
+
+\begin{definition}[Count Below Threshold]
+\label{def:count_below}
+\lean{FUST.Probability.countBelow}
+\leanok
+\[
+\#\{k \in [-N, N] \mid A_f(k) \leq t\}
+\]
+\end{definition}
+
+\begin{definition}[Empirical Distribution at Finite $N$]
+\label{def:empirical_dist}
+\lean{FUST.Probability.empiricalDistN}
+\leanok
+\[
+\rho_f^{(N)}(t) := \frac{\#\{k \in [-N, N] \mid A_f(k) \leq t\}}{2N + 1}
+\]
+\end{definition}
+
+\begin{theorem}[Distribution Bounds]
+\label{thm:dist_bounds}
+\lean{FUST.Probability.empiricalDistN_bounds}
+\leanok
+\[
+0 \leq \rho_f^{(N)}(t) \leq 1
+\]
+\end{theorem}
+
+\begin{theorem}[Distribution at Infinity]
+\label{thm:dist_infinity}
+\lean{FUST.Probability.empiricalDistN_at_infinity}
+\leanok
+If all observations are bounded by $M < t$, then:
+\[
+\rho_f^{(N)}(t) = 1
+\]
+\end{theorem}
+
+\section{FUST Probability}
+
+For set $E \subseteq \mathbb{R}_{\geq 0}$:
+
+\begin{definition}[FUST Probability at Finite $N$]
+\label{def:fust_prob}
+\lean{FUST.Probability.fustProbN}
+\leanok
+\[
+P_f^{(N)}(E) := \frac{\#\{k \in [-N, N] \mid A_f(k) \in E\}}{2N + 1}
+\]
+\end{definition}
+
+\begin{theorem}[Normalization]
+\label{thm:normalization}
+\lean{FUST.Probability.fustProb_normalization}
+\leanok
+\[
+P_f^{(N)}(\mathbb{R}_{\geq 0}) = 1
+\]
+\end{theorem}
+
+\begin{proof}
+Since all observations are non-negative ($A_f(k) \geq 0$), every observation
+is in $\mathbb{R}_{\geq 0}$.
+\end{proof}
+
+\begin{theorem}[Probability Non-negative]
+\label{thm:prob_nonneg}
+\lean{FUST.Probability.fustProbN_nonneg}
+\leanok
+\[
+P_f^{(N)}(E) \geq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Probability Bounded]
+\label{thm:prob_bounded}
+\lean{FUST.Probability.fustProbN_le_one}
+\leanok
+\[
+P_f^{(N)}(E) \leq 1
+\]
+\end{theorem}

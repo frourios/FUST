@@ -1,0 +1,85 @@
+% φ-Scale Iteration and Observation Sequences
+
+\chapter{Observation Sequences}
+\label{chap:observation}
+
+\section{\texorpdfstring{$\varphi$-Scale Transformation}{phi-Scale Transformation}}
+
+The $\varphi$-scale transformation:
+\[
+x \mapsto \varphi^k \cdot x \quad (k \in \mathbb{Z})
+\]
+generates observation sequences that correspond to ``trials'' in probability theory.
+
+\begin{definition}[Observation at Step $k$]
+\label{def:observation}
+\lean{FUST.Probability.observationAt}
+\leanok
+For state $f$ and base point $x_0$:
+\[
+A_f(k) := |D_6[f](\varphi^k \cdot x_0)|
+\]
+\end{definition}
+
+\begin{theorem}[Observations Non-negative]
+\label{thm:obs_nonneg}
+\lean{FUST.Probability.observationAt_nonneg}
+\leanok
+\[
+A_f(k) \geq 0 \quad \forall k \in \mathbb{Z}
+\]
+\end{theorem}
+
+\section{\texorpdfstring{$\varphi$-Invariant Measure}{phi-Invariant Measure}}
+
+The $\varphi$-scale invariant measure is uniquely determined:
+\[
+d\mu = \frac{dx}{x}
+\]
+This is the Haar measure on the multiplicative group, derived from
+$\varphi$-scale structure (not assumed externally).
+
+\begin{theorem}[Shift Invariance]
+\label{thm:shift_invariance}
+\lean{FUST.Probability.observation_shift}
+\leanok
+\[
+A_f(k; \varphi \cdot x_0) = A_f(k+1; x_0)
+\]
+\end{theorem}
+
+\section{Discrete Action}
+
+\begin{definition}[Discrete Action]
+\label{def:discrete_action}
+\lean{FUST.Probability.discreteAction}
+\leanok
+\[
+\mathcal{A}_N[f] := \sum_{k=-N}^{N} A_f(k)^2 \cdot \log\varphi
+\]
+\end{definition}
+
+\begin{definition}[Haar Weight]
+\label{def:haar_weight}
+\lean{FUST.Probability.haarWeight}
+\leanok
+\[
+w := \log\varphi
+\]
+\end{definition}
+
+\begin{theorem}[Action Non-negative]
+\label{thm:action_nonneg}
+\lean{FUST.Probability.discreteAction_nonneg}
+\leanok
+\[
+\mathcal{A}_N[f] \geq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Kernel States Have Zero Action]
+\label{thm:action_zero_ker}
+\lean{FUST.Probability.action_zero_for_ker}
+\leanok
+If $f \in \ker(D_6)$, then $\mathcal{A}_N[f] = 0$ for all $N$.
+\end{theorem}

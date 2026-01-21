@@ -195,6 +195,7 @@ jobs:
             mkdir -p blueprint/print/chapters/least_action
             mkdir -p blueprint/print/chapters/navier_stokes
             mkdir -p blueprint/print/chapters/physics_discoveries
+            mkdir -p blueprint/print/chapters/probability
             leanblueprint pdf
             cp blueprint/print/print.pdf home_page/dist/blueprint.pdf
             leanblueprint web

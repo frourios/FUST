@@ -1,0 +1,153 @@
+% Golden Partition and Cosmological Density Parameters
+
+\chapter{Golden Partition and Cosmology}
+\label{chap:golden_partition}
+
+This chapter presents the golden partition theorem and its application
+to cosmological density parameters.
+
+\section{The Golden Partition}
+
+\begin{theorem}[Golden Partition]
+\label{thm:golden_partition}
+\lean{FUST.PMNSMixingAngles.golden_partition}
+\leanok
+\[
+\varphi^{-1} + \varphi^{-2} = 1
+\]
+\end{theorem}
+
+\begin{proof}
+Using $\varphi^2 = \varphi + 1$:
+\begin{align*}
+\varphi^{-1} + \varphi^{-2} &= \frac{1}{\varphi} + \frac{1}{\varphi^2} \\
+&= \frac{1}{\varphi} + \frac{1}{\varphi + 1} \\
+&= \frac{\varphi + 1 + \varphi}{\varphi(\varphi + 1)} \\
+&= \frac{2\varphi + 1}{\varphi^2 + \varphi} \\
+&= \frac{2\varphi + 1}{2\varphi + 1} = 1
+\end{align*}
+\end{proof}
+
+Numerical values:
+\begin{itemize}
+\item $\varphi^{-1} \approx 0.618$
+\item $\varphi^{-2} \approx 0.382$
+\end{itemize}
+
+\section{Cosmological Density Parameters}
+
+The flatness condition $\Omega_\Lambda + \Omega_m = 1$ suggests a connection
+to the golden partition.
+
+\subsection{Golden Partition Hypothesis}
+
+\begin{definition}[Dark Energy Density]
+\label{def:omega_lambda}
+\lean{FUST.PMNSMixingAngles.Omega_Lambda_golden}
+\leanok
+\[
+\Omega_\Lambda^{(\text{golden})} := \varphi^{-1} \approx 0.618
+\]
+\end{definition}
+
+\begin{definition}[Matter Density]
+\label{def:omega_m}
+\lean{FUST.PMNSMixingAngles.Omega_m_golden}
+\leanok
+\[
+\Omega_m^{(\text{golden})} := \varphi^{-2} \approx 0.382
+\]
+\end{definition}
+
+\begin{theorem}[Density Sum]
+\label{thm:density_sum}
+\lean{FUST.PMNSMixingAngles.density_sum_one}
+\leanok
+\[
+\Omega_\Lambda^{(\text{golden})} + \Omega_m^{(\text{golden})} = 1
+\]
+\end{theorem}
+
+\begin{theorem}[Dark Energy Dominance]
+\label{thm:dark_energy_dominates}
+\lean{FUST.PMNSMixingAngles.dark_energy_dominates}
+\leanok
+\[
+\Omega_\Lambda^{(\text{golden})} > \Omega_m^{(\text{golden})}
+\]
+\end{theorem}
+
+\begin{proof}
+Since $\varphi > 1$, we have $-1 > -2$ in the exponent ordering, so
+$\varphi^{-1} > \varphi^{-2}$.
+\end{proof}
+
+\subsection{\texorpdfstring{Refined Prediction with $\varphi^{-5}$ Correction}{Refined Prediction with phi-5 Correction}}
+
+The experimental values (Planck 2018) are:
+\begin{itemize}
+\item $\Omega_\Lambda = 0.685$
+\item $\Omega_m = 0.315$
+\end{itemize}
+
+The golden values differ from experiment. We propose a refined prediction
+with $\varphi^{-5}$ correction:
+
+\begin{definition}[Refined Dark Energy Density]
+\label{def:omega_lambda_refined}
+\lean{FUST.PMNSMixingAngles.Omega_Lambda_refined}
+\leanok
+\[
+\Omega_\Lambda^{(\text{refined})} := \varphi^{-1} + \frac{\varphi^{-5}}{2}
+\]
+\end{definition}
+
+\begin{definition}[Refined Matter Density]
+\label{def:omega_m_refined}
+\lean{FUST.PMNSMixingAngles.Omega_m_refined}
+\leanok
+\[
+\Omega_m^{(\text{refined})} := \varphi^{-2} - \frac{\varphi^{-5}}{2}
+\]
+\end{definition}
+
+\begin{theorem}[Refined Sum Conservation]
+\label{thm:refined_sum}
+\lean{FUST.PMNSMixingAngles.refined_density_sum_one}
+\leanok
+\[
+\Omega_\Lambda^{(\text{refined})} + \Omega_m^{(\text{refined})} = 1
+\]
+\end{theorem}
+
+Numerical values of refined prediction:
+\begin{itemize}
+\item $\Omega_\Lambda^{(\text{refined})} \approx 0.618 + 0.045 = 0.663$
+\item $\Omega_m^{(\text{refined})} \approx 0.382 - 0.045 = 0.337$
+\end{itemize}
+
+\section{Summary}
+
+\begin{theorem}[Cosmological Predictions]
+\label{thm:cosmological_complete}
+\lean{FUST.PMNSMixingAngles.cosmological_predictions_complete}
+\leanok
+\begin{enumerate}
+\item[(A)] Golden partition: $\varphi^{-1} + \varphi^{-2} = 1$
+\item[(B)] Dark energy dominates: $\Omega_\Lambda > \Omega_m$
+\item[(C)] Refined predictions preserve sum: $\Omega_\Lambda^{(\text{refined})} + \Omega_m^{(\text{refined})} = 1$
+\end{enumerate}
+\end{theorem}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+Parameter & Golden & Refined & Experiment \\
+\hline
+$\Omega_\Lambda$ & $\varphi^{-1} \approx 0.618$ & $0.663$ & $0.685$ \\
+$\Omega_m$ & $\varphi^{-2} \approx 0.382$ & $0.337$ & $0.315$ \\
+\hline
+\end{tabular}
+\caption{Cosmological density parameter predictions}
+\end{table}

@@ -1,0 +1,151 @@
+% PMNS Mixing Angles from FUST Probability Theory
+
+\chapter{PMNS Mixing Angles}
+\label{chap:pmns_mixing}
+
+This chapter presents improved predictions for PMNS neutrino mixing angles
+derived from FUST probability structure.
+
+\section{Overview of Predictions}
+
+The key results are:
+\begin{enumerate}
+\item $\sin^2\theta_{13} = \varphi^{-8}$ (reactor angle, error: 2.4\%)
+\item $\sin^2\theta_{23} = \frac{1}{2} + \frac{\varphi^{-5}}{2}$ (atmospheric angle, error: 0.02\%)
+\item $\sin^2\theta_{12} = \frac{1}{3}$ (solar angle, from $D_3$ symmetry)
+\end{enumerate}
+
+\section{\texorpdfstring{Reactor Angle $\theta_{13}$}{Reactor Angle theta13}}
+
+\subsection{Old vs New Prediction}
+
+The previous prediction was:
+\[
+\sin^2\theta_{13} = \frac{C(2,2)}{C(6,2)} = \frac{1}{15} \approx 0.0667
+\]
+with experimental value $0.0218$, giving error $206\%$.
+
+The new prediction from probability theory:
+\[
+\sin^2\theta_{13} = \varphi^{-8} \approx 0.0213
+\]
+with error only $2.4\%$.
+
+\subsection{Probability-Theoretic Derivation}
+
+\begin{definition}[Reactor Angle]
+\label{def:sin2_theta13}
+\lean{FUST.PMNSMixingAngles.sin2_theta13_new}
+\leanok
+\[
+\sin^2\theta_{13} := \varphi^{-8}
+\]
+\end{definition}
+
+The exponent $8 = D_{\max} + D_{\min} = 6 + 2$ represents the transition
+probability from $\ker(D_2)$ to $\ker(D_6)$.
+
+\begin{theorem}[Valid Probability Range]
+\label{thm:theta13_bounds}
+\lean{FUST.PMNSMixingAngles.sin2_theta13_pos, FUST.PMNSMixingAngles.sin2_theta13_lt_one}
+\leanok
+$0 < \sin^2\theta_{13} < 1$
+\end{theorem}
+
+\begin{proof}
+Since $\varphi > 1$, we have $\varphi^{-8} > 0$ and
+$\varphi^{-8} < \varphi^0 = 1$.
+\end{proof}
+
+\begin{theorem}[Improvement over Old Prediction]
+\label{thm:theta13_improvement}
+\lean{FUST.PMNSMixingAngles.new_theta13_smaller_than_old}
+\leanok
+$\varphi^{-8} < \frac{1}{15}$
+\end{theorem}
+
+\begin{proof}
+We show $\varphi > \frac{3}{2}$ (since $\sqrt{5} > 2$), hence
+$\varphi^8 > \left(\frac{3}{2}\right)^8 = \frac{6561}{256} > 15$.
+Therefore $\varphi^{-8} < \frac{1}{15}$.
+\end{proof}
+
+\section{\texorpdfstring{Atmospheric Angle $\theta_{23}$}{Atmospheric Angle theta23}}
+
+\subsection{\texorpdfstring{Maximal Mixing with $\varphi$ Correction}{Maximal Mixing with phi Correction}}
+
+Experimental value: $\sin^2\theta_{23} \approx 0.545$ (normal ordering).
+
+\begin{definition}[Atmospheric Angle]
+\label{def:sin2_theta23}
+\lean{FUST.PMNSMixingAngles.sin2_theta23}
+\leanok
+\[
+\sin^2\theta_{23} := \frac{1}{2} + \frac{\varphi^{-5}}{2}
+\]
+\end{definition}
+
+The base $\frac{1}{2}$ represents maximal mixing, and the correction
+$\varphi^{-5}/2$ comes from the 5 active $D$-levels ($D_2$ through $D_6$).
+
+Numerical value: $\frac{1}{2} + \frac{\varphi^{-5}}{2} \approx 0.5451$
+
+Error: only $0.02\%$ --- remarkable agreement!
+
+\begin{theorem}[Valid Range]
+\label{thm:theta23_bounds}
+\lean{FUST.PMNSMixingAngles.sin2_theta23_bounds}
+\leanok
+$0 < \sin^2\theta_{23} < 1$
+\end{theorem}
+
+\begin{theorem}[Deviation from Maximal]
+\label{thm:theta23_deviation}
+\lean{FUST.PMNSMixingAngles.sin2_theta23_gt_half}
+\leanok
+$\sin^2\theta_{23} > \frac{1}{2}$
+\end{theorem}
+
+\section{\texorpdfstring{Solar Angle $\theta_{12}$}{Solar Angle theta12}}
+
+\begin{definition}[Solar Angle]
+\label{def:sin2_theta12}
+\lean{FUST.PMNSMixingAngles.sin2_theta12}
+\leanok
+\[
+\sin^2\theta_{12} := \frac{1}{3}
+\]
+\end{definition}
+
+This follows from $D_3$ triplet symmetry: $\ker(D_3)$ acts on 3 generations
+equally.
+
+Experimental value: $0.307$, error: $8.6\%$.
+
+\section{Summary of PMNS Predictions}
+
+\begin{theorem}[Complete PMNS Predictions]
+\label{thm:pmns_complete}
+\lean{FUST.PMNSMixingAngles.pmns_predictions_complete}
+\leanok
+\begin{enumerate}
+\item[(A)] $\sin^2\theta_{13} = \varphi^{-8}$
+\item[(B)] $\sin^2\theta_{23} = \frac{1}{2} + \frac{\varphi^{-5}}{2}$
+\item[(C)] $\sin^2\theta_{12} = \frac{1}{3}$
+\item[(D)] All angles are in valid range $(0, 1)$
+\end{enumerate}
+\end{theorem}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+Angle & Prediction & Experiment & Error \\
+\hline
+$\sin^2\theta_{13}$ & $\varphi^{-8} \approx 0.0213$ & $0.0218$ & $2.4\%$ \\
+$\sin^2\theta_{23}$ & $\frac{1}{2} + \frac{\varphi^{-5}}{2} \approx 0.5451$ & $0.545$ & $0.02\%$ \\
+$\sin^2\theta_{12}$ & $\frac{1}{3} \approx 0.333$ & $0.307$ & $8.6\%$ \\
+\hline
+\end{tabular}
+\caption{PMNS mixing angle predictions vs experiment}
+\end{table}

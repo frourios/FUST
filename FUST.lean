@@ -3,14 +3,20 @@ import FUST.Biology.Life
 import FUST.Biology.Observer
 import FUST.Biology.Sleep
 
+import FUST.Physics.BlackHole
 import FUST.Physics.Cosmology
 import FUST.Physics.CouplingConstants
 import FUST.Physics.GaugeGroups
+import FUST.Physics.GaugeSectors
 import FUST.Physics.GravitationalCoupling
+import FUST.Physics.Hamiltonian
 import FUST.Physics.LeastAction
 import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
+import FUST.Physics.MassRatioPredictions
 import FUST.Physics.ParticleSpectrum
+import FUST.Physics.PMNSMixingAngles
+import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation

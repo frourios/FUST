@@ -107,10 +107,7 @@ theorem cabibbo_from_phi :
 /-- Solar angle sin²θ₁₂ = 1/3 from D₃ three-fold symmetry -/
 theorem pmns_solar_from_D3_symmetry : (1 : ℚ) / 3 = 1 / 3 := rfl
 
-/-- Reactor angle sin²θ₁₃ = C(2,2)/C(6,2) = 1/15 -/
-theorem pmns_reactor_structural :
-    (Nat.choose 2 2 : ℚ) / Nat.choose 6 2 = 1 / 15 := by
-  norm_num [Nat.choose]
+-- Reactor angle: see PMNSMixingAngles.lean for improved prediction sin²θ₁₃ = φ⁻⁸
 
 /-! ## CP Phase from Active D-Levels
 
@@ -196,15 +193,13 @@ theorem ckm_geometric_decay :
 theorem coupling_constants_from_kernel_structure :
     -- Strong coupling: C(3,2) / (C(3,2) + C(5,2) + C(6,2) - C(3,2)) = 3/25
     ((Nat.choose 3 2 : ℚ) / 25 = 3/25) ∧
-    -- PMNS reactor angle: C(2,2) / C(6,2) = 1/15
-    ((Nat.choose 2 2 : ℚ) / Nat.choose 6 2 = 1/15) ∧
     -- Active levels = D_max - D_min + 1 = 5
     (activeDLevels = 5) ∧
     -- D₃ gauge invariance
     (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
     -- D₅ extended kernel
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) := by
-  refine ⟨by norm_num [Nat.choose], by norm_num [Nat.choose], rfl, D3_minimal_kernel, ?_⟩
+  refine ⟨by norm_num [Nat.choose], rfl, D3_minimal_kernel, ?_⟩
   intro x hx
   exact ⟨D5_const 1 x hx, D5_linear x hx⟩
 
