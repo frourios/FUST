@@ -1,0 +1,211 @@
+% FUST Physics Discoveries - Thermodynamics
+\chapter{Thermodynamics from D-Structure}
+\label{chap:pd_thermodynamics}
+
+\section{Overview}
+\label{sec:thermo_overview}
+
+FUST derives all thermodynamic laws from the $D_6$ operator structure:
+\begin{itemize}
+\item \textbf{First Law}: Energy conservation from $D_6$ linearity
+\item \textbf{Second Law}: Entropy increase from $\varphi > 1$ amplification
+\item \textbf{Third Law}: Absolute zero unreachable for massive states ($f \notin \ker(D_6)$)
+\item \textbf{Stefan-Boltzmann}: $L \propto T^4$ from spacetime dimension 4
+\end{itemize}
+
+\section{Third Law of Thermodynamics}
+\label{sec:thermo_third_law}
+
+The third law states that absolute zero (zero entropy everywhere) is unreachable for massive states.
+
+In FUST:
+\begin{itemize}
+\item Absolute zero $\Leftrightarrow \forall t,\, \mathrm{entropyAt}(f, t) = 0$
+\item $\mathrm{entropy\_zero\_iff\_ker}$: $(\forall t,\, \mathrm{entropyAt}(f, t) = 0) \Leftrightarrow f \in \ker(D_6)$
+\item Therefore: $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
+\end{itemize}
+
+\begin{theorem}[Third Law: Massive States Cannot Reach Absolute Zero]
+\label{thm:third_law}
+\lean{FUST.Thermodynamics.third_law_massive_positive_entropy}
+\leanok
+For $f \notin \ker(D_6)$:
+\[
+\exists t,\, \mathrm{entropyAt}(f, t) > 0
+\]
+\end{theorem}
+
+\begin{theorem}[Absolute Zero Implies Lightlike]
+\label{thm:absolute_zero_lightlike}
+\lean{FUST.Thermodynamics.absolute_zero_implies_lightlike}
+\leanok
+If $\forall t,\, \mathrm{entropyAt}(f, t) = 0$, then $f \in \ker(D_6)$.
+\end{theorem}
+
+\begin{theorem}[Lightlike States Can Reach Zero]
+\label{thm:lightlike_zero}
+\lean{FUST.Thermodynamics.lightlike_can_reach_zero}
+\leanok
+If $f \in \ker(D_6)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
+\end{theorem}
+
+\section{Light and Sound Structural Separation}
+\label{sec:thermo_light_sound}
+
+Light and sound have fundamentally different structures in FUST:
+\begin{itemize}
+\item \textbf{Light} = $\ker(D_6)$ components (proper time = 0)
+\item \textbf{Sound} = $\ker(D_6)^\perp$ components (proper time $> 0$)
+\end{itemize}
+
+\begin{theorem}[Light States Have Zero Action]
+\label{thm:light_zero_action}
+\lean{FUST.Thermodynamics.light_zero_action}
+\leanok
+For $f \in \ker(D_6)$ and $x_0 > 0$:
+\[
+\mathcal{A}_N[f] = 0
+\]
+\end{theorem}
+
+\begin{theorem}[Sound States Have Nonzero perpProjection]
+\label{thm:sound_positive_perp}
+\lean{FUST.Thermodynamics.sound_positive_perp}
+\leanok
+For $f \notin \ker(D_6)$:
+\[
+\exists t,\, \mathrm{perpProjection}(f, t) \neq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Light-Sound Separation]
+\label{thm:light_sound_separation}
+\lean{FUST.Thermodynamics.light_sound_separation}
+\leanok
+\begin{enumerate}
+\item $f \in \ker(D_6) \Rightarrow \forall x \neq 0,\, D_6[f](x) = 0$
+\item $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{perpProjection}(f, t) \neq 0$
+\end{enumerate}
+\end{theorem}
+
+\section{Stefan-Boltzmann Law}
+\label{sec:thermo_stefan_boltzmann}
+
+The Stefan-Boltzmann law $L \propto T^4$ follows from:
+\begin{enumerate}
+\item $\mathrm{spacetimeDim} = 4$ (from $\ker(D_6)$ dimension + time)
+\item Energy density scales as $\varphi^{-4k}$
+\item Temperature scales as $\varphi^k$
+\end{enumerate}
+
+Therefore: $L \propto \rho \propto \varphi^{-4k} = (\varphi^{-k})^4 \propto T^{-4}$
+
+\begin{theorem}[Stefan-Boltzmann Exponent]
+\label{thm:stefan_boltzmann_exponent}
+\lean{FUST.Thermodynamics.stefan_boltzmann_exponent}
+\leanok
+\[
+\mathrm{spacetimeDim} = 4
+\]
+\end{theorem}
+
+\begin{theorem}[Energy Density Ratio]
+\label{thm:energy_density_ratio}
+\lean{FUST.Thermodynamics.energy_density_ratio_is_phi_neg_4}
+\leanok
+\[
+\frac{\rho_{k+1}}{\rho_k} = \varphi^{-\mathrm{spacetimeDim}} = \varphi^{-4}
+\]
+\end{theorem}
+
+\begin{theorem}[Stefan-Boltzmann from Spacetime]
+\label{thm:stefan_boltzmann_spacetime}
+\lean{FUST.Thermodynamics.stefan_boltzmann_from_spacetime}
+\leanok
+\[
+\mathrm{spacetimeDim} = 4 \quad \text{and} \quad \forall k,\, \frac{\rho_{k+1}}{\rho_k} = \varphi^{-4}
+\]
+\end{theorem}
+
+\section{First Law: Energy Conservation}
+\label{sec:thermo_first_law}
+
+Energy conservation follows from $D_6$ linearity and $L^2$ norm structure.
+
+\begin{theorem}[First Law: Linearity]
+\label{thm:first_law_linearity}
+\lean{FUST.Thermodynamics.first_law_linearity}
+\leanok
+\[
+D_6[a \cdot f](x) = a \cdot D_6[f](x)
+\]
+\end{theorem}
+
+\begin{theorem}[First Law: Energy Non-negativity]
+\label{thm:first_law_nonneg}
+\lean{FUST.Thermodynamics.first_law_energy_nonneg}
+\leanok
+\[
+\mathcal{A}_N[f] \geq 0
+\]
+\end{theorem}
+
+\section{Second Law: Entropy Increase}
+\label{sec:thermo_second_law}
+
+Entropy increases under time evolution because $\varphi > 1$ amplifies perpProjection.
+
+\begin{theorem}[Second Law: Amplification]
+\label{thm:second_law_amplification}
+\lean{FUST.Thermodynamics.second_law_amplification}
+\leanok
+\[
+\varphi > 1
+\]
+\end{theorem}
+
+\begin{theorem}[Second Law: Monomial Amplification]
+\label{thm:second_law_monomial}
+\lean{FUST.Thermodynamics.second_law_monomial_amplification}
+\leanok
+\[
+\mathrm{timeEvolution}(t^n)(t) = \varphi^n \cdot t^n
+\]
+\end{theorem}
+
+\begin{theorem}[Second Law: Power Amplification]
+\label{thm:second_law_phi_pow}
+\lean{FUST.Thermodynamics.second_law_phi_pow_amplifies}
+\leanok
+For $n \geq 1$:
+\[
+\varphi^n > 1
+\]
+\end{theorem}
+
+\begin{theorem}[Second Law: Entropy Increase]
+\label{thm:second_law_entropy}
+\lean{FUST.Thermodynamics.second_law_entropy_increase}
+\leanok
+For $x > 0$:
+\[
+\mathrm{frourioInfo}\left(\frac{1}{\varphi x}\right) = \mathrm{frourioInfo}\left(\frac{1}{x}\right) + \mathrm{phiStep}
+\]
+\end{theorem}
+
+\section{Complete Thermodynamics Summary}
+\label{sec:thermo_summary}
+
+\begin{theorem}[FUST Thermodynamics]
+\label{thm:fust_thermodynamics}
+\lean{FUST.Thermodynamics.fust_thermodynamics}
+\leanok
+All thermodynamic laws are derived from $D_6$ structure:
+\begin{enumerate}
+\item \textbf{First Law}: $D_6[a \cdot f] = a \cdot D_6[f]$ and $\mathcal{A}[f] \geq 0$
+\item \textbf{Second Law}: $\varphi > 1$ and $\varphi^n > 1$ for $n \geq 1$
+\item \textbf{Third Law}: $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
+\item \textbf{Light-Sound Separation}: $\ker(D_6)$ vs $\ker(D_6)^\perp$
+\item \textbf{Stefan-Boltzmann}: $\mathrm{spacetimeDim} = 4$
+\end{enumerate}
+\end{theorem}

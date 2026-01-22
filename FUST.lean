@@ -18,6 +18,7 @@ import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
+import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
