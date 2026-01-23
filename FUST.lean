@@ -10,6 +10,7 @@ import FUST.Physics.GaugeGroups
 import FUST.Physics.GaugeSectors
 import FUST.Physics.GravitationalCoupling
 import FUST.Physics.Hamiltonian
+import FUST.Physics.HilbertPolya
 import FUST.Physics.LeastAction
 import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
