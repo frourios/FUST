@@ -18,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for forbidden keywords (axiom/sorry/admit)
+      - name: Check for forbidden keywords
         run: |
-          if grep -r -n -E '\b(axiom|sorry|admit)\b' FUST/**/*.lean; then
-            echo "Error: Found forbidden keywords (axiom, sorry, admit) in Lean files"
+          if grep -r -n -E '\b(axiom|sorry|admit|unsafe)\b' FUST/**/*.lean; then
+            echo "Error: Found forbidden keywords (axiom, sorry, admit, unsafe) in Lean files"
             echo "All proofs must be complete without shortcuts"
             exit 1
           fi

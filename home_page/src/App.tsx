@@ -232,7 +232,7 @@ function App() {
         <DarkModeToggle />
         <div className="header-content">
           <h1 className="project-name">FUST</h1>
-          <h2 className="project-tagline">Frourio Universe Structure Theory</h2>
+          <h2 className="project-tagline">Frourio Universal Structure Theorem</h2>
           <p className="project-subtitle">
             Solving the mysteries of the universe with Lean4 formal proofs
           </p>

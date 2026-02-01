@@ -6,7 +6,7 @@ function NotFound() {
       </a>
 
       <header className="page-header">
-        <h1 className="project-name">FUST - Frourio Universe Structure Theory</h1>
+        <h1 className="project-name">FUST - Frourio Universal Structure Theorem</h1>
         <h2 className="project-tagline">Solving the mysteries of the universe with Lean4 formal proofs</h2>
       </header>
 

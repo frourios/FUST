@@ -1,6 +1,4 @@
-# FUST: Frourio Universe Structure Theory
-
-Solving all mysteries of the universe with Lean
+# FUST: Frourio Universal Structure Theorem
 
 Website: https://fust.frourio.com
 
