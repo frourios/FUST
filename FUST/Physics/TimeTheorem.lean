@@ -562,3 +562,31 @@ theorem planck_scale_complete :
   ⟨structuralMinTime_eq, structuralMinLength_eq, rfl⟩
 
 end FUST.TimeTheorem
+
+namespace FUST.Dim
+
+/-- Structural minimum time with derived dimension -/
+noncomputable def structuralMinTime_dim : ScaleQ dimTime :=
+  ⟨FUST.TimeTheorem.structuralMinTime⟩
+
+/-- Structural minimum length with derived dimension -/
+noncomputable def structuralMinLength_dim : ScaleQ dimLength :=
+  ⟨FUST.TimeTheorem.structuralMinLength⟩
+
+theorem structuralMinTime_dim_val : structuralMinTime_dim.val = 25 / 12 :=
+  FUST.TimeTheorem.structuralMinTime_eq
+
+theorem structuralMinLength_dim_val : structuralMinLength_dim.val = 25 / 12 :=
+  FUST.TimeTheorem.structuralMinLength_eq
+
+/-- l = c · t: light speed c=1 inlined as ScaleQ dimLightSpeed -/
+theorem length_eq_speed_times_time :
+    structuralMinLength_dim.val = ((⟨1⟩ : ScaleQ dimLightSpeed) * structuralMinTime_dim).val := by
+  simp only [ScaleQ.mul_val, structuralMinTime_dim, structuralMinLength_dim,
+    FUST.TimeTheorem.structuralMinLength, one_mul]
+
+/-- Time is positive -/
+theorem structuralMinTime_positive : structuralMinTime_dim.val > 0 :=
+  FUST.TimeTheorem.structuralMinTime_positive
+
+end FUST.Dim

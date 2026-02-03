@@ -264,3 +264,28 @@ theorem fust_hamiltonian_mass_gap :
 end CompleteMassGap
 
 end FUST.Hamiltonian
+
+namespace FUST.Dim
+
+/-- Hamiltonian contribution with derived Lagrangian dimension -/
+noncomputable def hamiltonianContribution_dim (f : ℝ → ℝ) (n : ℤ) :
+    ScaleQ dimLagrangian :=
+  ⟨FUST.Hamiltonian.hamiltonianContribution f n⟩
+
+theorem hamiltonianContribution_dim_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    (hamiltonianContribution_dim f n).val ≥ 0 :=
+  FUST.Hamiltonian.hamiltonianContribution_nonneg f n
+
+/-- ker(D₆) functions have zero Hamiltonian contribution -/
+theorem hamiltonianContribution_ker_zero (f : ℝ → ℝ)
+    (hf : FUST.LeastAction.IsInKerD6 f) (n : ℤ) :
+    (hamiltonianContribution_dim f n).val = 0 :=
+  FUST.Hamiltonian.hamiltonianContribution_ker_zero f hf n
+
+/-- Spectral gap as count quantity -/
+def spectralGap_count : CountQ := ⟨FUST.Hamiltonian.spectralGapValue⟩
+
+theorem spectralGap_count_val : spectralGap_count.val = 6 := by
+  simp only [spectralGap_count, FUST.Hamiltonian.spectralGapValue_eq]
+
+end FUST.Dim

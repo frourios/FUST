@@ -129,3 +129,10 @@ a = -1, \quad b = -4
 \end{enumerate}
 \end{theorem}
 
+\section{Dimensional Type}
+\label{sec:weinberg_dim}
+
+$\sin^2\theta_W = 3/13$ is a \textbf{RatioQuantity}: a ratio of pair counts $C(3,2)/(C(3,2)+C(5,2))$, inherently dimensionless.
+
+Lean: \texttt{FUST\_dim.CouplingConstants.weinbergAngle} with type \texttt{RatioQ}. The value theorem \texttt{weinbergAngle\_val} is proven by \texttt{simp only [weinbergAngle, Nat.choose]; norm\_num}, verifying the structural derivation.
+

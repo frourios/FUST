@@ -15,10 +15,14 @@ import FUST.Physics.LeastAction
 import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
+import FUST.Physics.MassRatios
+import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Probability
+import FUST.Physics.QuantumStructure
 import FUST.Physics.QuarkMassRatios
+import FUST.Physics.ScaleStructure
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation
@@ -37,4 +41,5 @@ import FUST.Problems.YangMills
 
 import FUST.Basic
 import FUST.DifferenceOperators
+import FUST.DimensionalAnalysis
 import FUST.FrourioLogarithm

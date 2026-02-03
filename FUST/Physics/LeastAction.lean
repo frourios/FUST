@@ -685,3 +685,26 @@ theorem frourio_time_equivalence :
 end FrourioFormulation
 
 end FUST.LeastAction
+
+namespace FUST.Dim
+
+/-- Lagrangian density L(f,x) = (D₆ f x)² with derived dimension -/
+noncomputable def lagrangian_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ dimLagrangian :=
+  ⟨FUST.LeastAction.FUSTLagrangian f x⟩
+
+theorem lagrangian_dim_val (f : ℝ → ℝ) (x : ℝ) :
+    (lagrangian_dim f x).val = (D6 f x) ^ 2 := rfl
+
+theorem lagrangian_dim_nonneg (f : ℝ → ℝ) (x : ℝ) :
+    (lagrangian_dim f x).val ≥ 0 :=
+  sq_nonneg _
+
+/-- ker(D₆) functions have zero Lagrangian -/
+theorem lagrangian_ker_zero (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f)
+    (x : ℝ) (hx : x ≠ 0) :
+    (lagrangian_dim f x).val = 0 := by
+  simp only [lagrangian_dim, FUST.LeastAction.FUSTLagrangian]
+  rw [FUST.LeastAction.IsInKerD6_implies_D6_zero f hf x hx]
+  simp
+
+end FUST.Dim

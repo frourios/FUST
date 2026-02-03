@@ -238,3 +238,26 @@ No arbitrary selection is involved in deriving the mass gap:
 \end{itemize}
 \end{theorem}
 
+\section{Dimensional Types of Physical Quantities}
+\label{sec:mat_physics_dim}
+
+The dimensional type system classifies the quantities in this chapter:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Type & Dimension / Value \\
+\hline
+$L_{\mathrm{FUST}} = \|D_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
+$\Delta = \dim\ker(D_5) \times \dim\ker(D_6)$ & CountQuantity & $6$ \\
+$\Delta^2$ (energy threshold) & CountQuantity & $36$ \\
+Spacetime dimension & CountQuantity & $4$ \\
+$f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
+\hline
+\end{tabular}
+\end{center}
+
+The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} is a \textbf{numerical comparison} in the FUST coordinate system, not an equality of dimensioned quantities. $\Delta = 6$ (CountQuantity from kernel tensor product) is structurally distinct from $\varphi^6 \approx 17.94$ (ScaleQuantity, mass ratio).
+
+Lean: \texttt{FUST\_dim.Combined.massGap} (CountQ), \texttt{FUST\_dim.Combined.spectralGap\_count}.
+

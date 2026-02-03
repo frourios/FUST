@@ -1,3 +1,4 @@
+import FUST.Physics.GaugeSectors
 import FUST.Physics.WaveEquation
 import Mathlib.Data.Nat.Choose.Basic
 
@@ -387,3 +388,69 @@ theorem all_constants_derived :
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.ParticleSpectrum
+
+namespace FUST.Dim
+
+/-! ## Particle Counts as CountQ -/
+
+def maxGenerations : CountQ := ⟨FUST.ParticleSpectrum.maxGenerations⟩
+def leptonCount : CountQ := ⟨FUST.ParticleSpectrum.leptonCount⟩
+def quarkCount : CountQ := ⟨FUST.ParticleSpectrum.quarkCount⟩
+def smFermionCount : CountQ := ⟨FUST.ParticleSpectrum.SM_fermion_count⟩
+def gluonCount : CountQ := ⟨FUST.ParticleSpectrum.gluonCount⟩
+def weakBosonCount : CountQ := ⟨FUST.ParticleSpectrum.weakBosonCount⟩
+def smBosonCount : CountQ := ⟨FUST.ParticleSpectrum.SM_boson_count⟩
+def smParticleCount : CountQ := ⟨FUST.ParticleSpectrum.SM_particle_count⟩
+
+theorem maxGenerations_val : maxGenerations.val = 3 := rfl
+theorem leptonCount_val : leptonCount.val = 6 := rfl
+theorem quarkCount_val : quarkCount.val = 18 := rfl
+theorem smFermionCount_val : smFermionCount.val = 24 := rfl
+theorem gluonCount_val : gluonCount.val = 8 := rfl
+theorem weakBosonCount_val : weakBosonCount.val = 3 := rfl
+theorem smBosonCount_val : smBosonCount.val = 13 := rfl
+theorem smParticleCount_val : smParticleCount.val = 37 := rfl
+
+/-! ## Charge Constraints as CountQ -/
+
+def allowedChargeCount : CountQ := ⟨FUST.ParticleSpectrum.allowedChargeCount⟩
+def allowedSpinCount : CountQ := ⟨FUST.ParticleSpectrum.allowedSpinCount⟩
+
+theorem allowedChargeCount_val : allowedChargeCount.val = 7 := rfl
+theorem allowedSpinCount_val : allowedSpinCount.val = 4 := rfl
+
+/-! ## Gauge Sector Counts as CountQ -/
+
+def su2Dim : CountQ := ⟨FUST.su2Dim⟩
+def su3Dim : CountQ := ⟨FUST.su3Dim⟩
+def massGapValue : CountQ := ⟨FUST.massGapValue⟩
+
+theorem su2Dim_val : su2Dim.val = 3 := rfl
+theorem su3Dim_val : su3Dim.val = 8 := rfl
+theorem massGapValue_val : massGapValue.val = 6 := rfl
+
+/-! ## Spacetime Dimensions as CountQ -/
+
+def spatialDim : CountQ := ⟨FUST.WaveEquation.spatialDim⟩
+def timeDim : CountQ := ⟨FUST.WaveEquation.timeDim⟩
+def spacetimeDim : CountQ := ⟨FUST.WaveEquation.spacetimeDim⟩
+
+theorem spatialDim_val : spatialDim.val = 3 := rfl
+theorem timeDim_val : timeDim.val = 1 := rfl
+theorem spacetimeDim_val : spacetimeDim.val = 4 := rfl
+
+/-! ## Derivation consistency -/
+
+theorem fermion_count_derivation :
+    smFermionCount.val = leptonCount.val + quarkCount.val := rfl
+
+theorem particle_count_derivation :
+    smParticleCount.val = smFermionCount.val + smBosonCount.val := rfl
+
+theorem generation_from_pair_counts :
+    maxGenerations.val = (Nat.choose 3 2 - Nat.choose 2 2) + 1 := rfl
+
+theorem spin_from_spacetime :
+    allowedSpinCount.val = spacetimeDim.val := rfl
+
+end FUST.Dim

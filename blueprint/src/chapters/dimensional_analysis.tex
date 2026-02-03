@@ -1,0 +1,324 @@
+% Chapter: Dimensional Analysis --- Structural Typing of FUST Quantities
+\chapter{Dimensional Analysis}
+\label{chap:dimensional_analysis}
+
+\section{Motivation}
+\label{sec:dim_motivation}
+
+In FUST, quantities such as $t_{\mathrm{FUST}} = 25/12$ and $\Delta = 6$ are all defined as $\mathbb{R}$ or $\mathbb{N}$ in the Lean implementation.
+This allows type-checked operations like $t_{\mathrm{FUST}} + \Delta$ that are physically meaningless.
+Moreover, $t_{\mathrm{FUST}}$ (time) and $l_{\mathrm{FUST}}$ (length) have the same numerical value $25/12$
+(\texttt{planck\_time\_space\_equivalence: rfl}), yet represent fundamentally different physical quantities.
+
+This chapter introduces a \textbf{structural type system} $(p, \delta, \tau)$ derived from FUST's internal algebraic structure,
+classifying all quantities into three disjoint types: \textbf{ScaleQuantity}, \textbf{CountQuantity}, and \textbf{RatioQuantity}.
+
+\section{Three Independent Dimensions}
+\label{sec:dim_three_dimensions}
+
+\begin{definition}[FUST Dimension]
+\label{def:dim_fdim}
+\lean{FUST.Dim.FDim}
+\leanok
+The dimension of a FUST ScaleQuantity is a triple $(p, \delta, \tau) \in \mathbb{Z}^3$:
+\begin{itemize}
+\item $p$: \textbf{$\varphi$-power dimension} --- exponent of $(\varphi - \psi) = \sqrt{5}$
+\item $\delta$: \textbf{dissipation dimension} --- count of $C_d$ normalization factors
+\item $\tau$: \textbf{time dimension} --- $\ker(D_6)^\perp$ direction count
+\end{itemize}
+\end{definition}
+
+\subsection{Dimension I: \texorpdfstring{$\varphi$}{φ}-Power Dimension \texorpdfstring{$p$}{p}}
+
+The discrete scale lattice $\varphi^k$ ($k \in \mathbb{Z}$) generates FUST's hierarchical structure.
+Time evolution $f \mapsto f(\varphi \cdot)$ shifts $p$ by $+1$.
+The normalization denominator $(\varphi - \psi)^{m-1}$ of each $D_m$ contributes $-(m-1)$ to $p$.
+
+\subsection{Dimension II: Dissipation Dimension \texorpdfstring{$\delta$}{δ}}
+
+The dissipation coefficient $C_d$ is the value of $D_6$ applied to $x^d$.
+Even-$m$ operators ($D_2, D_4, D_6$) have antisymmetric coefficient patterns yielding $\sqrt{5} \cdot F_n$ (Fibonacci) factors,
+giving $\delta = 1$.
+Odd-$m$ operators ($D_3, D_5$) have symmetric patterns yielding Lucas integers, giving $\delta = 0$.
+
+\subsection{Dimension III: Time Dimension \texorpdfstring{$\tau$}{τ}}
+
+$\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ defines the spatial sector.
+Only $D_6$ detects $x^3 \notin \ker(D_6)$ (temporal sector), hence only $D_6$ carries $\tau = -1$.
+All other operators detect modes within $\ker(D_6)$, hence $\tau = 0$.
+
+\section{Type Hierarchy}
+\label{sec:dim_type_hierarchy}
+
+\begin{definition}[ScaleQuantity]
+\label{def:dim_scaleq}
+\lean{FUST.Dim.ScaleQ}
+\leanok
+$\mathrm{ScaleQ}(p, \delta, \tau)$: a real-valued quantity carrying dimension $(p, \delta, \tau)$.
+Addition is restricted to quantities of identical dimension.
+\end{definition}
+
+\begin{definition}[CountQuantity]
+\label{def:dim_countq}
+\lean{FUST.Dim.CountQ}
+\leanok
+$\mathrm{CountQ}$: a natural number arising from kernel dimensions, pair counts, or tensor products.
+Carries no $(p, \delta, \tau)$ structure.
+\end{definition}
+
+\begin{definition}[RatioQuantity]
+\label{def:dim_ratioq}
+\lean{FUST.Dim.RatioQ}
+\leanok
+$\mathrm{RatioQ}$: a rational number formed as ratios of pair counts.
+Dimensionless ($p = \delta = \tau = 0$).
+\end{definition}
+
+\begin{theorem}[Type Separation]
+\label{thm:dim_type_separation}
+Addition across types is prohibited:
+\begin{itemize}
+\item $\mathrm{ScaleQ}(d_1) + \mathrm{ScaleQ}(d_2)$ requires $d_1 = d_2$
+\item $\mathrm{ScaleQ} + \mathrm{CountQ}$: type error
+\item $\mathrm{ScaleQ} + \mathrm{RatioQ}$: type error
+\item $\mathrm{CountQ} + \mathrm{RatioQ}$: type error
+\end{itemize}
+\end{theorem}
+
+\section{Algebra of Dimensions}
+\label{sec:dim_algebra}
+
+\begin{theorem}[Multiplicative Group]
+\label{thm:dim_comm_group}
+\lean{FUST.Dim.instCommGroupFDim}
+\leanok
+$(p, \delta, \tau)$ forms a commutative group under componentwise addition:
+\begin{align}
+\dim(Q_1 \cdot Q_2) &= (p_1 + p_2,\; \delta_1 + \delta_2,\; \tau_1 + \tau_2) \\
+\dim(Q_1 / Q_2) &= (p_1 - p_2,\; \delta_1 - \delta_2,\; \tau_1 - \tau_2)
+\end{align}
+\end{theorem}
+
+\section{Difference Operator Output Dimensions}
+\label{sec:dim_operator_output}
+
+\begin{definition}[Operator Output Dimension]
+\label{def:dim_derive_fdim}
+\lean{FUST.Dim.deriveFDim}
+\leanok
+The output dimension of $D_m$ is:
+\[
+\dim(D_m f(x)) = (-(m-1),\; \delta_m,\; \tau_m)
+\]
+where $\delta_m = [m \bmod 2 = 0]$ and $\tau_m = -[m = 6]$.
+\end{definition}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Operator & Symmetry & $\delta$ & $\tau$ & $(p, \delta, \tau)$ \\
+\hline
+$D_2$ & antisymmetric (Fibonacci) & 1 & 0 & $(-1, 1, 0)$ \\
+$D_3$ & symmetric (Lucas) & 0 & 0 & $(-2, 0, 0)$ \\
+$D_4$ & antisymmetric (Fibonacci) & 1 & 0 & $(-3, 1, 0)$ \\
+$D_5$ & symmetric (Lucas) & 0 & 0 & $(-4, 0, 0)$ \\
+$D_6$ & antisymmetric (Fibonacci) & 1 & $-1$ & $(-5, 1, -1)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theorem}[Operators Have Distinct Dimensions]
+\label{thm:dim_operators_distinct}
+For $i \neq j$, $\dim(D_i f) \neq \dim(D_j f)$, so $D_i f(x) + D_j f(x)$ is a type error.
+\end{theorem}
+
+\begin{theorem}[$D_6$ Output Is Inverse Time]
+\label{thm:dim_D6_inverse_time}
+\lean{FUST.Dim.observation_is_D6_output}
+\leanok
+\[
+\dim(D_6 f) = (-5, 1, -1) = \dim(t_{\mathrm{FUST}})^{-1}
+\]
+\end{theorem}
+
+\section{Structural Constants}
+\label{sec:dim_structural_constants}
+
+\begin{definition}[Time Dimension]
+\label{def:dim_time}
+\lean{FUST.Dim.dimTime}
+\leanok
+\[
+\dim(t_{\mathrm{FUST}}) := (\dim(D_6 f))^{-1} = (5, -1, 1)
+\]
+\end{definition}
+
+\begin{definition}[Length Dimension]
+\label{def:dim_length}
+\lean{FUST.Dim.dimLength}
+\leanok
+\[
+\dim(l_{\mathrm{FUST}}) := (5, -1, 0)
+\]
+Length shares $(p, \delta) = (5, -1)$ with time but has $\tau = 0$ (spatial).
+\end{definition}
+
+\begin{definition}[Light Speed Dimension]
+\label{def:dim_lightspeed}
+\lean{FUST.Dim.dimLightSpeed}
+\leanok
+\[
+\dim(c) := \dim(l) - \dim(t) = (0, 0, -1)
+\]
+\end{definition}
+
+\begin{theorem}[$l = c \cdot t$ Dimensional Consistency]
+\label{thm:dim_l_eq_ct}
+\lean{FUST.Dim.length_eq_speed_times_time}
+\leanok
+\[
+(5, -1, 0) = (0, 0, -1) + (5, -1, 1) \quad \checkmark
+\]
+\end{theorem}
+
+\begin{definition}[Lagrangian Dimension]
+\label{def:dim_lagrangian}
+\lean{FUST.Dim.dimLagrangian}
+\leanok
+\[
+\dim((D_6 f)^2) = 2 \cdot (-5, 1, -1) = (-10, 2, -2)
+\]
+\end{definition}
+
+\section{$D_{5\frac{1}{2}}$ Direct Sum Structure}
+\label{sec:dim_d5half}
+
+\begin{definition}[$D_{5\frac{1}{2}}$ Dimension]
+\label{def:dim_d5half}
+\lean{FUST.Dim.D5half_dim}
+\leanok
+$D_{5\frac{1}{2}} f(x) = D_5 f(x) + \frac{2}{\varphi} \cdot x \cdot D_2 f(x)$ has a direct sum type:
+\[
+D_{5\frac{1}{2}} f(x) \in \mathrm{ScaleQ}(-4, 0, 0) \oplus \mathrm{ScaleQ}(-2, 1, 0)
+\]
+The $D_5$ component is symmetric (Lucas, $\delta = 0$) and the $D_2$ component is antisymmetric (Fibonacci, $\delta = 1$).
+This is a \textbf{dimension bridge operator} connecting the two sectors.
+\end{definition}
+
+\section{Physical Quantity Classification}
+\label{sec:dim_classification}
+
+\subsection{ScaleQuantity Instances}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & $(p, \delta, \tau)$ & Lean reference \\
+\hline
+$t_{\mathrm{FUST}} = 25/12$ & $(5, -1, 1)$ & \texttt{structuralMinTime\_dim} \\
+$l_{\mathrm{FUST}} = 25/12$ & $(5, -1, 0)$ & \texttt{structuralMinLength\_dim} \\
+$c = 1$ & $(0, 0, -1)$ & \texttt{dimLightSpeed} \\
+$D_6 f(x)$ & $(-5, 1, -1)$ & \texttt{D6\_dim} \\
+$(D_6 f)^2$ & $(-10, 2, -2)$ & \texttt{dimLagrangian} \\
+$m_s/m_d = \varphi^6$ & $(0, 0, 0)$ & \texttt{msMdRatio} (dimensionless) \\
+$\alpha = \varphi^{-5}/4\pi$ & $(0, 0, 0)$ & \texttt{fineStructure} (dimensionless) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{CountQuantity Instances}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Value & Lean reference \\
+\hline
+$\dim\ker(D_5)$ & 2 & \texttt{kerDimD5} \\
+$\dim\ker(D_6)$ & 3 & \texttt{kerDimD6} \\
+Mass gap $\Delta$ & 6 & \texttt{massGap} \\
+Spacetime dimension & 4 & \texttt{spacetimeDim} \\
+Active D-levels & 5 & \texttt{activeDLevels} \\
+SM particle count & 37 & \texttt{smParticleCount} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{RatioQuantity Instances}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Value & Lean reference \\
+\hline
+$\sin^2\theta_W$ & $C(3,2)/(C(3,2)+C(5,2)) = 3/13$ & \texttt{weinbergAngle} \\
+$\alpha_s$ & $C(3,2)/(C(5,2)+C(6,2)) = 3/25$ & \texttt{strongCoupling} \\
+$m_u/m_d$ & $C(2,2)/2 = 1/2$ & \texttt{muMdRatio} \\
+$m_W^2/m_Z^2$ & $C(5,2)/(C(3,2)+C(5,2)) = 10/13$ & \texttt{wzRatioSq} \\
+$\sin^2\theta_{12}$ & $1/C(3,2) = 1/3$ & \texttt{solarMixing} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Consistency Verification}
+\label{sec:dim_consistency}
+
+\begin{theorem}[Blueprint Consistency]
+\label{thm:dim_blueprint_consistency}
+The dimensional type system is consistent with all blueprint theorems:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Blueprint theorem & Dimensional verification \\
+\hline
+$t_{\mathrm{FUST}} = 25/12$ & Scale$(5,-1,1)$ $\checkmark$ \\
+$l_{\mathrm{FUST}} = 25/12$ & Scale$(5,-1,0)$ $\checkmark$ \\
+$l = c \cdot t$ & $(5,-1,0) = (0,0,-1) + (5,-1,1)$ $\checkmark$ \\
+$\Delta = 6$ & Count $\checkmark$ \\
+$\sin^2\theta_W = 3/13$ & Ratio (Count/Count) $\checkmark$ \\
+$(D_6 f)^2$ Hamiltonian & Scale$(-10,2,-2)$ $\checkmark$ \\
+$D_6[\mathrm{timeEvolution}(f)] = \varphi \cdot D_6[f](\varphi \cdot)$ & Both sides: $(-5,1,-1)$ $\checkmark$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{theorem}
+
+\section{Energy Conservation in Proper Time}
+\label{sec:dim_energy_conservation}
+
+Time evolution amplifies $D_6$ by $\varphi$:
+\[
+D_6[\mathrm{timeEvolution}(f)](x) = \varphi \cdot D_6[f](\varphi x)
+\]
+Squaring: $H' = \varphi^2 \cdot H$ in coordinate time. The $\tau = -2$ component of $\dim((D_6 f)^2) = (-10, 2, -2)$ indicates inverse-square-time scaling. The conserved quantity in proper time is:
+\[
+E_{\mathrm{conserved}} = \frac{H}{\varphi^{2 \cdot \mathrm{step}}}
+\]
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+FUST & General Relativity \\
+\hline
+Coordinate step & Coordinate time $t$ \\
+$(D_6 f)^2 : (-10, 2, -2)$ & Metric $g_{00}$ \\
+$\varphi^2$ amplification & Gravitational redshift \\
+$E_{\mathrm{conserved}}$ & $\nabla_\mu T^{\mu\nu} = 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{\texorpdfstring{$\Delta^2 \leq E$}{Δ^2 ≤ E} Interpretation}
+\label{sec:dim_spectral_gap}
+
+\begin{theorem}[Spectral Gap Dimensional Interpretation]
+\label{thm:dim_spectral_gap}
+\lean{FUST.Dim.spectralGap_count}
+\leanok
+$\Delta = 6$ is CountQuantity, $E = (D_6 f)^2$ is ScaleQuantity$(-10, 2, -2)$.
+The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} is a numerical comparison in the FUST coordinate system,
+not an equality of dimensioned quantities.
+\end{theorem}
+
+The distinction between $\Delta = 6$ (CountQuantity from $\dim\ker(D_5) \times \dim\ker(D_6)$)
+and $\varphi^6 \approx 17.94$ (ScaleQuantity, mass ratio $m_s/m_d$) is made explicit by the type system,
+despite the coincidental shared exponent~6.

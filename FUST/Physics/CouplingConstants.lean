@@ -204,3 +204,87 @@ theorem coupling_constants_from_kernel_structure :
   exact ⟨D5_const 1 x hx, D5_linear x hx⟩
 
 end FUST.CouplingConstants
+
+namespace FUST.Dim
+
+/-! ## Strong Coupling: α_s = 3/25 as RatioQ (§4.3) -/
+
+def strongCoupling : RatioQ :=
+  ⟨(Nat.choose 3 2 : ℚ) /
+   (Nat.choose 5 2 + Nat.choose 6 2)⟩
+
+theorem strongCoupling_val : strongCoupling.val = 3 / 25 := by
+  simp only [strongCoupling, Nat.choose]; norm_num
+
+/-! ## Weinberg Angle: sin²θ_W = C(3,2)/(C(3,2)+C(5,2)) as RatioQ -/
+
+def weinbergAngle : RatioQ :=
+  ⟨(Nat.choose 3 2 : ℚ) /
+   (Nat.choose 3 2 + Nat.choose 5 2)⟩
+
+theorem weinbergAngle_val : weinbergAngle.val = 3 / 13 := by
+  simp only [weinbergAngle, Nat.choose]; norm_num
+
+/-! ## Active D-Levels as CountQ -/
+
+def activeDLevels : CountQ := ⟨FUST.CouplingConstants.activeDLevels⟩
+
+theorem activeDLevels_val : activeDLevels.val = 5 := rfl
+
+theorem activeDLevels_derivation : activeDLevels.val = 6 - 2 + 1 := rfl
+
+/-! ## CP Phase as ScaleQ (involves π, transcendental) -/
+
+noncomputable def cpPhase : ScaleQ 1 := ⟨FUST.CouplingConstants.cp_phase⟩
+
+theorem cpPhase_val : cpPhase.val = 2 * Real.pi / 5 := rfl
+
+/-! ## Fine Structure Constant as ScaleQ (involves π) -/
+
+noncomputable def fineStructure : ScaleQ 1 := ⟨FUST.CouplingConstants.fine_structure⟩
+
+theorem fineStructure_val :
+    fineStructure.val = φ ^ (-(5 : ℤ)) / (4 * Real.pi) := rfl
+
+/-! ## CKM Decay as ScaleQ (φ-power) -/
+
+noncomputable def ckmDecay (steps : ℕ) : ScaleQ 1 :=
+  ⟨FUST.CouplingConstants.ckmAmplitudeDecay steps⟩
+
+theorem ckmDecay_geometric :
+    (ckmDecay 2).val = (ckmDecay 1).val * (ckmDecay 1).val ∧
+    (ckmDecay 3).val = (ckmDecay 1).val * (ckmDecay 2).val :=
+  FUST.CouplingConstants.ckm_geometric_decay
+
+/-! ## Solar Mixing Angle as RatioQ -/
+
+def solarMixing : RatioQ :=
+  ⟨1 / (Nat.choose 3 2 : ℚ)⟩
+
+theorem solarMixing_val : solarMixing.val = 1 / 3 := by
+  simp only [solarMixing, Nat.choose]; norm_num
+
+/-! ## W/Z Ratio as RatioQ -/
+
+def wzRatioSq : RatioQ :=
+  ⟨(Nat.choose 5 2 : ℚ) /
+   (Nat.choose 3 2 + Nat.choose 5 2)⟩
+
+theorem wzRatioSq_val : wzRatioSq.val = 10 / 13 := by
+  simp only [wzRatioSq, Nat.choose]; norm_num
+
+/-! ## Cabibbo Angle as ScaleQ (involves arctan) -/
+
+noncomputable def cabibboAngle : ScaleQ 1 := ⟨FUST.CouplingConstants.cabibbo_angle⟩
+
+/-! ## Summary -/
+
+theorem coupling_type_hierarchy :
+    (strongCoupling.val = 3 / 25) ∧
+    (weinbergAngle.val = 3 / 13) ∧
+    (solarMixing.val = 1 / 3) ∧
+    (wzRatioSq.val = 10 / 13) ∧
+    (activeDLevels.val = 5) := by
+  exact ⟨strongCoupling_val, weinbergAngle_val, solarMixing_val, wzRatioSq_val, rfl⟩
+
+end FUST.Dim

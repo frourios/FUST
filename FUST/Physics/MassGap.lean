@@ -222,3 +222,24 @@ theorem massGap_complete :
 end MassGapPhysicalMeaning
 
 end FUST
+
+namespace FUST.Dim
+
+/-- Mass gap = ker(D₅) dim × ker(D₆) dim -/
+def massGap : CountQ := ⟨kerDimD5.val * kerDimD6.val⟩
+
+theorem massGap_eq : massGap.val = 6 := by decide
+
+theorem massGap_pos : 0 < massGap.val := by decide
+
+/-- Mass gap derivation chain: kernel dimensions → product → gap value -/
+theorem massGap_derivation :
+    kerDimD5.val = 2 ∧ kerDimD6.val = 3 ∧ massGap.val = kerDimD5.val * kerDimD6.val := by
+  refine ⟨rfl, rfl, rfl⟩
+
+/-- Mass = deviation from ker(D₆) -/
+theorem mass_is_ker_deviation (f : ℝ → ℝ) :
+    FUST.LeastAction.IsMassiveState f ↔ FUST.LeastAction.TimeExists f :=
+  FUST.LeastAction.massive_iff_time_exists f
+
+end FUST.Dim

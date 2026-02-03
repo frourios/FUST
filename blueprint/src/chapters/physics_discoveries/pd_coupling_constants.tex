@@ -122,3 +122,27 @@ The exponent 3 = $C(3,2)$ comes from $D_3$ pair count.
 \end{enumerate}
 \end{theorem}
 
+\section{Dimensional Types}
+\label{sec:coupling_dim}
+
+The dimensional type system classifies coupling constants as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Type & Lean \\
+\hline
+$\alpha_s = C(3,2)/(C(5,2)+C(6,2)) = 3/25$ & RatioQuantity & \texttt{strongCoupling} \\
+$\sin^2\theta_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13$ & RatioQuantity & \texttt{weinbergAngle} \\
+$\sin^2\theta_{12} = 1/C(3,2) = 1/3$ & RatioQuantity & \texttt{solarMixing} \\
+$m_W^2/m_Z^2 = C(5,2)/(C(3,2)+C(5,2)) = 10/13$ & RatioQuantity & \texttt{wzRatioSq} \\
+Active D-levels $= 5$ & CountQuantity & \texttt{activeDLevels} \\
+$\delta_{CKM} = 2\pi/5$ & ScaleQ$(0,0,0)$ & \texttt{cpPhase} \\
+$\alpha = \varphi^{-5}/4\pi$ & ScaleQ$(0,0,0)$ & \texttt{fineStructure} \\
+$\theta_C = \arctan(1/\varphi^3)$ & ScaleQ$(0,0,0)$ & \texttt{cabibboAngle} \\
+\hline
+\end{tabular}
+\end{center}
+
+RatioQuantity values are ratios of pair counts $C(m,2)$, ensuring they are dimensionless. ScaleQ$(0,0,0)$ quantities involve transcendental functions ($\pi$, $\arctan$) but remain dimensionless. All definitions in \texttt{FUST\_dim.CouplingConstants} use structural formulas ($C(m,2)$), never hardcoded numerals.
+

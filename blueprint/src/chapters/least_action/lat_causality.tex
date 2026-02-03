@@ -72,3 +72,15 @@ This implies:
 
 FUST does not assume a unit system but defines the causal boundary from $D_6$ structure. Therefore, $c = 1$ is not a ``choice'' but a ``structural consequence.''
 
+\subsection{Dimensional Structure of the Speed of Light}
+
+The speed of light $c = l_{\mathrm{FUST}} / t_{\mathrm{FUST}}$ has dimension:
+\[
+\dim(c) = (5,-1,0) - (5,-1,1) = (0, 0, -1)
+\]
+The $\varphi$-power and dissipation components cancel, leaving only $\tau = -1$. Within FUST, $c = 1$ numerically, but the type system preserves the spatial/temporal distinction:
+\[
+\dim(l) = \dim(c) + \dim(t): \quad (5,-1,0) = (0,0,-1) + (5,-1,1)
+\]
+Lean: \texttt{FUST\_dim.Dim.dimLightSpeed}, \texttt{FUST\_dim.TimeTheorem.length\_eq\_speed\_times\_time}.
+

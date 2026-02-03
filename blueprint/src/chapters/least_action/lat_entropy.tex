@@ -177,3 +177,14 @@ Irreversible process & Transition to $\ker(D_6)^\perp$ \\
 
 \textbf{Important}: These are derived solely from $D_6$ structure, without external assumptions (initial conditions, statistical assumptions, external time parameter).
 
+\section{Dimensional Type of Entropy}
+\label{sec:mat_entropy_dim}
+
+Entropy $S(f)(t) = (\mathrm{perpProjection}(f)(t))^2$ has the same dimension as the Lagrangian:
+\[
+\dim(S) = \dim((D_6 f)^2) = (-10, 2, -2) \quad (\text{ScaleQuantity})
+\]
+Time evolution amplifies $D_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time. The $\tau = -2$ component indicates inverse-square-time scaling, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
+
+Lean: \texttt{FUST\_dim.QuantumStructure.entropyAt} with type \texttt{ScaleQ dimLagrangian}.
+

@@ -209,3 +209,21 @@ All thermodynamic laws are derived from $D_6$ structure:
 \item \textbf{Stefan-Boltzmann}: $\mathrm{spacetimeDim} = 4$
 \end{enumerate}
 \end{theorem}
+
+\section{Dimensional Types}
+\label{sec:thermo_dim}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Type & Dimension \\
+\hline
+$\mathrm{entropyAt}(f, t)$ & ScaleQuantity & $(-10, 2, -2)$ (= dimLagrangian) \\
+$\mathcal{A}_N[f]$ & ScaleQuantity & $(-10, 2, -2)$ (= dimLagrangian) \\
+spacetimeDim $= 4$ & CountQuantity & --- \\
+$\varphi^{-4}$ (density ratio) & ScaleQ$(0,0,0)$ & dimensionless \\
+\hline
+\end{tabular}
+\end{center}
+
+Lean: \texttt{FUST\_dim.QuantumStructure.entropyAt} with type \texttt{ScaleQ dimLagrangian}.

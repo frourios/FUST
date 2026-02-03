@@ -521,3 +521,26 @@ theorem temporal_dim_unique :
 end SpacetimeDimension
 
 end FUST
+
+namespace FUST.Dim
+
+def kerDimD2 : CountQ := ⟨kernelDimensions 0⟩
+def kerDimD5 : CountQ := ⟨kernelDimensions 1⟩
+def kerDimD6 : CountQ := ⟨kernelDimensions 2⟩
+
+theorem kerDimD2_val : kerDimD2.val = 1 := rfl
+theorem kerDimD5_val : kerDimD5.val = 2 := rfl
+theorem kerDimD6_val : kerDimD6.val = 3 := rfl
+
+/-- Kernel dimensions strictly increase -/
+theorem kernel_dims_strict : kerDimD2.val < kerDimD5.val ∧ kerDimD5.val < kerDimD6.val := by
+  simp only [kerDimD2, kerDimD5, kerDimD6, kernelDimensions]; omega
+
+/-- Spatial dimension = ker(D₆) dimension = 3 -/
+theorem spatial_dim_from_D6 : kerDimD6.val = spatialDimension := rfl
+
+/-- Spacetime = 3 + 1 = 4 -/
+theorem spacetime_dim : spatialDimension + temporalDimension = 4 :=
+  spacetimeDimension_eq_4
+
+end FUST.Dim

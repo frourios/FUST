@@ -190,3 +190,27 @@ $m_t/m_b$ & $\varphi^7 + \varphi^5$ & $C(4,2) \pm C(2,2)$ \\
 \end{center}
 \end{theorem}
 
+\section{Dimensional Types}
+\label{sec:mass_dim}
+
+Mass ratios split into two structural types:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Ratio & Type & Lean \\
+\hline
+$m_s/m_d = \varphi^6$ & ScaleQ$(0,0,0)$ (dimensionless) & \texttt{msMdRatio} \\
+$m_t/m_b = \varphi^7 + \varphi^5$ & ScaleQ$(0,0,0)$ (dimensionless) & \texttt{mtMbRatio} \\
+$m_u/m_d = C(2,2)/2 = 1/2$ & RatioQuantity & \texttt{muMdRatio} \\
+$m_b/m_c = C(3,2) = 3$ & CountQuantity & \texttt{mbMcValue} \\
+$m_c/m_s = C(5,2)+2 = 12$ & CountQuantity & \texttt{mcMsValue} \\
+$\Delta m^2_{21}/\Delta m^2_{31} = 1/30$ & RatioQuantity & \texttt{neutrinoMassSqRatio} \\
+\hline
+\end{tabular}
+\end{center}
+
+The exponents are CountQuantity: $T(3) = C(4,2) = 6$ (\texttt{msMdExponent}), $7 = C(4,2)+C(2,2)$ (\texttt{mtMbExpHigh}), $5 = C(4,2)-C(2,2)$ (\texttt{mtMbExpLow}). All exponents trace to D-structure pair counts, never hardcoded numerals.
+
+$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\Delta = 6$ (CountQuantity, mass gap) despite the shared numeral 6.
+

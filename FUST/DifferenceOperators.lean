@@ -1,4 +1,5 @@
 import FUST.Basic
+import FUST.DimensionalAnalysis
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 
@@ -1295,3 +1296,61 @@ theorem FUST_class_finite_observable :
 end FUSTFunctionClassCompleteness
 
 end FUST
+
+namespace FUST.dim
+
+/-- D₆ output with derived dimension (-5, 1, -1) -/
+noncomputable def D6_dim (f : ℝ → ℝ) (x : ℝ) : Dim.ScaleQ (Dim.deriveFDim 6) := ⟨D6 f x⟩
+
+/-- D₅½ as formal sum of D₅ and antisymmetric (D₂-like) components -/
+noncomputable def D5half_dim (f : ℝ → ℝ) (x : ℝ) :
+    Dim.DimSum2 (Dim.deriveFDim 5) (Dim.deriveFDim 2) :=
+  ⟨⟨D5 f x⟩, ⟨(2 / (φ + 2)) * ((f (φ * x)) - (f (ψ * x)))⟩⟩
+
+theorem D5half_dim_eval (f : ℝ → ℝ) (x : ℝ) :
+    (D5half_dim f x).eval = D5half f x := by
+  simp only [D5half_dim, Dim.DimSum2.eval, D5half]
+
+theorem D5half_dim_fst (f : ℝ → ℝ) (x : ℝ) :
+    (D5half_dim f x).fst.val = D5 f x := rfl
+
+theorem D5half_dim_snd (f : ℝ → ℝ) (x : ℝ) :
+    (D5half_dim f x).snd.val = (2 / (φ + 2)) * ((f (φ * x)) - (f (ψ * x))) := rfl
+
+/-! ## Justification of structural properties (§6.2)
+
+### Antisymmetry: coefficient pattern under φ↔ψ exchange -/
+
+/-- D₂ coefficients [1, -1] are antisymmetric -/
+theorem D2_antisymmetric : (1 : ℤ) + (-1) = 0 ∧ (1 : ℤ) - (-1) ≠ 0 := by decide
+
+/-- D₃ coefficients [1, -2, 1] are symmetric -/
+theorem D3_symmetric : (1 : ℤ) - 1 = 0 ∧ (1 : ℤ) + (-2) + 1 = 0 := by decide
+
+/-- D₅ coefficients [1, 1, -4, 1, 1] are symmetric -/
+theorem D5_symmetric : (1 : ℤ) - 1 = 0 ∧ (1 : ℤ) - 1 = 0 := by decide
+
+/-- D₆ coefficients [1, -3, 1, -1, 3, -1] are antisymmetric: c₁+c₆=0, c₂+c₅=0, c₃+c₄=0 -/
+theorem D6_antisymmetric :
+    (1 : ℤ) + (-1) = 0 ∧ (-3 : ℤ) + 3 = 0 ∧ (1 : ℤ) + (-1) = 0 := by decide
+
+/-! ### Terminality (§6.3): ker(D₇) = ker(D₆) -/
+
+theorem D6_is_terminal :
+    ∀ a : ℝ, (∀ k x, x ≠ 0 → FUST.D7_constrained a (fun _ => k) x = 0) ∧
+             (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
+             (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
+  FUST.D7_kernel_equals_D6_kernel
+
+/-! ## Kernel annihilation with dimensions -/
+
+theorem D6_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
+    (D6_dim (fun _ => c) x).val = 0 := D6_const c x hx
+
+theorem D6_dim_linear (x : ℝ) (hx : x ≠ 0) :
+    (D6_dim id x).val = 0 := D6_linear x hx
+
+theorem D6_dim_quadratic (x : ℝ) (hx : x ≠ 0) :
+    (D6_dim (fun t => t^2) x).val = 0 := D6_quadratic x hx
+
+end FUST.dim

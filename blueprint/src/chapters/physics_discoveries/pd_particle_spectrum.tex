@@ -141,3 +141,29 @@ Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi
 \end{enumerate}
 \end{theorem}
 
+\section{Dimensional Types}
+\label{sec:particle_dim}
+
+All particle spectrum quantities are CountQuantity ($\mathbb{N}$), derived from kernel dimensions and pair counts:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Quantity & Value & Lean \\
+\hline
+Max generations & $(C(3,2)-C(2,2))+1 = 3$ & \texttt{maxGenerations} \\
+SM fermions & $24$ & \texttt{smFermionCount} \\
+SM bosons & $13$ & \texttt{smBosonCount} \\
+SM total & $37$ & \texttt{smParticleCount} \\
+Allowed charges & $2 \times C(3,2) + 1 = 7$ & \texttt{allowedChargeCount} \\
+Allowed spins & spacetimeDim $= 4$ & \texttt{allowedSpinCount} \\
+$\dim \mathfrak{su}(2) = 3$ & $C(3,2)^2 - 1$ & \texttt{su2Dim} \\
+$\dim \mathfrak{su}(3) = 8$ & $C(3,2)^2 - 1$ & \texttt{su3Dim} \\
+Spatial dim $= 3$ & $\dim\ker(D_6)$ & \texttt{spatialDim} \\
+Spacetime dim $= 4$ & $\dim\ker(D_6) + 1$ & \texttt{spacetimeDim} \\
+\hline
+\end{tabular}
+\end{center}
+
+All definitions in \texttt{FUST\_dim.ParticleSpectrum} reference upstream FUST definitions, not hardcoded numerals.
+
