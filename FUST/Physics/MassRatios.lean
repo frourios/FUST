@@ -1,6 +1,7 @@
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
+import FUST.Physics.MassGap
 import FUST.DimensionalAnalysis
 
 namespace FUST.Dim
@@ -93,5 +94,63 @@ theorem all_exponents_from_pair_counts :
     (mtMbExpHigh.val = Nat.choose 4 2 + Nat.choose 2 2) ∧
     (mtMbExpLow.val = Nat.choose 4 2 - Nat.choose 2 2) :=
   ⟨rfl, rfl, rfl, rfl⟩
+
+/-! ## Dimensioned Masses: ScaleQ dimTime⁻¹
+
+Mass in FUST has dimension dimTime⁻¹ = (-5, 1, -1), the D₆ output dimension.
+The electron, as the lightest charged fermion, is identified with the mass gap
+Δ = C₃/(√5)⁵ = 12/25. Neutrinos acquire mass via a different mechanism
+(D₅ mixing perturbation from ker(D₆)) and are not bounded by Δ. -/
+
+/-- Electron mass: m_e = Δ (lightest charged fermion = D₆ mass gap) -/
+noncomputable def electronMass : ScaleQ dimTime⁻¹ := massGapΔ
+
+theorem electronMass_val : electronMass.val = 12 / 25 := rfl
+
+/-- Muon mass: m_μ = Δ × φ¹¹ -/
+noncomputable def muonMass : ScaleQ dimTime⁻¹ :=
+  ⟨FUST.massGapΔ * φ ^ (11 : ℤ)⟩
+
+theorem muonMass_val : muonMass.val = 12 / 25 * φ ^ (11 : ℤ) := rfl
+
+/-- Tau mass: m_τ = Δ × φ¹⁷ -/
+noncomputable def tauMass : ScaleQ dimTime⁻¹ :=
+  ⟨FUST.massGapΔ * φ ^ (17 : ℤ)⟩
+
+theorem tauMass_val : tauMass.val = 12 / 25 * φ ^ (17 : ℤ) := rfl
+
+/-- Proton mass: m_p = Δ × φ¹¹ × C(6,3)×C(4,2)/(C(3,2)+C(5,2)) -/
+noncomputable def protonMass : ScaleQ dimTime⁻¹ :=
+  ⟨FUST.massGapΔ * φ ^ (11 : ℤ) *
+    (Nat.choose 6 3 * Nat.choose 4 2 : ℝ) /
+    (Nat.choose 3 2 + Nat.choose 5 2 : ℝ)⟩
+
+theorem protonMass_val :
+    protonMass.val = 12 / 25 * φ ^ (11 : ℤ) * 120 / 13 := by
+  unfold protonMass FUST.massGapΔ
+  simp only [Nat.choose]
+  norm_num
+
+/-- m_e = Δ: lightest charged fermion is the D₆ mass gap -/
+theorem electronMass_eq_massGap : electronMass = massGapΔ := rfl
+
+/-- m_p / m_e = φ¹¹ × 120/13 -/
+theorem protonElectronRatio_from_masses :
+    protonMass.val / electronMass.val = φ ^ (11 : ℤ) * 120 / 13 := by
+  simp only [protonMass_val, electronMass_val]
+  field_simp
+
+/-- Lepton mass ratios from dimensioned masses -/
+theorem muon_electron_ratio_from_masses :
+    muonMass.val / electronMass.val = φ ^ (11 : ℤ) := by
+  simp only [muonMass_val, electronMass_val]
+  field_simp
+
+theorem tau_muon_ratio_from_masses :
+    tauMass.val / muonMass.val = φ ^ (6 : ℤ) := by
+  simp only [tauMass_val, muonMass_val]
+  have hΔ : (12 : ℝ) / 25 ≠ 0 := by norm_num
+  have hφ11 : φ ^ (11 : ℤ) ≠ 0 := zpow_ne_zero 11 (by linarith [φ_gt_one])
+  field_simp
 
 end FUST.Dim

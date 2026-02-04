@@ -20,6 +20,10 @@ The physical meaning of "mass" comes from TimeTheorem:
 - IsMassiveState f ↔ f ∉ ker(D6) ↔ TimeExists f
 - Massive particles have proper time (D6 f ≠ 0)
 - The minimum degree for ker(D6)⊥ is 3, giving the mass gap
+
+Δ is the mass gap for charged fermions coupled directly to D₆ output.
+Neutrinos acquire mass via D₅ mixing perturbation from ker(D₆) and
+can have mass below Δ.
 -/
 
 namespace FUST

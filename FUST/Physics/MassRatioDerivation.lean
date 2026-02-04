@@ -231,13 +231,23 @@ theorem muERatio_corrected_formula : muERatio_corrected = φ ^ 11 * (45 / 44) :=
   rw [mu_e_ratio, D5_correction_11pt]
   norm_num
 
-/-- p/e ratio with D5+D6: φ^11 × A × π × (1 - η_11) -/
-noncomputable abbrev protonElectronRatio_corrected : ℝ :=
-  φ ^ 11 * D6_coeff_A * Real.pi * (1 - D5CorrectionFactor 11)
+/-- Baryon spatial factor: C(6,3) × C(4,2) = 120 -/
+theorem baryon_spatial_factor :
+    Nat.choose 6 3 * Nat.choose 4 2 = 120 := by decide
 
-theorem protonElectronRatio_corrected_formula :
-    protonElectronRatio_corrected = φ ^ 11 * 3 * Real.pi * (43 / 44) := by
-  unfold protonElectronRatio_corrected D6_coeff_A D5CorrectionFactor D5_coeff_a D5_coeff_b
+/-- Baryon normalization: C(3,2) + C(5,2) = 13 -/
+theorem baryon_normalization :
+    Nat.choose 3 2 + Nat.choose 5 2 = 13 := by decide
+
+/-- p/e ratio: φ¹¹ × C(6,3)×C(4,2) / (C(3,2)+C(5,2)) = φ¹¹ × 120/13 -/
+noncomputable abbrev protonElectronRatio : ℝ :=
+  φ ^ 11 * (Nat.choose 6 3 * Nat.choose 4 2 : ℝ) /
+    (Nat.choose 3 2 + Nat.choose 5 2 : ℝ)
+
+theorem protonElectronRatio_formula :
+    protonElectronRatio = φ ^ 11 * 120 / 13 := by
+  unfold protonElectronRatio
+  simp only [Nat.choose]
   norm_num
 
 /-- All corrections are derived from uniquely determined coefficients -/

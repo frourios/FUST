@@ -124,19 +124,32 @@ theorem cp_phase_from_active_levels :
 
 /-! ## Fine Structure Constant
 
-α = φ⁻⁵ / 4π where 5 = number of active D-levels
+α₀ = φ⁻⁴ / C(6,3) where:
+- 4 = D_max - D_min = 6 - 2: D-level propagator exponent
+- C(6,3) = C(D_max, dim ker(D₆)) = 20: spatial normalization
+- Equivalently: 1/α₀ = 20φ⁴ = 10(7+3√5) = 70+30√5
+- Algebraic form: α₀ = (7-3√5)/40
 -/
 
-noncomputable abbrev fine_structure : ℝ := φ ^ (-(activeDLevels : ℤ)) / (4 * Real.pi)
+/-- Spatial normalization: C(D_max, dim_ker_D6) = C(6,3) = 20 -/
+theorem spatial_normalization : Nat.choose 6 3 = 20 := rfl
 
-theorem fine_structure_from_active_levels :
-    fine_structure = φ ^ (-(activeDLevels : ℤ)) / (4 * Real.pi) := rfl
+/-- D-level range: D_max - D_min = 6 - 2 = 4 -/
+theorem D_level_range : 6 - 2 = 4 := rfl
+
+/-- C(6,3) equals sum of pair counts C(m,2) for m=2..5 -/
+theorem spatial_norm_eq_pair_sum :
+    Nat.choose 6 3 = Nat.choose 2 2 + Nat.choose 3 2 + Nat.choose 4 2 + Nat.choose 5 2 := rfl
+
+/-- Tree-level fine structure constant: α₀ = φ⁻⁴/C(6,3) -/
+noncomputable abbrev fine_structure : ℝ :=
+  φ ^ (-(4 : ℤ)) / (Nat.choose 6 3 : ℝ)
+
+theorem fine_structure_from_D_structure :
+    fine_structure = φ ^ (-(6 - 2 : ℤ)) / (Nat.choose 6 3 : ℝ) := rfl
 
 theorem fine_structure_exponent_derivation :
-    -- Exponent 5 = number of active D-levels
-    activeDLevels = 5 ∧
-    -- Active levels derived from D_min and D_max
-    (6 - 2 + 1 = 5) :=
+    (6 : ℕ) - 2 = 4 ∧ Nat.choose 6 3 = 20 :=
   ⟨rfl, rfl⟩
 
 /-! ## Connection to Kernel Structure
@@ -239,12 +252,12 @@ noncomputable def cpPhase : ScaleQ 1 := ⟨FUST.CouplingConstants.cp_phase⟩
 
 theorem cpPhase_val : cpPhase.val = 2 * Real.pi / 5 := rfl
 
-/-! ## Fine Structure Constant as ScaleQ (involves π) -/
+/-! ## Fine Structure Constant as RatioQ (π-free, pure D-structure) -/
 
 noncomputable def fineStructure : ScaleQ 1 := ⟨FUST.CouplingConstants.fine_structure⟩
 
 theorem fineStructure_val :
-    fineStructure.val = φ ^ (-(5 : ℤ)) / (4 * Real.pi) := rfl
+    fineStructure.val = φ ^ (-(4 : ℤ)) / (Nat.choose 6 3 : ℝ) := rfl
 
 /-! ## CKM Decay as ScaleQ (φ-power) -/
 

@@ -80,14 +80,29 @@ where 5 = number of active D-levels ($D_2$ through $D_6$).
 \section{Fine Structure Constant}
 \label{sec:coupling_fine_structure}
 
-\begin{theorem}[Fine Structure Constant]
-\label{thm:coupling_fine_structure}
-\lean{FUST.CouplingConstants.fine_structure_from_active_levels}
+\begin{theorem}[Spatial Normalization]
+\label{thm:coupling_spatial_norm}
+\lean{FUST.CouplingConstants.spatial_normalization}
 \leanok
 \[
-\alpha = \frac{\varphi^{-5}}{4\pi}
+C(D_{\max}, \dim\ker(D_6)) = C(6,3) = 20
 \]
-where 5 = number of active D-levels.
+This equals the sum of pair counts: $C(2,2)+C(3,2)+C(4,2)+C(5,2) = 1+3+6+10 = 20$.
+\end{theorem}
+
+\begin{theorem}[Fine Structure Constant]
+\label{thm:coupling_fine_structure}
+\lean{FUST.CouplingConstants.fine_structure_from_D_structure}
+\leanok
+\[
+\alpha_0 = \frac{\varphi^{-(D_{\max}-D_{\min})}}{C(D_{\max},\,\dim\ker(D_6))} = \frac{\varphi^{-4}}{C(6,3)}
+\]
+where:
+\begin{itemize}
+\item $\varphi^{-4} = \varphi^{-(D_{\max}-D_{\min})}$: D-level propagator across the range $6-2=4$
+\item $C(6,3) = 20 = C(D_{\max},\,\dim\ker(D_6))$: spatial configuration count
+\end{itemize}
+Algebraic form: $\alpha_0 = (7-3\sqrt{5})/40$, giving $1/\alpha_0 = 70+30\sqrt{5} \approx 137.082$ (tree-level, error 0.034\%).
 \end{theorem}
 
 \section{CKM Decay Structure}
@@ -138,11 +153,11 @@ $\sin^2\theta_{12} = 1/C(3,2) = 1/3$ & RatioQuantity & \texttt{solarMixing} \\
 $m_W^2/m_Z^2 = C(5,2)/(C(3,2)+C(5,2)) = 10/13$ & RatioQuantity & \texttt{wzRatioSq} \\
 Active D-levels $= 5$ & CountQuantity & \texttt{activeDLevels} \\
 $\delta_{CKM} = 2\pi/5$ & ScaleQ$(0,0,0)$ & \texttt{cpPhase} \\
-$\alpha = \varphi^{-5}/4\pi$ & ScaleQ$(0,0,0)$ & \texttt{fineStructure} \\
+$\alpha_0 = \varphi^{-4}/C(6,3) = (7-3\sqrt{5})/40$ & ScaleQ$(0,0,0)$ & \texttt{fineStructure} \\
 $\theta_C = \arctan(1/\varphi^3)$ & ScaleQ$(0,0,0)$ & \texttt{cabibboAngle} \\
 \hline
 \end{tabular}
 \end{center}
 
-RatioQuantity values are ratios of pair counts $C(m,2)$, ensuring they are dimensionless. ScaleQ$(0,0,0)$ quantities involve transcendental functions ($\pi$, $\arctan$) but remain dimensionless. All definitions in \texttt{FUST\_dim.CouplingConstants} use structural formulas ($C(m,2)$), never hardcoded numerals.
+RatioQuantity values are ratios of pair counts $C(m,2)$, ensuring they are dimensionless. ScaleQ$(0,0,0)$ quantities involving $\pi$ ($\delta_{CKM}$) or $\arctan$ ($\theta_C$) are coordinate embeddings (see \S\ref{sec:pd_principles}). All definitions in \texttt{FUST\_dim.CouplingConstants} use structural formulas ($C(m,k)$, $\varphi$), never hardcoded numerals.
 

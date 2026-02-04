@@ -108,6 +108,61 @@ where correction $\delta = 1$ for $D_4 \to D_3$ descent.
 \]
 \end{theorem}
 
+\section{Dimensioned Particle Masses}
+\label{sec:mass_dimensioned}
+
+Mass in FUST has dimension $\dim_F = (-5, 1, -1) = \mathrm{dimTime}^{-1}$, the $D_6$ gauge-invariant output dimension.
+
+\begin{theorem}[Electron Mass]
+\label{thm:mass_electron}
+\lean{FUST.Dim.electronMass_eq_massGap}
+\leanok
+\[
+m_e = \Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimTime}^{-1}]
+\]
+The electron, as the lightest \emph{charged} fermion, is identified with the mass gap. Neutrinos acquire mass via $D_5$ mixing perturbation from $\ker(D_6)$ and are not bounded by $\Delta$.
+\end{theorem}
+
+\begin{theorem}[Proton Mass]
+\label{thm:mass_proton}
+\lean{FUST.Dim.protonMass_val}
+\leanok
+\[
+m_p = \Delta \times \varphi^{11} \times \frac{C(6,3) \times C(4,2)}{C(3,2)+C(5,2)} = \frac{12}{25} \cdot \varphi^{11} \cdot \frac{120}{13} \quad [\mathrm{dimTime}^{-1}]
+\]
+\end{theorem}
+
+\begin{theorem}[Proton/Electron Ratio]
+\label{thm:mass_pe}
+\lean{FUST.Dim.protonElectronRatio_from_masses}
+\leanok
+\[
+\frac{m_p}{m_e} = \varphi^{11} \times \frac{120}{13} \approx 1836.97
+\]
+Experimental: 1836.15 (error 0.045\%). Derived as quotient of independent dimensioned masses; $\Delta$ cancels.
+\end{theorem}
+
+Structural decomposition of $120/13$:
+\begin{itemize}
+\item $C(6,3) = 20$: spatial normalization ($C(D_{\max}, \dim\ker D_6)$)
+\item $C(4,2) = 6$: baryon pair count from $D_4$ hierarchy
+\item $C(3,2)+C(5,2) = 13$: kernel and $D_5$ pair normalization
+\end{itemize}
+
+Lepton masses follow the same pattern:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Particle & Formula & $\dim_F$ \\
+\hline
+$e$ & $\Delta$ & $(-5,1,-1)$ \\
+$\mu$ & $\Delta \cdot \varphi^{11}$ & $(-5,1,-1)$ \\
+$\tau$ & $\Delta \cdot \varphi^{17}$ & $(-5,1,-1)$ \\
+$p$ & $\Delta \cdot \varphi^{11} \cdot 120/13$ & $(-5,1,-1)$ \\
+\hline
+\end{tabular}
+\end{center}
+
 \section{Beyond SM Mass Ratios}
 \label{sec:mass_beyond_sm}
 
@@ -153,6 +208,8 @@ Experimental: 0.881 (error 0.5\%).
 \]
 Experimental: $\sim 1/33$ (error $\sim 10\%$).
 \end{theorem}
+
+Neutrino masses are not bounded by $\Delta$: neutrinos reside almost entirely in $\ker(D_6)$ and acquire mass only through $D_5$-level mixing perturbation. The mass gap $\Delta$ applies to charged fermions that couple directly to $D_6$ gauge-invariant output at degree $d = 3$.
 
 \section{Baryon Asymmetry}
 \label{sec:mass_baryon}
