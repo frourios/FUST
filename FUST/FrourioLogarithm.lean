@@ -160,40 +160,7 @@ theorem physical_completeness : ∀ n ≥ 7, projectToD6 n = projectToD6 6 := by
   rw [h1, h2]
 
 /-!
-## Derivation of Integers and Primes in FUST
-
-### Integers
-Integers are NOT primitive objects. They are defined as discrete labels
-of φ-scale orbits in frourio logarithm space:
-  t ↦ t + k·log_𝔣(φ)  for k ∈ ℤ
--/
-
-/-- φ-scale orbit: the set of points reachable by repeated φ-scaling -/
-def phiOrbit (x₀ : ℝ) : Set ℝ := {y | ∃ k : ℤ, y = x₀ * φ ^ k}
-
-/-- Integer as orbit label: k indexes the orbit position -/
-structure OrbitLabel where
-  base : ℝ
-  base_pos : 0 < base
-  index : ℤ
-
-/-- The actual position from an orbit label -/
-noncomputable def OrbitLabel.toReal (l : OrbitLabel) : ℝ := l.base * φ ^ l.index
-
-/-- Frourio coordinate of orbit label -/
-noncomputable def OrbitLabel.toFrourio (l : OrbitLabel) : ℝ :=
-  frourioLog l.base + l.index * phiStep
-
-/-- Orbit labels with same base form a ℤ-indexed sequence -/
-theorem orbit_label_additive (l : OrbitLabel) (k : ℤ) :
-    OrbitLabel.toFrourio ⟨l.base, l.base_pos, l.index + k⟩ =
-    OrbitLabel.toFrourio l + k * phiStep := by
-  unfold OrbitLabel.toFrourio
-  simp only [Int.cast_add]
-  ring
-
-/-!
-### Primes in FUST
+## Primes in FUST
 
 Primes are defined NOT by divisibility, but by structural irreducibility:
 1. Irreducible under Fibonacci convolution

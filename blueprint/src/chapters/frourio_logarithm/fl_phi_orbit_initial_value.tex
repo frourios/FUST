@@ -1,0 +1,249 @@
+\section{Number-Theoretic Constraint on \texorpdfstring{$\varphi$}{φ}-Orbit Initial Values}
+\label{sec:phi-orbit-initial-value}
+
+FUST theorems hold for universal variable $x$, but physically manifest particle states
+occupy specific initial values $x_0$. This section proves that
+$x_0$ is constrained to the golden quadratic field
+$\mathbb{Q}(\varphi) = \{a + b\varphi \mid a, b \in \mathbb{Q}\}$
+by purely algebraic conditions from the Frourio algebra.
+
+\subsection{Golden Quadratic Field \texorpdfstring{$\mathbb{Q}(\varphi)$}{Q(φ)}}
+
+\begin{definition}[Membership in $\mathbb{Q}(\varphi)$]
+\label{def:in-golden-field}
+\lean{FUST.PhiOrbit.InGoldenField}
+\leanok
+$x \in \mathbb{Q}(\varphi)$ iff $\exists\, a, b \in \mathbb{Q}$ such that $x = a + b\varphi$.
+\end{definition}
+
+\begin{theorem}[{$\mathbb{Z}[\varphi] \hookrightarrow \mathbb{Q}(\varphi)$}]
+\label{thm:golden-int-in-golden-field}
+\lean{FUST.PhiOrbit.goldenInt_in_goldenField}
+\leanok
+Every element of $\mathbb{Z}[\varphi]$ belongs to $\mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{theorem}[Field operations on $\mathbb{Q}(\varphi)$]
+\label{thm:golden-field-ops}
+\uses{def:in-golden-field}
+$\mathbb{Q}(\varphi)$ is closed under addition, negation, and multiplication:
+\begin{itemize}
+    \item \lean{FUST.PhiOrbit.goldenField_add} \leanok $x, y \in \mathbb{Q}(\varphi) \Rightarrow x + y \in \mathbb{Q}(\varphi)$
+    \item \lean{FUST.PhiOrbit.goldenField_neg} \leanok $x \in \mathbb{Q}(\varphi) \Rightarrow -x \in \mathbb{Q}(\varphi)$
+    \item \lean{FUST.PhiOrbit.goldenField_mul} \leanok $x, y \in \mathbb{Q}(\varphi) \Rightarrow x \cdot y \in \mathbb{Q}(\varphi)$
+\end{itemize}
+Multiplication closure uses $\varphi^2 = \varphi + 1$.
+\end{theorem}
+
+\begin{theorem}[$\varphi$-powers in $\mathbb{Q}(\varphi)$]
+\label{thm:golden-field-zpow}
+\lean{FUST.PhiOrbit.goldenField_phi_zpow}
+\leanok
+\uses{def:in-golden-field}
+For all $n \in \mathbb{Z}$, $\varphi^n \in \mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\subsection{Frourio-Admissible Subfield}
+
+\begin{definition}[Frourio-admissible set]
+\label{def:frourio-admissible}
+\lean{FUST.PhiOrbit.FrourioAdmissible}
+\leanok
+A subset $K \subseteq \mathbb{R}$ is \emph{Frourio-admissible} if:
+\begin{enumerate}
+    \item (PBW) $\varphi \in K$ and $\varphi^{-1} \in K$
+    \item (Field closure) $\mathbb{Q} \subseteq K$, and $K$ is closed under $+$, $\times$, negation
+    \item (Quadratic closure from $\chi(U) = -1$) $\forall x \in K,\, \exists\, a, b \in \mathbb{Q}: x = a + b\varphi$
+\end{enumerate}
+These three conditions are independently derived from the Frourio algebra:
+\begin{itemize}
+    \item Condition 1 follows from the Frourio operator $\Delta = M_{1/x}(\alpha U - \beta R^{\varepsilon} U^{-1})$ requiring $\varphi, \varphi^{-1}$ as scale parameters.
+    \item Condition 2 follows from the crossed product algebra requiring a coefficient field.
+    \item Condition 3 follows from the group character $\chi(U) = -1$ forcing a degree-2 Galois extension.
+\end{itemize}
+\end{definition}
+
+\subsection{Uniqueness of \texorpdfstring{$\mathbb{Q}(\varphi)$}{Q(φ)}}
+
+\begin{theorem}[$\mathbb{Q}(\varphi)$ is Frourio-admissible]
+\label{thm:golden-field-admissible}
+\lean{FUST.PhiOrbit.goldenField_admissible}
+\leanok
+\uses{def:frourio-admissible, def:in-golden-field}
+$\mathbb{Q}(\varphi)$ satisfies all three Frourio-admissibility conditions.
+\end{theorem}
+
+\begin{theorem}[Minimality: $\mathbb{Q}(\varphi) \subseteq K$]
+\label{thm:golden-field-minimal}
+\lean{FUST.PhiOrbit.goldenField_minimal}
+\leanok
+\uses{def:frourio-admissible, def:in-golden-field}
+Any Frourio-admissible $K$ contains $\mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{proof}
+For any $a + b\varphi \in \mathbb{Q}(\varphi)$: $a \in K$ by $\mathbb{Q} \subseteq K$,
+$b \in K$ by $\mathbb{Q} \subseteq K$, $\varphi \in K$ by PBW,
+so $b\varphi \in K$ by multiplicative closure and $a + b\varphi \in K$ by additive closure.
+\end{proof}
+
+\begin{theorem}[Maximality: $K \subseteq \mathbb{Q}(\varphi)$]
+\label{thm:golden-field-maximal}
+\lean{FUST.PhiOrbit.goldenField_maximal}
+\leanok
+\uses{def:frourio-admissible, def:in-golden-field}
+Any Frourio-admissible $K$ is contained in $\mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{proof}
+By the quadratic closure condition, every $x \in K$ satisfies $x = a + b\varphi$
+for some $a, b \in \mathbb{Q}$, hence $x \in \mathbb{Q}(\varphi)$.
+\end{proof}
+
+\begin{theorem}[Uniqueness of $\mathbb{Q}(\varphi)$]
+\label{thm:golden-field-unique}
+\lean{FUST.PhiOrbit.goldenField_unique}
+\leanok
+\uses{thm:golden-field-minimal, thm:golden-field-maximal}
+$\mathbb{Q}(\varphi)$ is the unique Frourio-admissible subfield of $\mathbb{R}$:
+\[
+K \text{ is Frourio-admissible} \implies K = \mathbb{Q}(\varphi)
+\]
+\end{theorem}
+
+\subsection{\texorpdfstring{$\varphi$}{φ}-Orbit Closure}
+
+\begin{theorem}[Orbit closure in $\mathbb{Q}(\varphi)$]
+\label{thm:orbit-in-golden-field}
+\lean{FUST.PhiOrbit.orbit_in_goldenField}
+\leanok
+\uses{def:in-golden-field, thm:golden-field-zpow}
+If $x_0 \in \mathbb{Q}(\varphi)$, then the entire $\varphi$-orbit
+$\mathcal{O}(x_0) = \{\varphi^n x_0 \mid n \in \mathbb{Z}\}$
+lies in $\mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\subsection{Valuation Non-Decreasing over \texorpdfstring{$\mathbb{Z}[\varphi]$}{Z[φ]}}
+
+\begin{theorem}[Valuation non-decreasing]
+\label{thm:valuation-non-decreasing-golden}
+\lean{FUST.PhiOrbit.valuation_nonDecreasing_over_goldenInt}
+\leanok
+The two-point difference operator preserves coefficient valuation
+when working over the golden integer ring $\mathbb{Z}[\varphi] \subset \mathbb{Q}(\varphi)$:
+\[
+v_{\mathfrak{p}}(\Delta f) \ge v_{\mathfrak{p}}(f)
+\]
+This property requires coefficients in an algebraic number ring;
+transcendental coefficients admit no discrete valuation.
+\end{theorem}
+
+\subsection{Galois Conjugation}
+
+\begin{definition}[Galois conjugation]
+\label{def:galois-conj}
+\lean{FUST.PhiOrbit.galoisConj}
+\leanok
+The Galois conjugation $\sigma : \mathbb{Q}(\varphi) \to \mathbb{Q}(\varphi)$ maps
+$a + b\varphi \mapsto a + b\psi$, where $\psi = 1 - \varphi$.
+\end{definition}
+
+\begin{theorem}[Galois conjugation preserves $\mathbb{Q}(\varphi)$]
+\label{thm:galois-conj-golden}
+\lean{FUST.PhiOrbit.galoisConj_in_goldenField}
+\leanok
+\uses{def:galois-conj, def:in-golden-field}
+$a + b\psi = (a + b) + (-b)\varphi \in \mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{theorem}[Galois conjugation is an involution]
+\label{thm:galois-conj-involution}
+\lean{FUST.PhiOrbit.galoisConj_involution}
+\leanok
+\uses{def:galois-conj}
+Applying $\sigma$ twice recovers the original coefficients:
+$\sigma(a + b\varphi) = (a+b) + (-b)\varphi$, and
+$\sigma((a+b) + (-b)\varphi) = a + b\varphi$.
+\end{theorem}
+
+\subsection{Group Character \texorpdfstring{$\chi(U) = -1$}{χ(U) = -1}}
+
+\begin{definition}[Group character criterion]
+\label{def:group-character}
+\lean{FUST.PhiOrbit.GroupCharacterCriterion}
+\leanok
+A group homomorphism $\chi : \mathbb{Z} \to \mathbb{Z}$ satisfying $\chi(1) = -1$.
+\end{definition}
+
+\begin{theorem}[Character has period 2]
+\label{thm:character-period-two}
+\lean{FUST.PhiOrbit.character_period_two}
+\leanok
+\uses{def:group-character}
+$\chi(1) = -1 \implies \chi(2) = 1$.
+\end{theorem}
+
+\begin{theorem}[{Character order matches $[\mathbb{Q}(\varphi):\mathbb{Q}] = 2$}]
+\label{thm:character-order}
+\lean{FUST.PhiOrbit.character_order_matches_degree}
+\leanok
+\uses{def:group-character, thm:character-period-two}
+$\chi$ has exact order 2, matching the degree of the quadratic extension.
+\end{theorem}
+
+\subsection{Main Theorem: \texorpdfstring{$\varphi$}{φ}-Orbit Initial Value Constraint}
+
+\begin{definition}[Frourio-compatible initial value]
+\label{def:frourio-compatible}
+\lean{FUST.PhiOrbit.IsFrourioCompatible}
+\leanok
+\uses{def:frourio-admissible}
+$x_0$ is Frourio-compatible if $\exists\, K \subseteq \mathbb{R}$
+such that $K$ is Frourio-admissible and $x_0 \in K$.
+\end{definition}
+
+\begin{theorem}[$\varphi$-orbit initial value theorem]
+\label{thm:initial-value-in-golden-field}
+\lean{FUST.PhiOrbit.initial_value_in_goldenField}
+\leanok
+\uses{def:frourio-compatible, thm:golden-field-unique}
+If $x_0$ is Frourio-compatible, then $x_0 \in \mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{proof}
+Let $K$ be a Frourio-admissible set with $x_0 \in K$.
+By Theorem~\ref{thm:golden-field-unique}, $K = \mathbb{Q}(\varphi)$.
+Therefore $x_0 \in \mathbb{Q}(\varphi)$.
+\end{proof}
+
+\begin{theorem}[Equivalence]
+\label{thm:compatible-iff-golden}
+\lean{FUST.PhiOrbit.compatible_iff_goldenField}
+\leanok
+\uses{thm:initial-value-in-golden-field, thm:golden-field-admissible}
+\[
+x_0 \text{ is Frourio-compatible} \iff x_0 \in \mathbb{Q}(\varphi)
+\]
+\end{theorem}
+
+\begin{theorem}[Orbit of compatible initial value]
+\label{thm:compatible-orbit}
+\lean{FUST.PhiOrbit.compatible_orbit_in_goldenField}
+\leanok
+\uses{thm:initial-value-in-golden-field, thm:orbit-in-golden-field}
+If $x_0$ is Frourio-compatible, the entire $\varphi$-orbit lies in $\mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\subsection{\texorpdfstring{$\mathbb{Q}(\varphi) = \mathbb{Q}(\sqrt{5})$}{Q(φ) = Q(√5)}}
+
+\begin{theorem}[$\mathbb{Q}(\varphi) = \mathbb{Q}(\sqrt{5})$]
+\label{thm:golden-field-eq-sqrt5}
+\lean{FUST.PhiOrbit.goldenField_eq_sqrt5Field}
+\leanok
+\uses{def:in-golden-field}
+$\mathbb{Q}(\varphi)$ and $\mathbb{Q}(\sqrt{5})$ coincide as subsets of $\mathbb{R}$:
+\begin{align}
+a + b\varphi &= \left(a + \tfrac{b}{2}\right) + \tfrac{b}{2}\sqrt{5} \\
+p + q\sqrt{5} &= (p - q) + 2q \cdot \varphi
+\end{align}
+\end{theorem}

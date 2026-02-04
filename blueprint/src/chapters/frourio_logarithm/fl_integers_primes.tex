@@ -7,37 +7,19 @@ In FUST, integers are NOT primitive objects. They emerge as discrete labels of $
 
 \begin{definition}[$\varphi$-Orbit]
 \label{def:phi-orbit}
-\lean{FUST.FrourioLogarithm.phiOrbit}
+\lean{FUST.PhiOrbit.phiOrbit}
 \leanok
-For $x_0 > 0$, the $\varphi$-orbit is:
+For $x_0 \in \mathbb{Q}(\varphi)$, the $\varphi$-orbit is:
 \[
-\mathrm{Orbit}_\varphi(x_0) := \{ y \mid \exists k \in \mathbb{Z},\, y = x_0 \cdot \varphi^k \}
+\mathrm{Orbit}_\varphi(x_0) := \{ y \mid \exists n \in \mathbb{Z},\, y = \varphi^n \cdot x_0 \}
 \]
+The initial value $x_0$ is constrained to the golden quadratic field $\mathbb{Q}(\varphi) = \{a + b\varphi \mid a, b \in \mathbb{Q}\}$ by the Frourio admissibility conditions (see \S\ref{sec:phi-orbit-initial-value}).
 \end{definition}
 
-\begin{definition}[Orbit Label]
-\label{def:orbit-label}
-\lean{FUST.FrourioLogarithm.OrbitLabel}
-\leanok
-An orbit label consists of:
-\begin{itemize}
-    \item A base point $x_0 > 0$
-    \item An integer index $k \in \mathbb{Z}$
-\end{itemize}
-\end{definition}
-
-\begin{theorem}[Orbit Label Additivity]
-\label{thm:orbit-label-additive}
-\lean{FUST.FrourioLogarithm.orbit_label_additive}
-\leanok
-The Frourio coordinate of an orbit label is:
+The key insight: integers $n$ index positions along the $\varphi$-orbit, forming a $\mathbb{Z}$-torsor in Frourio space. The Frourio coordinate is additive in the index:
 \[
-t(x_0, k) = \log_{\mathfrak{f}}(x_0) + k \cdot \mathrm{phiStep}
+t(x_0, n+k) = t(x_0, n) + k \cdot \mathrm{phiStep}
 \]
-This is additive in the index $k$.
-\end{theorem}
-
-The key insight: integers $k$ index positions along the $\varphi$-orbit, forming a $\mathbb{Z}$-torsor in Frourio space.
 
 \subsection{Primes in FUST}
 

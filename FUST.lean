@@ -3,6 +3,9 @@ import FUST.Biology.Life
 import FUST.Biology.Observer
 import FUST.Biology.Sleep
 
+import FUST.FrourioAlgebra.GoldenIntegerRing
+import FUST.FrourioAlgebra.GoldenValuation
+
 import FUST.Physics.BlackHole
 import FUST.Physics.Cosmology
 import FUST.Physics.CouplingConstants
@@ -18,6 +21,7 @@ import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassRatios
 import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
+import FUST.Physics.PhiOrbitInitialValue
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Probability
 import FUST.Physics.QuantumStructure
