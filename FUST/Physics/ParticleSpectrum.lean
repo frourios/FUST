@@ -423,11 +423,9 @@ theorem allowedSpinCount_val : allowedSpinCount.val = 4 := rfl
 
 def su2Dim : CountQ := ⟨FUST.su2Dim⟩
 def su3Dim : CountQ := ⟨FUST.su3Dim⟩
-def massGapValue : CountQ := ⟨FUST.massGapValue⟩
 
 theorem su2Dim_val : su2Dim.val = 3 := rfl
 theorem su3Dim_val : su3Dim.val = 8 := rfl
-theorem massGapValue_val : massGapValue.val = 6 := rfl
 
 /-! ## Spacetime Dimensions as CountQ -/
 

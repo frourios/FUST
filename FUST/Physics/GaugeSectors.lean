@@ -1,5 +1,6 @@
 import FUST.DifferenceOperators
 import FUST.Physics.GaugeGroups
+import FUST.Physics.MassGap
 import Mathlib.LinearAlgebra.Dimension.Finrank
 
 /-!
@@ -243,22 +244,10 @@ Observational boundary conditions select the Standard Model sector.
 
 section SectorSeparation
 
-/-- Mass gap from kernel dimension structure: Δ = dim(ker D₅) × dim(ker D₆) -/
-def massGapValue : ℕ := kerDim 1 * kerDim 2
-
-/-- Mass gap value is 6 -/
-theorem massGap_eq_6 : massGapValue = 6 := rfl
-
 /-- Transition amplitude suppression (qualitative) -/
 theorem transition_suppression_qualitative :
-    -- Larger gap means stronger suppression
-    massGapValue > 0 ∧
-    -- Gap is derived from kernel dimensions
-    massGapValue = 2 * 3 := by
-  constructor
-  · simp only [massGapValue, kerDim]
-    norm_num
-  · rfl
+    0 < FUST.massGapΔ ∧
+    FUST.massGapΔ = 12 / 25 := ⟨FUST.massGapΔ_pos, rfl⟩
 
 /-- Observational boundary conditions (numerical values) -/
 structure ObservationalData where

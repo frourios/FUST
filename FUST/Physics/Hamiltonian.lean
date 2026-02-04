@@ -1,5 +1,4 @@
-import FUST.Physics.LeastAction
-import FUST.Physics.GaugeGroups
+import FUST.Physics.MassGap
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.MetricSpace.Basic
 
@@ -138,11 +137,10 @@ end HamiltonianProperties
 /-!
 ## Section 3: Spectral Gap Structure
 
-The spectral gap is derived from:
+The spectral gap is derived from D₆ gauge-invariant output:
 1. ker(D6) = span{1, x, x²} has dim = 3
-2. ker(D5) = span{1, x} has dim = 2
-3. Minimum degree outside ker(D6) is 3
-4. Spectral gap Δ = dim ker(D5) × dim ker(D6) = 6
+2. Minimum degree outside ker(D6) is 3
+3. Spectral gap Δ = C₃/(√5)⁵ = 12/25 = 1/t_FUST
 
 Physical interpretation:
 - Δ is the minimum energy for massive (confined) states
@@ -150,17 +148,6 @@ Physical interpretation:
 -/
 
 section SpectralGap
-
-/-- Spectral gap value from kernel dimensions -/
-def spectralGapValue : ℕ := kernelDimensions 1 * kernelDimensions 2
-
-theorem spectralGapValue_eq : spectralGapValue = 6 := by
-  simp only [spectralGapValue, kernelDimensions]
-  norm_num
-
-theorem spectralGapValue_pos : 0 < spectralGapValue := by
-  rw [spectralGapValue_eq]
-  norm_num
 
 /-- Minimum massive degree is 3 (first polynomial outside ker(D6)) -/
 theorem minimum_massive_degree_is_3 :
@@ -187,20 +174,20 @@ For SU(3) Yang-Mills (QCD), the Hamiltonian has the interpretation:
 - H ∈ (0, Δ²): forbidden (spectral gap)
 - H ≥ Δ²: glueball states (confined gluons)
 
-The mass gap Δ = 6 (in FUST units) gives minimum glueball mass.
+The mass gap Δ = 12/25 (from D₆ gauge-invariant output) gives minimum glueball mass.
 -/
 
 section YangMillsInterpretation
 
-/-- Energy spectrum from Hamiltonian -/
+/-- Energy spectrum from Hamiltonian: E = 0 or E ≥ Δ² -/
 def EnergyInSpectrum (E : ℝ) : Prop :=
-  E = 0 ∨ (spectralGapValue : ℝ) ^ 2 ≤ E
+  E = 0 ∨ FUST.massGapΔ ^ 2 ≤ E
 
 /-- Vacuum energy is in spectrum -/
 theorem vacuum_in_spectrum : EnergyInSpectrum 0 := Or.inl rfl
 
 /-- Gap region is excluded -/
-theorem gap_excluded (E : ℝ) (hpos : 0 < E) (hlt : E < (spectralGapValue : ℝ) ^ 2) :
+theorem gap_excluded (E : ℝ) (hpos : 0 < E) (hlt : E < FUST.massGapΔ ^ 2) :
     ¬ EnergyInSpectrum E := by
   intro h
   cases h with
@@ -208,27 +195,21 @@ theorem gap_excluded (E : ℝ) (hpos : 0 < E) (hlt : E < (spectralGapValue : ℝ
   | inr hge => linarith
 
 /-- Energy above gap is in spectrum -/
-theorem above_gap_in_spectrum (E : ℝ) (hge : (spectralGapValue : ℝ) ^ 2 ≤ E) :
+theorem above_gap_in_spectrum (E : ℝ) (hge : FUST.massGapΔ ^ 2 ≤ E) :
     EnergyInSpectrum E := Or.inr hge
 
-/-- Spectral gap squared = 36 -/
-theorem spectral_gap_squared : (spectralGapValue : ℝ) ^ 2 = 36 := by
-  rw [spectralGapValue_eq]
-  norm_num
+/-- Spectral gap squared = 144/625 -/
+theorem spectral_gap_squared : FUST.massGapΔ ^ 2 = 144 / 625 :=
+  FUST.massGapΔ_sq
 
-/-- Clay requirement: gap is derived from kernel structure -/
+/-- Clay requirement: gap is derived from D₆ gauge-invariant output -/
 theorem clay_hamiltonian_gap_derived :
-    -- 1. Hamiltonian defined from D6 (not postulated)
     (∀ f n, hamiltonianContribution f n = (D6 f (φ ^ n))^2) ∧
-    -- 2. ker(D6) has dim 3
     (kernelDimensions 2 = 3) ∧
-    -- 3. ker(D5) has dim 2
     (kernelDimensions 1 = 2) ∧
-    -- 4. Spectral gap from kernel product
-    (spectralGapValue = kernelDimensions 1 * kernelDimensions 2) ∧
-    -- 5. Numerical value
-    (spectralGapValue = 6) := by
-  refine ⟨fun _ _ => rfl, rfl, rfl, rfl, spectralGapValue_eq⟩
+    (0 < FUST.massGapΔ) ∧
+    (FUST.massGapΔ = 12 / 25) := by
+  refine ⟨fun _ _ => rfl, rfl, rfl, FUST.massGapΔ_pos, rfl⟩
 
 end YangMillsInterpretation
 
@@ -242,24 +223,18 @@ section CompleteMassGap
 
 /-- Complete FUST Hamiltonian mass gap theorem -/
 theorem fust_hamiltonian_mass_gap :
-    -- 1. Hamiltonian is non-negative
     (∀ f N, partialHamiltonian f N ≥ 0) ∧
-    -- 2. ker(D6) states have zero Hamiltonian
     (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) ∧
-    -- 3. Cubic polynomial (first massive state) has positive Hamiltonian
     HasPositiveHamiltonian (fun t => t^3) ∧
-    -- 4. Spectral gap value from kernel dimensions
-    (spectralGapValue = kernelDimensions 1 * kernelDimensions 2) ∧
-    -- 5. Gap is positive
-    (0 < spectralGapValue) ∧
-    -- 6. Numerical value
-    (spectralGapValue = 6) :=
+    (0 < FUST.massGapΔ) ∧
+    (FUST.massGapΔ = 12 / 25) ∧
+    (FUST.massGapΔ ^ 2 = 144 / 625) :=
   ⟨partialHamiltonian_nonneg,
    partialHamiltonian_ker_zero,
    cubic_has_positive_hamiltonian,
+   FUST.massGapΔ_pos,
    rfl,
-   spectralGapValue_pos,
-   spectralGapValue_eq⟩
+   FUST.massGapΔ_sq⟩
 
 end CompleteMassGap
 
@@ -281,11 +256,5 @@ theorem hamiltonianContribution_ker_zero (f : ℝ → ℝ)
     (hf : FUST.LeastAction.IsInKerD6 f) (n : ℤ) :
     (hamiltonianContribution_dim f n).val = 0 :=
   FUST.Hamiltonian.hamiltonianContribution_ker_zero f hf n
-
-/-- Spectral gap as count quantity -/
-def spectralGap_count : CountQ := ⟨FUST.Hamiltonian.spectralGapValue⟩
-
-theorem spectralGap_count_val : spectralGap_count.val = 6 := by
-  simp only [spectralGap_count, FUST.Hamiltonian.spectralGapValue_eq]
 
 end FUST.Dim

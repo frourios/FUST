@@ -149,12 +149,12 @@ This is not an empirical claim but a \textbf{necessary consequence derived only 
 \section{Output Dimensions of Difference Operators}
 \label{sec:diff_op_dim}
 
-Each $D_m$ operator has a structurally determined output dimension $(p, \delta, \tau)$ (see Chapter~\ref{chap:dimensional_analysis}):
+Each $D_m$ operator has a structurally determined output dimension $(\sqrt{5}, \delta, \tau)$ (see Chapter~\ref{chap:dimensional_analysis}):
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-Operator & Coefficient symmetry & Output dimension $(p, \delta, \tau)$ & Lean \\
+Operator & Coefficient symmetry & Output dimension $(\sqrt{5}, \delta, \tau)$ & Lean \\
 \hline
 $D_2$ & antisymmetric ($\sqrt{5} \cdot F_n$) & $(-1, 1, 0)$ & \texttt{deriveFDim 2} \\
 $D_3$ & symmetric (Lucas) & $(-2, 0, 0)$ & \texttt{deriveFDim 3} \\
@@ -165,10 +165,10 @@ $D_6$ & antisymmetric ($\sqrt{5} \cdot F_n$) & $(-5, 1, -1)$ & \texttt{deriveFDi
 \end{tabular}
 \end{center}
 
-The $p$ component $-(m-1)$ comes from the normalization denominator $(\varphi-\psi)^{m-1}$.
+The $\sqrt{5}$ component $-(m-1)$ comes from the normalization denominator $(\varphi-\psi)^{m-1}$.
 The $\delta$ component alternates: even $m$ operators have $\delta = 1$ (antisymmetric, Fibonacci factors), odd $m$ have $\delta = 0$ (symmetric, Lucas integers).
 Only $D_6$ has $\tau = -1$, reflecting that it alone detects modes outside $\ker(D_6)$ (temporal sector).
 
-Since all five operators have distinct $(p, \delta, \tau)$, addition $D_i f(x) + D_j f(x)$ ($i \neq j$) is a type error.
+Since all five operators have distinct $(\sqrt{5}, \delta, \tau)$, addition $D_i f(x) + D_j f(x)$ ($i \neq j$) is a type error.
 
 $D_{5\frac{1}{2}}$ has a direct sum type $\mathrm{ScaleQ}(-4,0,0) \oplus \mathrm{ScaleQ}(-2,1,0)$, bridging the symmetric ($\delta = 0$) and antisymmetric ($\delta = 1$) sectors.

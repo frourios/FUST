@@ -149,26 +149,26 @@ $D_6$ & $\dim \ker(D_6) = 3$ & $\mathfrak{su}(3)$: $3^2 - 1 = 8$ \\
 
 \subsection{Derivation of Mass Gap Value}
 
-The mass gap is determined from the tensor product:
+The mass gap is derived from the $D_6$ gauge-invariant output:
 
 \begin{theorem}[Mass Gap Formula]
 \label{thm:mat_mass_gap_formula}
 \lean{FUST.massGap_formula_justified}
 \leanok
 
-Uniqueness of kernel dimensions:
+$D_6(t^d)(x) = C_d \cdot x^{d-1} / (\sqrt{5})^5$ where $C_d \cdot x^{d-1} / (\sqrt{5})^5 \cdot x^{-(d-1)} = C_d/(\sqrt{5})^5$ is gauge-invariant (independent of probe point $x$).
+
+Kernel structure:
 \begin{itemize}
-\item $\ker(D_5) = \mathrm{span}\{1, x\}$, $\dim = 2$ ($D_5$ annihilates up to degree 1, not degree 2)
 \item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$, $\dim = 3$ ($D_6$ annihilates up to degree 2, not degree 3)
+\item Minimum massive degree is $d = 3$
 \end{itemize}
 
-Tensor product formula:
+Mass gap from $D_6$ gauge-invariant output at $d = 3$:
 \[
-\Delta = \dim \ker(D_5) \times \dim \ker(D_6) = 2 \times 3 = 6
+\Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12\sqrt{5}}{(\sqrt{5})^5} = \frac{12}{25} = \frac{1}{t_{\mathrm{FUST}}}
 \]
 \end{theorem}
-
-\textbf{Why product?} Gauge representations combine via tensor products, and $\dim(V \otimes W) = \dim V \times \dim W$.
 
 \subsection{Degree of Minimal Mass State}
 
@@ -204,7 +204,7 @@ E = \{m^2 : m \in M, m \geq 0\}
 \lean{FUST.energy_gap}
 \leanok
 \[
-E \in \mathrm{EnergySpectrum} \Rightarrow E = 0 \lor E \geq \Delta^2 = 36
+E \in \mathrm{EnergySpectrum} \Rightarrow E = 0 \lor E \geq \Delta^2 = 144/625
 \]
 \end{theorem}
 
@@ -217,7 +217,7 @@ E \in \mathrm{EnergySpectrum} \Rightarrow E = 0 \lor E \geq \Delta^2 = 36
 \begin{enumerate}
 \item $\checkmark$ \textbf{4-dimensional spacetime}: $3 + 1 = 4$ (derived from Time Theorem)
 \item $\checkmark$ \textbf{Gauge group $\mathrm{SU}(3)$}: Derived from $\ker(D_6)$ dimension
-\item $\checkmark$ \textbf{Mass gap $\Delta = 6 > 0$}: Tensor product of kernel dimensions
+\item $\checkmark$ \textbf{Mass gap $\Delta = 12/25 > 0$}: Derived from $D_6$ gauge-invariant output $C_3/(\sqrt{5})^5$
 \item $\checkmark$ \textbf{Physical meaning}: Mass = deviation from $\ker(D_6)$ = existence of proper time
 \item $\checkmark$ \textbf{Vacuum $E = 0$}: Constant function $\in \ker(D_6)$
 \item $\checkmark$ \textbf{Non-vacuum $E \geq \Delta^2$}: From spectral structure
@@ -232,8 +232,9 @@ E \in \mathrm{EnergySpectrum} \Rightarrow E = 0 \lor E \geq \Delta^2 = 36
 \leanok
 No arbitrary selection is involved in deriving the mass gap:
 \begin{itemize}
-\item Kernel dimensions 2, 3 are uniquely determined from $D$ operator annihilation structure
-\item Product formula is a mathematical property of tensor products
+\item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ is uniquely determined from $D_6$ annihilation structure
+\item $C_3 = 12\sqrt{5}$ is the unique value of $D_6$ applied to $x^3$
+\item $\Delta = C_3/(\sqrt{5})^5 = 12/25$ is uniquely derived as a gauge-invariant quantity
 \item 4 dimensions are uniquely derived from observational constraints
 \end{itemize}
 \end{theorem}
@@ -249,15 +250,15 @@ The dimensional type system classifies the quantities in this chapter:
 Quantity & Type & Dimension / Value \\
 \hline
 $L_{\mathrm{FUST}} = \|D_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
-$\Delta = \dim\ker(D_5) \times \dim\ker(D_6)$ & CountQuantity & $6$ \\
-$\Delta^2$ (energy threshold) & CountQuantity & $36$ \\
+$\Delta = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ \\
+$\Delta^2 = 144/625$ (energy threshold) & ScaleQuantity & $(-10, 2, -2)$ \\
 Spacetime dimension & CountQuantity & $4$ \\
 $f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
 \hline
 \end{tabular}
 \end{center}
 
-The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} is a \textbf{numerical comparison} in the FUST coordinate system, not an equality of dimensioned quantities. $\Delta = 6$ (CountQuantity from kernel tensor product) is structurally distinct from $\varphi^6 \approx 17.94$ (ScaleQuantity, mass ratio).
+The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2, -2)$, which is dimensionally consistent. $\Delta = 12/25$ (ScaleQuantity from $D_6$ gauge-invariant output) has dimension $(-5, 1, -1) = \dim(t_{\mathrm{FUST}})^{-1}$.
 
-Lean: \texttt{FUST\_dim.Combined.massGap} (CountQ), \texttt{FUST\_dim.Combined.spectralGap\_count}.
+Lean: \texttt{FUST.massGap}$\Delta$ (ScaleQ $\dim(t)^{-1}$), \texttt{FUST.Dim.massGap}$\Delta$.
 

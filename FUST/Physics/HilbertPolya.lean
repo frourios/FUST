@@ -519,14 +519,6 @@ theorem FUSTEigenvalue_nonneg (n : ℕ) : 0 ≤ FUSTEigenvalue n := by
     have hn0 : 0 ≤ (n : ℝ) := by simp
     positivity
 
-/-- First non-zero eigenvalue is at n = 3. -/
-theorem FUSTEigenvalue_three : FUSTEigenvalue 3 = 6 := by
-  simp [FUSTEigenvalue]
-  norm_num
-
-/-- Spectral gap equals 6 (from n = 3). -/
-theorem FUSTSpectralGap : FUSTEigenvalue 3 = 6 := FUSTEigenvalue_three
-
 /-! ### Spectral Zeta Function
 
 The spectral zeta function for FUST Hamiltonian:

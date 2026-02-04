@@ -47,13 +47,6 @@ theorem fustHamiltonian_ker_zero (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKe
 theorem fustHamiltonian_eq_lagrangian (f : ℝ → ℝ) (x : ℝ) :
     (fustHamiltonian f x).val = (Dim.lagrangian_dim f x).val := rfl
 
-/-! ## Spectral Eigenvalues as CountQ -/
-
-def fustEigenvalue3 : CountQ := ⟨FUST.Hamiltonian.spectralGapValue⟩
-
-theorem fustEigenvalue3_val : fustEigenvalue3.val = 6 := by
-  simp only [fustEigenvalue3, FUST.Hamiltonian.spectralGapValue_eq]
-
 /-! ## Thermodynamics: entropy as ScaleQ(dimLagrangian) -/
 
 /-- Entropy at time t for function f -/
