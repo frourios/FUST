@@ -2,12 +2,13 @@
 \chapter{Six-Element Completeness Theorem}
 \label{chap:six_completeness}
 
-\section{Completeness of FUST Function Classes}
+\section{D6 Completeness}
 \label{sec:fust_completeness}
 
-\textbf{Important}: FUST \textbf{does not use arbitrary transcendental functions}. FUST deals only with the \textbf{specific function classes $\mathcal{F}_n$} defined in Chapter~\ref{chap:function_classes}.
+The $D_n$ operators are defined for \textbf{arbitrary functions} $f : \mathbb{R} \to \mathbb{R}$.
+The completeness theorem states that $\ker(D_7) = \ker(D_6)$ holds universally.
 
-\subsection{Completeness in Polynomial Space (Lean4 Proven)}
+\subsection{Kernel Equality (Lean4 Proven)}
 
 \begin{theorem}[Kernel Equality]
 \label{thm:kernel_equality}
@@ -18,16 +19,10 @@
 \]
 \end{theorem}
 
-This is formally proven in Lean4 as \texttt{D7\_kernel\_equals\_D6\_kernel}.
-
-\subsection{Completeness of FUST Function Classes (Lean4 Proven)}
-
-For FUST function classes $\mathcal{F}_n = e^{in\pi x} \cdot \varphi^{n\mathfrak{f} - n|x|^2}$:
-
 \begin{enumerate}
-\item \textbf{Multiplicative finite generation}: $\mathcal{F}_n$ for $n \ge 2$ is multiplicatively generated from $\mathcal{F}_2$ (\texttt{FUST\_class\_multiplicative})
-\item \textbf{Saturation of $D_6$-visible structure}: $D_6$ detects all polynomial components of degree 3 or higher (\texttt{FUST\_class\_D6\_completeness})
-\item \textbf{Redundancy of $D_7$ and higher}: From $\ker(D_7) = \ker(D_6)$, no new independent structure for $n \ge 7$
+\item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (3-dimensional)
+\item $D_6[x^3] \ne 0$: $D_6$ detects cubic and higher degree polynomials
+\item $\ker(D_7) = \ker(D_6)$: no new independent structure for $n \ge 7$
 \end{enumerate}
 
 \section{Elimination Conditions}

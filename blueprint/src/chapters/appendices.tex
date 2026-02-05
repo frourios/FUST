@@ -1,45 +1,6 @@
 % Appendices
 \appendix
 
-\chapter{Function Class Hierarchy Diagram}
-\label{app:hierarchy}
-
-\[
-\begin{array}{ccccccc}
-\mathcal{F}_2 & \xrightarrow{\cdot} & \mathcal{F}_3 & \xrightarrow{\cdot} & \mathcal{F}_5 & \xrightarrow{\cdot} & \mathcal{F}_6 \\
-& & \downarrow & & \downarrow & & \\
-& & \mathcal{F}_4 & & \mathcal{F}_{5.5} & &
-\end{array}
-\]
-
-\begin{itemize}
-\item Horizontal arrows: $\mathcal{F}_{n+2} = \mathcal{F}_n \cdot \mathcal{F}_{n}$ (self-product)
-\item Vertical arrows: $\mathcal{F}_{n+1} = \mathcal{F}_2 \cdot \mathcal{F}_n$ (base product)
-\item $\mathcal{F}_{5.5}$: Permits self-reference once (not closed under multiplication)
-\end{itemize}
-
-\chapter{Explicit Forms of Functions}
-\label{app:explicit_forms}
-
-Definition via \textbf{sign pattern $(+,+,-)$}:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Class & Generating function & Oscillation term & Exponent part \\
-\hline
-$\mathcal{F}_2$ & $F_2 = e^{i\pi x} \varphi^{\mathfrak{f}-|x|^2}$ & $e^{i\pi x}$ & $\mathfrak{f} - |x|^2$ \\
-$\mathcal{F}_3$ & $F_3 = F_2^2$ & $e^{2i\pi x}$ & $2\mathfrak{f} - 2|x|^2$ \\
-$\mathcal{F}_4$ & $F_4 = F_2 \cdot F_3$ & $e^{3i\pi x}$ & $3\mathfrak{f} - 3|x|^2$ \\
-$\mathcal{F}_5$ & $F_5 = F_3^2$ & $e^{4i\pi x}$ & $4\mathfrak{f} - 4|x|^2$ \\
-$\mathcal{F}_{5.5}$ & $F_{5.5} = F_5 + \lambda \Delta_2 F_5$ & Mixed & Mixed \\
-$\mathcal{F}_6$ & $F_6 = F_5^2$ & $e^{8i\pi x}$ & $8\mathfrak{f} - 8|x|^2$ \\
-\hline
-\end{tabular}
-\end{center}
-
-\textbf{Note}: The Gaussian wave packet balances at critical radius $|x| = \sqrt{\mathfrak{f}} \approx 1.92$ ($\mathfrak{f} = \exp_{\mathsf{F}}(1) \approx 3.7045$).
-
 \chapter{Coefficients and Elimination Patterns of Each Operator}
 \label{app:coefficients}
 
@@ -60,53 +21,16 @@ $D_6$ & $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ & $[1, -3, 1, 
 
 \textbf{Note}: Only $D_4$ has non-zero coefficient sum (gauge breaking). Only $D_6$ eliminates $x^0, x^1, x^2$ simultaneously. $D_{5.5}$ is a mixture of $D_5$ (symmetric) and $\Delta_2$ (antisymmetric difference).
 
-\chapter{Applications of the Dn-Fm Matrix}
-\label{app:matrix}
-
-The components of the $6 \times 6$ matrix $M_{nm} = D_n[F_m]$ have the following applications:
-
-\section{Diagonal Components (6 entries)}
-
-\textbf{Eigenvalue-like measurement}: $\lambda_n = D_n[F_n] / F_n$ gives ``eigenvalues''.
-\[
-D_n F_n = \lambda_n F_n
-\]
-
-Values at $x = 1$:
-\begin{itemize}
-\item $\lambda_2 \approx -0.65$, $\lambda_3 \approx -3.49$, $\lambda_4 \approx -4.14$
-\item $\lambda_5 \approx -3.26$, $\lambda_{5.5} \approx 0$ (near kernel), $\lambda_6 \approx -104$
-\end{itemize}
-
-\section{Off-diagonal Components}
-
-\textbf{Transition amplitudes}: Represent couplings between different hierarchies.
-
-\begin{itemize}
-\item \textbf{Upper triangular} ($n < m$): Projection of higher-order functions to lower orders
-\item \textbf{Lower triangular} ($n > m$): Excitation of lower-order functions to higher orders
-\end{itemize}
-
-\section{Applications}
-
-\begin{enumerate}
-\item \textbf{Spectral decomposition}: Expand any $g(x)$ as $g = \sum c_n F_n$, and determine coefficients $c_n$ from $D_m[g] = \sum c_n D_m[F_n]$ via matrix inversion
-
-\item \textbf{Consistency check}: If $D_m[g] / D_m[F_n]$ is constant for all $m$ $\Rightarrow g \propto F_n$
-
-\item \textbf{Half-order detection}: If $D_{5.5}[g] \approx 0$ and $D_5[g] \ne 0$, $D_6[g] \ne 0$, then $g$ is of type $F_{5.5}$
-\end{enumerate}
-
 \chapter{Neutrality with Respect to the Axiom of Choice}
 \label{app:ac_neutrality}
 
-FUST is \textbf{neutral} with respect to the Axiom of Choice (AC). That is, the core structures of FUST are constructible within ZF and do not depend on whether AC holds.
+FUST is \textbf{neutral} with respect to the full Axiom of Choice (AC). That is, the core structures of FUST are constructible within ZF + DC (Dependent Choice) and do not depend on whether full AC holds.
 
-\section{Constructibility within ZF}
+\section{Constructibility within ZF + DC}
 
-\begin{theorem}[Constructibility within ZF]
-\label{thm:zf_constructible}
-The core structures of FUST (difference operators $D_n$, kernels $\ker(D_n)$, gauge groups) are constructible within the ZF axiom system.
+\begin{theorem}[Constructibility within ZF + DC]
+\label{thm:zf_dc_constructible}
+The core structures of FUST (difference operators $D_n$, kernels $\ker(D_n)$, gauge groups) are constructible within the ZF + DC axiom system.
 \end{theorem}
 
 \begin{proof}
@@ -128,8 +52,8 @@ We show that each of the following constructions does not require AC:
 \begin{corollary}[AC Neutrality]
 FUST is neutral with respect to AC. That is:
 \begin{itemize}
-\item AC cannot be derived from ZF + FUST
-\item ZF + $\neg$AC + FUST is also consistent (if ZF + $\neg$AC is consistent)
+\item Full AC cannot be derived from ZF + DC + FUST
+\item ZF + DC + $\neg$AC + FUST is also consistent (if ZF + DC + $\neg$AC is consistent)
 \end{itemize}
 \end{corollary}
 

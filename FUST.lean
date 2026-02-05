@@ -27,6 +27,7 @@ import FUST.Physics.Probability
 import FUST.Physics.QuantumStructure
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.ScaleStructure
+import FUST.Physics.StateFunctionConstraint
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation

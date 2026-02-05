@@ -1,0 +1,116 @@
+\section{Algebraic Constraint on State Functions}
+\label{sec:state-function-constraint}
+
+Physically manifest state functions $g(x)$ are constrained to
+$\mathbb{Z}[\varphi]$-coefficient polynomials by three algebraic
+properties of the Frourio algebra:
+polynomial module closure (Prop~5.2),
+valuation non-decreasing (Prop~8.1),
+and PBW faithfulness.
+
+\subsection{Polynomial Module Closure (Proposition 5.2)}
+
+The polynomial space $V = \mathrm{Span}\{x^n\}$ is closed under:
+\begin{itemize}
+    \item Scale action $U$: preserves degree, multiplies coefficient by $\varphi^n$
+    \item Frourio difference $D_\Phi$: lowers degree by 1, coefficient is $S_{n-1}$
+\end{itemize}
+Both operations preserve $\mathbb{Z}[\varphi]$-coefficients.
+
+\begin{definition}[Evaluation of a $\mathbb{Z}\lbrack\varphi\rbrack$-coefficient polynomial]
+\label{def:eval-golden-poly}
+\lean{FUST.StateFunctionConstraint.evalGoldenPoly}
+\leanok
+For coefficients $c_0, \dots, c_d \in \mathbb{Z}[\varphi]$ and $x \in \mathbb{R}$:
+\[
+\mathrm{eval}(c, d, x) = \sum_{k=0}^{d} c_k \cdot x^k
+\]
+\end{definition}
+
+\begin{theorem}[Golden polynomial evaluation preserves $\mathbb{Q}(\varphi)$]
+\label{thm:eval-golden-poly-in-golden-field}
+\lean{FUST.StateFunctionConstraint.evalGoldenPoly_in_goldenField}
+\leanok
+\uses{def:eval-golden-poly, def:in-golden-field}
+If $x \in \mathbb{Q}(\varphi)$, then $\mathrm{eval}(c, d, x) \in \mathbb{Q}(\varphi)$
+for any $\mathbb{Z}[\varphi]$-coefficients $c$.
+\end{theorem}
+
+\subsection{Scale Action Preserves \texorpdfstring{$\mathbb{Z}[\varphi]$}{Z[φ]}-Coefficients}
+
+$U \cdot (\sum c_k x^k) = \sum (\varphi^k c_k) x^k$ evaluated at $\varphi x$.
+Since $\varphi^n \in \mathbb{Z}[\varphi]$, the scaled polynomial has
+$\mathbb{Z}[\varphi]$ coefficients.
+
+\begin{definition}[Scaled golden polynomial]
+\label{def:scale-golden-poly}
+\lean{FUST.StateFunctionConstraint.scaleGoldenPoly}
+\leanok
+Scaling by $\varphi$: each coefficient $c_k$ becomes $\varphi^k \cdot c_k$.
+\end{definition}
+
+\begin{theorem}[Scale evaluation identity]
+\label{thm:scale-eval-eq}
+\lean{FUST.StateFunctionConstraint.scale_eval_eq}
+\leanok
+\uses{def:eval-golden-poly, def:scale-golden-poly}
+\[
+\mathrm{eval}(\varphi^k c_k, d, x) = \mathrm{eval}(c, d, \varphi x)
+\]
+\end{theorem}
+
+\begin{definition}[Golden polynomial state function]
+\label{def:is-golden-polynomial-state}
+\lean{FUST.StateFunctionConstraint.IsGoldenPolynomialState}
+\leanok
+\uses{def:eval-golden-poly}
+A function $g : \mathbb{R} \to \mathbb{R}$ is a \emph{golden polynomial state}
+if there exist $d \in \mathbb{N}$ and $c_0, \dots, c_d \in \mathbb{Z}[\varphi]$
+such that $g(x) = \sum_{k=0}^{d} c_k x^k$.
+\end{definition}
+
+\begin{theorem}[Golden states evaluate to $\mathbb{Q}(\varphi)$]
+\label{thm:golden-state-in-golden-field}
+\lean{FUST.StateFunctionConstraint.golden_state_in_goldenField}
+\leanok
+\uses{def:is-golden-polynomial-state, def:in-golden-field, thm:eval-golden-poly-in-golden-field}
+If $g$ is a golden polynomial state and $x \in \mathbb{Q}(\varphi)$,
+then $g(x) \in \mathbb{Q}(\varphi)$.
+\end{theorem}
+
+\begin{theorem}[Closure under scale action $U$]
+\label{thm:golden-state-closed-under-scale}
+\lean{FUST.StateFunctionConstraint.golden_state_closed_under_scale}
+\leanok
+\uses{def:is-golden-polynomial-state, def:scale-golden-poly, thm:scale-eval-eq}
+If $g$ is a golden polynomial state, then $x \mapsto g(\varphi x)$
+is also a golden polynomial state.
+\end{theorem}
+
+\subsection{Valuation Non-Decreasing for Golden Polynomials}
+
+The theorem \texttt{valuation\_nonDecreasing} from
+\S\ref{sec:phi-orbit-initial-value} states
+$v_{\mathfrak{p}}(\Delta f) \ge v_{\mathfrak{p}}(f)$
+for $f \in \mathbb{Z}[\varphi]((x))$ with unit parameters
+$\alpha, \beta \in \mathbb{Z}[\varphi]^\times$.
+
+\begin{definition}[Golden polynomial to Laurent series]
+\label{def:golden-poly-to-laurent}
+\lean{FUST.StateFunctionConstraint.goldenPolyToLaurent}
+\leanok
+Embeds a $\mathbb{Z}[\varphi]$-coefficient polynomial of degree $d$
+into the Laurent series ring by setting negative-index coefficients to zero.
+\end{definition}
+
+\begin{theorem}[Valuation non-decreasing for golden polynomials]
+\label{thm:poly-valuation-non-decreasing}
+\lean{FUST.StateFunctionConstraint.poly_valuation_nonDecreasing}
+\leanok
+\uses{def:golden-poly-to-laurent, thm:valuation-non-decreasing-golden}
+For a $\mathbb{Z}[\varphi]$-coefficient polynomial $f$ with
+$\alpha = \varphi$, $\beta = \varphi^{-1}$:
+\[
+v_{\mathfrak{p}}(\Delta_{\alpha,\beta} f) \ge v_{\mathfrak{p}}(f)
+\]
+\end{theorem}

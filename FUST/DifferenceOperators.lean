@@ -588,98 +588,7 @@ theorem FUST_coefficient_uniqueness :
 
 end CoefficientUniqueness
 
-/-!
-## Function Classes and Annihilation Structure
-
-The function class F_n is defined by the basis function F_2 and generation rules.
-F_2(x) = e^{iπx} · φ^{𝔣} · φ^{-|x|²}
--/
-
-section FunctionClasses
-
-open Complex
-
-/-- Phase factor: e^{iπx} -/
-noncomputable def phaseFactor (x : ℝ) : ℂ := Complex.exp (Complex.I * Real.pi * x)
-
-/-- Gaussian decay factor: φ^{-|x|²} -/
-noncomputable def gaussianDecay (x : ℝ) : ℝ := φ ^ (-(x ^ 2))
-
-/-- Amplification factor: φ^{𝔣} -/
-noncomputable def amplificationFactor : ℝ := φ ^ frourioConst
-
-/-- Basis function F_2(x) = e^{iπx} · φ^{𝔣} · φ^{-|x|²}
-    Sign pattern (+,+,-): oscillation, amplification, decay -/
-noncomputable def F2 (x : ℝ) : ℂ :=
-  phaseFactor x * (amplificationFactor * gaussianDecay x : ℝ)
-
-/-- F_3 = F_2² = e^{2iπx} · φ^{2𝔣 - 2|x|²} -/
-noncomputable def F3 (x : ℝ) : ℂ := F2 x ^ 2
-
-/-- F_4 = F_2 · F_3 = e^{3iπx} · φ^{3𝔣 - 3|x|²} -/
-noncomputable def F4 (x : ℝ) : ℂ := F2 x * F3 x
-
-/-- F_5 = F_3² = e^{4iπx} · φ^{4𝔣 - 4|x|²} -/
-noncomputable def F5 (x : ℝ) : ℂ := F3 x ^ 2
-
-/-- F_6 = F_5² = e^{8iπx} · φ^{8𝔣 - 8|x|²} -/
-noncomputable def F6 (x : ℝ) : ℂ := F5 x ^ 2
-
-/-- Generation rule: F_3 = F_2² -/
-theorem F3_eq_F2_sq : F3 = fun x => F2 x ^ 2 := rfl
-
-/-- Generation rule: F_4 = F_2 · F_3 -/
-theorem F4_eq_F2_mul_F3 : F4 = fun x => F2 x * F3 x := rfl
-
-/-- Generation rule: F_5 = F_3² -/
-theorem F5_eq_F3_sq : F5 = fun x => F3 x ^ 2 := rfl
-
-/-- Generation rule: F_6 = F_5² -/
-theorem F6_eq_F5_sq : F6 = fun x => F5 x ^ 2 := rfl
-
-/-- Alternative: F_5 = F_2⁴ -/
-theorem F5_eq_F2_pow4 (x : ℝ) : F5 x = F2 x ^ 4 := by
-  simp only [F5, F3]
-  ring
-
-/-- Alternative: F_6 = F_2⁸ -/
-theorem F6_eq_F2_pow8 (x : ℝ) : F6 x = F2 x ^ 8 := by
-  simp only [F6, F5, F3]
-  ring
-
-/-- Critical radius: √𝔣 ≈ 1.92 -/
-noncomputable def criticalRadius : ℝ := Real.sqrt frourioConst
-
-/-- The Gaussian decay equals amplification at critical radius -/
-theorem gaussian_amplification_balance (x : ℝ) (hx : x ^ 2 = frourioConst) :
-    gaussianDecay x = 1 / amplificationFactor := by
-  simp only [gaussianDecay, amplificationFactor, hx]
-  rw [Real.rpow_neg (le_of_lt phi_pos)]
-  ring
-
-/-- Inside critical radius: amplification dominates -/
-theorem inside_critical_amplification_dominates (x : ℝ) (hx : x ^ 2 < frourioConst) :
-    gaussianDecay x > 1 / amplificationFactor := by
-  simp only [gaussianDecay, amplificationFactor]
-  rw [Real.rpow_neg (le_of_lt phi_pos), one_div]
-  have h1 : φ ^ (x ^ 2) < φ ^ frourioConst := Real.rpow_lt_rpow_of_exponent_lt φ_gt_one hx
-  have h2 : 0 < φ ^ (x ^ 2) := Real.rpow_pos_of_pos phi_pos _
-  have hinv : 1 / (φ ^ frourioConst) < 1 / (φ ^ (x ^ 2)) := one_div_lt_one_div_of_lt h2 h1
-  simp only [one_div] at hinv
-  exact hinv
-
-/-- Outside critical radius: decay dominates -/
-theorem outside_critical_decay_dominates (x : ℝ) (hx : x ^ 2 > frourioConst) :
-    gaussianDecay x < 1 / amplificationFactor := by
-  simp only [gaussianDecay, amplificationFactor]
-  rw [Real.rpow_neg (le_of_lt phi_pos), one_div]
-  have h1 : φ ^ frourioConst < φ ^ (x ^ 2) := Real.rpow_lt_rpow_of_exponent_lt φ_gt_one hx
-  have h3 : 0 < φ ^ frourioConst := Real.rpow_pos_of_pos phi_pos _
-  have hinv : 1 / (φ ^ (x ^ 2)) < 1 / (φ ^ frourioConst) := one_div_lt_one_div_of_lt h3 h1
-  simp only [one_div] at hinv
-  exact hinv
-
-/-! ### Half-order function class F_{5.5} -/
+section AlgebraicConstants
 
 /-- Half-order mixing parameter: λ = 2/(φ + 2) = 2/(φ² + 1) ≈ 0.5528 -/
 noncomputable def halfOrderParam : ℝ := 2 / (φ + 2)
@@ -710,21 +619,6 @@ theorem halfOrderParam_unique_from_condition (μ : ℝ) (h : μ * (φ ^ 2 + 1) =
   rw [halfOrderParam_alt]
   field_simp at h ⊢
   linarith
-
-/-- Half-order function: F_{5.5}(x) = F_5(x) + λ·(F_5(φx) - F_5(ψx)) -/
-noncomputable def F5_half (x : ℝ) : ℂ :=
-  F5 x + halfOrderParam * (F5 (φ * x) - F5 (ψ * x))
-
-/-- F_{5.5} includes self-referential difference term -/
-theorem F5_half_has_self_reference (x : ℝ) :
-    F5_half x = F5 x + halfOrderParam * (F5 (φ * x) - F5 (ψ * x)) := rfl
-
-/-- F_{5.5}² expands with cross terms that don't fit F_{5.5} form -/
-theorem F5_half_sq_has_cross_terms (x : ℝ) :
-    F5_half x ^ 2 = F5 x ^ 2 + 2 * halfOrderParam * F5 x * (F5 (φ * x) - F5 (ψ * x)) +
-      halfOrderParam ^ 2 * (F5 (φ * x) - F5 (ψ * x)) ^ 2 := by
-  simp only [F5_half]
-  ring
 
 /-! ### Coefficient sums and gauge invariance -/
 
@@ -791,7 +685,7 @@ theorem D6_kernel_contains_polynomials_up_to_degree_2 (x : ℝ) (hx : x ≠ 0) :
     D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t^2) x = 0 :=
   ⟨D6_const 1 x hx, D6_linear x hx, D6_quadratic x hx⟩
 
-end FunctionClasses
+end AlgebraicConstants
 
 /-!
 ## D7 Algebraic Reduction to D6
@@ -1075,21 +969,12 @@ theorem D7_algebraic_reduction :
 end D7Reduction
 
 /-!
-## F6 Transcendental Completeness
+## D6 Completeness
 
-This section proves the **Restricted F6 Completeness Theorem** for transcendental functions.
-
-Key insight: While transcendental functions (exp, sin, etc.) have infinite Taylor series,
-their **D6-visible component** (the part detected by D6) is always finite-dimensional.
-
-Main results:
-1. D6 annihilates polynomials up to degree 2 (ker(D6) = span{1, x, x²})
-2. D6 detects cubic terms (D6[x³] ≠ 0)
-3. Higher-order terms (degree ≥ 7) are constrained by F6 saturation
-4. The D6-visible component of any function lies in a finite-dimensional quotient
+ker(D6) = span{1, x, x²}, D6 detects cubic and higher, ker(D7) = ker(D6).
 -/
 
-section F6TranscendentalCompleteness
+section D6Completeness
 
 /-- D6 detects cubic terms: D6[x³] ≠ 0 -/
 theorem D6_detects_cubic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 := by
@@ -1151,16 +1036,7 @@ theorem D6_detects_cubic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
   have hx3_ne : x^3 ≠ 0 := pow_ne_zero 3 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx3_ne) hden_ne
 
-/-- F6 Restricted Completeness Theorem (Main Result):
-    For any function f, its D6-visible component is finite-dimensional.
-
-    Interpretation:
-    - f_ker ∈ ker(D6) = span{1, x, x²} is "time-invisible" (construction info)
-    - f_visible = f - f_ker contains all observable physics
-    - The D6-visible component lives in at most 4-dimensional quotient
-
-    This proves: transcendental functions, while infinite in structure,
-    have finite-dimensional observable content under D6. -/
+/-- D6 Completeness Theorem: ker(D6) = span{1, x, x²} and ker(D7) = ker(D6). -/
 theorem F6_restricted_completeness :
     -- 1. ker(D6) is exactly 3-dimensional: span{1, x, x²}
     (∀ c x, x ≠ 0 → D6 (fun _ => c) x = 0) ∧
@@ -1178,38 +1054,7 @@ theorem F6_restricted_completeness :
   · exact fun a x hx => D7_constrained_linear a x hx
   · exact fun a x hx => D7_constrained_quadratic a x hx
 
-end F6TranscendentalCompleteness
-
-/-!
-## FUST Function Class Completeness
-
-FUST function classes are defined as:
-  F_n(x) = e^{inπx} · φ^{nf - n|x|²}
-
-where f = exp_F(1) ≈ 3.7045 is the Frourio constant.
-
-Key property: F_n classes are generated multiplicatively from F_2:
-  F_3 = F_2², F_4 = F_2·F_3, F_5 = F_3², F_6 = F_5²
-
-The completeness theorem states: for functions in FUST classes,
-D6 detects all independent structure, and D7+ adds nothing new.
--/
-
-section FUSTFunctionClassCompleteness
-
-/-- Multiplicative generation: n ≥ 4 can be written as sum of two indices ≥ 2 -/
-def isMultiplicativelyGenerated (n : ℕ) : Prop :=
-  n = 2 ∨ n = 3 ∨ (∃ a b : ℕ, 2 ≤ a ∧ 2 ≤ b ∧ a + b = n)
-
-/-- F_n classes for n ≥ 2 are multiplicatively generated -/
-theorem FUST_class_multiplicative (n : ℕ) (hn : n ≥ 2) :
-    isMultiplicativelyGenerated n := by
-  rcases Nat.lt_or_eq_of_le hn with h | h
-  · rcases Nat.lt_or_eq_of_le h with h2 | h2
-    · right; right
-      exact ⟨2, n - 2, le_refl 2, by omega, by omega⟩
-    · right; left; omega
-  · left; omega
+end D6Completeness
 
 /-- D6 does not annihilate quartic: D6[x⁴] ≠ 0 -/
 theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 := by
@@ -1272,28 +1117,6 @@ theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 
   have hx4_ne : x^4 ≠ 0 := pow_ne_zero 4 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx4_ne) hden_ne
 
-/-- FUST Class Completeness Theorem:
-    For FUST function classes F_n, the D6-visible structure saturates.
-    - ker(D6) = span{1, x, x²} (3-dimensional)
-    - D6 detects cubic and higher
-    - D7+ kernel equals D6 kernel (no new observable structure) -/
-theorem FUST_class_D6_completeness :
-    (∀ c x, x ≠ 0 → D6 (fun _ => c) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    (∀ a : ℝ, ∀ c x, x ≠ 0 → D7_constrained a (fun _ => c) x = 0) ∧
-    (∀ a : ℝ, ∀ x, x ≠ 0 → D7_constrained a id x = 0) ∧
-    (∀ a : ℝ, ∀ x, x ≠ 0 → D7_constrained a (fun t => t^2) x = 0) :=
-  F6_restricted_completeness
-
-/-- FUST class finite observable: products exit kernel but D7 adds nothing -/
-theorem FUST_class_finite_observable :
-    (∀ x, x ≠ 0 → D6 (fun t => t^4) x ≠ 0) ∧
-    (∀ a : ℝ, ∀ x, x ≠ 0 → D7_constrained a (fun t => t^2) x = 0) :=
-  ⟨D6_quartic_nonzero, fun a x hx => D7_constrained_quadratic a x hx⟩
-
-end FUSTFunctionClassCompleteness
 
 end FUST
 
