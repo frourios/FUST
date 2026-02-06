@@ -42,17 +42,14 @@ noncomputable def discreteScale (n : ℤ) : ScaleQ 1 :=
 theorem discreteScale_pos (n : ℤ) : (discreteScale n).val > 0 :=
   FUST.BlackHole.discreteScale_pos n
 
-noncomputable def hawkingTemperatureScale (n : ℕ) : ScaleQ 1 :=
-  ⟨FUST.BlackHole.hawkingTemperatureScale n⟩
+noncomputable def dissipationRate (n : ℕ) : ScaleQ 1 :=
+  ⟨FUST.BlackHole.dissipationRate n⟩
 
-noncomputable def areaScale (k : ℕ) : ScaleQ 1 :=
-  ⟨FUST.BlackHole.areaScale k⟩
+noncomputable def scaleResolution (k : ℕ) : ScaleQ 1 :=
+  ⟨FUST.BlackHole.scaleResolution k⟩
 
-noncomputable def entropyScale (k : ℕ) : ScaleQ 1 :=
-  ⟨FUST.BlackHole.entropyScale k⟩
-
-theorem entropy_area_law (k : ℕ) :
-    (entropyScale k).val = φ ^ (2 * k) := rfl
+def degreesOfFreedom (k : ℕ) : CountQ :=
+  ⟨FUST.BlackHole.degreesOfFreedom k⟩
 
 /-! ## Gravitational Coupling Exponents as CountQ -/
 
@@ -86,15 +83,6 @@ theorem phi_psi_duality : φ * |ψ| = 1 :=
 theorem unitarity (n : ℤ) :
     (discreteScale n).val * (discreteScale (-n)).val = 1 :=
   FUST.BlackHole.unitarity_from_duality n
-
-/-! ## Information Capacity -/
-
-noncomputable def infoCapacity (area : ℝ) : ScaleQ 1 :=
-  ⟨FUST.BlackHole.infoCapacity area⟩
-
-theorem infoCapacity_scaling (k : ℕ) :
-    (infoCapacity (FUST.BlackHole.areaScale k)).val = 2 * k :=
-  FUST.BlackHole.infoCapacity_scaling k
 
 /-! ## Exponent Derivation Consistency -/
 

@@ -2,115 +2,30 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fin.Basic
+import Mathlib.NumberTheory.Real.GoldenRatio
 
 namespace FUST
 
 noncomputable def φ : ℝ := (1 + Real.sqrt 5) / 2
-
-lemma golden_ratio_property : φ^2 = φ + 1 := by
-  have hmul := Real.mul_self_sqrt (Nat.cast_nonneg (α := ℝ) 5)
-  -- rewrite to exponent form for easier substitution
-  have hsq : (Real.sqrt 5)^2 = (5 : ℝ) := by
-    calc
-      (Real.sqrt 5)^2 = (Real.sqrt 5) * (Real.sqrt 5) := by simp [pow_two]
-      _ = (5 : ℝ) := hmul
-  have h1 : φ^2 = ((1 + Real.sqrt 5)^2) / 4 := by
-    have htmp : ((1 + Real.sqrt 5) / 2)^2 = ((1 + Real.sqrt 5)^2) / 4 := by
-      ring
-    simpa [φ] using htmp
-  have h2 : φ + 1 = (3 + Real.sqrt 5) / 2 := by
-    have htmp : (1 + Real.sqrt 5) / 2 + 1 = (3 + Real.sqrt 5) / 2 := by
-      ring
-    simpa [φ] using htmp
-  calc
-    φ^2
-        = ((1 + Real.sqrt 5)^2) / 4 := h1
-    _   = (1 + 2 * Real.sqrt 5 + (Real.sqrt 5)^2) / 4 := by ring
-    _   = (1 + 2 * Real.sqrt 5 + 5) / 4 := by simp [hsq]
-    _   = (6 + 2 * Real.sqrt 5) / 4 := by ring
-    _   = (3 + Real.sqrt 5) / 2 := by ring
-    _   = φ + 1 := by simp [h2]
-
-lemma phi_pos : 0 < φ := by
-  -- φ = (1 + √5) / 2 > 0
-  have h₁ : 0 < 1 + Real.sqrt 5 := by
-    have hs : 0 < Real.sqrt 5 := Real.sqrt_pos.mpr (by norm_num)
-    linarith
-  have h₂ : 0 < (2 : ℝ) := by norm_num
-  have : 0 < (1 + Real.sqrt 5) / 2 := div_pos h₁ h₂
-  simpa [φ] using this
-
-lemma phi_inv : φ⁻¹ = φ - 1 := by
-  have hφ : φ ^ 2 = φ + 1 := golden_ratio_property
-  have hne : φ ≠ 0 := ne_of_gt phi_pos
-  -- φ*(φ-1) = 1
-  have hmul : φ * (φ - 1) = 1 := by
-    have h' : φ * φ = φ + 1 := by simpa [pow_two] using hφ
-    calc
-      φ * (φ - 1) = φ * φ - φ := by ring
-      _ = (φ + 1) - φ := by simp [h']
-      _ = 1 := by simp
-  -- (φ-1) = φ⁻¹
-  have hmul' : (φ - 1) * φ = 1 := by simpa [mul_comm] using hmul
-  have : (φ - 1) * φ * φ⁻¹ = 1 * φ⁻¹ := congrArg (fun t => t * φ⁻¹) hmul'
-  have : (φ - 1) = φ⁻¹ := by simp [hne] at this; simpa using this
-  simp [this]
-
-/-- φ³ = φ² · φ = (φ+1) · φ = φ² + φ = 2φ + 1 -/
-theorem phi_cubed : φ ^ 3 = 2 * φ + 1 := by
-  calc φ ^ 3 = φ ^ 2 * φ := by ring
-    _ = (φ + 1) * φ := by rw [golden_ratio_property]
-    _ = φ ^ 2 + φ := by ring
-    _ = (φ + 1) + φ := by rw [golden_ratio_property]
-    _ = 2 * φ + 1 := by ring
-
-/-- The golden ratio is greater than 1 -/
-theorem φ_gt_one : 1 < φ := by
-  unfold φ
-  -- We need to show (1 + √5) / 2 > 1
-  -- This is equivalent to 1 + √5 > 2, or √5 > 1
-  have h_sqrt5_gt_1 : 1 < Real.sqrt 5 := by
-    rw [Real.lt_sqrt]
-    · norm_num  -- 1^2 < 5
-    · norm_num  -- 0 ≤ 1
-  linarith
-
-/-- Conjugate golden ratio ψ = (1 - √5) / 2 -/
 noncomputable def ψ : ℝ := (1 - Real.sqrt 5) / 2
 
-lemma psi_neg : ψ < 0 := by
-  unfold ψ
-  have h : 1 < Real.sqrt 5 := by
-    rw [Real.lt_sqrt] <;> norm_num
+lemma golden_ratio_property : φ^2 = φ + 1 := Real.goldenRatio_sq
+lemma phi_pos : 0 < φ := Real.goldenRatio_pos
+theorem φ_gt_one : 1 < φ := Real.one_lt_goldenRatio
+
+lemma phi_inv : φ⁻¹ = φ - 1 := by
+  have h1 : φ⁻¹ = -ψ := Real.inv_goldenRatio
+  have h2 : φ + ψ = 1 := Real.goldenRatio_add_goldenConj
   linarith
 
-lemma phi_sub_psi : φ - ψ = Real.sqrt 5 := by
-  unfold φ ψ
-  ring
+theorem phi_cubed : φ ^ 3 = 2 * φ + 1 := by
+  nlinarith [golden_ratio_property]
 
-lemma phi_add_psi : φ + ψ = 1 := by
-  unfold φ ψ
-  ring
-
-lemma phi_mul_psi : φ * ψ = -1 := by
-  unfold φ ψ
-  have h : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-  ring_nf
-  linarith [h]
-
-lemma psi_sq : ψ ^ 2 = ψ + 1 := by
-  have h : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-  unfold ψ
-  ring_nf
-  linarith [h]
-
-inductive Sign
-  | pos : Sign
-  | neg : Sign
-
-def Sign.toInt : Sign → ℤ
-  | Sign.pos => 1
-  | Sign.neg => -1
+lemma psi_neg : ψ < 0 := Real.goldenConj_neg
+lemma phi_sub_psi : φ - ψ = Real.sqrt 5 := Real.goldenRatio_sub_goldenConj
+lemma phi_add_psi : φ + ψ = 1 := Real.goldenRatio_add_goldenConj
+lemma phi_mul_psi : φ * ψ = -1 := Real.goldenRatio_mul_goldenConj
+lemma psi_sq : ψ ^ 2 = ψ + 1 := Real.goldenConj_sq
 
 section FrourioExponential
 /-!

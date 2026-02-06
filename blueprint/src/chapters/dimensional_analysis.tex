@@ -319,3 +319,79 @@ $\Delta = C_3/(\sqrt{5})^5 = 12/25$ is ScaleQuantity$(-5, 1, -1)$, and $\Delta^2
 The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2, -2)$,
 which is dimensionally consistent.
 \end{theorem}
+
+\section{Degree Constraint from Mass Condition}
+\label{sec:dim_degree_constraint}
+
+The BH formation condition $|D_6(x^d)(x_0)| < 1$ constrains admissible polynomial degrees.
+For monomial state functions $g(x) = x^d$:
+\[
+D_6(x^d)(x_0) = C_d \cdot x_0^{d-1}, \quad C_d = \frac{F_{3d} - 3F_{2d} + F_d}{25}
+\]
+where $F_n$ is the $n$-th Fibonacci number. Since $C_d \sim \varphi^{3d}/(25\sqrt{5})$,
+higher degrees produce larger mass, bounding degree from above.
+
+\begin{theorem}[\texorpdfstring{$D_6(x^4)$}{D6(x\^{}4)} Quartic Formula]
+\label{thm:dim_d6_quartic}
+\lean{FUST.D6_quartic_eq}
+\leanok
+\[
+D_6(x^4)(x_0) = \frac{84}{25} \cdot x_0^3
+\]
+where $84 = F_{12} - 3F_8 + F_4 = 144 - 63 + 3$.
+\end{theorem}
+
+\begin{theorem}[Cubic Admissible in Domain]
+\label{thm:dim_cubic_admissible}
+\lean{FUST.cubic_admissible_in_domain}
+\leanok
+For $x_0 \in (0, 1]$ (FUST coordinate domain):
+\[
+|D_6(x^3)(x_0)| = \frac{12}{25} \cdot x_0^2 \leq \frac{12}{25} < 1
+\]
+The cubic mode is admissible throughout the FUST domain.
+\end{theorem}
+
+\begin{theorem}[Quartic Inadmissible at \texorpdfstring{$x_0 = 1$}{x0 = 1}]
+\label{thm:dim_quartic_inadmissible}
+\lean{FUST.quartic_inadmissible_at_one}
+\leanok
+\[
+D_6(x^4)(1) = \frac{84}{25} = 3.36 > 1
+\]
+The quartic mode exceeds the mass threshold at $x_0 = 1$.
+\end{theorem}
+
+\begin{definition}[Admissible Mode]
+\label{def:dim_admissible_mode}
+\lean{FUST.IsAdmissibleMode}
+\leanok
+A mode $(d, x_0)$ is \emph{admissible} if $x_0 \neq 0 \Rightarrow |D_6(x^d)(x_0)| < 1$.
+\end{definition}
+
+\begin{theorem}[\texorpdfstring{$d_{\max} = 3$}{dmax = 3} at \texorpdfstring{$x_0 = 1$}{x0 = 1}]
+\label{thm:dim_dmax_at_one}
+\lean{FUST.d_max_at_one}
+\leanok
+At $x_0 = 1$, the cubic mode is the unique admissible massive mode:
+\[
+\mathrm{IsAdmissibleMode}(3, 1) \quad \land \quad \lnot\, \mathrm{IsAdmissibleMode}(4, 1)
+\]
+\end{theorem}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$k$ & $x_0 = \varphi^{-k}$ & $d_{\max}$ & Physical meaning \\
+\hline
+0 & 1 & 3 & Cubic only \\
+1 & $\varphi^{-1} \approx 0.618$ & 4 & Cubic + quartic \\
+2 & $\varphi^{-2} \approx 0.382$ & 6 & Low-degree modes \\
+$\geq 3$ & $\leq \varphi^{-3} \approx 0.236$ & $\infty$ & All degrees allowed \\
+\hline
+\end{tabular}
+\end{center}
+
+The critical threshold $k = 3$ corresponds to the highest node degree $\varphi^3$ in $D_6$.
+The net $\varphi$-exponent $d(3-k) + k$ becomes $d$-independent at $k = 3$,
+with limit $\varphi^3/(25\sqrt{5}) \approx 0.076 < 1$.

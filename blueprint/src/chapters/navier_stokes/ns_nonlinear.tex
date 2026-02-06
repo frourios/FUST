@@ -9,7 +9,7 @@ The deviation from the Leibniz rule of $D_6$ gives the nonlinear term:
 
 \begin{definition}[Nonlinear Coefficient]
 \label{def:ns_nonlinear}
-\lean{FUST.nonlinearCoeff}
+\lean{FUST.NavierStokes.nonlinearCoeff}
 \leanok
 \[
 N_{m,n} = C_{m+n} - C_m - C_n
@@ -18,7 +18,7 @@ N_{m,n} = C_{m+n} - C_m - C_n
 
 \begin{theorem}[Existence of Nonlinear Term]
 \label{thm:ns_nonlinear_exists}
-\lean{FUST.nonlinearCoeff_1_2_ne_zero}
+\lean{FUST.NavierStokes.nonlinearCoeff_1_2_ne_zero}
 \leanok
 \[
 N_{1,2} = C_3 \neq 0
@@ -30,7 +30,7 @@ N_{1,2} = C_3 \neq 0
 
 \begin{theorem}[Nonlinear Coefficient Growth]
 \label{thm:ns_nonlinear_growth}
-\lean{FUST.nonlinear_coeff_growth}
+\lean{FUST.NavierStokes.nonlinear_coeff_growth}
 \leanok
 \[
 |N_{m,n}| \leq 30 \cdot \varphi^{3(m+n)}

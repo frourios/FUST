@@ -1,40 +1,73 @@
-% FUST Physics Discoveries - Black Hole Physics
-\chapter{Black Hole Physics}
+% FUST Physics Discoveries - Gravitational Collapse from D₆ Structure
+\chapter{Gravitational Collapse from D-Structure}
 \label{chap:pd_black_hole}
 
-\section{No True Singularity}
+All results derived from $D_6$ operator algebra and $\varphi$-$\psi$ duality only.
+No continuous theory (GR, QFT, Bekenstein-Hawking) is assumed.
+
+\section{\texorpdfstring{$D_6$}{D6} Completeness (No Singularity)}
 \label{sec:bh_no_singularity}
 
 \begin{theorem}[$D_6$ Completeness]
 \label{thm:bh_d6_completeness}
+\lean{FUST.BlackHole.D6_completeness}
+\leanok
+$6 = \binom{3}{2} + \binom{3}{2}$. $D_6$ is the maximum D-level.
+\end{theorem}
+
+\begin{theorem}[No Singularity from $D_6$ Completeness]
+\label{thm:bh_no_singularity}
 \lean{FUST.BlackHole.no_singularity_from_D6_completeness}
 \leanok
 For all $n \geq 7$, $D_n$ projects to $D_6$:
 \[
 \forall n \geq 7: \mathrm{projectToD6}(n) = 6
 \]
+Physics has finite resolution. Infinite density (singularity) cannot exist.
 \end{theorem}
 
-This means physics cannot probe scales smaller than the Planck scale. Therefore, infinite density (singularity) cannot exist in FUST.
+\section{Discrete Scale Lattice}
+\label{sec:bh_discrete_scales}
 
 \begin{theorem}[Discrete Scales]
 \label{thm:bh_discrete_scales}
 \lean{FUST.BlackHole.no_continuous_limit}
 \leanok
-Physical scales are discrete: $\varphi^n$ for $n \in \mathbb{Z}$. The ratio between adjacent scales is exactly $\varphi$:
+Physical scales form a discrete lattice $\varphi^n$ ($n \in \mathbb{Z}$).
+No continuous limit exists. The ratio between adjacent scales is exactly $\varphi$:
 \[
 \frac{\varphi^{n+1}}{\varphi^n} = \varphi
 \]
 \end{theorem}
 
-\section{Information Preservation via Duality}
-\label{sec:bh_info_preservation}
-
-\begin{theorem}[Information Preservation]
-\label{thm:bh_info_preservation}
-\lean{FUST.BlackHole.information_preservation}
+\begin{theorem}[Discrete Levels Distinct]
+\label{thm:bh_discrete_levels_distinct}
+\lean{FUST.BlackHole.discrete_levels_distinct}
 \leanok
-The $\varphi$-$\psi$ duality ensures information is preserved:
+$\varphi > 1$ implies injectivity:
+\[
+n \neq m \Rightarrow \varphi^n \neq \varphi^m
+\]
+\end{theorem}
+
+\section{\texorpdfstring{$\varphi$-$\psi$}{φ-ψ} Duality (Algebraic Reversibility)}
+\label{sec:bh_duality}
+
+\begin{theorem}[$\varphi$-$\psi$ Duality]
+\label{thm:bh_phi_psi_duality}
+\lean{FUST.BlackHole.phi_psi_duality}
+\leanok
+From $x^2 = x + 1$:
+\[
+\varphi \cdot |\psi| = 1
+\]
+\end{theorem}
+
+\begin{theorem}[Algebraic Reversibility]
+\label{thm:bh_algebraic_reversibility}
+\lean{FUST.BlackHole.algebraic_reversibility}
+\leanok
+For all $n \in \mathbb{N}$:
 \[
 \varphi^n \cdot |\psi|^n = 1
 \]
@@ -44,152 +77,236 @@ The $\varphi$-$\psi$ duality ensures information is preserved:
 \label{thm:bh_unitarity}
 \lean{FUST.BlackHole.unitarity_from_duality}
 \leanok
+Scale inversion:
 \[
 \forall n \in \mathbb{Z}: \varphi^n \cdot \varphi^{-n} = 1
 \]
 \end{theorem}
 
-\section{Discrete Hawking Spectrum}
-\label{sec:bh_hawking}
+\section{\texorpdfstring{$\ker(D_6)$}{ker(D6)} Structure}
+\label{sec:bh_kernel}
 
-\begin{theorem}[Hawking Temperature Discretization]
-\label{thm:bh_hawking_discrete}
-\lean{FUST.BlackHole.hawkingTemperature_discrete}
+\begin{theorem}[Spatial Dimension from Kernel]
+\label{thm:bh_spatial_dim}
+\lean{FUST.BlackHole.spatial_from_kernel}
 \leanok
-Hawking temperature at scale level $n$: $T_n \propto \varphi^{-n}$. The ratio between successive levels:
-\[
-\frac{T_{n+1}}{T_n} = |\psi|
-\]
+$\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (dimension 3).
+Spatial dimension is 3, derived from $D_6$ algebra, not imported from GR.
 \end{theorem}
 
-In FUST, Hawking radiation is NOT truly thermal. Emission occurs at discrete $\varphi^n$ levels, carrying correlations that preserve information.
-
-\section{Fuzzy Horizon}
-\label{sec:bh_fuzzy_horizon}
-
-\begin{theorem}[No Sharp Horizon]
-\label{thm:bh_no_sharp_horizon}
-\lean{FUST.BlackHole.no_sharp_horizon}
+\begin{theorem}[Kernel Dimension]
+\label{thm:bh_kernel_dimension}
+\lean{FUST.BlackHole.kernel_dimension}
 \leanok
-Horizon width at Planck scale is $\varphi^{-k}$ for some $k$. For all $k$:
-\[
-\mathrm{horizonWidth}(k) > 0
-\]
-\end{theorem}
-
-Spatial dimension comes from $\ker(D_6)$: $\dim\ker(D_6) = 3$ gives 3-dimensional space.
-
-\section{Bekenstein-Hawking Entropy}
-\label{sec:bh_entropy}
-
-\begin{theorem}[Entropy-Area Law]
-\label{thm:bh_entropy_area}
-\lean{FUST.BlackHole.entropy_area_law}
-\leanok
-Area at scale level $k$: $A_k \propto \varphi^{2k}$. Entropy:
-\[
-S_k = \varphi^{2k}
-\]
-\end{theorem}
-
-\begin{theorem}[Information Capacity]
-\label{thm:bh_info_capacity}
-\lean{FUST.BlackHole.infoCapacity_scaling}
-\leanok
-\[
-\mathrm{infoCapacity}(A_k) = \frac{\log A_k}{\log\varphi} = 2k
-\]
-\end{theorem}
-
-\section{Page Curve}
-\label{sec:bh_page_curve}
-
-\begin{theorem}[Entropy Peaks at Page Time]
-\label{thm:bh_page_curve}
-\lean{FUST.BlackHole.entropy_peaks_at_page_time}
-\leanok
-Radiation entropy at step $n$: $\min(n, \text{total}-n)$. This peaks at $n = \text{total}/2$ (Page time).
-\end{theorem}
-
-\section{Firewall Resolution}
-\label{sec:bh_firewall}
-
-\begin{theorem}[No Firewall]
-\label{thm:bh_no_firewall}
-\lean{FUST.BlackHole.no_firewall}
-\leanok
-The AMPS firewall paradox is resolved by discrete locality:
+$\{1, x, x^2\}$ are annihilated by $D_6$, but $x^3$ is detected:
 \begin{enumerate}
-\item Horizon is fuzzy at Planck scale: $\mathrm{horizonWidth}(k) > 0$
-\item Width decreases: $\mathrm{horizonWidth}(k+1) < \mathrm{horizonWidth}(k)$
+\item $D_6(1)(x) = 0$ for $x \neq 0$
+\item $D_6(\mathrm{id})(x) = 0$ for $x \neq 0$
+\item $D_6(t^2)(x) = 0$ for $x \neq 0$
+\item $D_6(t^3)(x) \neq 0$ for $x \neq 0$
 \end{enumerate}
 \end{theorem}
 
-\section{White Holes}
-\label{sec:bh_white_holes}
+\section{\texorpdfstring{$D_6$}{D6} Dissipation Rate}
+\label{sec:bh_dissipation}
 
-\begin{theorem}[White Hole as Time-Reversed Black Hole]
-\label{thm:bh_white_hole}
-\lean{FUST.BlackHole.white_hole_time_reversal}
+$D_6$ output decays geometrically by $|\psi|$ per step.
+This replaces continuous Hawking temperature without importing QFT.
+
+\begin{theorem}[Dissipation Geometric Decay]
+\label{thm:bh_dissipation_geometric}
+\lean{FUST.BlackHole.dissipation_geometric}
 \leanok
-White hole scale $|\psi|^n$ is dual to black hole scale $\varphi^n$:
 \[
-\varphi^n \cdot |\psi|^n = 1
+\mathrm{dissipationRate}(n+1) = \mathrm{dissipationRate}(n) \cdot |\psi|
+\]
+where $\mathrm{dissipationRate}(n) = |\psi|^n$.
+\end{theorem}
+
+\begin{theorem}[Dissipation Ratio]
+\label{thm:bh_dissipation_ratio}
+\lean{FUST.BlackHole.dissipation_ratio}
+\leanok
+\[
+\frac{\mathrm{dissipationRate}(n+1)}{\mathrm{dissipationRate}(n)} = |\psi|
+\]
+The ratio $|\psi| = \varphi^{-1}$ is a purely algebraic consequence of $\varphi \cdot |\psi| = 1$.
+\end{theorem}
+
+\section{Scale Separation (Discrete Resolution)}
+\label{sec:bh_scale_separation}
+
+The minimum scale separation is $\varphi^{-k}$ for $k$ steps.
+This is the $D_6$ resolution limit, not a ``horizon width'' from GR.
+
+\begin{theorem}[Scale Resolution Decreasing]
+\label{thm:bh_scale_resolution_decreasing}
+\lean{FUST.BlackHole.scaleResolution_decreasing}
+\leanok
+\[
+\mathrm{scaleResolution}(k+1) < \mathrm{scaleResolution}(k)
+\]
+where $\mathrm{scaleResolution}(k) = \varphi^{-k} > 0$.
+\end{theorem}
+
+\section{State Space Dimension from \texorpdfstring{$D_6$}{D6}}
+\label{sec:bh_dof}
+
+The number of independent degrees of freedom at scale level $k$
+is determined by $\ker(D_6)$ dimension and the number of scale steps.
+This replaces Bekenstein-Hawking $S \propto A$ without importing continuous GR.
+
+\begin{theorem}[Degrees of Freedom from Kernel Dimension]
+\label{thm:bh_dof}
+\lean{FUST.BlackHole.dof_from_kernel_dim}
+\leanok
+\[
+\mathrm{degreesOfFreedom}(k) = \dim\ker(D_6) \times k = 3k
 \]
 \end{theorem}
 
-\begin{theorem}[White Holes Unobservable]
-\label{thm:bh_white_hole_unobservable}
-\lean{FUST.BlackHole.white_hole_D6_unobservable}
+\begin{theorem}[Degrees of Freedom Monotone]
+\label{thm:bh_dof_monotone}
+\lean{FUST.BlackHole.dof_monotone}
 \leanok
-White holes exist mathematically ($|\psi|^n > 0$) but are unobservable due to $D_6$ boundary.
+\[
+\mathrm{degreesOfFreedom}(k) \leq \mathrm{degreesOfFreedom}(k+1)
+\]
 \end{theorem}
 
-\section{Big Bang from \texorpdfstring{$D_6$}{D6} Boundary}
-\label{sec:bh_big_bang}
+\section{\texorpdfstring{$\psi$}{ψ}-Contraction (Time-Reversed Evolution)}
+\label{sec:bh_contraction}
 
-\begin{theorem}[No Pre-Big-Bang Singularity]
-\label{thm:bh_big_bang}
-\lean{FUST.BlackHole.big_bang_from_D6_boundary}
+$|\psi|^n$ is the contraction dual of $\varphi^n$ expansion.
+Purely algebraic ($\varphi \cdot |\psi| = 1$), not ``white holes'' from GR.
+
+\begin{theorem}[Expansion-Contraction Identity]
+\label{thm:bh_expansion_contraction}
+\lean{FUST.BlackHole.expansion_contraction_identity}
 \leanok
-The Big Bang is the $D_6$ boundary, not a singularity:
-\begin{enumerate}
-\item Big Bang scale: $\varphi^{-6} > 0$
-\item No trans-Planckian physics: $D_7$+ projects to $D_6$
-\item Universe expands via $\varphi$-evolution from $D_6$ boundary
-\end{enumerate}
+\[
+\varphi^n \cdot |\psi|^n = 1 \quad \forall n \in \mathbb{N}
+\]
 \end{theorem}
 
-\section{No True Wormholes}
-\label{sec:bh_no_wormholes}
+\section{Algebraic Completion (\texorpdfstring{$x \to 0$}{x → 0})}
+\label{sec:bh_completion}
 
-\begin{theorem}[No True Wormholes]
-\label{thm:bh_no_wormholes}
-\lean{FUST.BlackHole.no_true_wormhole}
+In FUST coordinate $x \in (0, 1)$, the sequence $\varphi^{-n} \to 0$ provides
+algebraic completion. This is NOT a ``Big Bang singularity'' from GR.
+
+\begin{theorem}[Completion Bounded by $D_6$]
+\label{thm:bh_completion_bounded}
+\lean{FUST.BlackHole.completion_bounded}
 \leanok
-True wormholes do NOT exist in FUST:
-\begin{enumerate}
-\item $D_6$ completeness prevents spatial connections beyond boundary
-\item $\varphi$-$\psi$ duality is algebraic, not a spatial tunnel
-\item Discrete scale levels have no ``tunnel'' between them
-\end{enumerate}
+$D_6$ boundary prevents trans-Planckian extension:
+\[
+\forall n \geq 7: \mathrm{projectToD6}(n) = 6
+\]
 \end{theorem}
 
-EPR correlations provide pseudo-wormhole behavior (topological, not geometric).
+\section{Scale Unboundedness}
+\label{sec:bh_unbounded}
 
-\section{Summary}
+\begin{theorem}[Scale Unbounded]
+\label{thm:bh_scale_unbounded}
+\lean{FUST.BlackHole.scale_unbounded}
+\leanok
+$\varphi^n$ grows without bound ($\varphi > 1$):
+\[
+\forall M \in \mathbb{R},\; \exists k \in \mathbb{N}: \varphi^k > M
+\]
+\end{theorem}
+
+\section{\texorpdfstring{$D_6$}{D6} Critical Scale}
+\label{sec:bh_critical_scale}
+
+From $\Delta = 1/t_{\mathrm{FUST}}$ and mass $m = \Delta \cdot x_0^2$,
+the conserved energy $E_{\mathrm{cons}} = \varphi^{4n} \cdot m^2$ reaches 1
+at a critical scale $n_{\mathrm{crit}}$, giving coordinate distance
+$r_{\mathrm{crit}} = x_0 \cdot |\psi|$.
+
+\begin{theorem}[$|\psi| = \varphi^{-1}$]
+\label{thm:bh_abs_psi_eq_inv_phi}
+\lean{FUST.BlackHole.abs_psi_eq_inv_phi}
+\leanok
+Algebraic consequence of $\varphi \cdot |\psi| = 1$:
+\[
+|\psi| = \varphi^{-1}
+\]
+\end{theorem}
+
+\begin{theorem}[Mass--Time Identity]
+\label{thm:bh_mass_time_identity}
+\lean{FUST.BlackHole.mass_time_identity}
+\leanok
+For all $x_0 \in \mathbb{R}$:
+\[
+\Delta \cdot x_0^2 \cdot t_{\mathrm{FUST}} = x_0^2
+\]
+\end{theorem}
+
+\begin{theorem}[Critical Scale Positive]
+\label{thm:bh_critical_scale_pos}
+\lean{FUST.BlackHole.criticalScale_pos}
+\leanok
+For $x_0 > 0$:
+\[
+\mathrm{criticalScale}(x_0) = x_0 \cdot |\psi| > 0
+\]
+\end{theorem}
+
+\begin{theorem}[Critical Scale Below Initial Position]
+\label{thm:bh_critical_scale_lt}
+\lean{FUST.BlackHole.criticalScale_lt}
+\leanok
+For $x_0 > 0$:
+\[
+\mathrm{criticalScale}(x_0) < x_0
+\]
+since $|\psi| < 1$.
+\end{theorem}
+
+\begin{theorem}[Critical Scale at Lattice Point]
+\label{thm:bh_critical_scale_lattice}
+\lean{FUST.BlackHole.criticalScale_at_lattice}
+\leanok
+For $x_0 = \varphi^{-k}$:
+\[
+\mathrm{criticalScale}(\varphi^{-k}) = \varphi^{-(k+1)}
+\]
+\end{theorem}
+
+\begin{theorem}[Critical Scale = Next Resolution Level]
+\label{thm:bh_critical_scale_resolution}
+\lean{FUST.BlackHole.criticalScale_eq_scaleResolution}
+\leanok
+\[
+\mathrm{criticalScale}(\mathrm{scaleResolution}(k)) = \mathrm{scaleResolution}(k+1)
+\]
+\end{theorem}
+
+\begin{theorem}[Critical Scale Monotone]
+\label{thm:bh_critical_scale_monotone}
+\lean{FUST.BlackHole.criticalScale_monotone}
+\leanok
+\[
+x_1 \leq x_2 \Rightarrow \mathrm{criticalScale}(x_1) \leq \mathrm{criticalScale}(x_2)
+\]
+\end{theorem}
+
+\section{Summary: All from \texorpdfstring{$D_6$}{D6} Algebra}
 \label{sec:bh_summary}
 
-\begin{theorem}[Information Paradox Resolution]
-\label{thm:bh_info_paradox_resolution}
-\lean{FUST.BlackHole.information_paradox_resolution}
+\begin{theorem}[All from $D_6$ Algebra]
+\label{thm:bh_all_from_d6}
+\lean{FUST.BlackHole.all_from_D6_algebra}
 \leanok
-FUST resolves the information paradox via:
-\begin{enumerate}
-\item No singularity: $D_6$ completeness
-\item $\varphi$-$\psi$ duality preserves unitarity
-\item Discrete spectrum preserves correlations
-\item Fuzzy horizon at Planck scale
-\end{enumerate}
+Every result uses only:
+\begin{itemize}
+\item $\varphi, \psi$: roots of $x^2 = x + 1$
+\item $D_6$: difference operator with $\ker = \mathrm{span}\{1, x, x^2\}$
+\item $D_6$ completeness: $6 = \binom{3}{2} + \binom{3}{2}$
+\end{itemize}
+No GR metric, no QFT, no Bekenstein-Hawking, no Hawking temperature assumed.
 \end{theorem}
-

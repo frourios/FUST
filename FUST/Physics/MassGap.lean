@@ -1,5 +1,6 @@
 import FUST.Physics.GaugeGroups
 import FUST.Physics.TimeTheorem
+import FUST.Physics.PhiOrbitInitialValue
 
 /-!
 # Section 8: Mass Gap from D₆ Gauge-Invariant Output
@@ -170,6 +171,304 @@ theorem massGap_complete :
    rfl⟩
 
 end MassGapPhysicalMeaning
+
+/-!
+## Section 8.5: Mass Auto-Discretization Theorem
+
+When x₀ ∈ ℤ[φ] and g(x) ∈ ℤ[φ][x], the mass k = D₆g(x₀)/Δ ∈ ℤ[φ].
+This proves that the algebraic condition k ∈ ℤ[φ] in the triple constraint
+is automatically satisfied by the D₆ operator structure.
+-/
+
+section MassAutoDiscretization
+
+open FUST.PhiOrbit
+
+/-- ℤ[φ] is closed under multiplication -/
+theorem goldenInt_mul {x y : ℝ} (hx : InGoldenInt x) (hy : InGoldenInt y) :
+    InGoldenInt (x * y) := by
+  obtain ⟨a₁, b₁, rfl⟩ := hx
+  obtain ⟨a₂, b₂, rfl⟩ := hy
+  have hφ2 : φ * φ = φ + 1 := by have := golden_ratio_property; rwa [sq] at this
+  refine ⟨a₁ * a₂ + b₁ * b₂, a₁ * b₂ + b₁ * a₂ + b₁ * b₂, ?_⟩
+  push_cast
+  have : (↑b₁ : ℝ) * φ * (↑b₂ * φ) = ↑b₁ * ↑b₂ * (φ + 1) := by rw [← hφ2]; ring
+  linarith [this]
+
+/-- ℤ[φ] is closed under squaring -/
+theorem goldenInt_sq {x : ℝ} (hx : InGoldenInt x) : InGoldenInt (x ^ 2) := by
+  rw [sq]
+  exact goldenInt_mul hx hx
+
+/-- ℤ[φ] is closed under natural powers -/
+theorem goldenInt_pow {x : ℝ} (hx : InGoldenInt x) (n : ℕ) : InGoldenInt (x ^ n) := by
+  induction n with
+  | zero => exact ⟨1, 0, by simp⟩
+  | succ n ih => rw [pow_succ]; exact goldenInt_mul ih hx
+
+/-- D₆(x³)(x₀) = Δ · x₀² for x₀ ∈ ℝ -/
+theorem D6_cubic_eq_massGap_mul_sq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
+    D6 (fun t => t^3) x₀ = massGapΔ * x₀^2 := by
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hsqrt5_pow5 : Real.sqrt 5 ^ 5 = 25 * Real.sqrt 5 := by
+    have h2 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+    calc Real.sqrt 5 ^ 5 = Real.sqrt 5 ^ 2 * Real.sqrt 5 ^ 2 * Real.sqrt 5 := by ring
+      _ = 5 * 5 * Real.sqrt 5 := by rw [h2]
+      _ = 25 * Real.sqrt 5 := by ring
+  have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
+  have hψ3 : ψ^3 = 2*ψ + 1 := by
+    have hψ2 : ψ^2 = ψ + 1 := psi_sq
+    calc ψ^3 = ψ^2 * ψ := by ring
+      _ = (ψ + 1) * ψ := by rw [hψ2]
+      _ = ψ^2 + ψ := by ring
+      _ = (ψ + 1) + ψ := by rw [hψ2]
+      _ = 2*ψ + 1 := by ring
+  have hφ6 : φ^6 = 8*φ + 5 := by
+    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+    have hφ4 : φ^4 = 3*φ + 2 := by
+      calc φ^4 = φ^2 * φ^2 := by ring
+        _ = (φ + 1) * (φ + 1) := by rw [hφ2]
+        _ = φ^2 + 2*φ + 1 := by ring
+        _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
+        _ = 3*φ + 2 := by ring
+    calc φ^6 = φ^4 * φ^2 := by ring
+      _ = (3*φ + 2) * (φ + 1) := by rw [hφ4, hφ2]
+      _ = 3*φ^2 + 5*φ + 2 := by ring
+      _ = 3*(φ + 1) + 5*φ + 2 := by rw [hφ2]
+      _ = 8*φ + 5 := by ring
+  have hψ6 : ψ^6 = 8*ψ + 5 := by
+    have hψ2 : ψ^2 = ψ + 1 := psi_sq
+    have hψ4 : ψ^4 = 3*ψ + 2 := by
+      calc ψ^4 = ψ^2 * ψ^2 := by ring
+        _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
+        _ = ψ^2 + 2*ψ + 1 := by ring
+        _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
+        _ = 3*ψ + 2 := by ring
+    calc ψ^6 = ψ^4 * ψ^2 := by ring
+      _ = (3*ψ + 2) * (ψ + 1) := by rw [hψ4, hψ2]
+      _ = 3*ψ^2 + 5*ψ + 2 := by ring
+      _ = 3*(ψ + 1) + 5*ψ + 2 := by rw [hψ2]
+      _ = 8*ψ + 5 := by ring
+  have hφ9 : φ^9 = 34*φ + 21 := by
+    calc φ^9 = φ^6 * φ^3 := by ring
+      _ = (8*φ + 5) * (2*φ + 1) := by rw [hφ6, hφ3]
+      _ = 16*φ^2 + 18*φ + 5 := by ring
+      _ = 16*(φ + 1) + 18*φ + 5 := by rw [golden_ratio_property]
+      _ = 34*φ + 21 := by ring
+  have hψ9 : ψ^9 = 34*ψ + 21 := by
+    calc ψ^9 = ψ^6 * ψ^3 := by ring
+      _ = (8*ψ + 5) * (2*ψ + 1) := by rw [hψ6, hψ3]
+      _ = 16*ψ^2 + 18*ψ + 5 := by ring
+      _ = 16*(ψ + 1) + 18*ψ + 5 := by rw [psi_sq]
+      _ = 34*ψ + 21 := by ring
+  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num : (5 : ℝ) > 0)
+  have hcoef : (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3 = 12 * (φ - ψ) := by
+    calc (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3
+        = φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 := by ring
+      _ = (34*φ + 21) - 3*(8*φ + 5) + (2*φ + 1) - (2*ψ + 1) + 3*(8*ψ + 5) - (34*ψ + 21) := by
+          rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]
+      _ = 34*φ - 24*φ + 2*φ - 2*ψ + 24*ψ - 34*ψ := by ring
+      _ = 12 * (φ - ψ) := by ring
+  have hnum : (φ^3 * x₀)^3 - 3 * (φ^2 * x₀)^3 + (φ * x₀)^3 - (ψ * x₀)^3 +
+      3 * (ψ^2 * x₀)^3 - (ψ^3 * x₀)^3 =
+      ((φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3) * x₀^3 := by ring
+  simp only [D6, massGapΔ, hx₀, ↓reduceIte]
+  rw [hnum, hcoef, hφψ, hsqrt5_pow5]
+  have h25ne : (25 : ℝ) ≠ 0 := by norm_num
+  field_simp [hsqrt5_ne, hx₀, h25ne]
+
+/-- Mass k = D₆g(x₀)/Δ for g(x) = x³ is x₀² -/
+theorem mass_from_cubic (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
+    D6 (fun t => t^3) x₀ / massGapΔ = x₀^2 := by
+  rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀]
+  have hΔ_pos : massGapΔ > 0 := massGapΔ_pos
+  field_simp
+
+/-- **Mass Auto-Discretization Theorem**:
+    When x₀ ∈ ℤ[φ], mass k = D₆(x³)(x₀)/Δ ∈ ℤ[φ] -/
+theorem mass_auto_discretization {x₀ : ℝ} (hx₀ : x₀ ≠ 0) (hInt : InGoldenInt x₀) :
+    InGoldenInt (D6 (fun t => t^3) x₀ / massGapΔ) := by
+  rw [mass_from_cubic x₀ hx₀]
+  exact goldenInt_sq hInt
+
+/-- The algebraic condition k ∈ ℤ[φ] is automatically satisfied -/
+theorem algebraic_condition_automatic {x₀ : ℝ} (hx₀ : x₀ ≠ 0) (hInt : InGoldenInt x₀) :
+    ∃ k : ℝ, InGoldenInt k ∧ D6 (fun t => t^3) x₀ = massGapΔ * k := by
+  use x₀^2
+  constructor
+  · exact goldenInt_sq hInt
+  · rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀]
+
+/-- Complete mass discretization theorem -/
+theorem mass_discretization_complete :
+    (∀ x₀, x₀ ≠ 0 → D6 (fun t => t^3) x₀ = massGapΔ * x₀^2) ∧
+    (∀ x₀, InGoldenInt x₀ → InGoldenInt (x₀^2)) ∧
+    (∀ x₀, x₀ ≠ 0 → InGoldenInt x₀ → InGoldenInt (D6 (fun t => t^3) x₀ / massGapΔ)) :=
+  ⟨D6_cubic_eq_massGap_mul_sq, fun _ h => goldenInt_sq h,
+   fun _ hne hInt => mass_auto_discretization hne hInt⟩
+
+end MassAutoDiscretization
+
+/-! ## Section 8.6: Coordinate Structure Upper Bound
+
+The upper bound x₀ ≤ 1 comes from FUST coordinate structure x ∈ (0, 1).
+-/
+
+section CoordinateUpperBound
+
+open FUST.PhiOrbit
+
+/-- FUST coordinate domain: x ∈ (0, 1] -/
+def InFUSTDomain (x : ℝ) : Prop := 0 < x ∧ x ≤ 1
+
+/-- Upper bound from coordinate structure (NOT from BH condition) -/
+theorem upper_bound_from_coordinate :
+    ∀ x₀ : ℝ, InFUSTDomain x₀ → x₀ ≤ 1 := fun _ h => h.2
+
+/-- x₀ = 1 is the maximal element in ℤ[φ] ∩ (0,1] -/
+theorem maximal_initial_value_in_goldenInt :
+    ∀ x₀ : ℝ, InFUSTDomain x₀ → InGoldenInt x₀ → (x₀ = 1 ∨ x₀ < 1) := by
+  intro x₀ hdom _
+  rcases lt_or_eq_of_le hdom.2 with h | h
+  · right; exact h
+  · left; exact h
+
+/-- Mass at maximal initial value x₀ = 1 -/
+theorem mass_at_one : (1 : ℝ)^2 * massGapΔ = 12 / 25 := by
+  simp only [massGapΔ, one_pow, one_mul]
+
+/-- φ > 1 implies φ is outside FUST coordinate domain -/
+theorem phi_outside_domain : ¬ InFUSTDomain φ := by
+  unfold InFUSTDomain
+  push_neg
+  intro _
+  have : φ > 1 := φ_gt_one
+  linarith
+
+end CoordinateUpperBound
+
+/-! ## Section 8.7: Degree Constraint from Mass Condition
+
+The BH formation condition |D₆(x^d)(x₀)| < 1 constrains admissible polynomial degrees.
+D₆(x^d)(x₀) = C_d · x₀^(d-1) where C_d = (F_{3d} - 3F_{2d} + F_d)/25.
+Since C_d ~ φ^(3d), higher degrees produce larger mass → degree is bounded above.
+-/
+
+section DegreeConstraint
+
+open FUST.PhiOrbit
+
+/-- D₆(x⁴)(x₀) = (84/25) · x₀³ -/
+theorem D6_quartic_eq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
+    D6 (fun t => t^4) x₀ = (84 : ℝ) / 25 * x₀^3 := by
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hsqrt5_pow5 : Real.sqrt 5 ^ 5 = 25 * Real.sqrt 5 := by
+    have h2 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+    calc Real.sqrt 5 ^ 5 = Real.sqrt 5 ^ 2 * Real.sqrt 5 ^ 2 * Real.sqrt 5 := by ring
+      _ = 5 * 5 * Real.sqrt 5 := by rw [h2]
+      _ = 25 * Real.sqrt 5 := by ring
+  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ^2 = ψ + 1 := psi_sq
+  have hφ4 : φ^4 = 3*φ + 2 := by
+    calc φ^4 = (φ^2)^2 := by ring
+      _ = (φ + 1)^2 := by rw [hφ2]
+      _ = φ^2 + 2*φ + 1 := by ring
+      _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
+      _ = 3*φ + 2 := by ring
+  have hψ4 : ψ^4 = 3*ψ + 2 := by
+    calc ψ^4 = (ψ^2)^2 := by ring
+      _ = (ψ + 1)^2 := by rw [hψ2]
+      _ = ψ^2 + 2*ψ + 1 := by ring
+      _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
+      _ = 3*ψ + 2 := by ring
+  have hφ8 : φ^8 = 21*φ + 13 := by
+    calc φ^8 = (φ^4)^2 := by ring
+      _ = (3*φ + 2)^2 := by rw [hφ4]
+      _ = 9*φ^2 + 12*φ + 4 := by ring
+      _ = 9*(φ + 1) + 12*φ + 4 := by rw [hφ2]
+      _ = 21*φ + 13 := by ring
+  have hψ8 : ψ^8 = 21*ψ + 13 := by
+    calc ψ^8 = (ψ^4)^2 := by ring
+      _ = (3*ψ + 2)^2 := by rw [hψ4]
+      _ = 9*ψ^2 + 12*ψ + 4 := by ring
+      _ = 9*(ψ + 1) + 12*ψ + 4 := by rw [hψ2]
+      _ = 21*ψ + 13 := by ring
+  have hφ12 : φ^12 = 144*φ + 89 := by
+    calc φ^12 = φ^8 * φ^4 := by ring
+      _ = (21*φ + 13) * (3*φ + 2) := by rw [hφ8, hφ4]
+      _ = 63*φ^2 + 81*φ + 26 := by ring
+      _ = 63*(φ + 1) + 81*φ + 26 := by rw [hφ2]
+      _ = 144*φ + 89 := by ring
+  have hψ12 : ψ^12 = 144*ψ + 89 := by
+    calc ψ^12 = ψ^8 * ψ^4 := by ring
+      _ = (21*ψ + 13) * (3*ψ + 2) := by rw [hψ8, hψ4]
+      _ = 63*ψ^2 + 81*ψ + 26 := by ring
+      _ = 63*(ψ + 1) + 81*ψ + 26 := by rw [hψ2]
+      _ = 144*ψ + 89 := by ring
+  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num : (5 : ℝ) > 0)
+  have hcoef : (φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4 = 84 * (φ - ψ) := by
+    calc (φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4
+        = φ^12 - 3*φ^8 + φ^4 - ψ^4 + 3*ψ^8 - ψ^12 := by ring
+      _ = (144*φ + 89) - 3*(21*φ + 13) + (3*φ + 2) - (3*ψ + 2) + 3*(21*ψ + 13) - (144*ψ + 89) := by
+          rw [hφ12, hφ8, hφ4, hψ4, hψ8, hψ12]
+      _ = 84 * (φ - ψ) := by ring
+  have hnum : (φ^3 * x₀)^4 - 3 * (φ^2 * x₀)^4 + (φ * x₀)^4 - (ψ * x₀)^4 +
+      3 * (ψ^2 * x₀)^4 - (ψ^3 * x₀)^4 =
+      ((φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4) * x₀^4 := by ring
+  simp only [D6, hx₀, ↓reduceIte]
+  rw [hnum, hcoef, hφψ, hsqrt5_pow5]
+  have h25ne : (25 : ℝ) ≠ 0 := by norm_num
+  field_simp [hsqrt5_ne, hx₀, h25ne]
+
+/-- Quartic coefficient C₄ = 84/25 exceeds 1 -/
+theorem quartic_coeff_gt_one : (84 : ℝ) / 25 > 1 := by norm_num
+
+/-- Quartic mode is inadmissible at x₀ = 1 -/
+theorem quartic_inadmissible_at_one :
+    D6 (fun t => t^4) 1 > 1 := by
+  rw [D6_quartic_eq 1 one_ne_zero]
+  norm_num
+
+/-- Cubic mode is admissible throughout the FUST domain -/
+theorem cubic_admissible_in_domain (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
+    |D6 (fun t => t^3) x₀| < 1 := by
+  have hx₀_ne : x₀ ≠ 0 := ne_of_gt hdom.1
+  rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀_ne]
+  simp only [massGapΔ]
+  rw [abs_of_pos (by positivity)]
+  have hle : x₀^2 ≤ 1 := by
+    have : x₀ ≤ 1 := hdom.2
+    have : 0 < x₀ := hdom.1
+    nlinarith [sq_nonneg (1 - x₀)]
+  calc (12 : ℝ) / 25 * x₀ ^ 2 ≤ 12 / 25 * 1 := by nlinarith
+    _ = 12 / 25 := by ring
+    _ < 1 := by norm_num
+
+/-- A mode (d, x₀) is admissible if its D₆ mass is below 1 -/
+def IsAdmissibleMode (d : ℕ) (x₀ : ℝ) : Prop :=
+  x₀ ≠ 0 → |D6 (fun t => t ^ d) x₀| < 1
+
+/-- Degree 3 is admissible for all x₀ in FUST domain -/
+theorem degree3_admissible (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
+    IsAdmissibleMode 3 x₀ := by
+  intro _
+  exact cubic_admissible_in_domain x₀ hdom
+
+/-- Degree 4 is not admissible at x₀ = 1 -/
+theorem degree4_inadmissible_at_one : ¬ IsAdmissibleMode 4 1 := by
+  intro h
+  have := h one_ne_zero
+  rw [D6_quartic_eq 1 one_ne_zero] at this
+  simp only [one_pow, mul_one] at this
+  have : (84 : ℝ) / 25 < 1 := by rwa [abs_of_pos (by norm_num : (84 : ℝ) / 25 > 0)] at this
+  linarith
+
+/-- At x₀ = 1, d_max = 3: cubic is the unique admissible massive mode -/
+theorem d_max_at_one :
+    IsAdmissibleMode 3 1 ∧ ¬ IsAdmissibleMode 4 1 :=
+  ⟨degree3_admissible 1 ⟨by norm_num, le_refl 1⟩, degree4_inadmissible_at_one⟩
+
+end DegreeConstraint
 
 end FUST
 
