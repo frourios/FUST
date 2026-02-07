@@ -1,5 +1,5 @@
 import FUST.Physics.TimeTheorem
-import FUST.Physics.HilbertPolya
+import FUST.Problems.RH.HilbertPolya
 import FUST.FrourioLogarithm
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
 import Mathlib.NumberTheory.LSeries.Nonvanishing
@@ -31,7 +31,7 @@ Two zeta functions are derived from FUST:
 
 namespace FUST.RiemannHypothesis
 
-open FUST.TimeTheorem
+open FUST.TimeTheorem Complex
 
 /-!
 ## Section 1: Golden Zeta Function
@@ -471,8 +471,6 @@ From functional equation symmetry, we derive structural constraints.
 -/
 
 section RiemannHypothesisSection
-
-open Complex
 
 /-- Riemann Hypothesis: all zeros in critical strip have Re = 1/2 -/
 def RH : Prop :=
@@ -1470,11 +1468,11 @@ theorem theorem_VI_functional_equation :
 theorem theorem_VII_spectral_correspondence :
     -- Forward direction: L² condition implies Re = 1/2
     (∀ s : ℂ, L2PowerCondition s → s.re = 1/2) ∧
-    -- Spectral resonances are on critical line
-    (∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
+    -- Spectral resonances are on critical line under physical-sheet L² condition
+    (ResonanceL2Condition → ∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
     -- Spectral axis is critical line
     (∀ E : ℝ, (spectralToComplex E).re = 1/2) :=
-  ⟨fun _ h => h, resonance_on_critical_line, spectral_re_half⟩
+  ⟨fun _ h => h, fun hL2 ρ hρ => resonance_on_critical_line hL2 ρ hρ, spectral_re_half⟩
 
 /-- **Theorem VIII: Critical Strip Properties**
     Structural properties of zeros in critical strip -/
@@ -1525,7 +1523,7 @@ This is derived from:
 The L² constraint on the "physical sheet" then forces Re(ρ) = 1/2.
 -/
 def ZetaSpectralCorrespondence : Prop :=
-  ∀ ρ : ℂ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ
+  ∀ ρ : ℂ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ ∧ L2PowerCondition ρ
 
 /-- **Main Theorem: RH from FUST**
 
@@ -1539,8 +1537,8 @@ theorem rh_from_zeta_spectral_correspondence (h : ZetaSpectralCorrespondence) :
     ∀ ρ : ℂ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → ρ.re = 1/2 := by
   intro ρ hz hpos hlt
   have hstrip : IsZetaZeroInStrip ρ := ⟨hz, hpos, hlt⟩
-  have hres : IsSpectralResonance ρ := h ρ hstrip
-  exact hres.1
+  have hres : IsSpectralResonance ρ ∧ L2PowerCondition ρ := h ρ hstrip
+  exact hres.2
 
 /-- **Complete FUST-RH Proof Requirements Summary**
 
@@ -1559,8 +1557,8 @@ theorem fust_rh_complete_requirements :
     (∀ s : ℂ, L2PowerCondition s → s.re = 1/2) ∧
     -- (VI) Functional equation
     (∀ s : ℂ, completedRiemannZeta₀ (1 - s) = completedRiemannZeta₀ s) ∧
-    -- (VII) Spectral correspondence conclusion
-    (∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
+    -- (VII) Spectral correspondence conclusion under physical-sheet L² condition
+    (ResonanceL2Condition → ∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
     -- (VIII) Critical strip symmetry
     (∀ ρ : ℂ, IsInCriticalStrip ρ → IsInCriticalStrip (1 - ρ)) :=
   ⟨⟨phi_mul_psi, phi_add_psi, φ_gt_one, abs_psi_lt_one⟩,
@@ -1569,7 +1567,7 @@ theorem fust_rh_complete_requirements :
    mellin_axis_from_haar_weight,
    fun _ h => h,
    completedRiemannZeta₀_one_sub,
-   resonance_on_critical_line,
+   fun hL2 ρ hρ => resonance_on_critical_line hL2 ρ hρ,
    critical_strip_symmetric⟩
 
 /-- **Derivation of ZetaSpectralCorrespondence**
@@ -1605,8 +1603,8 @@ theorem zeta_spectral_correspondence_status :
     (ZetaSpectralCorrespondence ↔
      ∀ ρ : ℂ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → L2PowerCondition ρ) :=
   ⟨rh_from_zeta_spectral_correspondence,
-   ⟨fun h ρ hz hpos hlt => (h ρ ⟨hz, hpos, hlt⟩).1,
-    fun h ρ ⟨hz, hpos, hlt⟩ => ⟨h ρ hz hpos hlt, hpos, hlt⟩⟩⟩
+   ⟨fun h ρ hz hpos hlt => (h ρ ⟨hz, hpos, hlt⟩).2,
+    fun h ρ ⟨hz, hpos, hlt⟩ => ⟨⟨hz, hpos, hlt⟩, h ρ hz hpos hlt⟩⟩⟩
 
 end RHProofSummary
 

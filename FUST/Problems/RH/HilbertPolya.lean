@@ -403,17 +403,18 @@ Since ξ(ρ) = 0 ⟺ riemannZeta(ρ) = 0 (in critical strip), we get:
 -/
 
 /-- Spectral resonance: pole of analytically continued resolvent.
-    By FUST-Scattering Zeta Identity, this equals zeta zeros. -/
+    The L²/critical-line constraint is a separate physical-sheet condition. -/
 def IsSpectralResonance (ρ : ℂ) : Prop :=
-  -- A resonance is characterized by: ξ(ρ) = 0 in the critical strip
-  -- The L² condition below captures the constraint that resonances
-  -- on the "physical sheet" satisfy the Mellin-Plancherel axis condition
-  L2PowerCondition ρ ∧ 0 < ρ.re ∧ ρ.re < 1
+  riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1
 
-/-- Spectral resonances are on critical line.
-    This follows from the Mellin-Plancherel structure of H_FUST. -/
-theorem resonance_on_critical_line (ρ : ℂ) (h : IsSpectralResonance ρ) :
-    ρ.re = 1/2 := h.1
+/-- Physical-sheet condition: resonances satisfy Mellin L² constraint. -/
+def ResonanceL2Condition : Prop :=
+  ∀ ρ : ℂ, IsSpectralResonance ρ → L2PowerCondition ρ
+
+/-- Spectral resonances are on critical line, assuming physical-sheet L² condition. -/
+theorem resonance_on_critical_line (hL2 : ResonanceL2Condition) (ρ : ℂ)
+    (h : IsSpectralResonance ρ) : ρ.re = 1/2 :=
+  hL2 ρ h
 
 /-- **Spectral Completeness Theorem (Theorem 9.1)**
 
@@ -429,22 +430,26 @@ theorem spectral_completeness :
     (∀ f x, FUSTHamiltonian f x ≥ 0) →
     -- Premise 2: L² constraint gives Re = 1/2
     (∀ s, L2PowerCondition s → s.re = 1/2) →
+    -- Premise 3: Resonances on physical sheet satisfy L²
+    ResonanceL2Condition →
     -- Premise 3: Zeta zeros correspond to spectral resonances
     (∀ ρ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ) →
     -- Conclusion: All critical strip zeros are on critical line
     ∀ ρ, IsZetaZeroInStrip ρ → ρ.re = 1/2 := by
-  intro _ hL2 hCorr ρ hZero
+  intro _ hL2 hResL2 hCorr ρ hZero
   have hRes := hCorr ρ hZero
-  exact hL2 ρ hRes.1
+  exact hL2 ρ (hResL2 ρ hRes)
 
 /-- Zeta-spectral correspondence: zeros ↔ L² spectral points -/
 theorem zeta_spectral_bijection :
+    ResonanceL2Condition →
     -- Forward: zeta zero → spectral point
     (∀ ρ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ → ρ.re = 1/2) ∧
     -- Backward: spectral point on critical line → potential zeta zero location
     (∀ E : ℝ, (spectralToComplex E).re = 1/2) := by
+  intro hResL2
   constructor
-  · intro ρ _ hRes; exact hRes.1
+  · intro ρ _ hRes; exact hResL2 ρ hRes
   · exact spectral_re_half
 
 /-- **RH from Spectral Completeness**
@@ -459,13 +464,14 @@ theorem rh_from_spectral_completeness :
     (∀ f x, FUSTHamiltonian f x = (D6 f x)^2) →
     (∀ f x, FUSTHamiltonian f x ≥ 0) →
     (∀ s, L2PowerCondition s → s.re = 1/2) →
+    ResonanceL2Condition →
     (∀ ρ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ) →
     -- RH conclusion
     ∀ ρ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → ρ.re = 1/2 := by
-  intro _ _ hL2 hCorr ρ hZero hPos hLt
+  intro _ _ hL2 hResL2 hCorr ρ hZero hPos hLt
   have hStrip : IsZetaZeroInStrip ρ := ⟨hZero, hPos, hLt⟩
   have hRes := hCorr ρ hStrip
-  exact hL2 ρ hRes.1
+  exact hL2 ρ (hResL2 ρ hRes)
 
 /-! ### FUST Spectral Determinant and Scattering Resonances
 
@@ -638,6 +644,8 @@ theorem riemann_hypothesis_from_fust :
     (∀ f x, FUSTHamiltonian f x ≥ 0) →
     -- L² power functions require Re = 1/2
     (∀ s : ℂ, L2PowerCondition s → s.re = 1/2) →
+    -- Physical-sheet resonances satisfy L²
+    ResonanceL2Condition →
     -- Zeta zeros in critical strip are spectral resonances
     (∀ ρ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ) →
     -- RH: all critical strip zeros have Re = 1/2

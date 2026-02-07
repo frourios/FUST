@@ -13,7 +13,6 @@ import FUST.Physics.GaugeGroups
 import FUST.Physics.GaugeSectors
 import FUST.Physics.GravitationalCoupling
 import FUST.Physics.Hamiltonian
-import FUST.Physics.HilbertPolya
 import FUST.Physics.LeastAction
 import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
@@ -33,6 +32,12 @@ import FUST.Physics.TimeTheorem
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
 
+import FUST.Problems.RH.Basic
+import FUST.Problems.RH.CompleteDifferential
+import FUST.Problems.RH.ContinuousDiscreteEquivalence
+import FUST.Problems.RH.HilbertPolya
+import FUST.Problems.RH.SpectralZeta
+
 import FUST.Problems.ABC
 import FUST.Problems.BSD
 import FUST.Problems.Collatz
@@ -41,7 +46,6 @@ import FUST.Problems.Hodge
 import FUST.Problems.Langlands
 import FUST.Problems.NavierStokes
 import FUST.Problems.PvsNP
-import FUST.Problems.RiemannHypothesis
 import FUST.Problems.YangMills
 
 import FUST.Basic

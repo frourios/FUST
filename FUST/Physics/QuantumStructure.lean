@@ -1,7 +1,6 @@
 import FUST.DifferenceOperators
 import FUST.Physics.LeastAction
 import FUST.Physics.Probability
-import FUST.Physics.HilbertPolya
 import FUST.Physics.Thermodynamics
 
 namespace FUST.Dim
@@ -29,23 +28,6 @@ theorem action_zero_for_ker (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f
     (x₀ : ℝ) (hx₀ : 0 < x₀) (N : ℕ) :
     (discreteAction f x₀ N).val = 0 :=
   FUST.Probability.action_zero_for_ker f hf x₀ hx₀ N
-
-/-! ## Hamiltonian: (D₆ f x)² as ScaleQ(dimLagrangian) -/
-
-noncomputable def fustHamiltonian (f : ℝ → ℝ) (x : ℝ) : ScaleQ dimLagrangian :=
-  ⟨FUST.HilbertPolya.FUSTHamiltonian f x⟩
-
-theorem fustHamiltonian_nonneg (f : ℝ → ℝ) (x : ℝ) :
-    (fustHamiltonian f x).val ≥ 0 :=
-  FUST.HilbertPolya.hamiltonian_nonneg f x
-
-theorem fustHamiltonian_ker_zero (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f)
-    (x : ℝ) (hx : x ≠ 0) :
-    (fustHamiltonian f x).val = 0 :=
-  FUST.HilbertPolya.hamiltonian_ker_zero f hf x hx
-
-theorem fustHamiltonian_eq_lagrangian (f : ℝ → ℝ) (x : ℝ) :
-    (fustHamiltonian f x).val = (Dim.lagrangian_dim f x).val := rfl
 
 /-! ## Thermodynamics: entropy as ScaleQ(dimLagrangian) -/
 
