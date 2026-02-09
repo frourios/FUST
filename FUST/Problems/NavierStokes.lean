@@ -100,6 +100,16 @@ theorem dissipationCoeff_two : dissipationCoeff 2 = 0 := by
         rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]
     _ = 0 := by ring
 
+/-- C(n) = (φ-ψ)·(F(3n) - 3F(2n) + F(n)) where F = FStructureConst -/
+theorem dissipation_fibonacci_decomposition (n : ℕ) :
+    dissipationCoeff n =
+    (φ - ψ) * (FStructureConst (3*n) - 3 * FStructureConst (2*n) + FStructureConst n) := by
+  simp only [dissipationCoeff, FStructureConst]
+  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
+  rw [phi_sub_psi]
+  field_simp
+  ring
+
 /-- C_3 ≠ 0 (cubic outside kernel) -/
 theorem dissipationCoeff_three_ne_zero : dissipationCoeff 3 ≠ 0 := by
   simp only [dissipationCoeff]
@@ -267,6 +277,129 @@ theorem dissipation_positive_outside_kernel (n : ℕ) (hn : n ≥ 3) :
         cases l with
         | zero => exact dissipationCoeff_three_ne_zero
         | succ p => exact dissipationCoeff_higher_ne_zero (p + 4) (by omega)
+
+/-! ### Dissipation Recurrence
+
+C(n) satisfies a 6th-order integer recurrence from the characteristic polynomial
+x⁶ - 8x⁵ + 18x⁴ - 6x³ - 12x² + 2x + 1 whose roots are {φ³,φ²,φ,ψ,ψ²,ψ³}.
+-/
+
+private lemma charPoly_phi3_zero :
+    φ ^ 18 - 8 * φ ^ 15 + 18 * φ ^ 12 - 6 * φ ^ 9 - 12 * φ ^ 6 + 2 * φ ^ 3 + 1 = 0 := by
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hφ5 : φ ^ 5 = 5 * φ + 3 := by nlinarith [hφ2, hφ4]
+  have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
+  have hφ8 : φ ^ 8 = 21 * φ + 13 := by nlinarith [hφ2, hφ4]
+  have hφ9 : φ ^ 9 = 34 * φ + 21 := by nlinarith [hφ4, hφ5]
+  have hφ10 : φ ^ 10 = 55 * φ + 34 := by nlinarith [hφ2, hφ8]
+  have hφ12 : φ ^ 12 = 144 * φ + 89 := by nlinarith [hφ2, hφ10]
+  have hφ15 : φ ^ 15 = 610 * φ + 377 := by nlinarith [hφ6, hφ9]
+  have hφ18 : φ ^ 18 = 2584 * φ + 1597 := by nlinarith [hφ8, hφ10]
+  nlinarith [phi_cubed]
+
+private lemma charPoly_phi2_zero :
+    φ ^ 12 - 8 * φ ^ 10 + 18 * φ ^ 8 - 6 * φ ^ 6 - 12 * φ ^ 4 + 2 * φ ^ 2 + 1 = 0 := by
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
+  have hφ8 : φ ^ 8 = 21 * φ + 13 := by nlinarith [hφ2, hφ4]
+  have hφ10 : φ ^ 10 = 55 * φ + 34 := by nlinarith [hφ2, hφ8]
+  have hφ12 : φ ^ 12 = 144 * φ + 89 := by nlinarith [hφ2, hφ10]
+  nlinarith
+
+private lemma charPoly_phi1_zero :
+    φ ^ 6 - 8 * φ ^ 5 + 18 * φ ^ 4 - 6 * φ ^ 3 - 12 * φ ^ 2 + 2 * φ + 1 = 0 := by
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hφ5 : φ ^ 5 = 5 * φ + 3 := by nlinarith [hφ2, hφ4]
+  have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
+  nlinarith [phi_cubed]
+
+private lemma charPoly_psi1_zero :
+    ψ ^ 6 - 8 * ψ ^ 5 + 18 * ψ ^ 4 - 6 * ψ ^ 3 - 12 * ψ ^ 2 + 2 * ψ + 1 = 0 := by
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  have hψ5 : ψ ^ 5 = 5 * ψ + 3 := by nlinarith [hψ2, hψ4]
+  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
+  have hψ3 : ψ ^ 3 = 2 * ψ + 1 := by nlinarith [hψ2]
+  nlinarith
+
+private lemma charPoly_psi2_zero :
+    ψ ^ 12 - 8 * ψ ^ 10 + 18 * ψ ^ 8 - 6 * ψ ^ 6 - 12 * ψ ^ 4 + 2 * ψ ^ 2 + 1 = 0 := by
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
+  have hψ8 : ψ ^ 8 = 21 * ψ + 13 := by nlinarith [hψ2, hψ4]
+  have hψ10 : ψ ^ 10 = 55 * ψ + 34 := by nlinarith [hψ2, hψ8]
+  have hψ12 : ψ ^ 12 = 144 * ψ + 89 := by nlinarith [hψ2, hψ10]
+  nlinarith
+
+private lemma charPoly_psi3_zero :
+    ψ ^ 18 - 8 * ψ ^ 15 + 18 * ψ ^ 12 - 6 * ψ ^ 9 - 12 * ψ ^ 6 + 2 * ψ ^ 3 + 1 = 0 := by
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  have hψ5 : ψ ^ 5 = 5 * ψ + 3 := by nlinarith [hψ2, hψ4]
+  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
+  have hψ8 : ψ ^ 8 = 21 * ψ + 13 := by nlinarith [hψ2, hψ4]
+  have hψ9 : ψ ^ 9 = 34 * ψ + 21 := by nlinarith [hψ4, hψ5]
+  have hψ10 : ψ ^ 10 = 55 * ψ + 34 := by nlinarith [hψ2, hψ8]
+  have hψ12 : ψ ^ 12 = 144 * ψ + 89 := by nlinarith [hψ2, hψ10]
+  have hψ15 : ψ ^ 15 = 610 * ψ + 377 := by nlinarith [hψ6, hψ9]
+  have hψ18 : ψ ^ 18 = 2584 * ψ + 1597 := by nlinarith [hψ8, hψ10]
+  have hψ3 : ψ ^ 3 = 2 * ψ + 1 := by nlinarith [hψ2]
+  nlinarith
+
+/-- 6th-order recurrence for dissipation coefficients -/
+theorem dissipation_recurrence (n : ℕ) :
+    dissipationCoeff (n + 6) =
+    8 * dissipationCoeff (n + 5) - 18 * dissipationCoeff (n + 4) +
+    6 * dissipationCoeff (n + 3) + 12 * dissipationCoeff (n + 2) -
+    2 * dissipationCoeff (n + 1) - dissipationCoeff n := by
+  simp only [dissipationCoeff]
+  rw [show 3*(n+6) = 3*n+18 from by omega, show 2*(n+6) = 2*n+12 from by omega,
+      show 3*(n+5) = 3*n+15 from by omega, show 2*(n+5) = 2*n+10 from by omega,
+      show 3*(n+4) = 3*n+12 from by omega, show 2*(n+4) = 2*n+8 from by omega,
+      show 3*(n+3) = 3*n+9 from by omega, show 2*(n+3) = 2*n+6 from by omega,
+      show 3*(n+2) = 3*n+6 from by omega, show 2*(n+2) = 2*n+4 from by omega,
+      show 3*(n+1) = 3*n+3 from by omega, show 2*(n+1) = 2*n+2 from by omega]
+  simp only [pow_add]
+  have hmA := mul_eq_zero_of_right (φ ^ (3 * n)) charPoly_phi3_zero
+  have hmB := mul_eq_zero_of_right (φ ^ (2 * n)) charPoly_phi2_zero
+  have hmC := mul_eq_zero_of_right (φ ^ n) charPoly_phi1_zero
+  have hmD := mul_eq_zero_of_right (ψ ^ n) charPoly_psi1_zero
+  have hmE := mul_eq_zero_of_right (ψ ^ (2 * n)) charPoly_psi2_zero
+  have hmF := mul_eq_zero_of_right (ψ ^ (3 * n)) charPoly_psi3_zero
+  have hA' : φ ^ 18 * φ ^ (3*n) - 8 * (φ ^ 15 * φ ^ (3*n)) + 18 * (φ ^ 12 * φ ^ (3*n))
+    - 6 * (φ ^ 9 * φ ^ (3*n)) - 12 * (φ ^ 6 * φ ^ (3*n)) + 2 * (φ ^ 3 * φ ^ (3*n))
+    + φ ^ (3*n) = 0 := by nlinarith [hmA]
+  have hB' : φ ^ 12 * φ ^ (2*n) - 8 * (φ ^ 10 * φ ^ (2*n)) + 18 * (φ ^ 8 * φ ^ (2*n))
+    - 6 * (φ ^ 6 * φ ^ (2*n)) - 12 * (φ ^ 4 * φ ^ (2*n)) + 2 * (φ ^ 2 * φ ^ (2*n))
+    + φ ^ (2*n) = 0 := by nlinarith [hmB]
+  have hC' : φ ^ 6 * φ ^ n - 8 * (φ ^ 5 * φ ^ n) + 18 * (φ ^ 4 * φ ^ n)
+    - 6 * (φ ^ 3 * φ ^ n) - 12 * (φ ^ 2 * φ ^ n) + 2 * (φ * φ ^ n) + φ ^ n = 0 := by
+    nlinarith [hmC]
+  have hD' : ψ ^ 6 * ψ ^ n - 8 * (ψ ^ 5 * ψ ^ n) + 18 * (ψ ^ 4 * ψ ^ n)
+    - 6 * (ψ ^ 3 * ψ ^ n) - 12 * (ψ ^ 2 * ψ ^ n) + 2 * (ψ * ψ ^ n) + ψ ^ n = 0 := by
+    nlinarith [hmD]
+  have hE' : ψ ^ 12 * ψ ^ (2*n) - 8 * (ψ ^ 10 * ψ ^ (2*n)) + 18 * (ψ ^ 8 * ψ ^ (2*n))
+    - 6 * (ψ ^ 6 * ψ ^ (2*n)) - 12 * (ψ ^ 4 * ψ ^ (2*n)) + 2 * (ψ ^ 2 * ψ ^ (2*n))
+    + ψ ^ (2*n) = 0 := by nlinarith [hmE]
+  have hF' : ψ ^ 18 * ψ ^ (3*n) - 8 * (ψ ^ 15 * ψ ^ (3*n)) + 18 * (ψ ^ 12 * ψ ^ (3*n))
+    - 6 * (ψ ^ 9 * ψ ^ (3*n)) - 12 * (ψ ^ 6 * ψ ^ (3*n)) + 2 * (ψ ^ 3 * ψ ^ (3*n))
+    + ψ ^ (3*n) = 0 := by nlinarith [hmF]
+  linarith
+
+/-- Power sum p₂ = L(6)+L(4)+L(2) = 28: sum of squared evaluation multipliers -/
+theorem D6_power_sum_2 :
+    φ ^ 6 + φ ^ 4 + φ ^ 2 + ψ ^ 2 + ψ ^ 4 + ψ ^ 6 = 28 := by
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
+  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
+  linarith [phi_add_psi]
 
 end DissipationCoefficients
 

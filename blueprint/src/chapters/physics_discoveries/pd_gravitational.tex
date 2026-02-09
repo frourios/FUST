@@ -71,27 +71,13 @@ C(2,2) + C(3,2) + C(4,2) + C(5,2) + C(6,2) = 1 + 3 + 6 + 10 + 15 = 35
 \]
 \end{theorem}
 
-\section{Cosmological Constant}
-\label{sec:grav_cosmological}
-
-\begin{theorem}[Cosmological Exponent]
-\label{thm:grav_cosmological_exponent}
-\lean{FUST.GravitationalCoupling.cosmologicalExponent_eq}
-\leanok
-\[
-582 = 4 \times 107 + T(5) \times T(4) + 4
-\]
-\end{theorem}
-
-\begin{theorem}[Cosmological Density Ratio]
-\label{thm:grav_cosmological_density}
-\[
-\frac{\rho_\Lambda}{\rho_{Pl}} = \varphi^{-582}
-\]
-\end{theorem}
-
 \section{CMB Temperature}
 \label{sec:grav_cmb}
+
+The CMB temperature exponent decomposes as $152 = 107 + 45$,
+separating mass scale ($\varphi^{-107} \approx m_e/m_{Pl}$)
+from the thermal factor ($\varphi^{-45} = T_{CMB}/m_e$ in natural units).
+Both terms are dimensionless exponents.
 
 \begin{theorem}[CMB Decoupling Factor]
 \label{thm:grav_cmb_decoupling}
@@ -115,6 +101,36 @@ C(2,2) + C(3,2) + C(4,2) + C(5,2) + C(6,2) = 1 + 3 + 6 + 10 + 15 = 35
 \label{thm:grav_cmb_ratio}
 \[
 \frac{T_{CMB}}{T_{Pl}} = \varphi^{-152}
+= \underbrace{\varphi^{-107}}_{\approx\, m_e/m_{Pl}} \times \underbrace{\varphi^{-45}}_{T_{CMB}/m_e}
+\]
+\end{theorem}
+
+\section{Cosmological Constant}
+\label{sec:grav_cosmological}
+
+The cosmological exponent uses dimensional separation via Stefan--Boltzmann
+$\rho \propto T^4$: the energy density ratio factors as
+$\varphi^{-582} = (\varphi^{-152})^4 \times \varphi^{26}$,
+giving $582 = 4 \times 152 - 26$ where $4 = d{+}1$ is the spacetime dimension
+and $26 = L(1)^2 + L(2)^2 + L(3)^2$ is the sector trace square sum.
+
+\begin{theorem}[Cosmological Exponent]
+\label{thm:grav_cosmological_exponent}
+\lean{FUST.GravitationalCoupling.cosmologicalExponent_eq}
+\leanok
+\[
+582 = 4 \times 152 - 26
+= \underbrace{(d{+}1)}_{\text{Stefan--Boltzmann}}
+  \times \underbrace{152}_{\text{CMB exponent}}
+  - \underbrace{L(1)^2{+}L(2)^2{+}L(3)^2}_{\text{sector trace squares}}
+\]
+\end{theorem}
+
+\begin{theorem}[Cosmological Density Ratio]
+\label{thm:grav_cosmological_density}
+\[
+\frac{\rho_\Lambda}{\rho_{Pl}} = \varphi^{-582}
+= \left(\frac{T_{CMB}}{T_{Pl}}\right)^{\!4} \times \varphi^{26}
 \]
 \end{theorem}
 
@@ -138,20 +154,440 @@ C(2,2) + C(3,2) + C(4,2) + C(5,2) + C(6,2) = 1 + 3 + 6 + 10 + 15 = 35
 \lean{FUST.GravitationalCoupling.cosmological_summary}
 \leanok
 \begin{enumerate}
-\item Cosmological constant exponent = 582
-\item CMB temperature exponent = 152
-\item Decoupling factor = $T(9) = 45$
+\item CMB temperature exponent: $152 = 107 + 45$ (mass scale + thermal factor)
+\item Cosmological constant exponent: $582 = 4 \times 152 - 26$ (Stefan--Boltzmann + sector correction)
+\item Decoupling factor: $45 = C(3,2) \times T(5) = T(9)$
+\item Sector trace squares: $26 = L(1)^2 + L(2)^2 + L(3)^2$
 \end{enumerate}
 \end{theorem}
 
-\section{Physical Interpretation}
-\label{sec:grav_interpretation}
+\section{Inverse Square Law from D-Structure}
+\label{sec:grav_inverse_square}
 
-Gravity emerges from the complete D-hierarchy through:
+Newton's inverse square law $F \propto 1/r^2$ is derived purely from the $D_6$
+operator structure, without importing any assumption from continuous field theory.
+
+\subsection{Golden Conjugate Inversion}
+
+The derivation rests on the algebraic identity $\varphi\psi = -1$, which implies:
+
+\begin{lemma}[Golden Conjugate Inversion]
+\label{lem:golden_conjugate_inversion}
+\lean{FUST.GravitationalCoupling.phi_inv_eq_neg_psi}
+\lean{FUST.GravitationalCoupling.psi_inv_eq_neg_phi}
+\leanok
+\[
+\varphi^{-1} = -\psi, \qquad \psi^{-1} = -\varphi.
+\]
+In particular, $\varphi^{-2k} = \psi^{2k}$ and $\psi^{-2k} = \varphi^{2k}$ for all $k$.
+\end{lemma}
+
+\subsection{Extended Kernel of D-Structure}
+
+Define the dissipation coefficient for the monomial $t^n$:
+\[
+C(n) = \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}.
+\]
+The kernel $\ker(D_6) = \operatorname{span}\{1, t, t^2\}$ corresponds to $C(0) = C(1) = C(2) = 0$.
+
+By the golden conjugate inversion, the coefficient at $n = -2$ satisfies
+\[
+C(-2) = \varphi^{-6} - 3\varphi^{-4} + \varphi^{-2} - \psi^{-2} + 3\psi^{-4} - \psi^{-6}
+= \psi^{6} - 3\psi^{4} + \psi^{2} - \varphi^{2} + 3\varphi^{4} - \varphi^{6} = -C(2) = 0.
+\]
+
+\begin{theorem}[$D_6$ Annihilates $t^{-2}$]
+\label{thm:D6_inv_sq_zero}
+\lean{FUST.GravitationalCoupling.D6_inv_sq_zero}
+\leanok
+For all $x \neq 0$,
+\[
+D_6[t^{-2}](x) = 0.
+\]
+\end{theorem}
+
+\begin{proof}
+Expand $D_6[t^{-2}](x)$ using $(ax)^{-2} = a^{-2}x^{-2}$.
+The numerator factors as $x^{-2} \cdot C(-2) = 0$ since $\varphi^{-2k} = \psi^{2k}$
+reduces the coefficient to $-C(2) = 0$.
+\end{proof}
+
+\subsection{Inverse-Square Force}
+
+The $D_6$ operator applied to the $1/r$ potential $\Phi(t) = t^{-1}$ yields:
+
+\begin{theorem}[Inverse-Square Force from $D_6$]
+\label{thm:D6_inv_one}
+\lean{FUST.GravitationalCoupling.D6_inv_one}
+\leanok
+For all $x \neq 0$,
+\[
+D_6[t^{-1}](x) = \frac{6}{(\varphi - \psi)^4 \cdot x^2} = \frac{6}{25} \cdot \frac{1}{x^2}.
+\]
+\end{theorem}
+
+\begin{proof}
+Expand the numerator using $(ax)^{-1} = a^{-1}x^{-1}$ and the substitutions
+$\varphi^{-1} = -\psi$, $\psi^{-1} = -\varphi$:
+\begin{align*}
+\text{numerator}
+&= x^{-1}\bigl(-\psi^3 - 3\psi^2 - \psi + \varphi + 3\varphi^2 + \varphi^3\bigr) \\
+&= x^{-1}\bigl(-(2\psi+1) - 3(\psi+1) - \psi + \varphi + 3(\varphi+1) + (2\varphi+1)\bigr) \\
+&= x^{-1} \cdot 6(\varphi - \psi) = 6\sqrt{5} \cdot x^{-1}.
+\end{align*}
+Dividing by the denominator $(\varphi-\psi)^5 x = (\sqrt{5})^5 x$ gives
+$6\sqrt{5}/((\sqrt{5})^5 x^2) = 6/25 \cdot x^{-2}$.
+\end{proof}
+
+The nonzero coefficient $C(-1) = 6\sqrt{5} \neq 0$ confirms the gravitational force
+exists and is exactly inverse-square.
+
+\subsection{Harmonic Potential}
+
+\begin{theorem}[$1/r$ Potential is Harmonic]
+\label{thm:dAlembertian_inv_zero}
+\lean{FUST.GravitationalCoupling.dAlembertian_inv_zero}
+\leanok
+For all $x \neq 0$,
+\[
+\Box_\varphi[t^{-1}](x) = D_6(D_6[t^{-1}])(x) = 0.
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:D6_inv_one}, $D_6[t^{-1}](y) = \tfrac{6}{(\varphi-\psi)^4} \cdot y^{-2}$
+for $y \neq 0$.  Since $D_6$ evaluates only at nonzero points $\varphi^k x$ and $\psi^k x$,
+the outer $D_6$ sees a constant multiple of $t^{-2}$.
+By $D_6$-linearity (homogeneity) and Theorem~\ref{thm:D6_inv_sq_zero}:
+\[
+D_6\!\Bigl[\frac{6}{(\varphi-\psi)^4} \cdot t^{-2}\Bigr](x)
+= \frac{6}{(\varphi-\psi)^4} \cdot D_6[t^{-2}](x) = 0. \qedhere
+\]
+\end{proof}
+
+\subsection{Summary}
+
+\begin{theorem}[Inverse Square Law Derivation]
+\label{thm:inverse_square_law}
+\lean{FUST.GravitationalCoupling.inverse_square_law_derivation}
+\leanok
+From the $D_6$ structure alone:
+\begin{enumerate}
+\item $\dim\ker(D_6) = 3$ determines spatial dimension $d = 3$.
+\item $D_6[t^{-2}] = 0$: the inverse-square monomial is in the extended kernel.
+\item $D_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$: force is inverse-square with nonzero coefficient.
+\item $\Box_\varphi[t^{-1}] = 0$: the $1/r$ potential is harmonic under the FUST d'Alembertian.
+\end{enumerate}
+\end{theorem}
+
+The derivation chain is:
+\[
+\varphi\psi = -1
+\;\;\Longrightarrow\;\;
+C(-2) = 0
+\;\;\Longrightarrow\;\;
+D_6[t^{-2}] = 0
+\;\;\Longrightarrow\;\;
+\Box_\varphi[t^{-1}] = 0
+\;\;\Longrightarrow\;\;
+F = D_6[t^{-1}] \propto \frac{1}{r^2}.
+\]
+
+\section{D-Structure Algebraic Relations}
+\label{sec:grav_d_structure_relations}
+
+Systematic exploration of D$_6$ algebraic properties reveals deep connections
+to Fibonacci and Lucas number theory.
+
+\subsection{Lucas Numbers}
+
+\begin{definition}[Lucas Number]
+\label{def:lucas_number}
+\lean{FUST.GravitationalCoupling.lucasNumber}
+\leanok
+\[
+L(n) = \varphi^n + \psi^n.
+\]
+\end{definition}
+
+Key values: $L(0) = 2$, $L(1) = 1$, $L(2) = 3$, $L(3) = 4$, $L(5) = 11$,
+$L(8) = 47$, $L(9) = 76$.
+
+\subsection{Dissipation--Fibonacci Decomposition}
+
+\begin{theorem}[Dissipation--Fibonacci Decomposition]
+\label{thm:dissipation_fibonacci}
+\lean{FUST.NavierStokes.dissipation_fibonacci_decomposition}
+\leanok
+For all $n \in \mathbb{N}$,
+\[
+C(n) = (\varphi - \psi) \cdot \bigl(F(3n) - 3F(2n) + F(n)\bigr)
+\]
+where $F(k) = (\varphi^k - \psi^k)/\sqrt{5}$ is the $k$-th Fibonacci number
+and $C(n)$ is the dissipation coefficient.
+\end{theorem}
+
+\subsection{$D_6$ Coefficient Structure}
+
+\begin{theorem}[$D_6$ Evaluation Point Sum]
+\label{thm:D6_eval_sum}
+\lean{FUST.GravitationalCoupling.D6_eval_multiplier_sum}
+\leanok
+\[
+\varphi^3 + \varphi^2 + \varphi + \psi + \psi^2 + \psi^3 = 8 = L(1) + L(2) + L(3).
+\]
+\end{theorem}
+
+\begin{theorem}[$D_6$ Coefficient Properties]
+\label{thm:D6_coeff_props}
+\lean{FUST.GravitationalCoupling.D6_coeff_sum}
+\lean{FUST.GravitationalCoupling.D6_coeff_abs_sum}
+\leanok
+The $D_6$ coefficients $[1, -3, 1, -1, 3, -1]$ satisfy:
+\begin{enumerate}
+\item Signed sum $= 0$ (kills constants).
+\item Absolute sum $= 10 = C(5,2)$.
+\item Positive part sum $=$ negative part $= 5 = $ active levels.
+\end{enumerate}
+\end{theorem}
+
+\subsection{Lucas Decomposition of Physical Exponents}
+
+\begin{theorem}[Lepton Exponent via Lucas]
+\label{thm:lepton_lucas}
+\lean{FUST.GravitationalCoupling.leptonExponent_from_lucas}
+\leanok
+\[
+107 = C(5,2) \times L(5) - C(3,2) = 10 \times 11 - 3.
+\]
+The structural coincidence $C(5,2) + 1 = L(5) = 11$ connects pair counts to Lucas numbers.
+\end{theorem}
+
+\begin{theorem}[CMB Exponent via Lucas]
+\label{thm:cmb_lucas}
+\lean{FUST.GravitationalCoupling.cmbExponent_from_lucas}
+\leanok
+\[
+152 = 2 \times L(9), \quad \text{where } 9 = D_{\max} + D_{\min} + 1 = 6 + 2 + 1.
+\]
+\end{theorem}
+
+\begin{theorem}[Cosmological Exponent via Lucas]
+\label{thm:cosmo_lucas}
+\lean{FUST.GravitationalCoupling.cosmologicalExponent_from_lucas}
+\leanok
+\[
+582 = 5 \times 107 + L(8), \quad \text{where } 8 = D_{\max} + D_{\min} = 6 + 2.
+\]
+\end{theorem}
+
+\subsection{D$_6$ Spectral Invariants}
+
+The elementary symmetric polynomials $e_k$ of the evaluation multipliers
+$\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ are:
+
+\begin{theorem}[$D_6$ Spectral Invariants]
+\label{thm:D6_spectral_invariants}
+\lean{FUST.GravitationalCoupling.D6_spectral_invariants}
+\leanok
+\begin{align*}
+e_1 &= 8, & e_2 &= 18, & e_3 &= 6, \\
+e_4 &= -12, & e_5 &= -2, & e_6 &= (\varphi\psi)^{1+2+3} = (-1)^6 = 1.
+\end{align*}
+\end{theorem}
+
+These define the characteristic polynomial
+\[
+p(x) = x^6 - 8x^5 + 18x^4 - 6x^3 - 12x^2 + 2x + 1
+\]
+whose roots are precisely the $D_6$ evaluation multipliers.
+
+\begin{theorem}[$D_6$ Characteristic Polynomial Roots]
+\label{thm:D6_charPoly_roots}
+\lean{FUST.GravitationalCoupling.D6_charPoly_roots}
+\leanok
+\[
+p(\varphi^k) = 0, \quad p(\psi^k) = 0 \quad \text{for } k = 1, 2, 3.
+\]
+\end{theorem}
+
+\subsection{\texorpdfstring{$D_6$}{D₆} Sector Factorization}
+
+The characteristic polynomial factors into three sectors:
+
+\begin{theorem}[$D_6$ Characteristic Polynomial Factorization]
+\label{thm:D6_charPoly_factorization}
+\lean{FUST.GravitationalCoupling.D6_charPoly_factorization}
+\leanok
+\[
+p(x) = (x^2 - x - 1)(x^2 - 3x + 1)(x^2 - 4x - 1)
+\]
+corresponding to matter $(\varphi,\psi)$, gauge $(\varphi^2,\psi^2)$,
+and gravity $(\varphi^3,\psi^3)$ sectors.
+\end{theorem}
+
+\begin{theorem}[Sector Trace Squares]
+\label{thm:sector_trace_sq_sum}
+\lean{FUST.GravitationalCoupling.sector_trace_sq_sum}
+\leanok
+\[
+L(1)^2 + L(2)^2 + L(3)^2 = 1 + 9 + 16 = 26.
+\]
+\end{theorem}
+
+The spectral spread (sum of squared eigenvalue gaps) is:
+
+\begin{theorem}[Spectral Spread]
+\label{thm:spectral_spread}
+\lean{FUST.GravitationalCoupling.spectral_spread_eq}
+\leanok
+\[
+\sum_{i<j} (\lambda_i - \lambda_j)^2 = n \cdot p_2 - p_1^2 = 6 \cdot 28 - 64 = 104.
+\]
+\end{theorem}
+
+\subsubsection*{Numerical Observations (Degree-Inhomogeneous)}
+
+The following equalities are numerically verified but \emph{not} structural derivations:
+they mix terms of different eigenvalue degree (e.g.\ $\deg(p_2)=2$ with $\deg(d)=0$),
+violating discrete dimensional homogeneity.
+In particular, since all $D_6$ power sums $p_k$ are even while $107$ is odd,
+no single-degree homogeneous formula in spectral data can yield $107$.
+
+\begin{theorem}[Spectral Exponent Observation]
+\label{thm:spectral_exponent_observation}
+\lean{FUST.GravitationalCoupling.spectral_exponent_observation}
+\leanok
+With $n=6$, $d=\dim(\ker D_6)=3$, $p_1=8$, $p_2=28$, $e_6=1$,
+and $\sigma = L(1)^2+L(2)^2+L(3)^2=26$:
+\begin{align*}
+107 &= n \cdot p_2 - p_1^2 + d & &\text{(deg 2 + deg 0: inhomogeneous)} \\
+152 &= 107 + T(p_1 + e_6) & &\text{(deg 1 + deg 6: inhomogeneous)} \\
+582 &= (d{+}1) \cdot 152 - \sigma & &\text{(count $\times$ exponent $-$ trace$^2$: inhomogeneous)}
+\end{align*}
+\end{theorem}
+
+\begin{theorem}[Spectral Spread + Kernel Dimension = 107]
+\label{thm:spectral_spread_plus_ker}
+\lean{FUST.GravitationalCoupling.spectral_spread_plus_ker_eq_107}
+\leanok
+\[
+104 + 3 = \sum_{i<j} (\lambda_i - \lambda_j)^2 + \dim(\ker D_6) = 107.
+\]
+This is a numerical coincidence: spectral spread has eigenvalue degree~2
+while kernel dimension has degree~0.
+\end{theorem}
+
+\subsection{Dissipation Recurrence}
+
+\begin{theorem}[6th-Order Recurrence for Dissipation Coefficients]
+\label{thm:dissipation_recurrence}
+\lean{FUST.NavierStokes.dissipation_recurrence}
+\leanok
+For all $n \in \mathbb{N}$,
+\[
+C(n{+}6) = 8C(n{+}5) - 18C(n{+}4) + 6C(n{+}3)
+ + 12C(n{+}2) - 2C(n{+}1) - C(n).
+\]
+The recurrence coefficients are the negated elementary symmetric polynomials:
+$\{8, -18, 6, 12, -2, -1\} = \{e_1, -e_2, e_3, -e_4, e_5, -e_6\}$.
+\end{theorem}
+
+\begin{theorem}[Power Sum $p_2$]
+\label{thm:D6_power_sum_2}
+\lean{FUST.NavierStokes.D6_power_sum_2}
+\leanok
+\[
+\varphi^6 + \varphi^4 + \varphi^2 + \psi^2 + \psi^4 + \psi^6 = 28 = L(6) + L(4) + L(2).
+\]
+\end{theorem}
+
+\subsection{Extended d'Alembertian Kernel}
+
+\begin{theorem}[Extended Kernel of $\Box_\varphi$]
+\label{thm:dAlembertian_extended_kernel}
+\lean{FUST.GravitationalCoupling.dAlembertian_extended_kernel}
+\leanok
+The FUST d'Alembertian $\Box_\varphi = D_6 \circ D_6$ annihilates:
+\[
+\Box_\varphi[t^n] = 0 \quad \text{for } n \in \{-1, 0, 1, 2, 3\}.
+\]
+For $n = 0, 1, 2$: $D_6[t^n] = 0$ (kernel), so $\Box_\varphi[t^n] = D_6(0) = 0$.
+For $n = 3$: $D_6[t^3] \propto t^2$, then $D_6[t^2] = 0$.
+For $n = -1$: $D_6[t^{-1}] \propto t^{-2}$, then $D_6[t^{-2}] = 0$.
+\end{theorem}
+
+\section{Dimensional Derivation Structure}
+\label{sec:grav_derivation_structure}
+
+The $D_6$ operator maps $D_6[t^n](x) = C(n) \cdot x^n / (\varphi-\psi)^5$
+where $C(n)$ is the dissipation coefficient.
+The monomial eigenvalue $\Lambda(n) = C(n)/(\varphi-\psi)^5$ vanishes
+for $n \in \{0, 1, 2\}$:
 \begin{itemize}
-\item Lepton mass structure (107)
-\item Electromagnetic structure (5 = $\alpha$ exponent)
-\item Weak structure (3 = $C(3,2)$)
-\item Full $D_6$ hierarchy (21 = $T(6)$)
+\item $\Delta = 0$: constants (dimensionless couplings)
+\item $\Delta = 1$: mass operators ($m_e$, $m_{Pl}$)
+\item $\Delta = 2$: kinetic energy operators ($p^2$, $\nabla^2$)
+\end{itemize}
+Since $D_6$ annihilates $\Delta = 1$, mass ratios $m_e/m_{Pl}$
+are \emph{boundary data} of the D-hierarchy, not determined by $D_6$ eigenvalues.
+
+\begin{theorem}[$D_6$ Kernel Dimensions]
+\label{thm:D6_kernel_dimensions}
+\lean{FUST.GravitationalCoupling.D6_kernel_dimensions}
+\leanok
+$D_6[1] = D_6[t] = D_6[t^2] = 0$ (kernel: $\Delta = 0, 1, 2$),
+while $D_6[t^{-1}] \neq 0$ (force operator: outside kernel).
+\end{theorem}
+
+The physical exponents form a three-layer structure:
+
+\subsection*{Layer 1: $D_6$ Eigenvalue Structure (structural)}
+
+Determined purely by $D_6$ spectral data:
+\begin{itemize}
+\item $d = \dim(\ker D_6) = 3$ (spatial dimension)
+\item $d{+}1 = 4$ (spacetime dimension)
+\item $\sigma = L(1)^2 + L(2)^2 + L(3)^2 = 26$ (sector trace squares)
+\item $F \propto 1/r^2$ (inverse square law from $\varphi\psi = -1$)
+\item $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$ (sector factorization)
 \end{itemize}
 
+\subsection*{Layer 2: D-Hierarchy Boundary Conditions (combinatorial)}
+
+Since $D_6$ annihilates mass operators ($\Delta = 1$),
+mass ratios are boundary data from the D-hierarchy:
+\begin{itemize}
+\item $107 = T(4) \times (T(4)+1) - C(3,2) = 10 \times 11 - 3$
+\item $45 = C(3,2) \times T(5) = T(9)$
+\item $5/63 = \text{activeLevels}/\text{correctionDenom}$
+\end{itemize}
+These are degree-0 (combinatorial count) formulas with no eigenvalue-dimensional intermediates.
+
+\subsection*{Layer 3: Physical Assembly (dimensionally consistent)}
+
+The physical quantities are assembled with dimensional intermediates:
+\begin{enumerate}
+\item $\varphi^{-152} = \varphi^{-107} \times \varphi^{-45}$:
+      $T_{CMB}/T_{Pl} = (m_e/m_{Pl}) \times (T_{CMB}/m_e)$,
+      passing through $[M]$ intermediate.
+\item $\varphi^{-582} = (\varphi^{-152})^4 \times \varphi^{26}$:
+      $\rho_\Lambda/\rho_{Pl} = (T_{CMB}/T_{Pl})^4 \times \varphi^{26}$,
+      passing through $[M^4]$ intermediate via Stefan--Boltzmann $\rho \propto T^4$.
+\end{enumerate}
+
+\begin{theorem}[Three-Layer Assembly]
+\label{thm:derivation_layer3}
+\lean{FUST.GravitationalCoupling.derivation_layer3_assembly}
+\leanok
+\begin{align*}
+152 &= 107 + 45 & &\text{(mass scale + thermal factor, via $[M]$)} \\
+582 &= 4 \times 152 - 26 & &\text{(Stefan--Boltzmann + sector correction, via $[M^4]$)}
+\end{align*}
+\end{theorem}
+
+\noindent\textbf{Note on spectral formulas.}
+The spectral equalities $107 = 6 \cdot 28 - 64 + 3$ etc.\ are numerically valid
+but degree-inhomogeneous. Since all $D_6$ power sums $p_k$ are even while $107$ is odd,
+no single-degree homogeneous spectral formula can yield $107$.
+This is consistent with Layer~2: mass ratios are boundary data, not spectral data.
