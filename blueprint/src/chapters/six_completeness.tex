@@ -146,3 +146,114 @@ In the Frourio difference hierarchy, the algebraically non-equivalent difference
 \item \textbf{Half-integer order $n = 5$}: Only $D_{5.5}$ is exceptional
 \end{enumerate}
 \end{proof}
+
+\section{D6 Spectral Coefficients}
+\label{sec:spectral_coefficients}
+
+When $D_6$ acts on the monomial $x^n$, the result factors as
+\[
+D_6[x^n](x) = \frac{C_n}{(\varphi - \psi)^5} \cdot x^{n-1}
+\]
+where the \emph{spectral coefficient} $C_n$ is defined as follows.
+
+\begin{definition}[D6 Spectral Coefficient]
+\label{def:D6Coeff}
+\lean{FUST.SpectralCoefficients.D6Coeff}
+\leanok
+\[
+C_n := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}
+\quad (n \in \mathbb{N})
+\]
+\end{definition}
+
+\begin{theorem}[Fibonacci Representation]
+\label{thm:D6Coeff_fibonacci}
+\lean{FUST.SpectralCoefficients.D6Coeff_fibonacci}
+\leanok
+\[
+C_n = \sqrt{5} \cdot \bigl(F_{3n} - 3F_{2n} + F_n\bigr)
+\]
+where $F_k$ denotes the $k$-th Fibonacci number.
+\end{theorem}
+
+\begin{theorem}[Polynomial Kernel Characterization]
+\label{thm:D6Coeff_eq_zero_iff}
+\lean{FUST.SpectralCoefficients.D6Coeff_eq_zero_iff}
+\leanok
+\[
+C_n = 0 \iff n \le 2
+\]
+In particular, $C_0 = C_1 = C_2 = 0$ and $C_3 = 12\sqrt{5} \ne 0$.
+\end{theorem}
+
+\begin{theorem}[Factorization]
+\label{thm:D6Coeff_factored}
+\lean{FUST.SpectralCoefficients.D6Coeff_factored}
+\leanok
+\[
+C_n = (\varphi^n - \psi^n)\bigl(\varphi^{2n} + \psi^{2n} + (-1)^n + 1 - 3(\varphi^n + \psi^n)\bigr)
+\]
+\end{theorem}
+
+\begin{theorem}[Asymptotic Growth]
+\label{thm:D6Coeff_asymptotic}
+\lean{FUST.SpectralCoefficients.D6Coeff_asymptotic}
+\leanok
+For $n \ge 3$, there exists $C > 0$ such that
+\[
+|C_n - \varphi^{3n}| \le C \cdot \varphi^{2n}
+\]
+\end{theorem}
+
+\subsection{Extended Kernel on \texorpdfstring{$\mathbb{Z}$}{Z}}
+\label{subsec:extended_kernel}
+
+Extending $C_n$ from $\mathbb{N}$ to $\mathbb{Z}$ using zpow yields the Laurent spectral coefficient.
+
+\begin{definition}[Laurent D6 Coefficient]
+\label{def:D6CoeffZ}
+\lean{FUST.SpectralCoefficients.D6CoeffZ}
+\leanok
+\[
+C_n^{\mathbb{Z}} := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}
+\quad (n \in \mathbb{Z})
+\]
+\end{definition}
+
+\begin{theorem}[Antisymmetry for Even Arguments]
+\label{thm:D6CoeffZ_neg_even}
+\lean{FUST.SpectralCoefficients.D6CoeffZ_neg_even}
+\leanok
+For even $n \in \mathbb{Z}$:
+\[
+C_{-n}^{\mathbb{Z}} = -C_n^{\mathbb{Z}}
+\]
+\end{theorem}
+
+\begin{theorem}[Extended Kernel Dimension]
+\label{thm:D6_extended_kernel_dim}
+\lean{FUST.SpectralCoefficients.D6_extended_kernel_dim}
+\leanok
+The Laurent kernel of $D_6$ is 4-dimensional:
+\[
+\{n \in \mathbb{Z} \mid C_n^{\mathbb{Z}} = 0\} \supseteq \{-2, 0, 1, 2\}
+\]
+\end{theorem}
+
+\begin{theorem}[Kernel Gap Structure]
+\label{thm:D6_kernel_gap_structure}
+\lean{FUST.SpectralCoefficients.D6_kernel_gap_structure}
+\leanok
+The extended kernel has a gap at $n = -1$:
+\[
+C_{-3}^{\mathbb{Z}} \ne 0, \quad C_{-2}^{\mathbb{Z}} = 0, \quad C_{-1}^{\mathbb{Z}} \ne 0, \quad
+C_0^{\mathbb{Z}} = C_1^{\mathbb{Z}} = C_2^{\mathbb{Z}} = 0, \quad C_3^{\mathbb{Z}} \ne 0
+\]
+The polynomial kernel $\{0, 1, 2\}$ extends to the Laurent kernel $\{-2, 0, 1, 2\}$,
+with $n = -2$ connected via the antisymmetry $C_{-2}^{\mathbb{Z}} = -C_2^{\mathbb{Z}} = 0$.
+The isolated zero at $n = -2$ (separated by the nonzero gap $C_{-1}^{\mathbb{Z}} \ne 0$)
+distinguishes the Laurent extension from the polynomial kernel.
+\end{theorem}
+
+\textbf{Remark}: The polynomial kernel $\ker(D_6) \cap \mathbb{R}[x] = \operatorname{span}\{1, x, x^2\}$ (dimension 3) is the physically relevant kernel used for spatial dimension derivation.
+The Laurent kernel (dimension 4) arises naturally in the Mellin transform setting on $L^2(\mathbb{R}_+, dx/x)$.

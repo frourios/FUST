@@ -36,6 +36,7 @@ import FUST.Problems.RH.Basic
 import FUST.Problems.RH.CompleteDifferential
 import FUST.Problems.RH.ContinuousDiscreteEquivalence
 import FUST.Problems.RH.HilbertPolya
+import FUST.Problems.RH.MellinSampling
 import FUST.Problems.RH.SpectralZeta
 
 import FUST.Problems.ABC
@@ -52,3 +53,4 @@ import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
 import FUST.FrourioLogarithm
+import FUST.SpectralCoefficients
