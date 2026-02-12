@@ -39,7 +39,7 @@ noncomputable def D6LeibnizDeviation (f g : ℝ → ℝ) (x : ℝ) : ℝ :=
 
 /-- Product of ker(D6) elements may exit kernel: x² · x² = x⁴ ∉ ker(D6) -/
 theorem product_exits_kernel (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ^2 = ψ + 1 := psi_sq
   have hφ4 : φ^4 = 3 * φ + 2 := by
@@ -91,9 +91,7 @@ theorem product_exits_kernel (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 
       _ = 84 * (φ - ψ) * x^4 := by rw [hcoef]
   rw [hnum]
   have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hden_ne : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero (pow_ne_zero 5 _) hx
-    rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
   have hdiff_ne : φ - ψ ≠ 0 := by rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
   have hx4_ne : x^4 ≠ 0 := pow_ne_zero 4 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx4_ne) hden_ne

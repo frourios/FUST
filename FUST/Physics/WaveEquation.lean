@@ -32,7 +32,7 @@ theorem D6_coeff_sum_zero : (1 : ℝ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by nor
 /-- D6 is linear -/
 theorem D6_linear_combination (f g : ℝ → ℝ) (a b : ℝ) (x : ℝ) :
     D6 (fun t => a * f t + b * g t) x = a * D6 f x + b * D6 g x := by
-  simp only [D6]
+  simp only [D6, N6]
   by_cases hx : x = 0
   · simp [hx]
   · simp only [hx, ↓reduceIte]; ring
@@ -95,12 +95,8 @@ theorem critical_point_condition (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
   intro h
   have h_cubic := h (fun t => t^3)
   have hD6_cubic_ne : D6 (fun t => t^3) x ≠ 0 := by
-    simp only [D6, hx, ↓reduceIte]
+    simp only [D6, N6, D6Denom, hx, ↓reduceIte]
     intro heq
-    have hdenom_ne : (φ - ψ)^5 * x ≠ 0 := by
-      apply mul_ne_zero
-      · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-      · exact hx
     rw [div_eq_zero_iff] at heq
     cases heq with
     | inl hnum =>
@@ -161,7 +157,7 @@ theorem critical_point_condition (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
       have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
       have h12_ne : (12 : ℝ) ≠ 0 := by norm_num
       exact mul_ne_zero h12_ne hsqrt5_ne hcoef_zero
-    | inr h => exact hdenom_ne h
+    | inr h => exact (D6Denom_mul_ne_zero x hx) h
   exact (mul_eq_zero.mp h_cubic).resolve_right hD6_cubic_ne
 
 /-! ## Part 4: Spacetime Dimension
@@ -185,12 +181,9 @@ theorem ker_D6_contains_basis :
 
 /-- D6[x³] ≠ 0: cubic is NOT in ker(D6) -/
 theorem D6_cubic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, D6Denom, hx, ↓reduceIte]
   intro heq
-  have hdenom_ne : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
+  have hdenom_ne := D6Denom_mul_ne_zero x hx
   rw [div_eq_zero_iff] at heq
   cases heq with
   | inl hnum =>

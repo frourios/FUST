@@ -27,14 +27,11 @@ open FUST.LeastAction FUST.TimeTheorem
 section ScaleTransfer
 
 /-- Scale transfer coefficient from D6 normalization: μ = 1/(φ-ψ)⁵ = 1/(√5)⁵ -/
-noncomputable def scaleTransferCoeff : ℝ := 1 / (φ - ψ)^5
+noncomputable def scaleTransferCoeff : ℝ := 1 / D6Denom
 
 theorem scaleTransferCoeff_positive : scaleTransferCoeff > 0 := by
   simp only [scaleTransferCoeff]
-  apply div_pos one_pos
-  apply pow_pos
-  rw [phi_sub_psi]
-  exact Real.sqrt_pos.mpr (by norm_num : (5 : ℝ) > 0)
+  exact div_pos one_pos D6Denom_pos
 
 end ScaleTransfer
 

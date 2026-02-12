@@ -39,7 +39,7 @@ def IsInKerD6 (f : ℝ → ℝ) : Prop :=
 /-- D6 applied to degree-2 polynomial is zero -/
 theorem D6_polynomial_deg2 (a₀ a₁ a₂ : ℝ) (x : ℝ) (hx : x ≠ 0) :
     D6 (fun t => a₀ + a₁ * t + a₂ * t^2) x = 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, D6Denom, hx, ↓reduceIte]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     calc ψ^3 = ψ^2 * ψ := by ring
@@ -77,12 +77,6 @@ theorem D6_polynomial_deg2 (a₀ a₁ a₂ : ℝ) (x : ℝ) (hx : x ≠ 0) :
       _ = (8*φ+5) - 3*(3*φ+2) + (φ+1) - (ψ+1) + 3*(3*ψ+2) - (8*ψ+5) := by
           rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]
       _ = 0 := by ring
-  have hdenom_ne : (φ - ψ)^5 * x ≠ 0 := by
-    have hphi_sub : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [hphi_sub]
-    apply mul_ne_zero
-    · apply pow_ne_zero; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
   rw [div_eq_zero_iff]
   left
   calc (a₀ + a₁ * (φ^3 * x) + a₂ * (φ^3 * x)^2) -
@@ -210,33 +204,17 @@ noncomputable def perpProjection (f : ℝ → ℝ) : ℝ → ℝ :=
 theorem perpProjection_D6_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
     D6 (perpProjection f) x = D6 f x := by
   have hker := kernelProjection_annihilated_by_D6 f x hx
-  simp only [perpProjection, D6, hx, ↓reduceIte]
-  simp only [D6, hx, ↓reduceIte] at hker
-  have hdenom_ne : (φ - ψ)^5 * x ≠ 0 := by
-    have hphi_sub : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [hphi_sub]
-    apply mul_ne_zero
-    · apply pow_ne_zero; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
-  have hnum_zero : kernelProjection f (φ ^ 3 * x) - 3 * kernelProjection f (φ ^ 2 * x) +
-      kernelProjection f (φ * x) - kernelProjection f (ψ * x) +
-      3 * kernelProjection f (ψ ^ 2 * x) - kernelProjection f (ψ ^ 3 * x) = 0 := by
+  rw [D6_eq_N6_div _ _ hx, D6_eq_N6_div f _ hx]
+  congr 1
+  rw [D6_eq_N6_div _ _ hx] at hker
+  have hdenom_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
+  have hnum_zero : N6 (kernelProjection f) x = 0 := by
     have h := div_eq_zero_iff.mp hker
     cases h with
     | inl hnum => exact hnum
     | inr hdenom => exact absurd hdenom hdenom_ne
-  have heq : (f (φ ^ 3 * x) - kernelProjection f (φ ^ 3 * x) -
-      3 * (f (φ ^ 2 * x) - kernelProjection f (φ ^ 2 * x)) +
-      (f (φ * x) - kernelProjection f (φ * x)) -
-      (f (ψ * x) - kernelProjection f (ψ * x)) +
-      3 * (f (ψ ^ 2 * x) - kernelProjection f (ψ ^ 2 * x)) -
-      (f (ψ ^ 3 * x) - kernelProjection f (ψ ^ 3 * x))) =
-      (f (φ ^ 3 * x) - 3 * f (φ ^ 2 * x) + f (φ * x) - f (ψ * x) +
-       3 * f (ψ ^ 2 * x) - f (ψ ^ 3 * x)) -
-      (kernelProjection f (φ ^ 3 * x) - 3 * kernelProjection f (φ ^ 2 * x) +
-       kernelProjection f (φ * x) - kernelProjection f (ψ * x) +
-       3 * kernelProjection f (ψ ^ 2 * x) - kernelProjection f (ψ ^ 3 * x)) := by ring
-  rw [heq, hnum_zero, sub_zero]
+  simp only [N6, perpProjection] at hnum_zero ⊢
+  linarith
 
 /-- If f ∈ ker(D6), then perpProjection is zero everywhere -/
 theorem kernel_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
@@ -392,11 +370,8 @@ theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℝ)
     (h : ∀ x, x ≠ 0 → D6 (fun t => a₀ + a₁ * t + a₂ * t ^ 2 + a₃ * t ^ 3) x = 0) :
     a₃ = 0 := by
   have h1 := h 1 one_ne_zero
-  simp only [D6, one_ne_zero, ↓reduceIte, mul_one] at h1
-  have hdenom_ne : (φ - ψ) ^ 5 ≠ 0 := by
-    apply pow_ne_zero
-    rw [phi_sub_psi]
-    exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  simp only [D6, N6, one_ne_zero, ↓reduceIte, mul_one] at h1
+  have hdenom_ne : D6Denom ≠ 0 := D6Denom_ne_zero
   have hnum := (div_eq_zero_iff.mp h1).resolve_right hdenom_ne
   have hφ2 := golden_ratio_property
   have hψ2 := psi_sq

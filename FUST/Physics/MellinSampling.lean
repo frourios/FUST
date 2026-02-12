@@ -1,14 +1,7 @@
-/-
-FUST Mellin-Shannon Sampling Theory
-
-The φ-lattice {φⁿ · x₀} is the unique minimal D6-compatible sampling grid.
-On L²(ℝ₊, dx/x), φ-lattice sampling with Mellin bandlimit |ω| < π/log(φ)
-gives exact reconstruction via sinc interpolation in log_φ coordinates.
--/
-
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.SpectralCoefficients
+import FUST.Physics.PhiBloch
 import FUST.Physics.GravitationalCoupling
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
@@ -33,128 +26,7 @@ namespace FUST.MellinSampling
 open FUST FUST.SpectralCoefficients FUST.FrourioLogarithm Real Complex Filter
   Topology Asymptotics Bornology
 
-/-! ## Section 2: φ-Lattice D6 Compatibility -/
-
-section LatticeCompatibility
-
-def D6Compatible (b : ℝ) : Prop :=
-  ∃ k : ℕ, k ≥ 1 ∧ b ^ k = φ
-
-theorem phi_D6_compatible : D6Compatible φ :=
-  ⟨1, le_refl 1, pow_one φ⟩
-
-theorem phi_coarsest_compatible (b : ℝ) (hb : 1 < b) (hcompat : D6Compatible b) :
-    b ≤ φ := by
-  obtain ⟨k, hk, hbk⟩ := hcompat
-  by_cases hk1 : k = 1
-  · rw [hk1, pow_one] at hbk; linarith
-  · have hk_ge2 : k ≥ 2 := by omega
-    have hb_pos : 0 < b := by linarith
-    have : b ^ k ≥ b ^ 2 := pow_le_pow_right₀ (le_of_lt hb) hk_ge2
-    have : b ^ 2 > b := by nlinarith
-    rw [hbk] at *
-    nlinarith [φ_gt_one]
-
-theorem D6_evaluation_offsets (n : ℤ) (x₀ : ℝ) :
-    (φ ^ (3 : ℤ) * (φ ^ n * x₀) = φ ^ (n + 3) * x₀) ∧
-    (φ ^ (2 : ℤ) * (φ ^ n * x₀) = φ ^ (n + 2) * x₀) ∧
-    (φ ^ (1 : ℤ) * (φ ^ n * x₀) = φ ^ (n + 1) * x₀) := by
-  have hφ : φ ≠ 0 := ne_of_gt phi_pos
-  refine ⟨?_, ?_, ?_⟩ <;> { rw [← mul_assoc, ← zpow_add₀ hφ]; ring_nf }
-
-private lemma psi_eq_neg_phi_inv : ψ = -1 * φ⁻¹ := by
-  have h : φ⁻¹ = -ψ := Real.inv_goldenRatio
-  nlinarith
-
-private theorem psi_zpow_decomp (k : ℤ) : ψ ^ k = (-1) ^ k * φ ^ (-k) := by
-  rw [show ψ = -1 * φ⁻¹ from psi_eq_neg_phi_inv, mul_zpow, inv_zpow, zpow_neg]
-
-theorem psi_on_phi_lattice (n k : ℤ) (x₀ : ℝ) :
-    ψ ^ k * (φ ^ n * x₀) = (-1) ^ k * (φ ^ (n - k) * x₀) := by
-  have hφ : φ ≠ 0 := ne_of_gt phi_pos
-  rw [psi_zpow_decomp]
-  simp only [mul_assoc]
-  congr 1
-  rw [← mul_assoc, ← zpow_add₀ hφ]
-  congr 1
-  ring_nf
-
-def FrourioIncompatible : Prop :=
-  ¬∃ (p q : ℤ), q ≠ 0 ∧ frourioConst ^ q = φ ^ p
-
-end LatticeCompatibility
-
-/-! ## Section 3: Mellin-Shannon Sampling Structure -/
-
-section MellinSampling
-
-noncomputable def phiLatticeSample (f : ℝ → ℝ) (x₀ : ℝ) (n : ℤ) : ℝ :=
-  f (φ ^ n * x₀)
-
-noncomputable def samplingInterval : ℝ := Real.log φ
-
-theorem samplingInterval_pos : samplingInterval > 0 :=
-  Real.log_pos φ_gt_one
-
-noncomputable def samplingIntervalFrourio : ℝ := phiStep
-
-theorem samplingIntervalFrourio_eq : samplingIntervalFrourio = frourioLog φ := rfl
-
-noncomputable def mellinNyquist : ℝ := Real.pi / samplingInterval
-
-theorem mellinNyquist_pos : mellinNyquist > 0 :=
-  div_pos Real.pi_pos samplingInterval_pos
-
-noncomputable def frourioNyquist : ℝ := Real.pi / samplingIntervalFrourio
-
-theorem nyquist_frourio_relation :
-    mellinNyquist = Real.pi / Real.log φ := by
-  simp [mellinNyquist, samplingInterval]
-
-def MellinBandlimited (f : ℝ → ℝ) : Prop :=
-  ∀ ω : ℝ, |ω| > mellinNyquist →
-    ∀ x₀ > 0, ∫ x in Set.Ioi 0,
-      f x * x ^ ((1:ℝ)/2) * Real.cos (ω * Real.log x) / x = 0
-
-def FrourioBandlimited (f : ℝ → ℝ) : Prop :=
-  MellinBandlimited f
-
-end MellinSampling
-
-/-! ## Section 4: Reconstruction Theorem -/
-
-section Reconstruction
-
-noncomputable def sinc (x : ℝ) : ℝ :=
-  if x = 0 then 1 else Real.sin (Real.pi * x) / (Real.pi * x)
-
-theorem sinc_zero : sinc 0 = 1 := by simp [sinc]
-
-theorem sinc_int (n : ℤ) (hn : n ≠ 0) : sinc n = 0 := by
-  simp only [sinc, Int.cast_eq_zero.not.mpr hn, ↓reduceIte]
-  rw [show Real.pi * (n : ℝ) = ↑n * Real.pi from by ring]
-  rw [Real.sin_int_mul_pi]
-  simp
-
-end Reconstruction
-
-/-! ## Section 5: Norm Preservation (Parseval in Mellin Space) -/
-
-section Parseval
-
-noncomputable def haarNormSq (f : ℝ → ℝ) : ℝ :=
-  ∫ x in Set.Ioi 0, (f x) ^ 2 / x
-
-noncomputable def latticeNormSq (f : ℝ → ℝ) (x₀ : ℝ) : ℝ :=
-  ∑' n : ℤ, (phiLatticeSample f x₀ n) ^ 2
-
-def MellinParseval (f : ℝ → ℝ) (x₀ : ℝ) : Prop :=
-  MellinBandlimited f →
-    haarNormSq f = samplingInterval * latticeNormSq f x₀
-
-end Parseval
-
-/-! ## Section 6: D6 Structure Preservation -/
+/-! ## D6 Structure Preservation -/
 
 section D6Preservation
 
@@ -172,12 +44,8 @@ theorem kernel_part_annihilated (a b c d : ℝ) (x : ℝ) (hx : x ≠ 0) :
   have h2 := D6_linear x hx
   have h3 := D6_quadratic x hx
   have h4 := FUST.GravitationalCoupling.D6_inv_sq_zero x hx
-  simp only [D6, hx, ↓reduceIte] at h1 h2 h3 h4 ⊢
-  have h_denom : (φ - ψ) ^ 5 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero; rw [phi_sub_psi]
-      exact Real.sqrt_ne_zero'.mpr (by norm_num : (5:ℝ) > 0)
-    · exact hx
+  simp only [D6, N6, hx, ↓reduceIte] at h1 h2 h3 h4 ⊢
+  have h_denom : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
   rw [div_eq_zero_iff] at h1 h2 h3 h4 ⊢
   left
   have n2 := h2.resolve_right h_denom
@@ -188,36 +56,12 @@ theorem kernel_part_annihilated (a b c d : ℝ) (x : ℝ) (hx : x ≠ 0) :
 
 def KernelRecoverable (f : ℝ → ℝ) (x₀ : ℝ) : Prop :=
   ∃! p : ℝ × ℝ × ℝ × ℝ, ∀ n ∈ ({0, 1, 2, 3} : Set ℤ),
-    phiLatticeSample f x₀ n =
+    PhiBloch.phiLatticeSample f x₀ n =
       p.1 * (φ ^ n * x₀)⁻¹ ^ 2 + p.2.1 + p.2.2.1 * (φ ^ n * x₀) + p.2.2.2 * (φ ^ n * x₀) ^ 2
 
 end D6Preservation
 
-/-! ## Section 7: Discrete Rotation Representation -/
-
-section DiscreteRotation
-
--- ψ^k on φ-lattice: odd k → π-rotation, even k → pure shift
-theorem D6_rotation_parity (k : ℤ) (hk : Odd k) (n : ℤ) (x₀ : ℝ) :
-    ψ ^ k * (φ ^ n * x₀) = -(φ ^ (n - k) * x₀) := by
-  rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
-
-theorem D6_shift_parity (k : ℤ) (hk : Even k) (n : ℤ) (x₀ : ℝ) :
-    ψ ^ k * (φ ^ n * x₀) = φ ^ (n - k) * x₀ := by
-  rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
-
--- D6 probes both f and π-rotated f simultaneously
-theorem D6_dual_probe (f : ℝ → ℝ) (n : ℤ) (x₀ : ℝ) :
-    (f (ψ ^ (1:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-1) * x₀))) ∧
-    (f (ψ ^ (2:ℤ) * (φ ^ n * x₀)) = f (φ ^ (n-2) * x₀)) ∧
-    (f (ψ ^ (3:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-3) * x₀))) :=
-  ⟨by congr 1; exact D6_rotation_parity 1 ⟨0, by ring⟩ n x₀,
-   by congr 1; exact D6_shift_parity 2 ⟨1, by ring⟩ n x₀,
-   by congr 1; exact D6_rotation_parity 3 ⟨1, by ring⟩ n x₀⟩
-
-end DiscreteRotation
-
-/-! ## Section 8: Analytic Continuation Framework -/
+/-! ## Analytic Continuation Framework -/
 
 section AnalyticContinuation
 
@@ -278,7 +122,7 @@ noncomputable def sincRecon (a : ℤ → ℂ) (z : ℂ) : ℂ :=
 
 -- φ-lattice sinc reconstruction
 noncomputable def phiSincRecon (f : ℝ → ℝ) (x₀ : ℝ) (z : ℂ) : ℂ :=
-  sincRecon (fun n => ↑(phiLatticeSample f x₀ n)) z
+  sincRecon (fun n => ↑(PhiBloch.phiLatticeSample f x₀ n)) z
 
 -- Interpolation: sincRecon evaluated at integer m = a_m
 theorem sincRecon_eval_int (a : ℤ → ℂ) (m : ℤ) :
@@ -894,7 +738,7 @@ theorem sin_const_not_L2 (c : ℂ) (hc : c ≠ 0) :
 
 end AnalyticContinuation
 
-/-! ## Section 9: FE Preservation and Zero Pairing under Bandlimiting -/
+/-! ## FE Preservation and Zero Pairing under Bandlimiting -/
 
 section ZeroCorrespondence
 
@@ -1122,7 +966,7 @@ theorem entire_zeroSet_countable (g : ℂ → ℂ)
 
 end ZeroCorrespondence
 
-/-! ## Section 10: Mellin-Poisson Aliasing Structure -/
+/-! ## Mellin-Poisson Aliasing Structure -/
 
 section MellinPoisson
 
@@ -1153,45 +997,69 @@ theorem aliasing_preserves_even (fhat : ℝ → ℂ) (T : ℝ)
 
 end MellinPoisson
 
-/-! ## Section 11: Summary -/
+/-! ## φ-Lattice D6 Compatibility -/
 
-theorem FUST_mellin_sampling_summary :
-    -- Sections 1-4: kernel, lattice, sampling, reconstruction
-    (D6CoeffZ (-2) = 0 ∧ D6CoeffZ 0 = 0 ∧ D6CoeffZ 1 = 0 ∧ D6CoeffZ 2 = 0) ∧
-    D6Compatible φ ∧
-    (∀ b : ℝ, 1 < b → D6Compatible b → b ≤ φ) ∧
-    mellinNyquist > 0 ∧
-    (sinc 0 = 1 ∧ ∀ n : ℤ, n ≠ 0 → sinc n = 0) ∧
-    -- Sections 7-8: rotation, analytic continuation, sinc uniqueness
-    Complex.exp (↑Real.pi * Complex.I) = -1 ∧
-    (sincC 0 = 1 ∧ ∀ n : ℤ, n ≠ 0 → sincC ↑n = 0) ∧
-    frourioRotationOffset > 0 ∧
-    (∀ a : ℤ → ℂ, ∀ m : ℤ, sincRecon a ↑m = a m) ∧
-    (∀ a b : ℤ → ℂ, (∀ z, sincRecon a z = sincRecon b z) ↔ a = b) ∧
-    -- Discrete FE → global FE
-    (∀ a : ℤ → ℂ, (∀ n, a n = a (1 - n)) →
-      ∀ s, sincRecon a s = sincRecon a (1 - s)) ∧
-    -- Section 9: FE preservation and zero pairing
-    (∀ (g : ℂ → ℂ), FunctionalEquation g → ∀ s, g s = 0 → g (1 - s) = 0) ∧
-    (∀ (s : ℂ), s.re ≠ 1 / 2 → s ≠ 1 - s) ∧
-    (∀ (t₀ : ℝ), (1 / 2 + ↑t₀ * Complex.I).re = 1 / 2) ∧
-    -- Section 10: aliasing preserves even spectrum
-    (∀ fhat T, (∀ ω, fhat (-ω) = fhat ω) →
-      ∀ ω, aliasedSpectrum fhat T (-ω) = aliasedSpectrum fhat T ω) :=
-  ⟨D6_extended_kernel_dim,
-   phi_D6_compatible,
-   fun b hb hc => phi_coarsest_compatible b hb hc,
-   mellinNyquist_pos,
-   ⟨sinc_zero, sinc_int⟩,
-   euler_identity,
-   ⟨sincC_zero, sincC_int⟩,
-   frourioRotationOffset_pos,
-   sincRecon_eval_int,
-   discrete_analytic_bijection,
-   discrete_FE_implies_global_FE,
-   fun g hFE s hs => functional_equation_zero_pair g hFE s hs,
-   fun s hs => off_line_distinct s hs,
-   critical_line_zero_re,
-   aliasing_preserves_even⟩
+section LatticeCompatibility
+
+def D6Compatible (b : ℝ) : Prop :=
+  ∃ k : ℕ, k ≥ 1 ∧ b ^ k = φ
+
+theorem phi_D6_compatible : D6Compatible φ :=
+  ⟨1, le_refl 1, pow_one φ⟩
+
+theorem phi_coarsest_compatible (b : ℝ) (hb : 1 < b) (hcompat : D6Compatible b) :
+    b ≤ φ := by
+  obtain ⟨k, hk, hbk⟩ := hcompat
+  by_cases hk1 : k = 1
+  · rw [hk1, pow_one] at hbk; linarith
+  · have hk_ge2 : k ≥ 2 := by omega
+    have hb_pos : 0 < b := by linarith
+    have : b ^ k ≥ b ^ 2 := pow_le_pow_right₀ (le_of_lt hb) hk_ge2
+    have : b ^ 2 > b := by nlinarith
+    rw [hbk] at *
+    nlinarith [φ_gt_one]
+
+end LatticeCompatibility
+
+/-! ## Discrete Rotation Representation -/
+
+section DiscreteRotation
+
+private lemma psi_eq_neg_phi_inv : ψ = -1 * φ⁻¹ := by
+  have h : φ⁻¹ = -ψ := Real.inv_goldenRatio
+  nlinarith
+
+private theorem psi_zpow_decomp (k : ℤ) : ψ ^ k = (-1) ^ k * φ ^ (-k) := by
+  rw [show ψ = -1 * φ⁻¹ from psi_eq_neg_phi_inv, mul_zpow, inv_zpow, zpow_neg]
+
+theorem psi_on_phi_lattice (n k : ℤ) (x₀ : ℝ) :
+    ψ ^ k * (φ ^ n * x₀) = (-1) ^ k * (φ ^ (n - k) * x₀) := by
+  have hφ : φ ≠ 0 := ne_of_gt phi_pos
+  rw [psi_zpow_decomp]
+  simp only [mul_assoc]
+  congr 1
+  rw [← mul_assoc, ← zpow_add₀ hφ]
+  congr 1
+  ring_nf
+
+-- ψ^k on φ-lattice: odd k → π-rotation, even k → pure shift
+theorem D6_rotation_parity (k : ℤ) (hk : Odd k) (n : ℤ) (x₀ : ℝ) :
+    ψ ^ k * (φ ^ n * x₀) = -(φ ^ (n - k) * x₀) := by
+  rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
+
+theorem D6_shift_parity (k : ℤ) (hk : Even k) (n : ℤ) (x₀ : ℝ) :
+    ψ ^ k * (φ ^ n * x₀) = φ ^ (n - k) * x₀ := by
+  rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
+
+-- D6 probes both f and π-rotated f simultaneously
+theorem D6_dual_probe (f : ℝ → ℝ) (n : ℤ) (x₀ : ℝ) :
+    (f (ψ ^ (1:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-1) * x₀))) ∧
+    (f (ψ ^ (2:ℤ) * (φ ^ n * x₀)) = f (φ ^ (n-2) * x₀)) ∧
+    (f (ψ ^ (3:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-3) * x₀))) :=
+  ⟨by congr 1; exact D6_rotation_parity 1 ⟨0, by ring⟩ n x₀,
+   by congr 1; exact D6_shift_parity 2 ⟨1, by ring⟩ n x₀,
+   by congr 1; exact D6_rotation_parity 3 ⟨1, by ring⟩ n x₀⟩
+
+end DiscreteRotation
 
 end FUST.MellinSampling

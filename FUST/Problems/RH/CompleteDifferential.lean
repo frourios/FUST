@@ -339,7 +339,7 @@ theorem kernel_stabilization :
     (∃ x, x ≠ 0 ∧ D6 (fun t => t^3) x ≠ 0) := by
   refine ⟨D6_const, D6_linear, D6_quadratic, ?_⟩
   use 1, one_ne_zero
-  simp only [D6, one_ne_zero, ↓reduceIte, mul_one]
+  simp only [D6, N6, one_ne_zero, ↓reduceIte, mul_one]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     calc ψ^3 = ψ^2 * ψ := by ring
@@ -361,7 +361,6 @@ theorem kernel_stabilization :
   have hψ6 : ψ^6 = 8 * ψ + 5 := by nlinarith [hψ2]
   have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
   have hdiff_pos : φ - ψ > 0 := by rw [hdiff]; exact Real.sqrt_pos.mpr (by norm_num)
-  have hden_ne : (φ - ψ)^5 ≠ 0 := pow_ne_zero 5 (ne_of_gt hdiff_pos)
   have hnum : (φ^3)^3 - 3 * (φ^2)^3 + φ^3 - ψ^3 + 3 * (ψ^2)^3 - (ψ^3)^3 =
       φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 := by ring
   have hnum_val : φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 = 12 * (φ - ψ) := by
@@ -369,12 +368,12 @@ theorem kernel_stabilization :
     ring
   rw [hnum, hnum_val]
   have h12_ne : 12 * (φ - ψ) ≠ 0 := mul_ne_zero (by norm_num) (ne_of_gt hdiff_pos)
-  exact div_ne_zero h12_ne hden_ne
+  exact div_ne_zero h12_ne D6Denom_ne_zero
 
 /-- D6 linearity for scalar multiplication -/
 theorem D6_scalar_mul (c : ℝ) (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
     D6 (fun y => c * f y) x = c * D6 f x := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   ring
 
 /-- Polynomials of degree ≤ 2 are in the kernel of D6 -/
@@ -389,14 +388,14 @@ theorem D6_polynomial_deg2 (a b c : ℝ) (x : ℝ) (hx : x ≠ 0) :
     rw [heq, D6_scalar_mul c (fun t => t^2) x hx, D6_quadratic x hx, mul_zero]
   have hD6_add : D6 (fun y => a + b * y + c * y^2) x =
       D6 (fun _ => a) x + D6 (fun y => b * y) x + D6 (fun y => c * y^2) x := by
-    simp only [D6, hx, ↓reduceIte]
+    simp only [D6, N6, hx, ↓reduceIte]
     ring
   rw [hD6_add, h1, h2, h3]
   ring
 
 /-- D6 applied to cubic function x³ is nonzero for all x ≠ 0 -/
 theorem D6_cubic_ne_zero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     calc ψ^3 = ψ^2 * ψ := by ring
@@ -418,7 +417,6 @@ theorem D6_cubic_ne_zero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
   have hψ6 : ψ^6 = 8 * ψ + 5 := by nlinarith [hψ2]
   have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
   have hdiff_pos : φ - ψ > 0 := by rw [hdiff]; exact Real.sqrt_pos.mpr (by norm_num)
-  have hden_ne : (φ - ψ)^5 * x ≠ 0 := mul_ne_zero (pow_ne_zero 5 (ne_of_gt hdiff_pos)) hx
   have hnum : (φ^3 * x)^3 - 3 * (φ^2 * x)^3 + (φ * x)^3 - (ψ * x)^3 +
       3 * (ψ^2 * x)^3 - (ψ^3 * x)^3 =
       (φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9) * x^3 := by ring
@@ -430,7 +428,7 @@ theorem D6_cubic_ne_zero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
     apply mul_ne_zero
     · exact mul_ne_zero (by norm_num) (ne_of_gt hdiff_pos)
     · exact pow_ne_zero 3 hx
-  exact div_ne_zero h12_ne hden_ne
+  exact div_ne_zero h12_ne (D6Denom_mul_ne_zero x hx)
 
 /-- The kernel of D6 on polynomial space is exactly span{1, x, x²}.
     Polynomials of degree ≤ 2 are annihilated, degree 3 is not. -/
@@ -455,11 +453,11 @@ theorem fust_differential_consistency_backward_poly (a b c d : ℝ) (x : ℝ) (h
     D6 (fun y => a + b * y + c * y^2 + d * y^3) x = 0 ↔ d = 0 := by
   have h012 : D6 (fun y => a + b * y + c * y^2) x = 0 := D6_polynomial_deg2 a b c x hx
   have hD6_cubic : D6 (fun y => d * y^3) x = d * D6 (fun t => t^3) x := by
-    simp only [D6, hx, ↓reduceIte]
+    simp only [D6, N6, hx, ↓reduceIte]
     ring
   have hD6_sum : D6 (fun y => a + b * y + c * y^2 + d * y^3) x =
       D6 (fun y => a + b * y + c * y^2) x + D6 (fun y => d * y^3) x := by
-    simp only [D6, hx, ↓reduceIte]
+    simp only [D6, N6, hx, ↓reduceIte]
     ring
   rw [hD6_sum, h012, zero_add, hD6_cubic]
   constructor

@@ -613,7 +613,7 @@ lemma psi_inv_eq_neg_phi : ψ⁻¹ = -φ := by
 /-- D₆ annihilates t⁻¹²: the inverse-square monomial is in the extended kernel.
     Uses φ⁻² = ψ² and ψ⁻² = φ² from golden conjugate inversion. -/
 theorem D6_inv_sq_zero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t⁻¹ ^ 2) x = 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ_ne := phi_ne_zero
   have hψ_ne := psi_ne_zero
   have expand (a : ℝ) (ha : a * x ≠ 0) : (a * x)⁻¹ ^ 2 = a⁻¹ ^ 2 * x⁻¹ ^ 2 := by
@@ -648,16 +648,15 @@ theorem D6_inv_sq_zero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t⁻¹ ^ 2) x = 0
     nlinarith [hφ2, hψ2, hφ4, hψ4, hφ6, hψ6, hsum]
   calc _ = (((-ψ) ^ 3) ^ 2 * x⁻¹ ^ 2 - 3 * (((-ψ) ^ 2) ^ 2 * x⁻¹ ^ 2) +
       (-ψ) ^ 2 * x⁻¹ ^ 2 - (-φ) ^ 2 * x⁻¹ ^ 2 +
-      3 * (((-φ) ^ 2) ^ 2 * x⁻¹ ^ 2) - ((-φ) ^ 3) ^ 2 * x⁻¹ ^ 2) /
-      ((φ - ψ) ^ 5 * x) := by ring_nf
-    _ = 0 / ((φ - ψ) ^ 5 * x) := by rw [hnum]
+      3 * (((-φ) ^ 2) ^ 2 * x⁻¹ ^ 2) - ((-φ) ^ 3) ^ 2 * x⁻¹ ^ 2) / (D6Denom * x) := by ring_nf
+    _ = 0 / (D6Denom * x) := by rw [hnum]
     _ = 0 := by ring
 
 /-- D₆(t⁻¹)(x) = 6/((φ-ψ)⁴x²): the gravitational force is inverse-square.
     The coefficient C(-1) = 6(φ-ψ) = 6√5 is nonzero, confirming the force exists. -/
 theorem D6_inv_one (x : ℝ) (hx : x ≠ 0) :
     D6 (fun t => t⁻¹) x = 6 / ((φ - ψ) ^ 4 * x ^ 2) := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ_ne := phi_ne_zero
   have hψ_ne := psi_ne_zero
   have expand (a : ℝ) (ha : a ≠ 0) : (a * x)⁻¹ = a⁻¹ * x⁻¹ := by
@@ -679,21 +678,21 @@ theorem D6_inv_one (x : ℝ) (hx : x ≠ 0) :
   have hcoef : -(ψ ^ 3) - 3 * ψ ^ 2 - ψ + φ + 3 * φ ^ 2 + φ ^ 3 = 6 * (φ - ψ) := by
     rw [hφ3, hφ2, hψ3, hψ2]; ring
   have hx_ne : x ≠ 0 := hx
-  have hdiff5x_ne : (φ - ψ) ^ 5 * x ≠ 0 := mul_ne_zero (pow_ne_zero 5 hdiff_ne) hx
+  have hdiff5x_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
   have hdiff4x2_ne : (φ - ψ) ^ 4 * x ^ 2 ≠ 0 :=
     mul_ne_zero (pow_ne_zero 4 hdiff_ne) (pow_ne_zero 2 hx)
   rw [show ((-ψ) ^ 3 * x⁻¹ - 3 * ((-ψ) ^ 2 * x⁻¹) + (-ψ) * x⁻¹ - (-φ) * x⁻¹ +
-      3 * ((-φ) ^ 2 * x⁻¹) - (-φ) ^ 3 * x⁻¹) / ((φ - ψ) ^ 5 * x) =
+      3 * ((-φ) ^ 2 * x⁻¹) - (-φ) ^ 3 * x⁻¹) / (D6Denom * x) =
       (-(ψ ^ 3) - 3 * ψ ^ 2 - ψ + φ + 3 * φ ^ 2 + φ ^ 3) * x⁻¹ /
-      ((φ - ψ) ^ 5 * x) from by ring]
+      (D6Denom * x) from by unfold D6Denom; ring]
   rw [hcoef]
-  rw [show 6 * (φ - ψ) * x⁻¹ / ((φ - ψ) ^ 5 * x) = 6 / ((φ - ψ) ^ 4 * x ^ 2) from by
-    field_simp]
+  rw [show 6 * (φ - ψ) * x⁻¹ / (D6Denom * x) = 6 / ((φ - ψ) ^ 4 * x ^ 2) from by
+    unfold D6Denom; field_simp]
 
 /-- D₆ preserves pointwise equality at evaluation points -/
 lemma D6_congr_nonzero (f g : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0)
     (hfg : ∀ y, y ≠ 0 → f y = g y) : D6 f x = D6 g x := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ_ne := phi_ne_zero
   have hψ_ne := psi_ne_zero
   rw [hfg _ (mul_ne_zero (pow_ne_zero 3 hφ_ne) hx),
@@ -748,14 +747,12 @@ theorem dAlembertian_cubic_zero (x : ℝ) (hx : x ≠ 0) :
   have hdiff_ne : φ - ψ ≠ 0 := by
     rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
   have hD6_cubic : ∀ y, y ≠ 0 → D6 (fun t => t ^ 3) y =
-      ((φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9) /
-       (φ - ψ) ^ 5) * y ^ 2 := by
+      ((φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9) / D6Denom) * y ^ 2 := by
     intro y hy
-    simp only [D6, hy, ↓reduceIte]
-    field_simp
+    simp only [D6, N6, hy, ↓reduceIte]
+    unfold D6Denom; field_simp
   have hfg : ∀ y, y ≠ 0 → D6 (fun t => t ^ 3) y =
-      ((φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9) /
-       (φ - ψ) ^ 5) * (fun t => t ^ 2) y := by
+      ((φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9) / D6Denom) * (fun t => t ^ 2) y := by
     intro y hy; simp only; exact hD6_cubic y hy
   rw [D6_congr_nonzero _ _ x hx hfg, D6_homogeneous, D6_quadratic x hx, mul_zero]
 

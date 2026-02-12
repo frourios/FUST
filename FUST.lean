@@ -18,8 +18,10 @@ import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassRatios
+import FUST.Physics.MellinSampling
 import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
+import FUST.Physics.PhiBloch
 import FUST.Physics.PhiOrbitInitialValue
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Probability
@@ -36,7 +38,6 @@ import FUST.Problems.RH.Basic
 import FUST.Problems.RH.CompleteDifferential
 import FUST.Problems.RH.ContinuousDiscreteEquivalence
 import FUST.Problems.RH.HilbertPolya
-import FUST.Problems.RH.MellinSampling
 import FUST.Problems.RH.SpectralZeta
 
 import FUST.Problems.ABC

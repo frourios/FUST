@@ -272,7 +272,8 @@ theorem D6_cubic_eq_massGap_mul_sq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
   have hnum : (φ^3 * x₀)^3 - 3 * (φ^2 * x₀)^3 + (φ * x₀)^3 - (ψ * x₀)^3 +
       3 * (ψ^2 * x₀)^3 - (ψ^3 * x₀)^3 =
       ((φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3) * x₀^3 := by ring
-  simp only [D6, massGapΔ, hx₀, ↓reduceIte]
+  simp only [D6, N6, massGapΔ, hx₀, ↓reduceIte]
+  unfold D6Denom
   rw [hnum, hcoef, hφψ, hsqrt5_pow5]
   have h25ne : (25 : ℝ) ≠ 0 := by norm_num
   field_simp [hsqrt5_ne, hx₀, h25ne]
@@ -415,7 +416,8 @@ theorem D6_quartic_eq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
   have hnum : (φ^3 * x₀)^4 - 3 * (φ^2 * x₀)^4 + (φ * x₀)^4 - (ψ * x₀)^4 +
       3 * (ψ^2 * x₀)^4 - (ψ^3 * x₀)^4 =
       ((φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4) * x₀^4 := by ring
-  simp only [D6, hx₀, ↓reduceIte]
+  simp only [D6, N6, hx₀, ↓reduceIte]
+  unfold D6Denom
   rw [hnum, hcoef, hφψ, hsqrt5_pow5]
   have h25ne : (25 : ℝ) ≠ 0 := by norm_num
   field_simp [hsqrt5_ne, hx₀, h25ne]

@@ -37,7 +37,7 @@ section SameDegreeRatio
 /-- D6 is linear: D6[a·f] = a·D6[f] -/
 theorem D6_linear_scalar (a : ℝ) (f : ℝ → ℝ) (x : ℝ) :
     D6 (fun t => a * f t) x = a * D6 f x := by
-  simp only [D6]
+  simp only [D6, N6]
   split_ifs with hx
   · simp
   · ring

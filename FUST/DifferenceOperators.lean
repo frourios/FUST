@@ -2,6 +2,7 @@ import FUST.Basic
 import FUST.DimensionalAnalysis
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.Data.Finset.Basic
 
 namespace FUST
 
@@ -29,12 +30,51 @@ noncomputable def D5 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x = 0 then 0 else
     (f (φ^2 * x) + f (φ * x) - 4 * f x + f (ψ * x) + f (ψ^2 * x)) / ((φ - ψ)^4 * x)
 
+/-- N6: numerator of D6, without the (φ-ψ)⁵·x denominator -/
+noncomputable def N6 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
+  f (φ^3 * x) - 3 * f (φ^2 * x) + f (φ * x) -
+  f (ψ * x) + 3 * f (ψ^2 * x) - f (ψ^3 * x)
+
+/-- D6 normalization constant: (φ - ψ)⁵ = (√5)⁵ -/
+noncomputable def D6Denom : ℝ := (φ - ψ)^5
+
+theorem D6Denom_ne_zero : D6Denom ≠ 0 := by
+  unfold D6Denom; apply pow_ne_zero; rw [phi_sub_psi]
+  exact Real.sqrt_ne_zero'.mpr (by norm_num)
+
+theorem D6Denom_pos : D6Denom > 0 := by
+  unfold D6Denom; apply pow_pos; rw [phi_sub_psi]
+  exact Real.sqrt_pos.mpr (by norm_num)
+
+theorem D6Denom_mul_ne_zero (x : ℝ) (hx : x ≠ 0) : D6Denom * x ≠ 0 :=
+  mul_ne_zero D6Denom_ne_zero hx
+
 /-- D6: Frourio golden 6-point difference with coefficients A=3, B=1
-    D₆ f(x) = (f(φ³x) - 3f(φ²x) + f(φx) - f(ψx) + 3f(ψ²x) - f(ψ³x)) / ((φ - ψ)⁵x) -/
+    D₆ f(x) = N6(f)(x) / (D6Denom · x) -/
 noncomputable def D6 (f : ℝ → ℝ) (x : ℝ) : ℝ :=
-  if x = 0 then 0 else
-    (f (φ^3 * x) - 3 * f (φ^2 * x) + f (φ * x) - f (ψ * x) + 3 * f (ψ^2 * x) - f (ψ^3 * x)) /
-    ((φ - ψ)^5 * x)
+  if x = 0 then 0 else N6 f x / (D6Denom * x)
+
+/-- D6 equals N6 divided by D6Denom · x -/
+theorem D6_eq_N6_div (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D6 f x = N6 f x / (D6Denom * x) := by
+  simp only [D6, hx, ↓reduceIte]
+
+/-- N6 distributes over finite sums -/
+theorem N6_finset_sum {ι : Type*}
+    (s : Finset ι) (cs : ι → ℝ) (fs : ι → ℝ → ℝ) (x : ℝ) :
+    N6 (fun y => ∑ i ∈ s, cs i * fs i y) x = ∑ i ∈ s, cs i * N6 (fs i) x := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [N6]
+  | insert a s' ha ih =>
+    rw [Finset.sum_insert ha]
+    have step1 : N6 (fun y => ∑ i ∈ insert a s', cs i * fs i y) x =
+        cs a * N6 (fs a) x + N6 (fun y => ∑ i ∈ s', cs i * fs i y) x := by
+      have : N6 (fun y => ∑ i ∈ insert a s', cs i * fs i y) x =
+          N6 (fun y => cs a * fs a y + ∑ i ∈ s', cs i * fs i y) x := by
+        congr 1; ext y; exact Finset.sum_insert ha
+      rw [this]; simp only [N6]; ring
+    rw [step1, ih]
 
 /-- D5½: Half-order difference operator
     D₅.₅ f(x) = D₅ f(x) + μ · (f(φx) - f(ψx)) where μ = 2/(φ+2) -/
@@ -81,12 +121,12 @@ theorem D5_linear (x : ℝ) (hx : x ≠ 0) : D5 id x = 0 := by
 
 /-- D6 annihilates constants: D₆[1] = 0 (coefficient sum = 1-3+1-1+3-1 = 0) -/
 theorem D6_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) : D6 (fun _ => c) x = 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   ring_nf
 
 /-- D6 annihilates x: D₆[x] = 0 -/
 theorem D6_linear (x : ℝ) (hx : x ≠ 0) : D6 id x = 0 := by
-  simp only [D6, hx, ↓reduceIte, id_eq]
+  simp only [D6, N6, hx, ↓reduceIte, id_eq]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     calc ψ^3 = ψ^2 * ψ := by ring
@@ -107,7 +147,7 @@ theorem D6_linear (x : ℝ) (hx : x ≠ 0) : D6 id x = 0 := by
 
 /-- D6 annihilates x²: D₆[x²] = 0 -/
 theorem D6_quadratic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^2) x = 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     calc ψ^3 = ψ^2 * ψ := by ring
@@ -415,11 +455,6 @@ theorem D6_D1_condition (A B : ℝ) :
   · intro h
     have hx := h 1 one_ne_zero
     simp only [D6_general, one_ne_zero, ↓reduceIte, id_eq, mul_one] at hx
-    have hne : (φ - ψ)^5 ≠ 0 := by
-      have : φ - ψ = Real.sqrt 5 := phi_sub_psi
-      rw [this]
-      apply pow_ne_zero
-      exact Real.sqrt_ne_zero'.mpr (by norm_num)
     rw [div_eq_zero_iff] at hx
     cases hx with
     | inl hx =>
@@ -444,7 +479,7 @@ theorem D6_D1_condition (A B : ℝ) :
       linarith
     | inr hx =>
       have hx' : (φ - ψ)^5 = 0 := by linarith
-      exact absurd hx' hne
+      exact absurd hx' D6Denom_ne_zero
   · intro hB x hx
     simp only [D6_general, hx, ↓reduceIte, id_eq]
     have hcoef : φ^3 - ψ^3 - A * (φ^2 - ψ^2) + B * (φ - ψ) = 0 := by
@@ -495,11 +530,6 @@ theorem D6_D2_condition (A B : ℝ) :
   · intro h
     have hx := h 1 one_ne_zero
     simp only [D6_general, one_ne_zero, ↓reduceIte, mul_one] at hx
-    have hne : (φ - ψ)^5 ≠ 0 := by
-      have : φ - ψ = Real.sqrt 5 := phi_sub_psi
-      rw [this]
-      apply pow_ne_zero
-      exact Real.sqrt_ne_zero'.mpr (by norm_num)
     rw [div_eq_zero_iff] at hx
     cases hx with
     | inl hx =>
@@ -530,7 +560,7 @@ theorem D6_D2_condition (A B : ℝ) :
       linarith
     | inr hx =>
       have hx' : (φ - ψ)^5 = 0 := by linarith
-      exact absurd hx' hne
+      exact absurd hx' D6Denom_ne_zero
   · intro hB x hx
     simp only [D6_general, hx, ↓reduceIte]
     have hcoef : φ^6 - ψ^6 - A * (φ^4 - ψ^4) + B * (φ^2 - ψ^2) = 0 := by
@@ -568,7 +598,7 @@ theorem D6_coefficients_unique :
 /-- D6 with determined coefficients equals D6 -/
 theorem D6_general_eq_D6 (f : ℝ → ℝ) (x : ℝ) :
     D6_general 3 1 f x = D6 f x := by
-  simp only [D6_general, D6]
+  simp only [D6_general, D6, N6, D6Denom]
   by_cases hx : x = 0
   · simp [hx]
   · simp only [hx, ↓reduceIte]
@@ -978,7 +1008,7 @@ section D6Completeness
 
 /-- D6 detects cubic terms: D6[x³] ≠ 0 -/
 theorem D6_detects_cubic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ^2 = ψ + 1 := psi_sq
   have hφ3 : φ^3 = 2*φ + 1 := by
@@ -1028,11 +1058,8 @@ theorem D6_detects_cubic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
       = (φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9) * x^3 := by ring
       _ = 12 * (φ - ψ) * x^3 := by rw [hcoef]
   rw [hnum]
-  have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hden_ne : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero (pow_ne_zero 5 _) hx
-    rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-  have hdiff_ne : φ - ψ ≠ 0 := by rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
+  have hdiff_ne : φ - ψ ≠ 0 := by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
   have hx3_ne : x^3 ≠ 0 := pow_ne_zero 3 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx3_ne) hden_ne
 
@@ -1058,7 +1085,7 @@ end D6Completeness
 
 /-- D6 does not annihilate quartic: D6[x⁴] ≠ 0 -/
 theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, hx, ↓reduceIte]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ^2 = ψ + 1 := psi_sq
   have hφ4 : φ^4 = 3 * φ + 2 := by
@@ -1109,11 +1136,8 @@ theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 
       = (φ^12 - 3*φ^8 + φ^4 - ψ^4 + 3*ψ^8 - ψ^12) * x^4 := by ring
       _ = 84 * (φ - ψ) * x^4 := by rw [hcoef]
   rw [hnum]
-  have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hden_ne : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero (pow_ne_zero 5 _) hx
-    rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-  have hdiff_ne : φ - ψ ≠ 0 := by rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
+  have hdiff_ne : φ - ψ ≠ 0 := by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
   have hx4_ne : x^4 ≠ 0 := pow_ne_zero 4 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx4_ne) hden_ne
 

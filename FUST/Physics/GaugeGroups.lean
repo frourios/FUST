@@ -103,7 +103,7 @@ theorem D5_not_annihilate_quadratic (x : ℝ) (hx : x ≠ 0) :
 /-- D6 does not annihilate x³: D6[x³] ≠ 0 -/
 theorem D6_not_annihilate_cubic (x : ℝ) (hx : x ≠ 0) :
     D6 (fun t => t^3) x ≠ 0 := by
-  simp only [D6, hx, ↓reduceIte]
+  simp only [D6, N6, D6Denom, hx, ↓reduceIte]
   have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2 * ψ + 1 := by
     have hψ2 : ψ^2 = ψ + 1 := psi_sq
@@ -164,12 +164,6 @@ theorem D6_not_annihilate_cubic (x : ℝ) (hx : x ≠ 0) :
       ((φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3) * x^3 := by ring
   rw [hnum, hcoef]
   have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hden_ne : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero
-      rw [hdiff]
-      exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
   have hx3_ne : x^3 ≠ 0 := pow_ne_zero 3 hx
   have hdiff_ne : φ - ψ ≠ 0 := by
     rw [hdiff]
@@ -180,7 +174,7 @@ theorem D6_not_annihilate_cubic (x : ℝ) (hx : x ≠ 0) :
       · norm_num
       · exact hdiff_ne
     · exact hx3_ne
-  exact div_ne_zero h12_ne hden_ne
+  exact div_ne_zero h12_ne (D6Denom_mul_ne_zero x hx)
 
 /-- The kernel dimensions strictly increase: dim ker(D2) < dim ker(D5) < dim ker(D6) -/
 theorem kernel_dimension_strict_increase :

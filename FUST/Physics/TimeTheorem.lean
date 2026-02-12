@@ -36,27 +36,19 @@ open FUST.LeastAction
 theorem D6_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
     D6 (fun t => f (c * t)) x = c * D6 f (c * x) := by
   have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  simp only [D6, hx, hcx, ↓reduceIte]
-  have hdenom : (φ - ψ)^5 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
-  have hdenom_cx : (φ - ψ)^5 * (c * x) ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hcx
+  simp only [D6, N6, D6Denom, hx, hcx, ↓reduceIte]
   have harg2 : c * (φ^2 * x) = φ^2 * (c * x) := by ring
   have harg3 : c * (φ * x) = φ * (c * x) := by ring
   have harg4 : c * (ψ * x) = ψ * (c * x) := by ring
   have harg5 : c * (ψ^2 * x) = ψ^2 * (c * x) := by ring
   have harg6 : c * (ψ^3 * x) = ψ^3 * (c * x) := by ring
   simp only [harg2, harg3, harg4, harg5, harg6]
-  field_simp [hdenom, hdenom_cx, hc]
+  field_simp [D6Denom_mul_ne_zero x hx, D6Denom_mul_ne_zero (c * x) hcx, hc]
 
 /-- D6 linearity: D6[a·f] = a · D6[f] -/
 theorem D6_linear_scalar (a : ℝ) (f : ℝ → ℝ) (x : ℝ) :
     D6 (fun t => a * f t) x = a * D6 f x := by
-  simp only [D6]
+  simp only [D6, N6]
   by_cases hx : x = 0
   · simp [hx]
   · simp only [hx, ↓reduceIte]
@@ -388,29 +380,23 @@ theorem kernel_component_D6_invariant (f g : ℝ → ℝ) (hg : IsInKerD6 g) :
     have hg' : g = fun t => a₀ + a₁ * t + a₂ * t^2 := funext hg_eq
     rw [hg']
     exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
-  simp only [D6, hx, ↓reduceIte] at hpoly ⊢
-  have hdenom_ne : (φ - ψ)^5 * x ≠ 0 := by
-    have hphi_sub : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [hphi_sub]
-    apply mul_ne_zero
-    · apply pow_ne_zero; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
+  simp only [D6, N6, D6Denom, hx, ↓reduceIte] at hpoly ⊢
   have hpoly_num : g (φ ^ 3 * x) - 3 * g (φ ^ 2 * x) + g (φ * x) - g (ψ * x) +
       3 * g (ψ ^ 2 * x) - g (ψ ^ 3 * x) = 0 := by
     rw [div_eq_zero_iff] at hpoly
     cases hpoly with
     | inl h => exact h
-    | inr h => exact absurd h hdenom_ne
+    | inr h => exact absurd h (D6Denom_mul_ne_zero x hx)
   calc ((f (φ^3*x) + g (φ^3*x)) - 3*(f (φ^2*x) + g (φ^2*x)) + (f (φ*x) + g (φ*x)) -
       (f (ψ*x) + g (ψ*x)) + 3*(f (ψ^2*x) + g (ψ^2*x)) - (f (ψ^3*x) + g (ψ^3*x))) /
-      ((φ - ψ)^5 * x)
+      (D6Denom * x)
     = ((f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) +
        (g (φ^3*x) - 3*g (φ^2*x) + g (φ*x) - g (ψ*x) + 3*g (ψ^2*x) - g (ψ^3*x))) /
-      ((φ - ψ)^5 * x) := by ring_nf
+      (D6Denom * x) := by ring_nf
     _ = ((f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) + 0) /
-      ((φ - ψ)^5 * x) := by rw [hpoly_num]
+      (D6Denom * x) := by rw [hpoly_num]
     _ = (f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) /
-      ((φ - ψ)^5 * x) := by ring_nf
+      (D6Denom * x) := by ring_nf
 
 /-! ## Structural Minimum Time
 
