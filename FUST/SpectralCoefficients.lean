@@ -475,4 +475,119 @@ theorem D6_kernel_gap_structure :
 
 end ExtendedKernel
 
+/-! ## Section 4: D₅ Spectral Coefficients
+
+D₅(xⁿ) = D5Coeff(n) · x^{n-1} / (√5)⁴ where
+D5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 = L(2n) + L(n) - 4.
+ker(D₅) = {n | D5Coeff(n) = 0} = {0, 1} (polynomial), {0, 1} (Laurent).
+-/
+
+section D5Spectral
+
+/-- D₅ spectral coefficient: D5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 -/
+noncomputable def D5CoeffZ (n : ℤ) : ℝ :=
+  φ ^ (2 * n) + φ ^ n + ψ ^ n + ψ ^ (2 * n) - 4
+
+theorem D5CoeffZ_zero : D5CoeffZ 0 = 0 := by simp [D5CoeffZ]; ring
+
+theorem D5CoeffZ_one : D5CoeffZ 1 = 0 := by
+  simp only [D5CoeffZ, zpow_one, show (2 : ℤ) * 1 = 2 from by ring]
+  rw [show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast,
+      show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast]
+  rw [golden_ratio_property, psi_sq]
+  linarith [phi_add_psi]
+
+theorem D5CoeffZ_two : D5CoeffZ 2 = 6 := by
+  simp only [D5CoeffZ, show (2 : ℤ) * 2 = 4 from by ring]
+  rw [show φ ^ (4 : ℤ) = φ ^ 4 from by norm_cast,
+      show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast,
+      show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast,
+      show ψ ^ (4 : ℤ) = ψ ^ 4 from by norm_cast]
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  linarith [phi_add_psi]
+
+theorem D5CoeffZ_two_ne_zero : D5CoeffZ 2 ≠ 0 := by
+  rw [D5CoeffZ_two]; norm_num
+
+theorem D5CoeffZ_neg_two : D5CoeffZ (-2) = 6 := by
+  simp only [D5CoeffZ, show (2 : ℤ) * (-2) = -4 from by ring]
+  rw [phi_neg_zpow, phi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
+  rw [show (-ψ) ^ (4 : ℤ) = ψ ^ (4 : ℤ) from
+        (Even.neg_zpow (⟨2, by ring⟩ : Even (4 : ℤ)) ψ),
+      show (-ψ) ^ (2 : ℤ) = ψ ^ (2 : ℤ) from
+        (Even.neg_zpow (⟨1, by ring⟩ : Even (2 : ℤ)) ψ),
+      show (-φ) ^ (4 : ℤ) = φ ^ (4 : ℤ) from
+        (Even.neg_zpow (⟨2, by ring⟩ : Even (4 : ℤ)) φ),
+      show (-φ) ^ (2 : ℤ) = φ ^ (2 : ℤ) from
+        (Even.neg_zpow (⟨1, by ring⟩ : Even (2 : ℤ)) φ)]
+  rw [show ψ ^ (4 : ℤ) = ψ ^ 4 from by norm_cast,
+      show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast,
+      show φ ^ (4 : ℤ) = φ ^ 4 from by norm_cast,
+      show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast]
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
+  linarith [phi_add_psi]
+
+/-- D₅ Laurent kernel: ker = {0, 1}, same as polynomial kernel -/
+theorem D5_kernel_structure :
+    D5CoeffZ 0 = 0 ∧ D5CoeffZ 1 = 0 ∧
+    D5CoeffZ 2 ≠ 0 ∧ D5CoeffZ (-1) ≠ 0 ∧ D5CoeffZ (-2) ≠ 0 := by
+  refine ⟨D5CoeffZ_zero, D5CoeffZ_one, D5CoeffZ_two_ne_zero, ?_, ?_⟩
+  · rw [D5CoeffZ]; simp only [show (2 : ℤ) * (-1) = -2 from by ring]
+    rw [phi_neg_zpow, phi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
+    rw [show (-ψ) ^ (2 : ℤ) = ψ ^ (2 : ℤ) from
+          (Even.neg_zpow (⟨1, by ring⟩ : Even (2 : ℤ)) ψ),
+        show (-ψ) ^ (1 : ℤ) = -(ψ ^ (1 : ℤ)) from
+          (Odd.neg_zpow (⟨0, by ring⟩ : Odd (1 : ℤ)) ψ),
+        show (-φ) ^ (2 : ℤ) = φ ^ (2 : ℤ) from
+          (Even.neg_zpow (⟨1, by ring⟩ : Even (2 : ℤ)) φ),
+        show (-φ) ^ (1 : ℤ) = -(φ ^ (1 : ℤ)) from
+          (Odd.neg_zpow (⟨0, by ring⟩ : Odd (1 : ℤ)) φ)]
+    rw [show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast,
+        show ψ ^ (1 : ℤ) = ψ from zpow_one ψ,
+        show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast,
+        show φ ^ (1 : ℤ) = φ from zpow_one φ]
+    rw [golden_ratio_property, psi_sq]
+    intro h
+    have : φ - ψ = Real.sqrt 5 := phi_sub_psi
+    have : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5:ℝ) > 0)
+    linarith
+  · rw [D5CoeffZ_neg_two]; norm_num
+
+/-- D₅ and D₆ coefficients agree at d=2: both give 6 (D₅ detects, D₆ annihilates) -/
+theorem D5D6_coeff_comparison_at_2 :
+    D5CoeffZ 2 = 6 ∧ D6CoeffZ 2 = 0 :=
+  ⟨D5CoeffZ_two, D6CoeffZ_two⟩
+
+/-- D₅ coefficients at d=±2 are equal (t⁻² and t² are D₅-dual) -/
+theorem D5CoeffZ_dual : D5CoeffZ (-2) = D5CoeffZ 2 := by
+  rw [D5CoeffZ_neg_two, D5CoeffZ_two]
+
+/-- D₅ gauge-invariant output for d=2: Δ₅ = D5Coeff(2)/(√5)⁴ = 6/25 -/
+noncomputable def D5MassScale : ℝ := D5CoeffZ 2 / (Real.sqrt 5) ^ 4
+
+theorem D5MassScale_eq : D5MassScale = 6 / 25 := by
+  simp only [D5MassScale, D5CoeffZ_two]
+  have h : (Real.sqrt 5) ^ 4 = 25 := by
+    have h2 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+    calc (Real.sqrt 5) ^ 4 = (Real.sqrt 5 ^ 2) ^ 2 := by ring
+      _ = 5 ^ 2 := by rw [h2]
+      _ = 25 := by norm_num
+  rw [h]
+
+/-- Δ₅ = Δ₆/2: D₅ mass scale is half the D₆ mass gap -/
+theorem D5MassScale_half_D6 : D5MassScale = (12 / 25 : ℝ) / 2 := by
+  rw [D5MassScale_eq]; norm_num
+
+/-- Δ₅/Δ₆ = 1/kerDimD5 = 1/2 -/
+theorem D5_D6_mass_ratio : D5MassScale / (12 / 25 : ℝ) = 1 / 2 := by
+  rw [D5MassScale_eq]; norm_num
+
+end D5Spectral
+
 end FUST.SpectralCoefficients

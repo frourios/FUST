@@ -45,15 +45,6 @@ def muMdRatio : RatioQ :=
 theorem muMdRatio_val : muMdRatio.val = 1 / 2 := by
   simp only [muMdRatio, Nat.choose]; norm_num
 
-/-! ## Neutrino Mass Squared Ratio as RatioQ -/
-
-def neutrinoMassSqRatio : RatioQ :=
-  ⟨1 / (2 * Nat.choose 6 2 : ℚ)⟩
-
-theorem neutrinoMassSqRatio_val :
-    neutrinoMassSqRatio.val = 1 / 30 := by
-  simp only [neutrinoMassSqRatio, Nat.choose]; norm_num
-
 /-! ## Mass Ratio Correction Exponents as CountQ -/
 
 def tauMuExponent : CountQ :=

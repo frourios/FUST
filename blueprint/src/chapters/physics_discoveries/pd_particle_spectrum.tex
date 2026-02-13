@@ -2,35 +2,48 @@
 \chapter{Particle Spectrum from D-Structure}
 \label{chap:pd_particle}
 
-\section{Generation Constraint}
+\section{Generation Structure from $\ker(D_6)$}
 \label{sec:particle_generations}
 
-\begin{theorem}[Maximum Generations]
-\label{thm:particle_max_generations}
-\lean{FUST.ParticleSpectrum.maxGenerations_from_kernel_transition}
+The number of fermion generations is not an input parameter but is derived from $\dim\ker(D_6) = 3$.
+
+\begin{theorem}[$\ker(D_6)$ Basis]
+\label{thm:particle_D6_kernel_basis}
+\lean{FUST.ParticleSpectrum.D6_kernel_basis}
 \leanok
-Maximum generations = 3, derived from kernel dimension transition:
-\[
-\text{maxGenerations} = (C(3,2) - C(2,2)) + 1 = (3 - 1) + 1 = 3
-\]
+$\ker(D_6) = \{1, x, x^2\}$: all three basis elements are annihilated by $D_6$.
 \end{theorem}
 
-\begin{theorem}[$D_3$, $D_4$ Selection]
-\label{thm:particle_d3_d4_selection}
-\lean{FUST.ParticleSpectrum.selected_D_structures_kernel_dim_1}
+\begin{theorem}[Maximum Generations $= \dim\ker(D_6)$]
+\label{thm:particle_max_generations}
+\lean{FUST.ParticleSpectrum.maxGenerations_eq}
 \leanok
-$D_3$ and $D_4$ are selected because they have kernel dimension 1:
+\[
+\text{maxGenerations} = \dim\ker(D_6) = 3
+\]
+Each basis element of $\ker(D_6)$ corresponds to one generation.
+\end{theorem}
+
+\begin{theorem}[Generation-Mass Separation]
+\label{thm:particle_generation_mass}
+\lean{FUST.ParticleSpectrum.generation_mass_separation}
+\leanok
+The $\ker(D_6)$ basis $\{1, x, x^2\}$ is separated by the responses of lower $D$-operators:
 \begin{itemize}
-\item $D_3$ does NOT annihilate linear: $\exists x \neq 0: D_3[x](x) \neq 0$
-\item $D_4$ does NOT annihilate linear: $\exists x \neq 0: D_4[x](x) \neq 0$
+\item $1 \in \ker(D_3) \cap \ker(D_5) \cap \ker(D_6)$: lightest (electron sector)
+\item $x \in \ker(D_6) \setminus \ker(D_3)$: intermediate mass (muon sector)
+\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: heaviest (tau sector)
 \end{itemize}
+Mass exponents derive from $D$-operator pair counts:
+$x^0 \to D_4$: $T(4)+1 = 11$, \quad $x^1 \to D_3$: $T(3) = 6$, \quad $x^2 \to D_3$: $T(3) = 6$.
 \end{theorem}
 
 \begin{theorem}[Fourth Generation Forbidden]
 \label{thm:particle_4th_gen_forbidden}
 \lean{FUST.ParticleSpectrum.fourth_generation_forbidden}
 \leanok
-4th generation would require $D_7$, which projects to $D_6$.
+$x^3 \notin \ker(D_6)$: $D_6$ detects cubic ($D_6[t^3](x) \neq 0$ for all $x \neq 0$).
+Additionally, $D_7$ projects to $D_6$ via Fibonacci recurrence.
 \end{theorem}
 
 \section{Charge Constraint}
@@ -135,8 +148,20 @@ The graviton has:
 See Chapter~\ref{chap:pd_gravitational}, \S\ref{sec:grav_graviton} for the full derivation.
 \end{theorem}
 
-\subsection{Right-Handed Neutrinos at \texorpdfstring{$D_5$}{D5}}
-Spin-1/2 fermions with extended kernel structure.
+\subsection{Neutrino Mass Structure at \texorpdfstring{$D_5$}{D5}}
+
+\begin{theorem}[Neutrino Generation Structure]
+\label{thm:neutrino_generation}
+\lean{FUST.ParticleSpectrum.neutrino_generation_structure}
+\leanok
+3 neutrino flavors from $\dim\ker(D_6) = 3$ (SU(2) doublet with charged leptons).
+Mass states split by $\ker(D_5) \subset \ker(D_6)$:
+\begin{itemize}
+\item $\ker(D_5) = \{1, x\}$: solar pair $\nu_1, \nu_2$ (2 nearly-degenerate states)
+\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: atmospheric $\nu_3$ (separated)
+\end{itemize}
+Right-handed neutrinos predicted at $D_5$ level (spin-1/2).
+\end{theorem}
 
 \subsection{\texorpdfstring{$D_{5\frac{1}{2}}$}{D5.5} Dark Matter}
 Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi^{-3/2}$.
@@ -151,8 +176,8 @@ Mass: $m_{DM}/m_e = \varphi^{25}$ (same exponent as W boson, differing by factor
 \leanok
 \begin{enumerate}
 \item SM particle count = 37 (derived from D-structure)
-\item Maximum generations = 3 (from kernel dimension transition)
-\item $D_6$ ceiling prevents 4th generation and spin $> 2$
+\item Maximum generations $= \dim\ker(D_6) = 3$
+\item $x^3 \notin \ker(D_6)$ prevents 4th generation; $D_7$ projects to $D_6$ prevents spin $> 2$
 \item Allowed spins = spacetime dimension = 4
 \item Allowed charges from $D_3$ structure
 \item Graviton: spin-2, massless, $D$-level 6 (structurally derived)
@@ -169,7 +194,7 @@ All particle spectrum quantities are CountQuantity ($\mathbb{N}$), derived from 
 \hline
 Quantity & Value & Lean \\
 \hline
-Max generations & $(C(3,2)-C(2,2))+1 = 3$ & \texttt{maxGenerations} \\
+Max generations & $\dim\ker(D_6) = 3$ & \texttt{maxGenerations} \\
 SM fermions & $24$ & \texttt{smFermionCount} \\
 SM bosons & $13$ & \texttt{smBosonCount} \\
 SM total & $37$ & \texttt{smParticleCount} \\

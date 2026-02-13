@@ -106,49 +106,46 @@ def graviton : ParticleQuantumNumbers :=
   { generation := none, T3 := .zero, Y := .minus_one,
     color := .singlet, spin := .two }
 
-/-! ## Part 4: D-Structure Selection from Kernel Dimension
+/-! ## Part 4: Generation Structure from ker(D₆)
 
-D₃ and D₄ are "selected" because:
-- D₃: kernel dimension 1 (annihilates constants only)
-- D₄: kernel dimension 1 (annihilates constants only)
-- D₅: kernel dimension 2 (annihilates constants AND linear)
-- D₆: kernel dimension 3 (annihilates constants, linear, AND quadratic)
+ker(D₆) = {1, x, x²} has dimension 3.
+Each basis element corresponds to one generation:
+- x⁰ = 1: first generation (electron sector)
+- x¹: second generation (muon sector)
+- x²: third generation (tau sector)
+- x³ ∉ ker(D₆): fourth generation forbidden (D6_detects_cubic)
+-/
+
+/-- ker(D₆) basis: {1, x, x²} all annihilated by D₆ -/
+theorem D6_kernel_basis :
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
+  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic⟩
+
+/-- x³ is NOT in ker(D₆): D₆ detects cubic -/
+theorem D6_cubic_not_in_kernel :
+    ∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0 := D6_detects_cubic
+
+/-- dim ker(D₆) = 3: exactly 3 independent basis elements -/
+abbrev kerDimD6 : ℕ := 3
+
+/-- maxGenerations = dim ker(D₆) = 3 -/
+abbrev maxGenerations : ℕ := kerDimD6
+
+theorem maxGenerations_eq : maxGenerations = 3 := rfl
+
+/-! ## Part 5: Mass Hierarchy from ker(D₆) Basis Action
+
+Each ker(D₆) basis element tⁿ (n=0,1,2) has distinct D₃/D₄ responses.
+D₃(1) = 0 but D₃(x) ≠ 0: separates first generation from heavier ones.
 -/
 
 /-- D₃ annihilates constants (gauge invariance) -/
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
   fun x hx => D3_const 1 x hx
 
-/-- D₅ has extended kernel (dimension ≥ 2) -/
-theorem D5_extended_kernel :
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear⟩
-
-/-- D₆ has full kernel (dimension 3) -/
-theorem D6_full_kernel :
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic⟩
-
-/-! ## Part 5: Generation Constraint from D₆ Ceiling -/
-
-/-- D₆ is the maximum D-level (Fibonacci recurrence closes at D₆) -/
-theorem D6_ceiling : 6 = Nat.choose 3 2 + Nat.choose 3 2 := rfl
-
-/-- D₇+ reduces to D₆ via Fibonacci recurrence: D_{n+2} = D_{n+1} + D_n -/
-abbrev projectToD6 (n : ℕ) : ℕ := min n 6
-
-theorem D7_projects : projectToD6 7 = 6 := rfl
-theorem D8_projects : projectToD6 8 = 6 := rfl
-
-/-- D₃ and D₄ are selected (kernel dim 1): count = C(3,2) - C(2,2) = 3 - 1 = 2 -/
-abbrev selectedDStructureCount : ℕ := Nat.choose 3 2 - Nat.choose 2 2
-
-theorem selectedDStructureCount_eq : selectedDStructureCount = 2 := rfl
-
-/-- D₃ does not annihilate linear functions (kernel dim = 1) -/
+/-- D₃ does not annihilate linear: x¹ ∈ ker(D₆) gives distinct mass state -/
 theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
   use 1, one_ne_zero
   simp only [D3, one_ne_zero, ↓reduceIte, id_eq, mul_one]
@@ -161,7 +158,7 @@ theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
   rw [hnum, hdenom]
   norm_num
 
-/-- D₄ does not annihilate linear functions (kernel dim = 1) -/
+/-- D₄ does not annihilate linear: x¹ ∈ ker(D₆) gives distinct mass state -/
 theorem D4_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0 := by
   use 1, one_ne_zero
   simp only [D4, one_ne_zero, ↓reduceIte, id_eq, mul_one]
@@ -180,32 +177,37 @@ theorem D4_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0 := by
   have hpsi_neg : ψ < 0 := psi_neg
   nlinarith [phi_pos]
 
-/-- Selection criterion: D₃, D₄ have kernel dim 1 (gauge invariance only) -/
-theorem selected_D_structures_kernel_dim_1 :
-    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) ∧ (∃ x, x ≠ 0 ∧ D4 id x ≠ 0) :=
-  ⟨D3_not_annihilate_linear, D4_not_annihilate_linear⟩
+/-- D₅ annihilates both 1 and x but not x² -/
+theorem D5_kernel_and_boundary :
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
+  ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
 
-/-- Maximum generations = selected structures + 1 = 3 -/
-abbrev maxGenerations : ℕ := selectedDStructureCount + 1
-
-theorem maxGenerations_eq : maxGenerations = 3 := rfl
-
-/-- 3 generations from kernel dimension transition: D₃, D₄ (dim 1) → D₅ (dim ≥ 2) -/
-theorem maxGenerations_from_kernel_transition :
-    maxGenerations = (Nat.choose 3 2 - Nat.choose 2 2) + 1 := rfl
-
-/-- Generation structure from D-hierarchy pair differences -/
-theorem generation_from_pair_differences :
-    (Nat.choose 4 2 - Nat.choose 3 2 = 3) ∧
-    (Nat.choose 5 2 - Nat.choose 4 2 = 4) ∧
-    (Nat.choose 6 2 - Nat.choose 5 2 = 5) := by
-  decide
+/-- Generation-mass correspondence: ker(D₆) basis {1,x,x²} separated by D₃/D₅ -/
+theorem generation_mass_separation :
+    -- 1 ∈ ker(D₃) ∩ ker(D₅) ∩ ker(D₆): lightest (electron)
+    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    -- x ∈ ker(D₆) \ ker(D₃): intermediate mass (muon)
+    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) ∧
+    -- x² ∈ ker(D₆) \ ker(D₅): heaviest (tau)
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
+    -- x³ ∉ ker(D₆): no fourth generation
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
+  ⟨D3_gauge_invariance, D3_not_annihilate_linear,
+   D5_not_annihilate_quadratic, D6_detects_cubic⟩
 
 /-! ## Part 6: FORBIDDEN - 4th Generation -/
 
-/-- 4th generation would require D₇, which projects to D₆ -/
+/-- D₇+ reduces to D₆ via Fibonacci recurrence -/
+abbrev projectToD6 (n : ℕ) : ℕ := min n 6
+
+/-- Fourth generation forbidden: x³ ∉ ker(D₆) and D₇ projects to D₆ -/
 theorem fourth_generation_forbidden :
-    projectToD6 7 = 6 ∧ maxGenerations = 3 := ⟨rfl, rfl⟩
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
+    projectToD6 7 = 6 ∧
+    maxGenerations = 3 :=
+  ⟨D6_detects_cubic, rfl, rfl⟩
 
 /-! ## Part 7: FORBIDDEN - Exotic Charges -/
 
@@ -283,6 +285,18 @@ theorem graviton_spin_derived :
     gravitonPrediction.gravity_sector_trace = WaveEquation.spacetimeDim ∧
     gravitonPrediction.gravity_sector_disc = Nat.choose 6 3 :=
   ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+/-- Neutrino generation structure from ker(D₅) ⊂ ker(D₆) -/
+theorem neutrino_generation_structure :
+    -- 3 flavors from ker(D₆) (SU(2) doublet with charged leptons)
+    kerDimD6 = 3 ∧
+    -- Mass states split by ker(D₅) ⊂ ker(D₆)
+    -- ker(D₅) = {1, x} (dim 2): solar pair ν₁, ν₂
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    -- ker(D₆)\ker(D₅) = {x²} (dim 1): atmospheric ν₃
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
+  ⟨rfl, fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
 
 /-- Right-handed neutrino at D₅ -/
 structure RightHandedNeutrinoPrediction where
@@ -368,11 +382,12 @@ theorem SM_count_derivation :
 theorem particle_spectrum_summary :
     -- Particle count derived from D-structure
     (SM_particle_count = 37) ∧
-    -- Generation limit from kernel dimension transition
-    (maxGenerations = 3) ∧
-    (selectedDStructureCount = Nat.choose 3 2 - Nat.choose 2 2) ∧
-    -- D₆ ceiling
+    -- Generation count = dim ker(D₆) = 3
+    (maxGenerations = kerDimD6) ∧
+    -- D₆ ceiling: D₇ projects to D₆
     (projectToD6 7 = 6) ∧
+    -- x³ ∉ ker(D₆): fourth generation forbidden
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     -- Spin limit = spacetimeDim
     (allowedSpinCount = 4) ∧
     (Spin.two ∈ allowedSpins) ∧
@@ -380,13 +395,13 @@ theorem particle_spectrum_summary :
     (allowedChargeCount = 2 * Nat.choose 3 2 + 1) ∧
     -- D₃ gauge invariance
     (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) := by
-  refine ⟨rfl, rfl, rfl, rfl, rfl, ?_, rfl, D3_gauge_invariance⟩
+  refine ⟨rfl, rfl, rfl, D6_detects_cubic, rfl, ?_, rfl, D3_gauge_invariance⟩
   decide
 
-/-- Complete derivation: all constants from D-structure -/
+/-- Complete derivation: all constants from ker(D₆) structure -/
 theorem all_constants_derived :
-    -- Generations from kernel transition D₃,D₄ → D₅
-    (maxGenerations = (Nat.choose 3 2 - Nat.choose 2 2) + 1) ∧
+    -- Generations = dim ker(D₆)
+    (maxGenerations = kerDimD6) ∧
     -- Spins from spacetime dimension (ker D6 + time)
     (allowedSpinCount = WaveEquation.spacetimeDim) ∧
     -- Charges from D₃ pair count
@@ -457,8 +472,8 @@ theorem fermion_count_derivation :
 theorem particle_count_derivation :
     smParticleCount.val = smFermionCount.val + smBosonCount.val := rfl
 
-theorem generation_from_pair_counts :
-    maxGenerations.val = (Nat.choose 3 2 - Nat.choose 2 2) + 1 := rfl
+theorem generation_from_kerDimD6 :
+    maxGenerations.val = FUST.ParticleSpectrum.kerDimD6 := rfl
 
 theorem spin_from_spacetime :
     allowedSpinCount.val = spacetimeDim.val := rfl

@@ -19,6 +19,7 @@ import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassRatios
 import FUST.Physics.MellinSampling
+import FUST.Physics.NeutrinoMass
 import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PhiBloch

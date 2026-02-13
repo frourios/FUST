@@ -55,8 +55,22 @@ Experimental: 3.0 (error 0\%, exact match).
 where $7 = C(4,2) + C(2,2)$ and $5 = C(4,2) - C(2,2)$. Experimental: 40.8 (error 1.7\%).
 \end{theorem}
 
-\section{Lepton Mass Ratios}
+\section{Lepton Mass Ratios from $\ker(D_6)$ Basis}
 \label{sec:mass_lepton}
+
+The three lepton generations correspond to $\ker(D_6) = \{1, x, x^2\}$.
+Each basis element $t^n$ maps to a $D$-operator index $k$, with mass exponent $T(k) + \delta$:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$\ker(D_6)$ basis & Generation & $D$-index & Exponent & Reason \\
+\hline
+$x^0 = 1$ & $e$ (lightest) & $D_4$ & $T(4)+1=11$ & $1 \in \ker(D_3)$, descent $D_4 \to D_3$ \\
+$x^1$ & $\mu$ (middle) & $D_3$ & $T(3)+0=6$ & $D_3(x) \neq 0$ \\
+$x^2$ & $\tau$ (heaviest) & $D_3$ & $T(3)+0=6$ & $D_5(x^2) \neq 0$ \\
+\hline
+\end{tabular}
+\end{center}
 
 \begin{theorem}[Tau/Mu Ratio]
 \label{thm:mass_tau_mu}
@@ -65,7 +79,7 @@ where $7 = C(4,2) + C(2,2)$ and $5 = C(4,2) - C(2,2)$. Experimental: 40.8 (error
 \[
 \frac{m_\tau}{m_\mu} = \varphi^{T(3)+0} = \varphi^6
 \]
-where correction $\delta = 0$ for same-level transition.
+Both $\tau$ and $\mu$ use $D_3$ pair count; correction $\delta = 0$ for same-level.
 \end{theorem}
 
 \begin{theorem}[Mu/Electron Ratio]
@@ -75,7 +89,7 @@ where correction $\delta = 0$ for same-level transition.
 \[
 \frac{m_\mu}{m_e} = \varphi^{T(4)+1} = \varphi^{11}
 \]
-where correction $\delta = 1$ for $D_4 \to D_3$ descent.
+Electron uses $D_4$ (since $1 \in \ker(D_3)$, requiring higher pair count); $\delta = 1$ for $D_4 \to D_3$ descent.
 \end{theorem}
 
 \begin{theorem}[Tau/Electron Ratio]
@@ -83,7 +97,7 @@ where correction $\delta = 1$ for $D_4 \to D_3$ descent.
 \lean{FUST.MassRatioDerivation.tau_e_ratio}
 \leanok
 \[
-\frac{m_\tau}{m_e} = \varphi^{17}
+\frac{m_\tau}{m_e} = \varphi^{6+11} = \varphi^{17}
 \]
 \end{theorem}
 
@@ -120,7 +134,7 @@ Mass in FUST has dimension $\dim_F = (-5, 1, -1) = \mathrm{dimTime}^{-1}$, the $
 \[
 m_e = \Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimTime}^{-1}]
 \]
-The electron, as the lightest \emph{charged} fermion, is identified with the mass gap. Neutrinos acquire mass via $D_5$ mixing perturbation from $\ker(D_6)$ and are not bounded by $\Delta$.
+The electron, as the lightest \emph{charged} fermion, is identified with the mass gap. Neutrinos acquire mass via $\ker(D_5) \subset \ker(D_6)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\Delta$.
 \end{theorem}
 
 \begin{theorem}[Proton Mass]
@@ -310,17 +324,40 @@ differing only by the factor $15/16$.
 \section{Neutrino Mass Hierarchy}
 \label{sec:mass_neutrino}
 
+Neutrinos have 3 flavors (from $\dim\ker(D_6) = 3$ via SU(2) doublet with charged leptons)
+but their mass structure is governed by $\ker(D_5) \subset \ker(D_6)$:
+
+\begin{itemize}
+\item $\ker(D_5) = \{1, x\}$ ($\dim = 2$): solar pair $\nu_1, \nu_2$ (nearly degenerate)
+\item $\ker(D_6) \setminus \ker(D_5) = \{x^2\}$ ($\dim = 1$): atmospheric state $\nu_3$ (separated)
+\item $D_5(x^2) \neq 0$: $x^2$ is not in $\ker(D_5)$, giving $\nu_3$ its distinct mass
+\end{itemize}
+
 \begin{theorem}[Neutrino Mass Squared Ratio]
 \label{thm:mass_neutrino}
-\lean{FUST.MassRatioPredictions.neutrinoMassSqRatio_eq}
+\lean{FUST.NeutrinoMass.neutrinoMassSqRatio_eq}
 \leanok
 \[
-\frac{\Delta m^2_{21}}{\Delta m^2_{31}} = \frac{1}{2 \times C(6,2)} = \frac{1}{30}
+\frac{\Delta m^2_{21}}{\Delta m^2_{31}} = \frac{1}{\dim\ker(D_5) \times C(6,2)} = \frac{1}{2 \times 15} = \frac{1}{30}
 \]
+where $\dim\ker(D_5) = 2$ counts the solar pair states and $C(6,2) = 15$ is the $D_6$ pair count.
 Experimental: $\sim 1/33$ (error $\sim 10\%$).
 \end{theorem}
 
-Neutrino masses are not bounded by $\Delta$: neutrinos reside almost entirely in $\ker(D_6)$ and acquire mass only through $D_5$-level mixing perturbation. The mass gap $\Delta$ applies to charged fermions that couple directly to $D_6$ gauge-invariant output at degree $d = 3$.
+\begin{theorem}[Neutrino Hierarchy from Kernel Filtration]
+\label{thm:mass_neutrino_hierarchy}
+\lean{FUST.NeutrinoMass.neutrino_hierarchy_from_kernel}
+\leanok
+The kernel filtration $\ker(D_2) \subset \ker(D_5) \subset \ker(D_6)$ with $\dim = 1, 2, 3$
+determines the neutrino mass hierarchy:
+\begin{enumerate}
+\item $\dim\ker(D_5) = 2$: two nearly-degenerate states (solar pair)
+\item $D_5(x^2) \neq 0$: one separated state (atmospheric)
+\item $\text{neutrinoMassSqDenom} = \dim\ker(D_5) \times C(6,2) = 30$
+\end{enumerate}
+\end{theorem}
+
+Neutrino masses are not bounded by $\Delta$: neutrinos acquire mass via $D_5$-level perturbation from $\ker(D_6)$. The mass gap $\Delta$ applies only to charged fermions that couple directly to $D_6$ output.
 
 \section{Baryon Asymmetry}
 \label{sec:mass_baryon}
@@ -373,7 +410,7 @@ $m_t/m_b = \varphi^7 + \varphi^5$ & ScaleQ$(0,0,0)$ (dimensionless) & \texttt{mt
 $m_u/m_d = C(2,2)/2 = 1/2$ & RatioQuantity & \texttt{muMdRatio} \\
 $m_b/m_c = C(3,2) = 3$ & CountQuantity & \texttt{mbMcValue} \\
 $m_c/m_s = C(5,2)+2 = 12$ & CountQuantity & \texttt{mcMsValue} \\
-$\Delta m^2_{21}/\Delta m^2_{31} = 1/30$ & RatioQuantity & \texttt{neutrinoMassSqRatio} \\
+$\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(D_5) \times C(6,2)) = 1/30$ & RatioQuantity & \texttt{neutrinoMassSqRatio} \\
 \hline
 \end{tabular}
 \end{center}

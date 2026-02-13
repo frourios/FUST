@@ -1,3 +1,4 @@
+import FUST.Physics.NeutrinoMass
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -97,33 +98,7 @@ theorem D5half_structure :
 theorem darkMatterElectronRatio_pos : darkMatterElectronRatio > 0 :=
   pow_pos phi_pos _
 
-/-! ## Part 3: Neutrino Mass Squared Hierarchy
-
-Δm²₂₁/Δm²₃₁ = 1/(2×C(6,2)) = 1/30
-
-This gives mass ratio: m₂/m₃ = √(1/30) = φ^(-(C(3,2)+1/2)) approximately.
--/
-
-/-- Neutrino mass squared ratio denominator -/
-abbrev neutrinoMassSqDenom : ℕ := 2 * Nat.choose 6 2
-
-theorem neutrinoMassSqDenom_eq : neutrinoMassSqDenom = 30 := rfl
-
-/-- Neutrino mass squared ratio: 1/30 -/
-noncomputable abbrev neutrinoMassSqRatio : ℚ := 1 / neutrinoMassSqDenom
-
-theorem neutrinoMassSqRatio_eq : neutrinoMassSqRatio = 1 / 30 := rfl
-
-/-- Neutrino mass ratio (m₂/m₃) from mass squared ratio -/
-noncomputable abbrev neutrinoMassRatio : ℝ := Real.sqrt (1 / 30)
-
-/-- Neutrino mass ratio approximate φ exponent -/
-theorem neutrinoMassRatio_exponent_approx :
-    -- φ^(-3.5) ≈ 0.186, √(1/30) ≈ 0.183
-    -- The exponent -3.5 = -(C(3,2) + 1/2) = -(3 + 0.5)
-    (Nat.choose 3 2 : ℝ) + 1/2 = 3.5 := by norm_num
-
-/-! ## Part 4: W/Z Mass Ratio
+/-! ## Part 3: W/Z Mass Ratio
 
 m_W/m_Z = cos(θ_W) = √(10/13) from Weinberg angle
 
@@ -308,7 +283,7 @@ theorem mass_ratio_predictions_summary :
     -- 2. Dark matter/electron: φ^25
     (darkMatterExponent = 25) ∧
     -- 3. Neutrino mass squared: 1/30
-    (neutrinoMassSqDenom = 30) ∧
+    (FUST.NeutrinoMass.neutrinoMassSqDenom = 30) ∧
     -- 4. W/Z: √(10/13)
     (WZRatioSq = 10/13) ∧
     -- 5. Baryon asymmetry exponent: 44
