@@ -33,7 +33,7 @@ theorem action_zero_for_ker (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f
 
 /-- Entropy at time t for function f -/
 noncomputable def entropyAt (f : ℝ → ℝ) (t : ℝ) : ScaleQ dimLagrangian :=
-  ⟨FUST.TimeTheorem.entropyAt f t⟩
+  ⟨FUST.LeastAction.entropyAtD6 f t⟩
 
 theorem third_law (f : ℝ → ℝ) (hf : ¬FUST.LeastAction.IsInKerD6 f) :
     ∃ t, (entropyAt f t).val > 0 :=

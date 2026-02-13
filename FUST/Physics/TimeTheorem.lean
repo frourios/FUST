@@ -1,93 +1,13 @@
 import FUST.Physics.LeastAction
 
-/-!
-# FUST Time Theorem
-
-Time is a theorem derived from the Least Action Theorem (not a principle).
-
-## Logical Order
-
-1. **Least Action Theorem** (derived from D6 structure)
-   - A[f] = ∫|D6 f|² dx/x
-   - A[f] = 0 ⟺ f ∈ ker(D6)
-   - Defines: IsInKerD6, TimeExists, IsMassiveState
-
-2. **Time Theorem** (this file)
-   - TimeExists f ⟺ A[f] > 0 ⟺ f ∉ ker(D6) (from LeastAction)
-   - Time direction from φ/ψ asymmetry
-   - Time evolution: f ↦ f(φ·)
-   - Entropy increase under time evolution
-
-## Key Results
-
-1. **Time Existence**: f ∉ ker(D6) ⟺ proper time exists
-2. **Arrow of Time**: φ > 1 (future), |ψ| < 1 (past)
-3. **Photon Invariance**: ker(D6) invariant under time evolution
-4. **Entropy Increase**: perpProjection amplified by φⁿ
--/
-
 namespace FUST.TimeTheorem
 
 open FUST.LeastAction
 
-/-! ## Gauge Transformations -/
-
-/-- D6 scaling under gauge transformation: D6[f(c·)](x) = c · D6[f](cx) -/
-theorem D6_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
-    D6 (fun t => f (c * t)) x = c * D6 f (c * x) := by
-  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  simp only [D6, N6, D6Denom, hx, hcx, ↓reduceIte]
-  have harg2 : c * (φ^2 * x) = φ^2 * (c * x) := by ring
-  have harg3 : c * (φ * x) = φ * (c * x) := by ring
-  have harg4 : c * (ψ * x) = ψ * (c * x) := by ring
-  have harg5 : c * (ψ^2 * x) = ψ^2 * (c * x) := by ring
-  have harg6 : c * (ψ^3 * x) = ψ^3 * (c * x) := by ring
-  simp only [harg2, harg3, harg4, harg5, harg6]
-  field_simp [D6Denom_mul_ne_zero x hx, D6Denom_mul_ne_zero (c * x) hcx, hc]
-
-/-- D6 linearity: D6[a·f] = a · D6[f] -/
-theorem D6_linear_scalar (a : ℝ) (f : ℝ → ℝ) (x : ℝ) :
-    D6 (fun t => a * f t) x = a * D6 f x := by
-  simp only [D6, N6]
-  by_cases hx : x = 0
-  · simp [hx]
-  · simp only [hx, ↓reduceIte]
-    ring
-
-/-- Time dilation ratio for same-degree functions is gauge-invariant -/
-theorem same_degree_ratio_gauge_invariant (a b : ℝ) (f : ℝ → ℝ) (x : ℝ)
-    (hb : b ≠ 0) (hfx : D6 f x ≠ 0) :
-    |D6 (fun t => a * f t) x| / |D6 (fun t => b * f t) x| = |a| / |b| := by
-  rw [D6_linear_scalar, D6_linear_scalar]
-  simp only [abs_mul]
-  have hbfx : |b| * |D6 f x| ≠ 0 := mul_ne_zero (abs_ne_zero.mpr hb) (abs_ne_zero.mpr hfx)
-  field_simp [hbfx]
-
-/-! ## Time Existence Theorem -/
-
-/-- Time requires deviation from kernel -/
-theorem time_requires_deviation :
-    ∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → ∃ t, perpProjection f t ≠ 0 := by
-  intro f ⟨x, hx, hD6⟩
-  by_contra hAll
-  push_neg at hAll
-  simp only [perpProjection] at hAll
-  have hf_eq : ∀ t, f t = kernelProjection f t := by
-    intro t; linarith [hAll t]
-  have hD6_zero : D6 f x = 0 := by
-    simp only [kernelProjection] at hf_eq
-    have hD6_poly := D6_polynomial_deg2 (f 0) ((f 1 - f (-1)) / 2)
-        ((f 1 + f (-1) - 2 * f 0) / 2) x hx
-    have hfeq : f = fun t => f 0 + (f 1 - f (-1)) / 2 * t +
-        (f 1 + f (-1) - 2 * f 0) / 2 * t ^ 2 := funext hf_eq
-    rw [hfeq]
-    exact hD6_poly
-  exact hD6 hD6_zero
-
 /-- Time Existence Theorem (Complete Form) -/
 theorem time_existence_theorem :
     (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExists f) ∧
+    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExistsD6 f) ∧
     (∀ f c x, c ≠ 0 → x ≠ 0 → D6 (fun t => f (c * t)) x = c * D6 f (c * x)) :=
   ⟨IsInKerD6_implies_D6_zero,
    fun f ⟨x, hx, hD6⟩ => D6_nonzero_implies_time f x hx hD6,
@@ -101,68 +21,6 @@ theorem higher_order_reduction :
              (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
              (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
   FUST.D7_kernel_equals_D6_kernel
-
-/-! ## Photon Correspondence -/
-
-/-- Photon state characterization -/
-theorem photon_state_iff_points (f : ℝ → ℝ) :
-    IsPhotonState f ↔ IsInKerD6 f ∧ (f 1 ≠ f 0 ∨ f (-1) ≠ f 0) := by
-  constructor
-  · intro ⟨hker, henergy⟩
-    constructor
-    · exact hker
-    · obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hker
-      by_contra h
-      push_neg at h
-      have h1 : f 1 = f 0 := h.1
-      have h2 : f (-1) = f 0 := h.2
-      have hf1 : f 1 = a₀ + a₁ + a₂ := by rw [hf_eq 1]; ring
-      have hf0 : f 0 = a₀ := by rw [hf_eq 0]; ring
-      have hfm1 : f (-1) = a₀ - a₁ + a₂ := by rw [hf_eq (-1)]; ring
-      rw [hf1, hf0] at h1
-      rw [hfm1, hf0] at h2
-      have ha1 : a₁ + a₂ = 0 := by linarith
-      have ha2 : -a₁ + a₂ = 0 := by linarith
-      have ha1_zero : a₁ = 0 := by linarith
-      have ha2_zero : a₂ = 0 := by linarith
-      have hconst : IsConstant f := by
-        use a₀
-        intro t; rw [hf_eq t, ha1_zero, ha2_zero]; ring
-      exact henergy hconst
-  · intro ⟨hker, hne⟩
-    constructor
-    · exact hker
-    · intro hconst
-      obtain ⟨c, hc⟩ := hconst
-      have h1 : f 1 = c := hc 1
-      have h0 : f 0 = c := hc 0
-      have hm1 : f (-1) = c := hc (-1)
-      rw [h1, h0, hm1] at hne
-      cases hne with
-      | inl h => exact h rfl
-      | inr h => exact h rfl
-
-/-- Non-constant ker(D6) functions have non-trivial linear or quadratic part -/
-theorem nonconstant_ker_has_energy (f : ℝ → ℝ) (hf : IsInKerD6 f) (hne : HasEnergy f) :
-    ∃ a₁ a₂ : ℝ, (a₁ ≠ 0 ∨ a₂ ≠ 0) ∧ ∃ a₀, ∀ t, f t = a₀ + a₁ * t + a₂ * t^2 := by
-  obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
-  use a₁, a₂
-  constructor
-  · by_contra h
-    push_neg at h
-    have hconst : IsConstant f := by
-      use a₀
-      intro t
-      rw [hf_eq t, h.1, h.2]; ring
-    exact hne hconst
-  · exact ⟨a₀, hf_eq⟩
-
-/-- ker(D6) decomposes into constant and non-constant -/
-theorem kernel_decomposition (f : ℝ → ℝ) (_hf : IsInKerD6 f) :
-    IsConstant f ∨ HasEnergy f := by
-  by_cases h : IsConstant f
-  · left; exact h
-  · right; exact h
 
 /-! ## Arrow of Time from φ/ψ Asymmetry -/
 
@@ -205,113 +63,9 @@ theorem phi_mul_abs_psi : φ * |ψ| = 1 := by
 
 /-! ## Time Evolution -/
 
-/-- Time evolution: scaling by φ -/
-noncomputable def timeEvolution (f : ℝ → ℝ) : ℝ → ℝ := fun t => f (φ * t)
-
-/-- Inverse time evolution: scaling by ψ -/
-noncomputable def inverseTimeEvolution (f : ℝ → ℝ) : ℝ → ℝ := fun t => f (ψ * t)
-
-/-- Time evolution and inverse relation -/
-theorem time_evolution_inverse_relation (f : ℝ → ℝ) (t : ℝ) :
-    timeEvolution (inverseTimeEvolution f) t = f (φ * ψ * t) := by
-  simp only [timeEvolution, inverseTimeEvolution]
-  ring_nf
-
 /-- φ is unique expansion factor > 1 -/
 theorem phi_unique_expansion : φ > 1 ∧ |ψ| < 1 :=
   ⟨φ_gt_one, abs_psi_lt_one⟩
-
-/-- ker(D6) is invariant under time evolution -/
-theorem ker_D6_invariant_timeEvolution (f : ℝ → ℝ) (hf : IsInKerD6 f) :
-    IsInKerD6 (timeEvolution f) := by
-  obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
-  use a₀, a₁ * φ, a₂ * φ^2
-  intro t
-  simp only [timeEvolution]
-  rw [hf_eq (φ * t)]
-  ring
-
-/-- Time evolution preserves TimeExists -/
-theorem timeEvolution_preserves_structure (f : ℝ → ℝ) :
-    TimeExists f ↔ TimeExists (timeEvolution f) := by
-  constructor
-  · intro hf hker
-    apply hf
-    obtain ⟨a₀, a₁, a₂, h_eq⟩ := hker
-    use a₀, a₁ / φ, a₂ / φ^2
-    intro t
-    have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
-    have hφ2 : φ^2 ≠ 0 := pow_ne_zero 2 hφ
-    have key := h_eq (t / φ)
-    simp only [timeEvolution] at key
-    have hsimp : φ * (t / φ) = t := by field_simp
-    rw [hsimp] at key
-    calc f t = a₀ + a₁ * (t / φ) + a₂ * (t / φ)^2 := key
-      _ = a₀ + a₁ / φ * t + a₂ / φ^2 * t^2 := by field_simp [hφ, hφ2]
-  · intro hf hker
-    apply hf
-    exact ker_D6_invariant_timeEvolution f hker
-
-/-- D6 scaling law under time evolution -/
-theorem D6_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
-    D6 (timeEvolution f) x = φ * D6 f (φ * x) := by
-  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
-  exact D6_gauge_scaling f φ x hφ hx
-
-/-! ## Time Differential -/
-
-/-- Time differential measures deviation from ker(D6) -/
-noncomputable def D6TimeDifferential (f : ℝ → ℝ) (t : ℝ) : ℝ :=
-  |perpProjection f t|
-
-/-- D6TimeDifferential is non-negative -/
-theorem D6TimeDifferential_nonneg (f : ℝ → ℝ) (t : ℝ) : D6TimeDifferential f t ≥ 0 :=
-  abs_nonneg _
-
-/-- D6TimeDifferential zero iff perpProjection zero -/
-theorem time_differential_zero_iff (f : ℝ → ℝ) (t : ℝ) :
-    D6TimeDifferential f t = 0 ↔ perpProjection f t = 0 := by
-  simp only [D6TimeDifferential, abs_eq_zero]
-
-/-- D6TimeDifferential = 0 everywhere iff f ∈ ker(D6) -/
-theorem time_differential_zero_gauge_invariant (f : ℝ → ℝ) :
-    (∀ t, D6TimeDifferential f t = 0) ↔ IsInKerD6 f := by
-  constructor
-  · intro h
-    have hperp : ∀ t, perpProjection f t = 0 := fun t => (time_differential_zero_iff f t).mp (h t)
-    exact perp_zero_implies_ker f hperp
-  · intro hker t
-    simp only [D6TimeDifferential, abs_eq_zero]
-    exact kernel_implies_perp_zero f hker t
-
-/-- Time zero iff in kernel -/
-theorem time_zero_iff_in_kernel (f : ℝ → ℝ) :
-    (∀ t, D6TimeDifferential f t = 0) ↔ (∀ t, perpProjection f t = 0) := by
-  simp only [D6TimeDifferential, abs_eq_zero]
-
-/-! ## Entropy Definition -/
-
-/-- FUST entropy: squared perpProjection -/
-noncomputable def entropyAt (f : ℝ → ℝ) (t : ℝ) : ℝ :=
-  (perpProjection f t)^2
-
-/-- entropyAt is non-negative -/
-theorem entropyAt_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAt f t ≥ 0 := sq_nonneg _
-
-/-- entropyAt zero iff perpProjection zero -/
-theorem entropyAt_zero_iff (f : ℝ → ℝ) (t : ℝ) :
-    entropyAt f t = 0 ↔ perpProjection f t = 0 := sq_eq_zero_iff
-
-/-- f ∈ ker(D6) iff entropyAt is zero everywhere -/
-theorem entropy_zero_iff_ker (f : ℝ → ℝ) :
-    (∀ t, entropyAt f t = 0) ↔ IsInKerD6 f := by
-  constructor
-  · intro h
-    have hperp : ∀ t, perpProjection f t = 0 := fun t => (entropyAt_zero_iff f t).mp (h t)
-    exact perp_zero_implies_ker f hperp
-  · intro hker t
-    rw [entropyAt_zero_iff]
-    exact kernel_implies_perp_zero f hker t
 
 /-! ## Entropy Increase -/
 
@@ -331,13 +85,13 @@ theorem phi_pow_2n_gt_one (n : ℕ) (hn : n ≥ 1) : φ^(2*n) > 1 :=
 
 /-- Entropy increase principle -/
 theorem entropy_increase_principle (f : ℝ → ℝ) (t : ℝ) :
-    entropyAt (timeEvolution f) t = (perpProjection (timeEvolution f) t)^2 := rfl
+    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 := rfl
 
-/-- For tⁿ, perpProjection scaling -/
+/-- For tⁿ, perpProjectionD6 scaling -/
 theorem monomial_perp_scaling (n : ℕ) (t : ℝ) :
-    perpProjection (timeEvolution (fun s => s^n)) t =
-    φ^n * t^n - kernelProjection (timeEvolution (fun s => s^n)) t := by
-  simp only [perpProjection, timeEvolution]
+    perpProjectionD6 (timeEvolution (fun s => s^n)) t =
+    φ^n * t^n - kernelProjectionD6 (timeEvolution (fun s => s^n)) t := by
+  simp only [perpProjectionD6, timeEvolution]
   ring
 
 /-- Time direction unique -/
@@ -352,12 +106,12 @@ theorem arrow_of_time_summary :
     (|ψ| < 1) ∧
     (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
     (∀ f x, x ≠ 0 → D6 (timeEvolution f) x = φ * D6 f (φ * x)) :=
-  ⟨φ_gt_one, abs_psi_lt_one, ker_D6_invariant_timeEvolution, D6_timeEvolution⟩
+  ⟨φ_gt_one, abs_psi_lt_one, ker_D6_invariant, D6_timeEvolution⟩
 
 /-- FUST Time Theorem: Complete statement -/
 theorem fust_time_theorem :
     (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExists f) ∧
+    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExistsD6 f) ∧
     ((∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
      (∀ x, x ≠ 0 → D6 id x = 0) ∧
      (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0)) ∧
@@ -507,46 +261,6 @@ theorem minimum_time_structural_reason :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
   ⟨structuralMinTime_positive, structuralMinTime_eq, D6_const 1, D6_linear, D6_quadratic⟩
 
-/-! ## Structural Minimum Length (Planck Length)
-
-Derived from causal_boundary_theorem + structuralMinTime:
-- causal_boundary_theorem: ker(D6) = light-like states → c = 1 in natural units
-- structuralMinTime = 25/12 (minimum time)
-- l = c × t = 1 × 25/12 = 25/12 (minimum length)
-
-This is NOT numerical fitting but a structural consequence:
-- ker(D6) defines the causal boundary (light-like states)
-- Time and space are equivalent at the Planck scale in ker(D6)
--/
-
-/-- Structural minimum length = structuralMinTime (c = 1 in FUST natural units) -/
-noncomputable def structuralMinLength : ℝ := structuralMinTime
-
-/-- structuralMinLength equals 25/12 -/
-theorem structuralMinLength_eq : structuralMinLength = 25 / 12 :=
-  structuralMinTime_eq
-
-/-- structuralMinLength is positive -/
-theorem structuralMinLength_positive : structuralMinLength > 0 :=
-  structuralMinTime_positive
-
-/-- Time-space equivalence at Planck scale: l_FUST = t_FUST
-    This follows from c = 1 (ker(D6) as causal boundary) -/
-theorem planck_time_space_equivalence :
-    structuralMinLength = structuralMinTime := rfl
-
-/-- Planck length derived from causal boundary theorem:
-    l = c × t where c = 1 (from ker(D6) being the causal/light-like boundary) -/
-theorem structuralMinLength_from_causal_boundary :
-    structuralMinLength = 1 * structuralMinTime := by simp [structuralMinLength]
-
-/-- Complete structural derivation: both Planck time and length from D6 structure -/
-theorem planck_scale_complete :
-    structuralMinTime = 25/12 ∧
-    structuralMinLength = 25/12 ∧
-    structuralMinLength = structuralMinTime :=
-  ⟨structuralMinTime_eq, structuralMinLength_eq, rfl⟩
-
 end FUST.TimeTheorem
 
 namespace FUST.Dim
@@ -555,21 +269,8 @@ namespace FUST.Dim
 noncomputable def structuralMinTime_dim : ScaleQ dimTime :=
   ⟨FUST.TimeTheorem.structuralMinTime⟩
 
-/-- Structural minimum length with derived dimension -/
-noncomputable def structuralMinLength_dim : ScaleQ dimLength :=
-  ⟨FUST.TimeTheorem.structuralMinLength⟩
-
 theorem structuralMinTime_dim_val : structuralMinTime_dim.val = 25 / 12 :=
   FUST.TimeTheorem.structuralMinTime_eq
-
-theorem structuralMinLength_dim_val : structuralMinLength_dim.val = 25 / 12 :=
-  FUST.TimeTheorem.structuralMinLength_eq
-
-/-- l = c · t: light speed c=1 inlined as ScaleQ dimLightSpeed -/
-theorem length_eq_speed_times_time :
-    structuralMinLength_dim.val = ((⟨1⟩ : ScaleQ dimLightSpeed) * structuralMinTime_dim).val := by
-  simp only [ScaleQ.mul_val, structuralMinTime_dim, structuralMinLength_dim,
-    FUST.TimeTheorem.structuralMinLength, one_mul]
 
 /-- Time is positive -/
 theorem structuralMinTime_positive : structuralMinTime_dim.val > 0 :=

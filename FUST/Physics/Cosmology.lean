@@ -113,13 +113,13 @@ theorem adjacent_level_ratio (n : ℤ) :
 
 /-- Entropy increases under time evolution (from TimeTheorem) -/
 theorem entropy_time_connection (f : ℝ → ℝ) (t : ℝ) :
-    entropyAt (timeEvolution f) t = (perpProjection (timeEvolution f) t)^2 :=
+    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 :=
   entropy_increase_principle f t
 
 /-- ker(D6) is preserved under time evolution -/
 theorem kernel_preserved_time (f : ℝ → ℝ) (hf : IsInKerD6 f) :
     IsInKerD6 (timeEvolution f) :=
-  ker_D6_invariant_timeEvolution f hf
+  ker_D6_invariant f hf
 
 /-! ## Part 5: Golden Ratio Mathematical Identities
 

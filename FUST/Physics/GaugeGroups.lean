@@ -1,4 +1,5 @@
 import FUST.DifferenceOperators
+import FUST.DimensionalAnalysis
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Algebra.Lie.Basic
@@ -59,122 +60,6 @@ theorem kernel_hierarchy :
    fun x hx => D6_const 1 x hx,
    D6_linear,
    D6_quadratic⟩
-
-/-- D5 does not annihilate x²: D5[x²] ≠ 0 -/
-theorem D5_not_annihilate_quadratic (x : ℝ) (hx : x ≠ 0) :
-    D5 (fun t => t^2) x ≠ 0 := by
-  simp only [D5, hx, ↓reduceIte]
-  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-  have hψ2 : ψ^2 = ψ + 1 := psi_sq
-  have hφ4 : φ^4 = 3 * φ + 2 := by
-    calc φ^4 = φ^2 * φ^2 := by ring
-      _ = (φ + 1) * (φ + 1) := by rw [hφ2]
-      _ = φ^2 + 2*φ + 1 := by ring
-      _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
-      _ = 3 * φ + 2 := by ring
-  have hψ4 : ψ^4 = 3 * ψ + 2 := by
-    calc ψ^4 = ψ^2 * ψ^2 := by ring
-      _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
-      _ = ψ^2 + 2*ψ + 1 := by ring
-      _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
-      _ = 3 * ψ + 2 := by ring
-  have hsum : φ + ψ = 1 := phi_add_psi
-  have hcoef : (φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2 = 6 := by
-    calc (φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2
-      = φ^4 + φ^2 + ψ^2 + ψ^4 - 4 := by ring
-      _ = (3*φ + 2) + (φ + 1) + (ψ + 1) + (3*ψ + 2) - 4 := by rw [hφ4, hφ2, hψ2, hψ4]
-      _ = 3*(φ + ψ) + (φ + ψ) + 2 := by ring
-      _ = 3*1 + 1 + 2 := by rw [hsum]
-      _ = 6 := by ring
-  have hnum : (φ^2 * x)^2 + (φ * x)^2 - 4 * x^2 + (ψ * x)^2 + (ψ^2 * x)^2 =
-      ((φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2) * x^2 := by ring
-  rw [hnum, hcoef]
-  have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hden_ne : (φ - ψ)^4 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero
-      rw [hdiff]
-      exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    · exact hx
-  have hx2_ne : x^2 ≠ 0 := pow_ne_zero 2 hx
-  have h6x2_ne : (6 : ℝ) * x^2 ≠ 0 := mul_ne_zero (by norm_num) hx2_ne
-  exact div_ne_zero h6x2_ne hden_ne
-
-/-- D6 does not annihilate x³: D6[x³] ≠ 0 -/
-theorem D6_not_annihilate_cubic (x : ℝ) (hx : x ≠ 0) :
-    D6 (fun t => t^3) x ≠ 0 := by
-  simp only [D6, N6, D6Denom, hx, ↓reduceIte]
-  have hφ3 : φ^3 = 2 * φ + 1 := phi_cubed
-  have hψ3 : ψ^3 = 2 * ψ + 1 := by
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    calc ψ^3 = ψ^2 * ψ := by ring
-      _ = (ψ + 1) * ψ := by rw [hψ2]
-      _ = ψ^2 + ψ := by ring
-      _ = (ψ + 1) + ψ := by rw [hψ2]
-      _ = 2 * ψ + 1 := by ring
-  have hφ6 : φ^6 = 8 * φ + 5 := by
-    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-    have hφ4 : φ^4 = 3 * φ + 2 := by
-      calc φ^4 = φ^2 * φ^2 := by ring
-        _ = (φ + 1) * (φ + 1) := by rw [hφ2]
-        _ = φ^2 + 2*φ + 1 := by ring
-        _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
-        _ = 3 * φ + 2 := by ring
-    calc φ^6 = φ^4 * φ^2 := by ring
-      _ = (3*φ + 2) * (φ + 1) := by rw [hφ4, hφ2]
-      _ = 3*φ^2 + 5*φ + 2 := by ring
-      _ = 3*(φ + 1) + 5*φ + 2 := by rw [hφ2]
-      _ = 8 * φ + 5 := by ring
-  have hψ6 : ψ^6 = 8 * ψ + 5 := by
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    have hψ4 : ψ^4 = 3 * ψ + 2 := by
-      calc ψ^4 = ψ^2 * ψ^2 := by ring
-        _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
-        _ = ψ^2 + 2*ψ + 1 := by ring
-        _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
-        _ = 3 * ψ + 2 := by ring
-    calc ψ^6 = ψ^4 * ψ^2 := by ring
-      _ = (3*ψ + 2) * (ψ + 1) := by rw [hψ4, hψ2]
-      _ = 3*ψ^2 + 5*ψ + 2 := by ring
-      _ = 3*(ψ + 1) + 5*ψ + 2 := by rw [hψ2]
-      _ = 8 * ψ + 5 := by ring
-  have hφ9 : φ^9 = 34 * φ + 21 := by
-    calc φ^9 = φ^6 * φ^3 := by ring
-      _ = (8*φ + 5) * (2*φ + 1) := by rw [hφ6, hφ3]
-      _ = 16*φ^2 + 18*φ + 5 := by ring
-      _ = 16*(φ + 1) + 18*φ + 5 := by rw [golden_ratio_property]
-      _ = 34 * φ + 21 := by ring
-  have hψ9 : ψ^9 = 34 * ψ + 21 := by
-    calc ψ^9 = ψ^6 * ψ^3 := by ring
-      _ = (8*ψ + 5) * (2*ψ + 1) := by rw [hψ6, hψ3]
-      _ = 16*ψ^2 + 18*ψ + 5 := by ring
-      _ = 16*(ψ + 1) + 18*ψ + 5 := by rw [psi_sq]
-      _ = 34 * ψ + 21 := by ring
-  have hsum : φ + ψ = 1 := phi_add_psi
-  -- F_9 - 3F_6 + F_3 = 34 - 3·8 + 2 = 12 ≠ 0
-  have hcoef : (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3 = 12 * (φ - ψ) := by
-    calc (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3
-      = φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 := by ring
-      _ = (34*φ + 21) - 3*(8*φ + 5) + (2*φ + 1) - (2*ψ + 1) + 3*(8*ψ + 5) - (34*ψ + 21) := by
-          rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]
-      _ = 34*φ - 24*φ + 2*φ - 2*ψ + 24*ψ - 34*ψ := by ring
-      _ = 12 * (φ - ψ) := by ring
-  have hnum : (φ^3 * x)^3 - 3 * (φ^2 * x)^3 + (φ * x)^3 - (ψ * x)^3 +
-      3 * (ψ^2 * x)^3 - (ψ^3 * x)^3 =
-      ((φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3) * x^3 := by ring
-  rw [hnum, hcoef]
-  have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hx3_ne : x^3 ≠ 0 := pow_ne_zero 3 hx
-  have hdiff_ne : φ - ψ ≠ 0 := by
-    rw [hdiff]
-    exact Real.sqrt_ne_zero'.mpr (by norm_num)
-  have h12_ne : (12 : ℝ) * (φ - ψ) * x^3 ≠ 0 := by
-    apply mul_ne_zero
-    · apply mul_ne_zero
-      · norm_num
-      · exact hdiff_ne
-    · exact hx3_ne
-  exact div_ne_zero h12_ne (D6Denom_mul_ne_zero x hx)
 
 /-- The kernel dimensions strictly increase: dim ker(D2) < dim ker(D5) < dim ker(D6) -/
 theorem kernel_dimension_strict_increase :

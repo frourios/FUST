@@ -79,9 +79,9 @@ theorem action_variation_structure (f η : ℝ → ℝ) (x : ℝ) :
 
 /-- Lagrangian expansion for perturbation -/
 theorem lagrangian_perturbation (f η : ℝ → ℝ) (ε x : ℝ) :
-    FUSTLagrangian (fun t => f t + ε * η t) x =
+    D6Lagrangian (fun t => f t + ε * η t) x =
     (D6 f x)^2 + 2 * ε * D6 f x * D6 η x + ε^2 * (D6 η x)^2 := by
-  simp only [FUSTLagrangian]
+  simp only [D6Lagrangian]
   have hlin : D6 (fun t => f t + ε * η t) x = D6 f x + ε * D6 η x := by
     have h := D6_linear_combination f η 1 ε x
     simp only [one_mul] at h
@@ -301,7 +301,7 @@ theorem fust_wave_structure :
 /-- Complete derivation chain: no arbitrary constants -/
 theorem derivation_chain :
     -- Lagrangian from D6 structure
-    (∀ f x, FUSTLagrangian f x = (D6 f x)^2) ∧
+    (∀ f x, D6Lagrangian f x = (D6 f x)^2) ∧
     -- Spatial dimension from ker(D6) basis {1, x, x²} with x³ ∉ ker
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     -- Time dimension from unique expansion factor

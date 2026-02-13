@@ -152,10 +152,10 @@ theorem spectral_gap_exists :
 /-- Spectral gap is equivalent to mass gap -/
 theorem spectral_gap_eq_mass_gap :
     -- Massive states have positive action
-    (∀ f, FUST.LeastAction.IsMassiveState f → ∃ t, FUST.LeastAction.perpProjection f t ≠ 0) ∧
+    (∀ f, FUST.LeastAction.TimeExistsD6 f → ∃ t, FUST.LeastAction.perpProjectionD6 f t ≠ 0) ∧
     -- Massless states (ker D6) have zero action
-    (∀ f, FUST.LeastAction.IsInKerD6 f → ∀ t, FUST.LeastAction.perpProjection f t = 0) :=
-  ⟨FUST.LeastAction.massive_has_proper_time, FUST.LeastAction.kernel_implies_perp_zero⟩
+    (∀ f, FUST.LeastAction.IsInKerD6 f → ∀ t, FUST.LeastAction.perpProjectionD6 f t = 0) :=
+  ⟨FUST.LeastAction.timeExists_has_proper_timeD6, FUST.LeastAction.kerD6_implies_perp_zero⟩
 
 /-! ## Part 6: Eigenfunction Structure
 
@@ -192,15 +192,14 @@ theorem hilbert_polya_requirements :
     -- (2) Kernel is finite dimensional (dim = 3)
     (FUST.FrourioLogarithm.D6_kernel_dim = 3) ∧
     -- (3) Spectral gap exists (mass gap)
-    (∀ f, ¬FUST.LeastAction.IsInKerD6 f → ∃ t, FUST.LeastAction.perpProjection f t ≠ 0) ∧
+    (∀ f, ¬FUST.LeastAction.IsInKerD6 f → ∃ t, FUST.LeastAction.perpProjectionD6 f t ≠ 0) ∧
     -- (4) φ > 1 gives time direction
     (φ > 1) ∧
     -- (5) Eigenfunction exponent has Re = 1/2
     (∀ E : ℝ, (1/2 + Complex.I * E : ℂ).re = 1/2) :=
   ⟨hamiltonian_nonneg,
    rfl,
-   fun f hf => FUST.LeastAction.massive_has_proper_time f
-     ((FUST.LeastAction.massive_iff_time_exists f).mpr hf),
+   fun f hf => FUST.LeastAction.timeExists_has_proper_timeD6 f hf,
    φ_gt_one,
    mellin_exponent_re⟩
 

@@ -35,29 +35,29 @@ The third law states that absolute zero (zero entropy everywhere) is unreachable
 for massive states.
 
 In FUST:
-- Absolute zero ⟺ ∀ t, entropyAt f t = 0
-- entropy_zero_iff_ker: (∀ t, entropyAt f t = 0) ⟺ f ∈ ker(D6)
-- Therefore: f ∉ ker(D6) ⟹ ∃ t, entropyAt f t > 0
+- Absolute zero ⟺ ∀ t, entropyAtD6 f t = 0
+- entropy_zero_iff_kerD6: (∀ t, entropyAtD6 f t = 0) ⟺ f ∈ ker(D6)
+- Therefore: f ∉ ker(D6) ⟹ ∃ t, entropyAtD6 f t > 0
 
 This means massive states (f ∉ ker(D6)) always have positive entropy somewhere.
 -/
 
 /-- Third law: massive states cannot reach absolute zero -/
 theorem third_law_massive_positive_entropy (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
-    ∃ t, entropyAt f t > 0 := by
+    ∃ t, entropyAtD6 f t > 0 := by
   by_contra h
   push_neg at h
-  have h_all_zero : ∀ t, entropyAt f t = 0 := fun t => le_antisymm (h t) (entropyAt_nonneg f t)
-  have h_ker : IsInKerD6 f := (entropy_zero_iff_ker f).mp h_all_zero
+  have h_all_zero : ∀ t, entropyAtD6 f t = 0 := fun t => le_antisymm (h t) (entropyAtD6_nonneg f t)
+  have h_ker : IsInKerD6 f := (entropy_zero_iff_kerD6 f).mp h_all_zero
   exact hf h_ker
 
 /-- Contrapositive: if entropy is zero everywhere, then f ∈ ker(D6) -/
-theorem absolute_zero_implies_lightlike (f : ℝ → ℝ) (h : ∀ t, entropyAt f t = 0) :
-    IsInKerD6 f := (entropy_zero_iff_ker f).mp h
+theorem absolute_zero_implies_lightlike (f : ℝ → ℝ) (h : ∀ t, entropyAtD6 f t = 0) :
+    IsInKerD6 f := (entropy_zero_iff_kerD6 f).mp h
 
 /-- Lightlike states can have zero entropy everywhere -/
 theorem lightlike_can_reach_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
-    ∀ t, entropyAt f t = 0 := (entropy_zero_iff_ker f).mpr hf
+    ∀ t, entropyAtD6 f t = 0 := (entropy_zero_iff_kerD6 f).mpr hf
 
 /-! ## Light and Sound Structural Separation
 
@@ -74,18 +74,17 @@ theorem light_zero_action (f : ℝ → ℝ) (hf : IsInKerD6 f) (x₀ : ℝ) (hx�
     FUST.Probability.discreteAction f x₀ N = 0 :=
   FUST.Probability.action_zero_for_ker f hf x₀ hx₀ N
 
-/-- Sound (massive) states have nonzero perpProjection -/
+/-- Sound (massive) states have nonzero perpProjectionD6 -/
 theorem sound_positive_perp (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
-    ∃ t, perpProjection f t ≠ 0 := by
-  have hmassive : IsMassiveState f := (massive_iff_time_exists f).mpr hf
-  exact (massive_iff_nonzero_perp f).mp hmassive
+    ∃ t, perpProjectionD6 f t ≠ 0 :=
+  timeExists_has_proper_timeD6 f hf
 
-/-- Light-sound orthogonality: structural separation via perpProjection -/
+/-- Light-sound orthogonality: structural separation via perpProjectionD6 -/
 theorem light_sound_separation :
     -- Light: ker(D6) components have zero D6
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    -- Sound: non-ker components have nonzero perpProjection somewhere
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjection f t ≠ 0) :=
+    -- Sound: non-ker components have nonzero perpProjectionD6 somewhere
+    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
   ⟨IsInKerD6_implies_D6_zero, sound_positive_perp⟩
 
 /-! ## Stefan-Boltzmann Law
@@ -135,7 +134,7 @@ theorem first_law_energy_nonneg (f : ℝ → ℝ) (x₀ : ℝ) (N : ℕ) :
 
 /-! ## Second Law: Entropy Increase
 
-Entropy increases under time evolution because φ > 1 amplifies perpProjection.
+Entropy increases under time evolution because φ > 1 amplifies perpProjectionD6.
 -/
 
 /-- φ > 1 implies amplification under time evolution -/
@@ -166,10 +165,10 @@ theorem fust_thermodynamics :
     (φ > 1) ∧
     (∀ n, n ≥ 1 → φ^n > 1) ∧
     -- Third Law: Absolute zero unreachable for massive states
-    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAt f t > 0) ∧
+    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     -- Light-Sound Separation
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjection f t ≠ 0) ∧
+    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) ∧
     -- Stefan-Boltzmann exponent
     (spacetimeDim = 4) :=
   ⟨first_law_linearity,

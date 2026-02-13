@@ -540,6 +540,42 @@ theorem D6_charPoly_factorization (x : ℝ) :
     (x ^ 2 - x - 1) * (x ^ 2 - 3 * x + 1) * (x ^ 2 - 4 * x - 1) := by
   unfold D6_charPoly; ring
 
+/-- Sector traces are Lucas numbers: L(1)=1, L(2)=3, L(3)=4 -/
+theorem sector_traces :
+    lucasNumber 1 = 1 ∧ lucasNumber 2 = 3 ∧ lucasNumber 3 = 4 :=
+  ⟨lucas_1, lucas_2, lucas_3⟩
+
+/-- Gravity sector trace = spacetimeDim: L(spatialDim) = spacetimeDim -/
+theorem gravity_trace_eq_spacetimeDim :
+    lucasNumber spatialDim = spacetimeDim := by
+  simp only [spatialDim, spacetimeDim, timeDim]; exact lucas_3
+
+/-- Gravity sector determinant = -1: (φψ)³ = (-1)³ = -1 -/
+theorem gravity_sector_det : (φ * ψ) ^ 3 = -1 := by
+  rw [phi_mul_psi]; norm_num
+
+/-- Gravity sector discriminant = C(6,3) = spacetimeDim × activeDLevels -/
+theorem gravity_sector_discriminant :
+    (4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3 := by decide
+
+theorem gravity_disc_eq_spacetime_times_active :
+    Nat.choose 6 3 = spacetimeDim * (6 - 2 + 1) := by
+  simp only [spacetimeDim, spatialDim, timeDim]; decide
+
+/-- Matter and gauge sectors have equal discriminant = 5 = activeDLevels -/
+theorem matter_gauge_discriminant :
+    (1 : ℕ) ^ 2 + 4 * 1 = 5 ∧ (3 : ℕ) ^ 2 - 4 * 1 = 5 := ⟨rfl, rfl⟩
+
+/-- Complete sector discriminant structure -/
+theorem sector_discriminants :
+    -- Matter (x²-x-1): Δ = 1+4 = 5
+    ((1 : ℕ) ^ 2 + 4 * 1 = 5) ∧
+    -- Gauge (x²-3x+1): Δ = 9-4 = 5
+    ((3 : ℕ) ^ 2 - 4 * 1 = 5) ∧
+    -- Gravity (x²-4x-1): Δ = 16+4 = 20 = C(6,3)
+    ((4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3) :=
+  ⟨rfl, rfl, by decide⟩
+
 /-- Sector trace squares: L(1)²+L(2)²+L(3)² = 1+9+16 = 26 -/
 theorem sector_trace_sq_sum :
     lucasNumber 1 ^ 2 + lucasNumber 2 ^ 2 + lucasNumber 3 ^ 2 = 26 := by
@@ -765,7 +801,7 @@ theorem dAlembertian_extended_kernel :
     (∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0) := by
   refine ⟨?_, ?_, ?_, dAlembertian_cubic_zero, dAlembertian_inv_zero⟩
   · intro x hx
-    exact dAlembertian_zero_on_kernel _ (constant_in_kernel 1) x hx
+    exact dAlembertian_zero_on_kernel _ ⟨1, 0, 0, fun t => by ring⟩ x hx
   · intro x hx
     exact dAlembertian_zero_on_kernel _ ⟨0, 1, 0, fun t => by ring⟩ x hx
   · intro x hx
@@ -818,5 +854,57 @@ theorem derivation_layer3_assembly :
     cmbTemperatureExponent = 152 ∧
     cosmologicalExponent = 582 := by
   refine ⟨rfl, rfl, cmbTemperatureExponent_value, cosmologicalExponent_value⟩
+
+/-! ## Graviton Structural Prediction
+
+The graviton is predicted (not postulated) by the D₆ operator structure:
+1. Existence: D₆ charPoly = (matter)(gauge)(gravity) has a gravity sector (x²-4x-1)
+2. Massless: □_φ(t⁻¹) = 0 (graviton propagator has no mass term)
+3. Spin-2: max spin for massless particle = spatialDim - 1 = 2
+4. Inverse square: D₆(t⁻¹) ∝ x⁻² (force law from operator algebra)
+5. Coupling: m_e/m_Pl = φ^(-107-5/63) from D-hierarchy combinatorics
+
+The gravity sector polynomial x²-4x-1 encodes:
+- Trace = L(3) = 4 = spacetimeDim (gravity couples to spacetime dimension)
+- Determinant = (φψ)³ = -1 (parity-odd, like matter sector)
+- Discriminant = 20 = C(6,3) = spacetimeDim × activeDLevels
+-/
+
+/-- Graviton masslessness: □_φ(t⁻¹) = 0 means the graviton mode
+    propagates without a mass term in the d'Alembertian. -/
+theorem graviton_massless :
+    ∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0 :=
+  dAlembertian_inv_zero
+
+/-- Graviton spin = spatialDim - timeDim = 3 - 1 = 2 -/
+theorem graviton_spin_from_spacetime :
+    spatialDim - timeDim = 2 := by
+  simp only [spatialDim, timeDim]
+
+/-- Graviton spin = spacetimeDim / 2 = 4 / 2 = 2 -/
+theorem graviton_spin_from_spacetimeDim :
+    spacetimeDim / 2 = 2 := by
+  simp only [spacetimeDim, spatialDim, timeDim]
+
+/-- Complete graviton structural prediction -/
+theorem graviton_prediction :
+    -- Existence: gravity sector in D₆ charPoly factorization
+    (∀ x : ℝ, D6_charPoly x =
+      (x ^ 2 - x - 1) * (x ^ 2 - 3 * x + 1) * (x ^ 2 - 4 * x - 1)) ∧
+    -- Gravity sector trace = spacetimeDim
+    (lucasNumber spatialDim = spacetimeDim) ∧
+    -- Gravity sector determinant
+    ((φ * ψ) ^ 3 = -1) ∧
+    -- Gravity sector discriminant = C(6,3)
+    ((4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3) ∧
+    -- Massless: □_φ(t⁻¹) = 0
+    (∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0) ∧
+    -- Spin-2 from spacetime structure
+    (spatialDim - timeDim = 2) ∧
+    -- Inverse square force law
+    (∀ x, x ≠ 0 → D6 (fun t => t⁻¹) x = 6 / ((φ - ψ) ^ 4 * x ^ 2)) := by
+  exact ⟨D6_charPoly_factorization, gravity_trace_eq_spacetimeDim,
+         gravity_sector_det, gravity_sector_discriminant,
+         dAlembertian_inv_zero, graviton_spin_from_spacetime, D6_inv_one⟩
 
 end FUST.GravitationalCoupling

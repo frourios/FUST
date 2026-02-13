@@ -7,7 +7,7 @@
 
 \begin{theorem}[Time Existence Theorem]
 \label{thm:mat_time_existence}
-\lean{FUST.time_existence_theorem}
+\lean{FUST.TimeTheorem.time_existence_theorem}
 \leanok
 For a state function $f : \mathbb{R} \to \mathbb{R}$, the following are equivalent:
 \begin{enumerate}
@@ -43,7 +43,7 @@ $f \notin \ker(D_6)$ & Exists & $\mathcal{A}[f] > 0$ \\
 
 \begin{corollary}[Gauge Invariance of Time Existence]
 \label{cor:mat_time_gauge}
-\lean{FUST.time_differential_zero_gauge_invariant}
+\lean{FUST.LeastAction.D6_gauge_scaling}
 \leanok
 The time existence condition ``$f \in \ker(D_6)$'' does not depend on:
 \begin{itemize}
@@ -65,7 +65,7 @@ To define the projection onto $\ker(D_6)$, function values at 3 points must be e
 
 \begin{theorem}[Interpolation Uniqueness]
 \label{thm:mat_interpolation_unique}
-\lean{FUST.kernel_interpolation_unique}
+\lean{FUST.LeastAction.kernel_interpolation_unique_D6}
 \leanok
 If two polynomials $p, q$ in $\ker(D_6)$ agree at any 3 distinct points $t_0, t_1, t_2$, then $p = q$.
 \end{theorem}

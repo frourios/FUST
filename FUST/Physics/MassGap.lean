@@ -18,7 +18,7 @@ output for the minimum massive mode (d = 3).
 ## Connection to Time Theorem
 
 The physical meaning of "mass" comes from TimeTheorem:
-- IsMassiveState f ↔ f ∉ ker(D6) ↔ TimeExists f
+- TimeExistsD6 f ↔ f ∉ ker(D6)
 - Massive particles have proper time (D6 f ≠ 0)
 - The minimum degree for ker(D6)⊥ is 3, giving the mass gap
 
@@ -148,8 +148,8 @@ open FUST.TimeTheorem
 
 /-- Mass is defined as deviation from ker(D6) in TimeTheorem. -/
 theorem mass_is_ker_deviation :
-    ∀ f : ℝ → ℝ, IsMassiveState f ↔ ¬ IsInKerD6 f :=
-  fun f => massive_iff_time_exists f
+    ∀ f : ℝ → ℝ, TimeExistsD6 f ↔ ¬ IsInKerD6 f :=
+  fun _ => Iff.rfl
 
 /-- The minimum non-trivial degree outside ker(D6) is 3. -/
 theorem minimum_massive_degree :
@@ -159,13 +159,11 @@ theorem minimum_massive_degree :
 
 /-- Complete mass gap theorem with physical interpretation -/
 theorem massGap_complete :
-    (∀ f, IsMassiveState f ↔ TimeExists f) ∧
-    (∀ f, IsMassiveState f → ∃ t, perpProjection f t ≠ 0) ∧
+    (∀ f, TimeExistsD6 f → ∃ t, perpProjectionD6 f t ≠ 0) ∧
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     massGapΔ = 12 / 25 :=
-  ⟨massive_iff_time_exists,
-   massive_has_proper_time,
+  ⟨timeExists_has_proper_timeD6,
    IsInKerD6_implies_D6_zero,
    D6_not_annihilate_cubic,
    rfl⟩
@@ -494,8 +492,8 @@ theorem massGapΔ_derivation :
     exact FUST.massGapΔ_eq_inv_structuralMinTime
 
 /-- Mass = deviation from ker(D₆) -/
-theorem mass_is_ker_deviation (f : ℝ → ℝ) :
-    FUST.LeastAction.IsMassiveState f ↔ FUST.LeastAction.TimeExists f :=
-  FUST.LeastAction.massive_iff_time_exists f
+theorem mass_is_ker_deviation_D6 (f : ℝ → ℝ) :
+    FUST.LeastAction.TimeExistsD6 f ↔ ¬FUST.LeastAction.IsInKerD6 f :=
+  Iff.rfl
 
 end FUST.Dim

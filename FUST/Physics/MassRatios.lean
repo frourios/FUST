@@ -153,4 +153,69 @@ theorem tau_muon_ratio_from_masses :
   have hφ11 : φ ^ (11 : ℤ) ≠ 0 := zpow_ne_zero 11 (by linarith [φ_gt_one])
   field_simp
 
+/-! ## Gauge Boson Masses: ScaleQ dimTime⁻¹
+
+W/Z/Higgs masses derived from electron mass and D-structure pair counts.
+m_W = m_e × φ^(C(5,2)+C(6,2)) × C(6,2)/(C(6,2)+C(2,2))
+m_Z = m_W / cos(θ_W)  where sin²θ_W = C(3,2)/(C(3,2)+C(5,2))
+m_H = m_W × (φ - 1/C(5,2))
+-/
+
+/-- W boson mass: m_W = Δ × φ^25 × 15/16 -/
+noncomputable def wBosonMass : ScaleQ dimTime⁻¹ :=
+  ⟨FUST.massGapΔ * FUST.MassRatioPredictions.WElectronRatio⟩
+
+theorem wBosonMass_val :
+    wBosonMass.val = 12 / 25 * (φ ^ 25 * (15 / 16)) := by
+  simp only [wBosonMass, FUST.MassRatioPredictions.WElectronRatio_eq, FUST.massGapΔ]
+
+/-- m_W / m_e = φ^25 × 15/16 -/
+theorem wBoson_electron_ratio :
+    wBosonMass.val / electronMass.val =
+    φ ^ 25 * (15 / 16) := by
+  simp only [wBosonMass_val, electronMass_val]
+  field_simp
+
+/-- Z boson mass: m_Z = m_W / √(10/13) -/
+noncomputable def zBosonMass : ScaleQ dimTime⁻¹ :=
+  ⟨wBosonMass.val / Real.sqrt ((Nat.choose 5 2 : ℝ) / (Nat.choose 3 2 + Nat.choose 5 2))⟩
+
+theorem zBosonMass_val :
+    zBosonMass.val = wBosonMass.val / Real.sqrt (10 / 13) := by
+  simp only [zBosonMass, Nat.choose]; norm_num
+
+/-- Higgs mass: m_H = m_W × (φ - 1/10) -/
+noncomputable def higgsMass : ScaleQ dimTime⁻¹ :=
+  ⟨wBosonMass.val * FUST.MassRatioPredictions.higgsWRatio⟩
+
+theorem higgsMass_val :
+    higgsMass.val = wBosonMass.val * (φ - 1 / 10) := by
+  simp only [higgsMass, FUST.MassRatioPredictions.higgsWRatio_structure]
+
+/-- W mass is positive -/
+theorem wBosonMass_pos : 0 < wBosonMass.val := by
+  rw [wBosonMass_val]
+  apply mul_pos (by norm_num : (0 : ℝ) < 12 / 25)
+  apply mul_pos (pow_pos phi_pos _)
+  norm_num
+
+/-- W > electron (massive gauge boson) -/
+theorem wBoson_gt_electron : wBosonMass.val > electronMass.val := by
+  rw [wBosonMass_val, electronMass_val]
+  have hφ : φ > 1 := φ_gt_one
+  have hφ2 : φ ^ 2 > 2 := by rw [golden_ratio_property]; linarith
+  have h21 : φ ^ 21 > 1 := one_lt_pow₀ (by linarith : 1 < φ) (by norm_num)
+  have hφ4 : φ ^ 4 > 4 := by nlinarith [sq_nonneg (φ ^ 2 - 2)]
+  have hφ25 : φ ^ 25 > 4 := by
+    have : φ ^ 25 = φ ^ 4 * φ ^ 21 := by ring
+    nlinarith
+  nlinarith
+
+/-- Complete gauge boson mass chain from D-structure -/
+theorem gauge_boson_chain :
+    (wBosonMass.val / electronMass.val = φ ^ 25 * (15 / 16)) ∧
+    (zBosonMass.val = wBosonMass.val / Real.sqrt (10 / 13)) ∧
+    (higgsMass.val = wBosonMass.val * (φ - 1 / 10)) :=
+  ⟨wBoson_electron_ratio, zBosonMass_val, higgsMass_val⟩
+
 end FUST.Dim

@@ -435,6 +435,70 @@ L(1)^2 + L(2)^2 + L(3)^2 = 1 + 9 + 16 = 26.
 \]
 \end{theorem}
 
+\subsection{Gravity Sector Structural Properties}
+
+The gravity sector polynomial $x^2 - 4x - 1$ encodes key spacetime properties.
+
+\begin{theorem}[Gravity Sector Trace = Spacetime Dimension]
+\label{thm:gravity_trace_spacetime}
+\lean{FUST.GravitationalCoupling.gravity_trace_eq_spacetimeDim}
+\leanok
+\[
+L(\mathrm{spatialDim}) = L(3) = \varphi^3 + \psi^3 = 4 = \mathrm{spacetimeDim}.
+\]
+The Lucas number at the spatial dimension (= $\dim\ker(D_6)$) equals the spacetime dimension.
+This is the structural bridge between the gravity sector and spacetime geometry.
+\end{theorem}
+
+\begin{theorem}[Gravity Sector Determinant]
+\label{thm:gravity_sector_det}
+\lean{FUST.GravitationalCoupling.gravity_sector_det}
+\leanok
+\[
+(\varphi\psi)^3 = (-1)^3 = -1.
+\]
+The gravity sector has determinant $-1$, inherited from the matter sector via cubing.
+\end{theorem}
+
+\begin{theorem}[Gravity Sector Discriminant]
+\label{thm:gravity_sector_disc}
+\lean{FUST.GravitationalCoupling.gravity_sector_discriminant}
+\leanok
+\[
+\Delta(x^2 - 4x - 1) = 4^2 + 4 \cdot 1 = 20 = C(6,3).
+\]
+\end{theorem}
+
+\begin{theorem}[Discriminant Decomposition]
+\label{thm:gravity_disc_decomposition}
+\lean{FUST.GravitationalCoupling.gravity_disc_eq_spacetime_times_active}
+\leanok
+\[
+C(6,3) = 20 = \mathrm{spacetimeDim} \times \mathrm{activeDLevels} = 4 \times 5.
+\]
+The spatial normalization $C(6,3)$ factors as the product of spacetime dimension and active D-levels.
+This is the same $C(6,3) = 20$ appearing in the fine structure constant $\alpha_0 = \varphi^{-4}/C(6,3)$.
+\end{theorem}
+
+\begin{theorem}[Sector Discriminant Pattern]
+\label{thm:sector_discriminants}
+\lean{FUST.GravitationalCoupling.sector_discriminants}
+\leanok
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Sector & Polynomial & Discriminant & Meaning \\
+\hline
+Matter & $x^2 - x - 1$ & $1 + 4 = 5$ & activeDLevels \\
+Gauge & $x^2 - 3x + 1$ & $9 - 4 = 5$ & activeDLevels \\
+Gravity & $x^2 - 4x - 1$ & $16 + 4 = 20 = C(6,3)$ & $4 \times 5$ \\
+\hline
+\end{tabular}
+\end{center}
+The matter and gauge sectors share discriminant $5 =$ activeDLevels.
+The gravity sector discriminant is $4 \times 5 = \mathrm{spacetimeDim} \times \mathrm{activeDLevels}$.
+\end{theorem}
+
 The spectral spread (sum of squared eigenvalue gaps) is:
 
 \begin{theorem}[Spectral Spread]
@@ -591,3 +655,62 @@ The spectral equalities $107 = 6 \cdot 28 - 64 + 3$ etc.\ are numerically valid
 but degree-inhomogeneous. Since all $D_6$ power sums $p_k$ are even while $107$ is odd,
 no single-degree homogeneous spectral formula can yield $107$.
 This is consistent with Layer~2: mass ratios are boundary data, not spectral data.
+
+\section{Graviton Structural Prediction}
+\label{sec:grav_graviton}
+
+The graviton is not postulated but derived from the $D_6$ structure.
+Seven properties follow from the characteristic polynomial and kernel analysis.
+
+\begin{theorem}[Graviton Masslessness]
+\label{thm:graviton_massless}
+\lean{FUST.GravitationalCoupling.graviton_massless}
+\leanok
+For all $x \neq 0$,
+\[
+\Box_\varphi[t^{-1}](x) = D_6(D_6[t^{-1}])(x) = 0.
+\]
+The graviton propagator has no mass term because $D_6[t^{-1}] \propto t^{-2}$
+and $t^{-2}$ is in the extended kernel of $D_6$ (Theorem~\ref{thm:D6_inv_sq_zero}).
+\end{theorem}
+
+\begin{theorem}[Graviton Spin from Spacetime]
+\label{thm:graviton_spin}
+\lean{FUST.GravitationalCoupling.graviton_spin_from_spacetime}
+\leanok
+\[
+\mathrm{spin}_{\text{graviton}} = \mathrm{spatialDim} - \mathrm{timeDim} = 3 - 1 = 2.
+\]
+The maximum helicity for a massless particle in $(d{+}1)$-dimensional spacetime is $d - 1$
+(Weinberg's theorem). With $\dim\ker(D_6) = 3$, the graviton is uniquely spin-2.
+\end{theorem}
+
+\begin{theorem}[Graviton Prediction from $D_6$ Structure]
+\label{thm:graviton_prediction}
+\lean{FUST.GravitationalCoupling.graviton_prediction}
+\leanok
+From the $D_6$ characteristic polynomial and kernel alone:
+\begin{enumerate}
+\item \textbf{Existence}: $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$ has a gravity sector.
+\item \textbf{Spacetime bridge}: $L(\mathrm{spatialDim}) = L(3) = 4 = \mathrm{spacetimeDim}$.
+\item \textbf{Sector determinant}: $(\varphi\psi)^3 = -1$.
+\item \textbf{Sector discriminant}: $\Delta = 20 = C(6,3) = 4 \times 5$.
+\item \textbf{Massless}: $\Box_\varphi[t^{-1}] = 0$.
+\item \textbf{Spin-2}: $\mathrm{spatialDim} - \mathrm{timeDim} = 2$.
+\item \textbf{Inverse square}: $D_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$.
+\end{enumerate}
+\end{theorem}
+
+The derivation chain is:
+\[
+D_6 \text{ charPoly}
+\;\Longrightarrow\;
+\text{gravity sector } (x^2{-}4x{-}1)
+\;\Longrightarrow\;
+\begin{cases}
+L(3) = 4 & \text{(spacetimeDim)} \\
+\Delta = 20 & \text{(spatial normalization)} \\
+\Box_\varphi[t^{-1}] = 0 & \text{(massless)} \\
+F \propto 1/r^2 & \text{(inverse square)}
+\end{cases}
+\]

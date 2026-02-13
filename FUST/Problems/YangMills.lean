@@ -144,30 +144,6 @@ theorem D5partialHamiltonian_nonneg (f : ℝ → ℝ) (N : ℕ) :
   intro n _
   exact D5hamiltonianContribution_nonneg f n
 
-/-- ker(D5) = span{1, x} characterization -/
-def IsInKerD5 (f : ℝ → ℝ) : Prop :=
-  ∃ a b : ℝ, ∀ t, f t = a + b * t
-
-/-- ker(D5) functions have D5 = 0 -/
-theorem IsInKerD5_implies_D5_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) (x : ℝ) (hx : x ≠ 0) :
-    D5 f x = 0 := by
-  obtain ⟨a, b, hf⟩ := hf
-  have hconst : D5 (fun _ => a) x = 0 := D5_const a x hx
-  have hlin : D5 (fun t => b * t) x = 0 := by
-    have h := D5_linear x hx
-    calc D5 (fun t => b * t) x = b * D5 id x := by
-           simp only [D5, hx, ↓reduceIte, id]
-           ring
-      _ = b * 0 := by rw [h]
-      _ = 0 := by ring
-  calc D5 f x = D5 (fun t => a + b * t) x := by
-        conv_lhs => rw [show f = (fun t => a + b * t) from funext hf]
-    _ = D5 (fun _ => a) x + D5 (fun t => b * t) x := by
-        simp only [D5, hx, ↓reduceIte]
-        ring
-    _ = 0 + 0 := by rw [hconst, hlin]
-    _ = 0 := by ring
-
 /-- ker(D5) functions have zero D5 Hamiltonian contribution -/
 theorem D5hamiltonianContribution_ker_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) (n : ℤ) :
     D5hamiltonianContribution f n = 0 := by
@@ -394,11 +370,11 @@ theorem yangMills_massGap :
     (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) ∧
     (0 < FUST.massGapΔ ∧ FUST.massGapΔ = 12 / 25) ∧
     HasPositiveHamiltonian (fun t => t ^ 3) ∧
-    (∀ f, IsMassiveState f ↔ TimeExists f) ∧
+    (∀ f, TimeExistsD6 f ↔ ¬IsInKerD6 f) ∧
     (∀ E, EnergyInSpectrum E → E = 0 ∨ FUST.massGapΔ ^ 2 ≤ E) := by
   refine ⟨⟨rfl, by norm_num⟩, spacetimeDimension_eq_4, partialHamiltonian_nonneg,
          partialHamiltonian_ker_zero, ⟨FUST.massGapΔ_pos, rfl⟩,
-         cubic_has_positive_hamiltonian, massive_iff_time_exists, ?_⟩
+         cubic_has_positive_hamiltonian, fun _ => Iff.rfl, ?_⟩
   intro E hE
   cases hE with
   | inl hz => left; exact hz

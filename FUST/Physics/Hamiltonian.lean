@@ -121,16 +121,15 @@ theorem hamiltonian_zero_iff_ker_discrete (f : ℝ → ℝ) :
   · intro h n
     simp only [hamiltonianContribution, h n, sq_eq_zero_iff]
 
-/-- Connection to TimeExists: positive Hamiltonian implies time exists -/
+/-- Connection to TimeExistsD6: positive Hamiltonian implies time exists -/
 theorem positive_hamiltonian_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonian f) :
-    TimeExists f :=
+    TimeExistsD6 f :=
   positive_hamiltonian_not_ker f hpos
 
-/-- Connection to IsMassiveState -/
+/-- Connection to TimeExistsD6 -/
 theorem positive_hamiltonian_massive (f : ℝ → ℝ) (hpos : HasPositiveHamiltonian f) :
-    IsMassiveState f := by
-  rw [massive_iff_time_exists]
-  exact positive_hamiltonian_time_exists f hpos
+    TimeExistsD6 f :=
+  positive_hamiltonian_time_exists f hpos
 
 end HamiltonianProperties
 

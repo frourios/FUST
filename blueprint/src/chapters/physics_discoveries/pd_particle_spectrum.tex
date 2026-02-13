@@ -117,13 +117,30 @@ Including graviton: 38.
 \label{sec:particle_predictions}
 
 \subsection{Graviton at \texorpdfstring{$D_6$}{D6}}
-Spin-2, massless gauge boson from $D_6$ structure.
+
+The graviton is structurally predicted from $D_6$, not postulated.
+
+\begin{theorem}[Graviton Structural Derivation]
+\label{thm:graviton_structural}
+\lean{FUST.ParticleSpectrum.graviton_spin_derived}
+\leanok
+The graviton has:
+\begin{itemize}
+\item $D$-level $= 6$ (highest active level)
+\item Spin $= 2$ (from $\mathrm{spatialDim} - \mathrm{timeDim} = 3 - 1$)
+\item Massless (from $\Box_\varphi[t^{-1}] = 0$)
+\item Gravity sector trace $= L(3) = 4 = \mathrm{spacetimeDim}$
+\item Gravity sector discriminant $= 20 = C(6,3)$
+\end{itemize}
+See Chapter~\ref{chap:pd_gravitational}, \S\ref{sec:grav_graviton} for the full derivation.
+\end{theorem}
 
 \subsection{Right-Handed Neutrinos at \texorpdfstring{$D_5$}{D5}}
 Spin-1/2 fermions with extended kernel structure.
 
 \subsection{\texorpdfstring{$D_{5\frac{1}{2}}$}{D5.5} Dark Matter}
 Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi^{-3/2}$.
+Mass: $m_{DM}/m_e = \varphi^{25}$ (same exponent as W boson, differing by factor $15/16$).
 
 \section{Summary}
 \label{sec:particle_summary}
@@ -138,6 +155,7 @@ Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi
 \item $D_6$ ceiling prevents 4th generation and spin $> 2$
 \item Allowed spins = spacetime dimension = 4
 \item Allowed charges from $D_3$ structure
+\item Graviton: spin-2, massless, $D$-level 6 (structurally derived)
 \end{enumerate}
 \end{theorem}
 

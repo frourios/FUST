@@ -149,7 +149,7 @@ Structural decomposition of $120/13$:
 \item $C(3,2)+C(5,2) = 13$: kernel and $D_5$ pair normalization
 \end{itemize}
 
-Lepton masses follow the same pattern:
+All dimensioned masses share dimension $\mathrm{dimTime}^{-1} = (-5,1,-1)$:
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
@@ -159,12 +159,70 @@ $e$ & $\Delta$ & $(-5,1,-1)$ \\
 $\mu$ & $\Delta \cdot \varphi^{11}$ & $(-5,1,-1)$ \\
 $\tau$ & $\Delta \cdot \varphi^{17}$ & $(-5,1,-1)$ \\
 $p$ & $\Delta \cdot \varphi^{11} \cdot 120/13$ & $(-5,1,-1)$ \\
+$W$ & $\Delta \cdot \varphi^{25} \cdot 15/16$ & $(-5,1,-1)$ \\
+$Z$ & $m_W / \sqrt{10/13}$ & $(-5,1,-1)$ \\
+$H$ & $m_W \cdot (\varphi - 1/10)$ & $(-5,1,-1)$ \\
 \hline
 \end{tabular}
 \end{center}
 
-\section{Beyond SM Mass Ratios}
-\label{sec:mass_beyond_sm}
+\section{Gauge Boson Masses}
+\label{sec:mass_gauge_bosons}
+
+The W boson mass is derived from the kernel hierarchy $\ker(D_5) \subsetneq \ker(D_6)$.
+The key degree of freedom is $x^2 \in \ker(D_6) \setminus \ker(D_5)$: this acts as the Higgs mechanism,
+giving W/Z bosons their mass while gluons (in $\ker(D_6)$) and photons (from grading symmetry) remain massless.
+
+\subsection{W Boson / Electron Mass Ratio}
+
+\begin{theorem}[W/Electron Mass Ratio]
+\label{thm:mass_w_e}
+\lean{FUST.MassRatioPredictions.WElectronRatio_from_kernel}
+\leanok
+\[
+\frac{m_W}{m_e} = \varphi^{C(5,2)+C(6,2)} \times \frac{C(6,2)}{C(6,2)+C(2,2)}
+= \varphi^{25} \times \frac{15}{16}
+\]
+\begin{itemize}
+\item Exponent $25 = C(5,2)+C(6,2)$: total pair interactions in $D_5$+$D_6$ sectors
+\item Factor $15/16 = C(6,2)/(C(6,2)+C(2,2))$: normalization spanning $D_6$ to $D_2$
+\item Kernel condition: $D_5(x^2) \neq 0$ and $D_6(x^2) = 0$ (W couples to the Higgs DOF)
+\end{itemize}
+Experimental: $m_W/m_e \approx 157\,279$, predicted $\approx 157\,276$ (error $0.002\%$).
+\end{theorem}
+
+\begin{theorem}[W Boson Dimensioned Mass]
+\label{thm:mass_w_dimensioned}
+\lean{FUST.Dim.wBosonMass_val}
+\leanok
+\[
+m_W = \Delta \times \varphi^{25} \times \frac{15}{16} \quad [\mathrm{dimTime}^{-1}]
+\]
+\end{theorem}
+
+\subsection{Z Boson Mass}
+
+\begin{theorem}[Z Boson Mass]
+\label{thm:mass_z}
+\lean{FUST.Dim.zBosonMass_val}
+\leanok
+\[
+m_Z = \frac{m_W}{\cos\theta_W} = m_W \times \sqrt{\frac{C(3,2)+C(5,2)}{C(5,2)}} = \frac{m_W}{\sqrt{10/13}}
+\]
+using $\sin^2\theta_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13$ (Chapter~\ref{chap:pd_weinberg}).
+\end{theorem}
+
+\begin{theorem}[W/Z Ratio]
+\label{thm:mass_w_z}
+\lean{FUST.MassRatioPredictions.WZRatio_from_kernel_structure}
+\leanok
+\[
+\frac{m_W}{m_Z} = \sqrt{\frac{C(5,2)}{C(3,2)+C(5,2)}} = \sqrt{\frac{10}{13}} \approx 0.877
+\]
+Experimental: 0.881 (error 0.5\%).
+\end{theorem}
+
+\subsection{Higgs Mass}
 
 \begin{theorem}[Higgs/W Ratio]
 \label{thm:mass_higgs_w}
@@ -176,6 +234,68 @@ $p$ & $\Delta \cdot \varphi^{11} \cdot 120/13$ & $(-5,1,-1)$ \\
 Experimental: 1.559 (error 2.6\%).
 \end{theorem}
 
+\begin{theorem}[Higgs Dimensioned Mass]
+\label{thm:mass_higgs_dimensioned}
+\lean{FUST.Dim.higgsMass_val}
+\leanok
+\[
+m_H = m_W \times \left(\varphi - \frac{1}{10}\right) \quad [\mathrm{dimTime}^{-1}]
+\]
+\end{theorem}
+
+\subsection{Gauge Boson Mass Mechanism}
+
+\begin{theorem}[Gauge Boson Mass Hierarchy]
+\label{thm:gauge_boson_hierarchy}
+\lean{FUST.MassRatioPredictions.gauge_boson_mass_hierarchy}
+\leanok
+The mass/massless distinction follows from kernel structure:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Particle & Source & Mass mechanism & Mass \\
+\hline
+gluon & $\ker(D_6)$, $\dim = 3$ & $D_6(\text{gluon}) = 0$ & massless \\
+$\gamma$ & grading symmetry & preserved by all $D_m$ & massless \\
+$W^\pm$ & $\ker(D_5)$, $\dim = 2$ & $D_5(x^2) \neq 0$ & $m_e \times \varphi^{25} \times 15/16$ \\
+$Z$ & $\ker(D_5)$, $\dim = 2$ & $m_W / \cos\theta_W$ & $m_W / \sqrt{10/13}$ \\
+$H$ & $x^2 \in \ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & $m_W \times (\varphi - 1/10)$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{theorem}
+
+\begin{theorem}[Complete Gauge Boson Chain]
+\label{thm:gauge_boson_chain}
+\lean{FUST.Dim.gauge_boson_chain}
+\leanok
+\begin{enumerate}
+\item $m_W / m_e = \varphi^{25} \times 15/16$
+\item $m_Z = m_W / \sqrt{10/13}$
+\item $m_H = m_W \times (\varphi - 1/10)$
+\end{enumerate}
+All gauge boson masses are determined by $\Delta$, $\varphi$, and pair counts $C(m,2)$.
+\end{theorem}
+
+\subsection{Numerical Comparison}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Particle & Mass formula & Predicted (GeV) & Experimental (GeV) & Error \\
+\hline
+$W^\pm$ & $m_e \times \varphi^{25} \times 15/16$ & 80.37 & 80.37 & 0.002\% \\
+$Z$ & $m_W \times \sqrt{13/10}$ & 91.66 & 91.19 & 0.5\% \\
+$H$ & $m_W \times (\varphi - 1/10)$ & 121.99 & 125.25 & 2.6\% \\
+gluon & 0 (in $\ker D_6$) & 0 & 0 & exact \\
+$\gamma$ & 0 (grading symmetry) & 0 & 0 & exact \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Beyond SM Mass Ratios}
+\label{sec:mass_beyond_sm}
+
 \begin{theorem}[Dark Matter/Electron Ratio]
 \label{thm:mass_dm_e}
 \lean{FUST.MassRatioPredictions.darkMatterElectronRatio_eq}
@@ -183,17 +303,8 @@ Experimental: 1.559 (error 2.6\%).
 \[
 \frac{m_{DM}}{m_e} = \varphi^{C(5,2)+C(6,2)} = \varphi^{25} \approx 1.68 \times 10^5
 \]
-(WIMP scale $\sim 100$ GeV).
-\end{theorem}
-
-\begin{theorem}[W/Z Ratio]
-\label{thm:mass_w_z}
-\lean{FUST.MassRatioPredictions.WZRatio_from_kernel_structure}
-\leanok
-\[
-\frac{m_W}{m_Z} = \sqrt{\frac{C(5,2)}{C(3,2)+C(5,2)}} = \sqrt{\frac{10}{13}} \approx 0.877
-\]
-Experimental: 0.881 (error 0.5\%).
+(WIMP scale $\sim 100$ GeV). Note that $m_{DM}/m_e$ shares the same exponent as $m_W/m_e$,
+differing only by the factor $15/16$.
 \end{theorem}
 
 \section{Neutrino Mass Hierarchy}

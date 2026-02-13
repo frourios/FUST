@@ -1,5 +1,4 @@
 import FUST.Basic
-import FUST.DimensionalAnalysis
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Data.Finset.Basic
@@ -88,11 +87,76 @@ section KernelTheorems
 theorem D2_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) : D2 (fun _ => c) x = 0 := by
   simp only [D2, hx, ↓reduceIte, sub_self, zero_div]
 
+/-- D2 does NOT annihilate x: x ∉ ker(D2) -/
+theorem D2_linear_ne_zero (x : ℝ) (hx : x ≠ 0) : D2 id x ≠ 0 := by
+  simp only [D2, hx, ↓reduceIte, id_eq]
+  have hnum : φ * x - ψ * x = (φ - ψ) * x := by ring
+  rw [hnum]
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : (φ - ψ) * x ≠ 0 := mul_ne_zero hφψ_ne hx
+  exact div_ne_zero hden_ne hden_ne
+
 /-- D3 annihilates constants: D₃[1] = 0 (coefficient sum = 1 - 2 + 1 = 0) -/
 theorem D3_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) : D3 (fun _ => c) x = 0 := by
   simp only [D3, hx, ↓reduceIte]
   have hnum : c - 2 * c + c = 0 := by ring
   simp only [hnum, zero_div]
+
+/-- D3 does NOT annihilate x: x ∉ ker(D3) -/
+theorem D3_linear_ne_zero (x : ℝ) (hx : x ≠ 0) : D3 id x ≠ 0 := by
+  simp only [D3, hx, ↓reduceIte, id_eq]
+  have hcoeff : φ + ψ - 2 = -1 := by linarith [phi_add_psi]
+  have hnum : φ * x - 2 * x + ψ * x = (φ + ψ - 2) * x := by ring
+  rw [hnum, hcoeff]
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : (φ - ψ) ^ 2 * x ≠ 0 := mul_ne_zero (pow_ne_zero 2 hφψ_ne) hx
+  rw [neg_one_mul, neg_div, neg_ne_zero]
+  exact div_ne_zero hx hden_ne
+
+/-- D4 does NOT annihilate constants: 1 ∉ ker(D4) -/
+theorem D4_const_ne_zero (x : ℝ) (hx : x ≠ 0) : D4 (fun _ => 1) x ≠ 0 := by
+  simp only [D4, hx, ↓reduceIte]
+  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ^2 = ψ + 1 := psi_sq
+  have hnum : (1 : ℝ) - φ^2 * 1 + ψ^2 * 1 - 1 = -(φ - ψ) := by rw [hφ2, hψ2]; ring
+  rw [hnum]
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hden_ne : (φ - ψ)^3 * x ≠ 0 := mul_ne_zero
+    (pow_ne_zero 3 (by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num))) hx
+  rw [neg_div, neg_ne_zero]
+  exact div_ne_zero (by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)) hden_ne
+
+/-- D4 annihilates x²: x² ∈ ker(D4) -/
+theorem D4_quadratic (x : ℝ) (hx : x ≠ 0) : D4 (fun t => t^2) x = 0 := by
+  simp only [D4, hx, ↓reduceIte]
+  have : (φ^2 * x)^2 - φ^2 * (φ * x)^2 + ψ^2 * (ψ * x)^2 - (ψ^2 * x)^2 = 0 := by ring
+  simp [this]
+
+/-- D4 does NOT annihilate x: x ∉ ker(D4) -/
+theorem D4_linear_ne_zero (x : ℝ) (hx : x ≠ 0) : D4 id x ≠ 0 := by
+  simp only [D4, hx, ↓reduceIte, id_eq]
+  -- numerator: φ²x - φ²·φx + ψ²·ψx - ψ²x = (φ²-φ³+ψ³-ψ²)x
+  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ^2 = ψ + 1 := psi_sq
+  have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
+  have hψ3 : ψ^3 = 2*ψ + 1 := by
+    calc ψ^3 = ψ^2 * ψ := by ring
+      _ = (ψ + 1) * ψ := by rw [hψ2]
+      _ = ψ^2 + ψ := by ring
+      _ = (ψ + 1) + ψ := by rw [hψ2]
+      _ = 2*ψ + 1 := by ring
+  have hcoeff : φ^2 - φ^3 + ψ^3 - ψ^2 = -(φ - ψ) := by
+    rw [hφ2, hφ3, hψ3, hψ2]; ring
+  have hnum : φ^2 * x - φ^2 * (φ * x) + ψ^2 * (ψ * x) - ψ^2 * x =
+    (φ^2 - φ^3 + ψ^3 - ψ^2) * x := by ring
+  rw [hnum, hcoeff]
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+  have hden_ne : (φ - ψ)^3 * x ≠ 0 := mul_ne_zero (pow_ne_zero 3 hφψ_ne) hx
+  rw [neg_mul, neg_div, neg_ne_zero]
+  exact div_ne_zero (mul_ne_zero hφψ_ne hx) hden_ne
 
 /-- D5 annihilates constants: D₅[1] = 0 (coefficient sum = 1+1-4+1+1 = 0) -/
 theorem D5_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) : D5 (fun _ => c) x = 0 := by
@@ -118,6 +182,42 @@ theorem D5_linear (x : ℝ) (hx : x ≠ 0) : D5 id x = 0 := by
       _ = 0 * x := by rw [hcoef]
       _ = 0 := by ring
   simp [hnum]
+
+/-- D5 does NOT annihilate x²: x² ∉ ker(D5) -/
+theorem D5_not_annihilate_quadratic (x : ℝ) (hx : x ≠ 0) :
+    D5 (fun t => t^2) x ≠ 0 := by
+  simp only [D5, hx, ↓reduceIte]
+  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ^2 = ψ + 1 := psi_sq
+  have hφ4 : φ^4 = 3 * φ + 2 := by
+    calc φ^4 = φ^2 * φ^2 := by ring
+      _ = (φ + 1) * (φ + 1) := by rw [hφ2]
+      _ = φ^2 + 2*φ + 1 := by ring
+      _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
+      _ = 3 * φ + 2 := by ring
+  have hψ4 : ψ^4 = 3 * ψ + 2 := by
+    calc ψ^4 = ψ^2 * ψ^2 := by ring
+      _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
+      _ = ψ^2 + 2*ψ + 1 := by ring
+      _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
+      _ = 3 * ψ + 2 := by ring
+  have hsum : φ + ψ = 1 := phi_add_psi
+  have hcoef : (φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2 = 6 := by
+    calc (φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2
+      = φ^4 + φ^2 + ψ^2 + ψ^4 - 4 := by ring
+      _ = (3*φ + 2) + (φ + 1) + (ψ + 1) + (3*ψ + 2) - 4 := by rw [hφ4, hφ2, hψ2, hψ4]
+      _ = 3*(φ + ψ) + (φ + ψ) + 2 := by ring
+      _ = 3*1 + 1 + 2 := by rw [hsum]
+      _ = 6 := by ring
+  have hnum : (φ^2 * x)^2 + (φ * x)^2 - 4 * x^2 + (ψ * x)^2 + (ψ^2 * x)^2 =
+      ((φ^2)^2 + φ^2 - 4 + ψ^2 + (ψ^2)^2) * x^2 := by ring
+  rw [hnum, hcoef]
+  have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  have hden_ne : (φ - ψ)^4 * x ≠ 0 := by
+    apply mul_ne_zero
+    · apply pow_ne_zero; rw [hdiff]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    · exact hx
+  exact div_ne_zero (mul_ne_zero (by norm_num) (pow_ne_zero 2 hx)) hden_ne
 
 /-- D6 annihilates constants: D₆[1] = 0 (coefficient sum = 1-3+1-1+3-1 = 0) -/
 theorem D6_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) : D6 (fun _ => c) x = 0 := by
@@ -1063,6 +1163,9 @@ theorem D6_detects_cubic (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
   have hx3_ne : x^3 ≠ 0 := pow_ne_zero 3 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx3_ne) hden_ne
 
+theorem D6_not_annihilate_cubic (x : ℝ) (hx : x ≠ 0) :
+    D6 (fun t => t^3) x ≠ 0 := D6_detects_cubic x hx
+
 /-- D6 Completeness Theorem: ker(D6) = span{1, x, x²} and ker(D7) = ker(D6). -/
 theorem F6_restricted_completeness :
     -- 1. ker(D6) is exactly 3-dimensional: span{1, x, x²}
@@ -1144,26 +1247,6 @@ theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 
 
 end FUST
 
-namespace FUST.dim
-
-/-- D₆ output with derived dimension (-5, 1, -1) -/
-noncomputable def D6_dim (f : ℝ → ℝ) (x : ℝ) : Dim.ScaleQ (Dim.deriveFDim 6) := ⟨D6 f x⟩
-
-/-- D₅½ as formal sum of D₅ and antisymmetric (D₂-like) components -/
-noncomputable def D5half_dim (f : ℝ → ℝ) (x : ℝ) :
-    Dim.DimSum2 (Dim.deriveFDim 5) (Dim.deriveFDim 2) :=
-  ⟨⟨D5 f x⟩, ⟨(2 / (φ + 2)) * ((f (φ * x)) - (f (ψ * x)))⟩⟩
-
-theorem D5half_dim_eval (f : ℝ → ℝ) (x : ℝ) :
-    (D5half_dim f x).eval = D5half f x := by
-  simp only [D5half_dim, Dim.DimSum2.eval, D5half]
-
-theorem D5half_dim_fst (f : ℝ → ℝ) (x : ℝ) :
-    (D5half_dim f x).fst.val = D5 f x := rfl
-
-theorem D5half_dim_snd (f : ℝ → ℝ) (x : ℝ) :
-    (D5half_dim f x).snd.val = (2 / (φ + 2)) * ((f (φ * x)) - (f (ψ * x))) := rfl
-
 /-! ## Justification of structural properties (§6.2)
 
 ### Antisymmetry: coefficient pattern under φ↔ψ exchange -/
@@ -1188,16 +1271,3 @@ theorem D6_is_terminal :
              (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
              (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
   FUST.D7_kernel_equals_D6_kernel
-
-/-! ## Kernel annihilation with dimensions -/
-
-theorem D6_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim (fun _ => c) x).val = 0 := D6_const c x hx
-
-theorem D6_dim_linear (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim id x).val = 0 := D6_linear x hx
-
-theorem D6_dim_quadratic (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim (fun t => t^2) x).val = 0 := D6_quadratic x hx
-
-end FUST.dim

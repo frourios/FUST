@@ -1,4 +1,5 @@
 import FUST.DifferenceOperators
+import FUST.DimensionalAnalysis
 import FUST.FrourioLogarithm
 import Mathlib.Tactic
 
@@ -6,16 +7,8 @@ import Mathlib.Tactic
 # FUST Least Action Theorem
 
 In FUST, "least action" is not a principle (external assumption) but a theorem
-derived from D6 structure: D6 structure → Least Action Theorem → Time Theorem
-
-## Frourio Logarithm Formulation
-
-The action integral in frourio coordinates becomes elegantly simple:
-
-**Real Space**: A[f] = ∫ (D6 f)² dx/x  (Haar measure)
-**Frourio Space**: A[f] = ∫ (D6 f)² dt  (uniform measure)
-
-where t = log_𝔣(x). The Haar measure dx/x becomes uniform dt in frourio space.
+derived from Dm structure. Each operator Dm (m=2..6) has its own kernel,
+projection, Lagrangian, and time existence condition.
 -/
 
 namespace FUST.LeastAction
@@ -29,10 +22,25 @@ theorem D6_kernel_dim_3 :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
   ⟨D6_const 1, D6_linear, D6_quadratic⟩
 
-/-! ## Part 2: Kernel Membership Definition -/
+/-! ## Part 2: Kernel Membership -/
 
-/-- A function is in ker(D6) iff it equals some degree-2 polynomial.
-    Physical interpretation: ker(D6) = light cone (null structure) -/
+/-- f ∈ ker(D2) iff f is constant -/
+def IsInKerD2 (f : ℝ → ℝ) : Prop :=
+  ∃ c : ℝ, ∀ t, f t = c
+
+/-- f ∈ ker(D3) iff f is constant -/
+def IsInKerD3 (f : ℝ → ℝ) : Prop :=
+  ∃ c : ℝ, ∀ t, f t = c
+
+/-- f ∈ ker(D4) iff f = c·x² -/
+def IsInKerD4 (f : ℝ → ℝ) : Prop :=
+  ∃ c : ℝ, ∀ t, f t = c * t ^ 2
+
+/-- f ∈ ker(D5) iff f is affine -/
+def IsInKerD5 (f : ℝ → ℝ) : Prop :=
+  ∃ a₀ a₁ : ℝ, ∀ t, f t = a₀ + a₁ * t
+
+/-- f ∈ ker(D6) iff f equals some degree-2 polynomial -/
 def IsInKerD6 (f : ℝ → ℝ) : Prop :=
   ∃ a₀ a₁ a₂ : ℝ, ∀ t, f t = a₀ + a₁ * t + a₂ * t^2
 
@@ -100,18 +108,79 @@ theorem IsInKerD6_implies_D6_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
   rw [hf']
   exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
 
+theorem IsInKerD2_implies_D2_zero (f : ℝ → ℝ) (hf : IsInKerD2 f) :
+    ∀ x, x ≠ 0 → D2 f x = 0 := by
+  intro x hx
+  obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun _ => c) from funext hf]
+  exact D2_const c x hx
+
+theorem IsInKerD3_implies_D3_zero (f : ℝ → ℝ) (hf : IsInKerD3 f) :
+    ∀ x, x ≠ 0 → D3 f x = 0 := by
+  intro x hx
+  obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun _ => c) from funext hf]
+  exact D3_const c x hx
+
+theorem IsInKerD4_implies_D4_zero (f : ℝ → ℝ) (hf : IsInKerD4 f) :
+    ∀ x, x ≠ 0 → D4 f x = 0 := by
+  intro x hx
+  obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun t => c * t ^ 2) from funext hf]
+  simp only [D4, hx, ↓reduceIte]
+  have : c * (φ ^ 2 * x) ^ 2 - φ ^ 2 * (c * (φ * x) ^ 2) +
+      ψ ^ 2 * (c * (ψ * x) ^ 2) - c * (ψ ^ 2 * x) ^ 2 = 0 := by ring
+  simp [this]
+
+/-- D5 applied to affine function is zero -/
+theorem D5_polynomial_deg1 (a₀ a₁ : ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D5 (fun t => a₀ + a₁ * t) x = 0 := by
+  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x hx
+  have hlin : D5 (fun t => a₁ * t) x = 0 := by
+    have h := D5_linear x hx
+    calc D5 (fun t => a₁ * t) x = a₁ * D5 id x := by
+          simp only [D5, hx, ↓reduceIte, id]; ring
+      _ = a₁ * 0 := by rw [h]
+      _ = 0 := by ring
+  calc D5 (fun t => a₀ + a₁ * t) x
+    = D5 (fun _ => a₀) x + D5 (fun t => a₁ * t) x := by
+        simp only [D5, hx, ↓reduceIte]; ring
+    _ = 0 + 0 := by rw [hconst, hlin]
+    _ = 0 := by ring
+
+theorem IsInKerD5_implies_D5_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) :
+    ∀ x, x ≠ 0 → D5 f x = 0 := by
+  intro x hx
+  obtain ⟨a₀, a₁, hf⟩ := hf
+  rw [show f = (fun t => a₀ + a₁ * t) from funext hf]
+  exact D5_polynomial_deg1 a₀ a₁ x hx
+
 /-! ## Part 3: Kernel Projection -/
 
-/-- Kernel projection using interpolation points {0, 1, -1}.
-    This is the unique degree-2 polynomial agreeing with f at these points. -/
-noncomputable def kernelProjection (f : ℝ → ℝ) : ℝ → ℝ :=
+section KernelProjection
+
+/-- D6 kernel projection using interpolation at {0, 1, -1} -/
+noncomputable def kernelProjectionD6 (f : ℝ → ℝ) : ℝ → ℝ :=
   let a₀ := f 0
   let a₁ := (f 1 - f (-1)) / 2
   let a₂ := (f 1 + f (-1) - 2 * f 0) / 2
   fun t => a₀ + a₁ * t + a₂ * t^2
 
-/-- The uniqueness theorem for degree-2 interpolation -/
-theorem kernel_interpolation_unique (p q : ℝ → ℝ) (hp : IsInKerD6 p) (hq : IsInKerD6 q)
+noncomputable def kernelProjectionD2 (f : ℝ → ℝ) : ℝ → ℝ := fun _ => f 0
+noncomputable def kernelProjectionD3 (f : ℝ → ℝ) : ℝ → ℝ := fun _ => f 0
+
+/-- D4 kernel projection onto span{x²} using evaluation at x=1 -/
+noncomputable def kernelProjectionD4 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f 1 * t ^ 2
+
+/-- D5 kernel projection onto span{1, x} using interpolation at {1, -1} -/
+noncomputable def kernelProjectionD5 (f : ℝ → ℝ) : ℝ → ℝ :=
+  let a₀ := (f 1 + f (-1)) / 2
+  let a₁ := (f 1 - f (-1)) / 2
+  fun t => a₀ + a₁ * t
+
+/-- D6 uniqueness theorem for degree-2 interpolation -/
+theorem kernel_interpolation_unique_D6 (p q : ℝ → ℝ) (hp : IsInKerD6 p) (hq : IsInKerD6 q)
     (t₀ t₁ t₂ : ℝ) (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
     (hp0 : p t₀ = q t₀) (hp1 : p t₁ = q t₁) (hp2 : p t₂ = q t₂) :
     ∀ t, p t = q t := by
@@ -184,186 +253,291 @@ theorem kernel_interpolation_unique (p q : ℝ → ℝ) (hp : IsInKerD6 p) (hq :
   have ha2 : a₂ = b₂ := by simp only [c₂] at hc2_zero; linarith
   rw [ha0, ha1, ha2]
 
-/-- Kernel projection is annihilated by D6 -/
-theorem kernelProjection_annihilated_by_D6 (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
-    D6 (kernelProjection f) x = 0 := by
-  simp only [kernelProjection]
+theorem kernelProjectionD6_annihilated (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D6 (kernelProjectionD6 f) x = 0 := by
+  simp only [kernelProjectionD6]
   exact D6_polynomial_deg2 _ _ _ x hx
 
-/-- Kernel projection is in ker(D6) -/
-theorem kernelProjection_is_in_ker (f : ℝ → ℝ) : IsInKerD6 (kernelProjection f) := by
+theorem kernelProjectionD6_is_in_ker (f : ℝ → ℝ) : IsInKerD6 (kernelProjectionD6 f) := by
   use f 0, (f 1 - f (-1)) / 2, (f 1 + f (-1) - 2 * f 0) / 2
   intro t
-  simp only [kernelProjection]
+  simp only [kernelProjectionD6]
 
-/-- Perpendicular projection: deviation from ker(D6) -/
-noncomputable def perpProjection (f : ℝ → ℝ) : ℝ → ℝ :=
-  fun t => f t - kernelProjection f t
+theorem kernelProjectionD2_is_in_ker (f : ℝ → ℝ) : IsInKerD2 (kernelProjectionD2 f) :=
+  ⟨f 0, fun _ => rfl⟩
 
-/-- Perpendicular projection has the same D6 value as original function -/
-theorem perpProjection_D6_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
-    D6 (perpProjection f) x = D6 f x := by
-  have hker := kernelProjection_annihilated_by_D6 f x hx
+theorem kernelProjectionD3_is_in_ker (f : ℝ → ℝ) : IsInKerD3 (kernelProjectionD3 f) :=
+  ⟨f 0, fun _ => rfl⟩
+
+theorem kernelProjectionD4_is_in_ker (f : ℝ → ℝ) : IsInKerD4 (kernelProjectionD4 f) :=
+  ⟨f 1, fun _ => rfl⟩
+
+theorem kernelProjectionD5_is_in_ker (f : ℝ → ℝ) : IsInKerD5 (kernelProjectionD5 f) :=
+  ⟨(f 1 + f (-1)) / 2, (f 1 - f (-1)) / 2, fun _ => rfl⟩
+
+/-- D6 perpendicular projection: deviation from ker(D6) -/
+noncomputable def perpProjectionD6 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f t - kernelProjectionD6 f t
+
+noncomputable def perpProjectionD2 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f t - kernelProjectionD2 f t
+
+noncomputable def perpProjectionD3 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f t - kernelProjectionD3 f t
+
+noncomputable def perpProjectionD4 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f t - kernelProjectionD4 f t
+
+noncomputable def perpProjectionD5 (f : ℝ → ℝ) : ℝ → ℝ :=
+  fun t => f t - kernelProjectionD5 f t
+
+theorem perpProjectionD6_D6_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D6 (perpProjectionD6 f) x = D6 f x := by
+  have hker := kernelProjectionD6_annihilated f x hx
   rw [D6_eq_N6_div _ _ hx, D6_eq_N6_div f _ hx]
   congr 1
   rw [D6_eq_N6_div _ _ hx] at hker
   have hdenom_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
-  have hnum_zero : N6 (kernelProjection f) x = 0 := by
+  have hnum_zero : N6 (kernelProjectionD6 f) x = 0 := by
     have h := div_eq_zero_iff.mp hker
     cases h with
     | inl hnum => exact hnum
     | inr hdenom => exact absurd hdenom hdenom_ne
-  simp only [N6, perpProjection] at hnum_zero ⊢
+  simp only [N6, perpProjectionD6] at hnum_zero ⊢
   linarith
 
-/-- If f ∈ ker(D6), then perpProjection is zero everywhere -/
-theorem kernel_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
-    ∀ t, perpProjection f t = 0 := by
-  obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
-  intro t
-  simp only [perpProjection, kernelProjection, hf_eq]
+theorem perpProjectionD2_D2_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D2 (perpProjectionD2 f) x = D2 f x := by
+  simp only [perpProjectionD2, kernelProjectionD2, D2, hx, ↓reduceIte]
   ring
 
-/-- Kernel projection matches f at interpolation points -/
-theorem kernelProjection_interpolates (f : ℝ → ℝ) :
-    kernelProjection f 0 = f 0 ∧
-    kernelProjection f 1 = f 1 ∧
-    kernelProjection f (-1) = f (-1) := by
-  simp only [kernelProjection]
+theorem perpProjectionD3_D3_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D3 (perpProjectionD3 f) x = D3 f x := by
+  simp only [perpProjectionD3, kernelProjectionD3, D3, hx, ↓reduceIte]
+  ring
+
+theorem perpProjectionD4_D4_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D4 (perpProjectionD4 f) x = D4 f x := by
+  simp only [perpProjectionD4, kernelProjectionD4, D4, hx, ↓reduceIte]
+  have hden : (φ - ψ) ^ 3 * x ≠ 0 := by
+    apply mul_ne_zero
+    · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    · exact hx
+  rw [div_eq_div_iff hden hden]
+  ring
+
+theorem perpProjectionD5_D5_eq (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D5 (perpProjectionD5 f) x = D5 f x := by
+  have hker := IsInKerD5_implies_D5_zero _ (kernelProjectionD5_is_in_ker f) x hx
+  have : D5 (perpProjectionD5 f) x =
+      D5 f x + D5 (fun t => -(kernelProjectionD5 f t)) x := by
+    simp only [perpProjectionD5, kernelProjectionD5, D5, hx, ↓reduceIte]; ring
+  rw [this]
+  have hneg : D5 (fun t => -(kernelProjectionD5 f t)) x =
+      -(D5 (kernelProjectionD5 f) x) := by
+    simp only [D5, hx, ↓reduceIte, kernelProjectionD5]; ring
+  rw [hneg, hker, neg_zero, add_zero]
+
+/-- If f ∈ ker(D6), then perpProjectionD6 is zero everywhere -/
+theorem kerD6_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+    ∀ t, perpProjectionD6 f t = 0 := by
+  obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
+  intro t
+  simp only [perpProjectionD6, kernelProjectionD6, hf_eq]
+  ring
+
+theorem kernelProjectionD6_interpolates (f : ℝ → ℝ) :
+    kernelProjectionD6 f 0 = f 0 ∧
+    kernelProjectionD6 f 1 = f 1 ∧
+    kernelProjectionD6 f (-1) = f (-1) := by
+  simp only [kernelProjectionD6]
   constructor
   · ring
   constructor
   · ring
   · ring
 
-/-! ## Part 4: Time Existence (Derived from Action Theorem) -/
+/-- Uniqueness: two constants agreeing at one point are equal -/
+theorem kernel_interpolation_unique_D2 (p q : ℝ → ℝ) (hp : IsInKerD2 p) (hq : IsInKerD2 q)
+    (t₀ : ℝ) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
+  obtain ⟨c, hp⟩ := hp
+  obtain ⟨d, hq⟩ := hq
+  have : c = d := by rw [hp t₀, hq t₀] at h; exact h
+  intro t; rw [hp, hq, this]
 
-/-- Time existence: f ∉ ker(D6), equivalently A[f] > 0 -/
-def TimeExists (f : ℝ → ℝ) : Prop := ¬ IsInKerD6 f
+theorem kernel_interpolation_unique_D3 (p q : ℝ → ℝ) (hp : IsInKerD3 p) (hq : IsInKerD3 q)
+    (t₀ : ℝ) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
+  obtain ⟨c, hp⟩ := hp
+  obtain ⟨d, hq⟩ := hq
+  have : c = d := by rw [hp t₀, hq t₀] at h; exact h
+  intro t; rw [hp, hq, this]
 
-/-- A function has degree ≥ 3 component -/
-def HasHigherDegree (f : ℝ → ℝ) : Prop :=
-  ¬ ∃ a₀ a₁ a₂ : ℝ, ∀ t, f t = a₀ + a₁ * t + a₂ * t^2
+/-- Uniqueness: two c·t² agreeing at any nonzero point are equal -/
+theorem kernel_interpolation_unique_D4 (p q : ℝ → ℝ) (hp : IsInKerD4 p) (hq : IsInKerD4 q)
+    (t₀ : ℝ) (ht₀ : t₀ ≠ 0) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
+  obtain ⟨c, hp_eq⟩ := hp
+  obtain ⟨d, hq_eq⟩ := hq
+  have : c * t₀ ^ 2 = d * t₀ ^ 2 := by rw [← hp_eq, ← hq_eq]; exact h
+  have hcd : c = d := by
+    have ht2 : t₀ ^ 2 ≠ 0 := pow_ne_zero 2 ht₀
+    exact mul_right_cancel₀ ht2 this
+  intro t; rw [hp_eq, hq_eq, hcd]
 
-/-- Massive state: f ∉ ker(D6) -/
-def IsMassiveState (f : ℝ → ℝ) : Prop := HasHigherDegree f
+/-- Uniqueness: two affine functions agreeing at 2 distinct points are equal -/
+theorem kernel_interpolation_unique_D5 (p q : ℝ → ℝ) (hp : IsInKerD5 p) (hq : IsInKerD5 q)
+    (t₀ t₁ : ℝ) (h01 : t₀ ≠ t₁) (hp0 : p t₀ = q t₀) (hp1 : p t₁ = q t₁) :
+    ∀ t, p t = q t := by
+  obtain ⟨a₀, a₁, hp_eq⟩ := hp
+  obtain ⟨b₀, b₁, hq_eq⟩ := hq
+  have h0 : a₀ + a₁ * t₀ = b₀ + b₁ * t₀ := by rw [← hp_eq, ← hq_eq]; exact hp0
+  have h1 : a₀ + a₁ * t₁ = b₀ + b₁ * t₁ := by rw [← hp_eq, ← hq_eq]; exact hp1
+  have hc1 : (a₁ - b₁) * (t₀ - t₁) = 0 := by linarith
+  have ht : t₀ - t₁ ≠ 0 := sub_ne_zero.mpr h01
+  have ha1 : a₁ = b₁ := by
+    have := mul_eq_zero.mp hc1
+    cases this with
+    | inl h => linarith
+    | inr h => exact absurd h ht
+  have ha0 : a₀ = b₀ := by
+    have := h0; rw [ha1] at this; linarith
+  intro t; rw [hp_eq, hq_eq, ha0, ha1]
 
-/-- IsMassiveState is exactly TimeExists -/
-theorem massive_iff_time_exists (f : ℝ → ℝ) : IsMassiveState f ↔ TimeExists f := by
-  simp only [IsMassiveState, HasHigherDegree, TimeExists, IsInKerD6]
+end KernelProjection
+
+/-! ## Part 4: Time Existence -/
+
+def TimeExistsD2 (f : ℝ → ℝ) : Prop := ¬ IsInKerD2 f
+def TimeExistsD3 (f : ℝ → ℝ) : Prop := ¬ IsInKerD3 f
+def TimeExistsD4 (f : ℝ → ℝ) : Prop := ¬ IsInKerD4 f
+def TimeExistsD5 (f : ℝ → ℝ) : Prop := ¬ IsInKerD5 f
+def TimeExistsD6 (f : ℝ → ℝ) : Prop := ¬ IsInKerD6 f
 
 /-- D6 f ≠ 0 at some gauge implies time exists -/
 theorem D6_nonzero_implies_time (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) (hD6 : D6 f x ≠ 0) :
-    TimeExists f := by
+    TimeExistsD6 f := by
   intro hker
   exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
 
-/-! ## Part 5: φ-Scale Invariant Measure (Haar Measure) -/
-
-section HaarMeasure
-
-/-- φ-scale transformation: x ↦ φx -/
-noncomputable def phiScale (x : ℝ) : ℝ := φ * x
-
-/-- The Haar measure on (0,∞) is dx/x in logarithmic coordinates -/
-theorem haar_measure_invariance_principle :
-    ∀ (a b : ℝ), 0 < a → a < b → Real.log b - Real.log a = Real.log (b/a) := by
-  intro a b ha _
-  rw [Real.log_div (ne_of_gt (by linarith : 0 < b)) (ne_of_gt ha)]
-
-/-- φ-scaling preserves the ratio structure -/
-theorem phi_scale_ratio (x y : ℝ) (hx : x ≠ 0) (hy : y ≠ 0) :
-    phiScale x / phiScale y = x / y := by
-  simp only [phiScale]
-  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
-  field_simp
-
-/-- The measure dx/x is characterized by scale invariance -/
-theorem haar_measure_scale_invariance (a b c : ℝ) (ha : 0 < a) (hb : a < b) (hc : 0 < c) :
-    Real.log (c * b) - Real.log (c * a) = Real.log b - Real.log a := by
-  rw [Real.log_mul (ne_of_gt hc) (ne_of_gt (lt_trans ha hb))]
-  rw [Real.log_mul (ne_of_gt hc) (ne_of_gt ha)]
-  ring
-
-end HaarMeasure
-
-/-! ## Part 6: FUST Lagrangian (Local Action Density) -/
+/-! ## Part 5: Lagrangian -/
 
 section Lagrangian
 
-/-- FUST Lagrangian: squared D6 value at a point -/
-noncomputable def FUSTLagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ :=
-  (D6 f x)^2
+noncomputable def D2Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D2 f x) ^ 2
+noncomputable def D3Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D3 f x) ^ 2
+noncomputable def D4Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D4 f x) ^ 2
+noncomputable def D5Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D5 f x) ^ 2
+noncomputable def D6Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D6 f x)^2
 
-/-- Lagrangian is non-negative -/
-theorem lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : FUSTLagrangian f x ≥ 0 :=
-  sq_nonneg _
+theorem D2_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D2Lagrangian f x ≥ 0 := sq_nonneg _
+theorem D3_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D3Lagrangian f x ≥ 0 := sq_nonneg _
+theorem D4_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D4Lagrangian f x ≥ 0 := sq_nonneg _
+theorem D5_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D5Lagrangian f x ≥ 0 := sq_nonneg _
+theorem D6_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D6Lagrangian f x ≥ 0 := sq_nonneg _
 
-/-- Lagrangian is zero iff D6 f = 0 at that point -/
-theorem lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
-    FUSTLagrangian f x = 0 ↔ D6 f x = 0 := sq_eq_zero_iff
+theorem D2_lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
+    D2Lagrangian f x = 0 ↔ D2 f x = 0 := sq_eq_zero_iff
+theorem D3_lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
+    D3Lagrangian f x = 0 ↔ D3 f x = 0 := sq_eq_zero_iff
+theorem D4_lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
+    D4Lagrangian f x = 0 ↔ D4 f x = 0 := sq_eq_zero_iff
+theorem D5_lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
+    D5Lagrangian f x = 0 ↔ D5 f x = 0 := sq_eq_zero_iff
+theorem D6_lagrangian_zero_iff (f : ℝ → ℝ) (x : ℝ) :
+    D6Lagrangian f x = 0 ↔ D6 f x = 0 := sq_eq_zero_iff
 
-/-- For ker(D6) states, Lagrangian is identically zero -/
-theorem lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (x : ℝ) (hx : x ≠ 0) :
-    FUSTLagrangian f x = 0 := by
-  rw [lagrangian_zero_iff]
-  exact IsInKerD6_implies_D6_zero f hf x hx
+theorem D2_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD2 f) (x : ℝ) (hx : x ≠ 0) :
+    D2Lagrangian f x = 0 := by
+  rw [D2_lagrangian_zero_iff]; exact IsInKerD2_implies_D2_zero f hf x hx
 
-/-- Positive Lagrangian implies TimeExists -/
-theorem positive_lagrangian_implies_time (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0)
-    (hpos : FUSTLagrangian f x > 0) : TimeExists f := by
-  intro hker
-  have hzero := lagrangian_ker_zero f hker x hx
-  linarith
+theorem D3_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD3 f) (x : ℝ) (hx : x ≠ 0) :
+    D3Lagrangian f x = 0 := by
+  rw [D3_lagrangian_zero_iff]; exact IsInKerD3_implies_D3_zero f hf x hx
 
-/-- D6 f ≠ 0 implies positive Lagrangian -/
-theorem D6_nonzero_implies_positive_lagrangian (f : ℝ → ℝ) (x : ℝ)
-    (hne : D6 f x ≠ 0) : FUSTLagrangian f x > 0 := by
-  simp only [FUSTLagrangian]
-  exact sq_pos_of_ne_zero hne
+theorem D4_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD4 f) (x : ℝ) (hx : x ≠ 0) :
+    D4Lagrangian f x = 0 := by
+  rw [D4_lagrangian_zero_iff]; exact IsInKerD4_implies_D4_zero f hf x hx
+
+theorem D5_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) (x : ℝ) (hx : x ≠ 0) :
+    D5Lagrangian f x = 0 := by
+  rw [D5_lagrangian_zero_iff]; exact IsInKerD5_implies_D5_zero f hf x hx
+
+theorem D6_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (x : ℝ) (hx : x ≠ 0) :
+    D6Lagrangian f x = 0 := by
+  rw [D6_lagrangian_zero_iff]; exact IsInKerD6_implies_D6_zero f hf x hx
 
 end Lagrangian
 
-/-! ## Part 7: Causal Boundary Theorem -/
+/-! ## Part 6: Causal Boundary -/
 
-/-- Causal boundary: perpProjection = 0 everywhere implies f ∈ ker(D6) -/
-theorem perp_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjection f t = 0) :
+theorem perpD6_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjectionD6 f t = 0) :
     IsInKerD6 f := by
   use f 0, (f 1 - f (-1)) / 2, (f 1 + f (-1) - 2 * f 0) / 2
   intro t
   have ht := h t
-  simp only [perpProjection, kernelProjection] at ht
+  simp only [perpProjectionD6, kernelProjectionD6] at ht
   linarith
 
-/-- Causal boundary theorem (both directions) -/
-theorem causal_boundary_theorem :
-    (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f : ℝ → ℝ, (∀ t, perpProjection f t = 0) → IsInKerD6 f) :=
-  ⟨IsInKerD6_implies_D6_zero, perp_zero_implies_ker⟩
+theorem perpD2_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjectionD2 f t = 0) :
+    IsInKerD2 f := by
+  have : ∀ t, f t = f 0 := fun t => by
+    have := h t; simp only [perpProjectionD2, kernelProjectionD2] at this; linarith
+  exact ⟨f 0, this⟩
 
-/-! ## Part 8: IsMassiveState Properties -/
+theorem perpD3_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjectionD3 f t = 0) :
+    IsInKerD3 f := by
+  have : ∀ t, f t = f 0 := fun t => by
+    have := h t; simp only [perpProjectionD3, kernelProjectionD3] at this; linarith
+  exact ⟨f 0, this⟩
 
-/-- IsMassiveState iff nonzero perpProjection somewhere -/
-theorem massive_iff_nonzero_perp (f : ℝ → ℝ) :
-    IsMassiveState f ↔ ∃ t, perpProjection f t ≠ 0 := by
+theorem perpD4_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjectionD4 f t = 0) :
+    IsInKerD4 f := by
+  have : ∀ t, f t = f 1 * t ^ 2 := fun t => by
+    have := h t; simp only [perpProjectionD4, kernelProjectionD4] at this; linarith
+  exact ⟨f 1, this⟩
+
+theorem perpD5_zero_implies_ker (f : ℝ → ℝ) (h : ∀ t, perpProjectionD5 f t = 0) :
+    IsInKerD5 f := by
+  have hval : ∀ t, f t = (f 1 + f (-1)) / 2 + (f 1 - f (-1)) / 2 * t := fun t => by
+    have := h t; simp only [perpProjectionD5, kernelProjectionD5] at this; linarith
+  exact ⟨(f 1 + f (-1)) / 2, (f 1 - f (-1)) / 2, hval⟩
+
+theorem kerD2_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD2 f) :
+    ∀ t, perpProjectionD2 f t = 0 := by
+  obtain ⟨c, hf⟩ := hf
+  intro t; simp only [perpProjectionD2, kernelProjectionD2, hf]; ring
+
+theorem kerD3_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD3 f) :
+    ∀ t, perpProjectionD3 f t = 0 := by
+  obtain ⟨c, hf⟩ := hf
+  intro t; simp only [perpProjectionD3, kernelProjectionD3, hf]; ring
+
+theorem kerD4_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD4 f) :
+    ∀ t, perpProjectionD4 f t = 0 := by
+  obtain ⟨c, hf⟩ := hf
+  intro t; simp only [perpProjectionD4, kernelProjectionD4, hf]; ring
+
+theorem kerD5_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) :
+    ∀ t, perpProjectionD5 f t = 0 := by
+  obtain ⟨a₀, a₁, hf⟩ := hf
+  intro t; simp only [perpProjectionD5, kernelProjectionD5, hf]; ring
+
+/-! ## Part 7: TimeExistsD6 Properties -/
+
+theorem timeExists_iff_nonzero_perpD6 (f : ℝ → ℝ) :
+    TimeExistsD6 f ↔ ∃ t, perpProjectionD6 f t ≠ 0 := by
   constructor
   · intro hf
     by_contra h
     push_neg at h
-    have hker : IsInKerD6 f := perp_zero_implies_ker f h
-    rw [massive_iff_time_exists] at hf
-    exact hf hker
-  · intro ⟨t, ht⟩
-    rw [massive_iff_time_exists]
-    intro hker
-    exact ht (kernel_implies_perp_zero f hker t)
+    exact hf (perpD6_zero_implies_ker f h)
+  · intro ⟨t, ht⟩ hker
+    exact ht (kerD6_implies_perp_zero f hker t)
 
-/-- Massive particle has nonzero perpProjection -/
-theorem massive_has_proper_time (f : ℝ → ℝ) (hf : IsMassiveState f) :
-    ∃ t, perpProjection f t ≠ 0 :=
-  (massive_iff_nonzero_perp f).mp hf
+theorem timeExists_has_proper_timeD6 (f : ℝ → ℝ) (hf : TimeExistsD6 f) :
+    ∃ t, perpProjectionD6 f t ≠ 0 :=
+  (timeExists_iff_nonzero_perpD6 f).mp hf
 
-/-! ## Part 9: D6_zero_implies_ker_poly -/
+/-! ## Part 8: D6_zero_implies_ker_poly -/
 
 /-- For cubic polynomials, D6 = 0 everywhere implies a₃ = 0 -/
 theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℝ)
@@ -452,234 +626,391 @@ theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℝ)
   simp only [mul_zero, zero_add] at hnum
   exact (mul_eq_zero.mp hnum).resolve_right hC3_ne
 
-/-! ## Part 10: Photon and Constant States -/
+/-! ## Part 9: Kernel Hierarchy -/
 
-/-- A function is constant -/
-def IsConstant (f : ℝ → ℝ) : Prop := ∃ c : ℝ, ∀ t, f t = c
+section KernelHierarchy
 
-/-- A function has energy (non-constant) -/
-def HasEnergy (f : ℝ → ℝ) : Prop := ¬ IsConstant f
+/-- ker(D2) ⊂ ker(D5) -/
+theorem ker_D2_subset_ker_D5 (f : ℝ → ℝ) (hf : IsInKerD2 f) : IsInKerD5 f := by
+  obtain ⟨c, hf⟩ := hf
+  exact ⟨c, 0, fun t => by rw [hf]; ring⟩
 
-/-- Constant functions are in ker(D6) -/
-theorem constant_in_kernel (c : ℝ) : IsInKerD6 (fun _ => c) := by
-  use c, 0, 0
-  intro t; ring
+/-- ker(D4) ⊄ ker(D5): x² ∈ ker(D4) \ ker(D5) -/
+theorem ker_D4_not_subset_ker_D5 :
+    ¬ (∀ f, IsInKerD4 f → IsInKerD5 f) := by
+  push_neg
+  refine ⟨fun t => t ^ 2, ⟨1, fun t => by ring⟩, ?_⟩
+  intro ⟨a₀, a₁, h⟩
+  have h0 := h 0; simp at h0
+  have h1 := h 1; simp at h1
+  have h2 := h 2; simp at h2
+  linarith
 
-/-- Photon state: in ker(D6) but non-constant -/
-def IsPhotonState (f : ℝ → ℝ) : Prop := IsInKerD6 f ∧ HasEnergy f
+/-- D4 detects constants: constant functions are massive under D4 -/
+theorem D4_constant_is_massive (c : ℝ) (hc : c ≠ 0) : TimeExistsD4 (fun _ => c) := by
+  intro ⟨d, hd⟩
+  have h0 := hd 0; simp only [mul_zero, pow_succ, pow_zero] at h0
+  exact hc h0
 
-/-- Photon has D6 = 0 (no proper time) -/
-theorem photon_no_proper_time (f : ℝ → ℝ) (hf : IsPhotonState f) :
-    ∀ x, x ≠ 0 → D6 f x = 0 :=
-  IsInKerD6_implies_D6_zero f hf.1
+end KernelHierarchy
 
-/-! ## Part 11: Summary Theorems -/
+/-! ## Part 10: Gauge Scaling -/
 
-/-- Complete Least Action Theorem (derived, not assumed) -/
-theorem ker_iff_not_time (f : ℝ → ℝ) : IsInKerD6 f ↔ ¬TimeExists f := by
-  simp only [TimeExists, not_not]
+section GaugeScaling
 
-theorem fust_least_action_complete :
-    (∀ f x, FUSTLagrangian f x ≥ 0) ∧
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → FUSTLagrangian f x = 0) ∧
-    (∀ f, IsInKerD6 f ↔ ¬TimeExists f) ∧
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) :=
-  ⟨lagrangian_nonneg, lagrangian_ker_zero, ker_iff_not_time, IsInKerD6_implies_D6_zero⟩
+theorem D2_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
+    D2 (fun t => f (c * t)) x = c * D2 f (c * x) := by
+  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
+  simp only [D2, hx, hcx, ↓reduceIte]
+  have : c * (φ * x) = φ * (c * x) := by ring
+  have : c * (ψ * x) = ψ * (c * x) := by ring
+  field_simp [mul_ne_zero (by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num) :
+    φ - ψ ≠ 0) hx,
+    mul_ne_zero (by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num) :
+    φ - ψ ≠ 0) hcx, hc]
 
-/-! ## Part 12: Frourio Logarithm Formulation
+theorem D3_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
+    D3 (fun t => f (c * t)) x = c * D3 f (c * x) := by
+  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
+  simp only [D3, hx, hcx, ↓reduceIte]
+  have hφψ : (φ - ψ) ^ 2 ≠ 0 := pow_ne_zero 2
+    (by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num))
+  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
 
-The frourio logarithm provides a beautiful reformulation of the action principle:
+theorem D4_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
+    D4 (fun t => f (c * t)) x = c * D4 f (c * x) := by
+  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
+  simp only [D4, hx, hcx, ↓reduceIte]
+  have hφψ : (φ - ψ) ^ 3 ≠ 0 := pow_ne_zero 3
+    (by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num))
+  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
 
-### Coordinate Transformation
-- Real space: x ∈ ℝ₊
-- Frourio space: t = log_𝔣(x) ∈ ℝ
+theorem D5_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
+    D5 (fun t => f (c * t)) x = c * D5 f (c * x) := by
+  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
+  simp only [D5, hx, hcx, ↓reduceIte]
+  have hφψ : (φ - ψ) ^ 4 ≠ 0 := pow_ne_zero 4
+    (by rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num))
+  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
 
-### Measure Transformation
-- dx/x (Haar measure) → log(𝔣) dt (uniform)
-- φ-scaling: x → φx becomes t → t + phiStep
+theorem D6_gauge_scaling (f : ℝ → ℝ) (c x : ℝ) (hc : c ≠ 0) (hx : x ≠ 0) :
+    D6 (fun t => f (c * t)) x = c * D6 f (c * x) := by
+  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
+  simp only [D6, N6, D6Denom, hx, hcx, ↓reduceIte]
+  have harg2 : c * (φ^2 * x) = φ^2 * (c * x) := by ring
+  have harg3 : c * (φ * x) = φ * (c * x) := by ring
+  have harg4 : c * (ψ * x) = ψ * (c * x) := by ring
+  have harg5 : c * (ψ^2 * x) = ψ^2 * (c * x) := by ring
+  have harg6 : c * (ψ^3 * x) = ψ^3 * (c * x) := by ring
+  simp only [harg2, harg3, harg4, harg5, harg6]
+  field_simp [D6Denom_mul_ne_zero x hx, D6Denom_mul_ne_zero (c * x) hcx, hc]
 
-### Physical Interpretation
-- Lagrangian L = (D6 f)² is the "energy density" in frourio time
-- Action A = ∫ L dt is the total "cost" of deviation from ker(D6)
-- ker(D6) states: A = 0 (timeless, light-like)
-- Massive states: A > 0 (proper time exists)
--/
+end GaugeScaling
+
+/-! ## Part 11: Time Evolution and Kernel Invariance -/
+
+section TimeEvolution
+
+noncomputable def timeEvolution (f : ℝ → ℝ) : ℝ → ℝ := fun t => f (φ * t)
+
+theorem ker_D2_invariant (f : ℝ → ℝ) (hf : IsInKerD2 f) :
+    IsInKerD2 (timeEvolution f) := by
+  obtain ⟨c, hf⟩ := hf; exact ⟨c, fun t => by simp [timeEvolution, hf]⟩
+
+theorem ker_D3_invariant (f : ℝ → ℝ) (hf : IsInKerD3 f) :
+    IsInKerD3 (timeEvolution f) := by
+  obtain ⟨c, hf⟩ := hf; exact ⟨c, fun t => by simp [timeEvolution, hf]⟩
+
+theorem ker_D4_invariant (f : ℝ → ℝ) (hf : IsInKerD4 f) :
+    IsInKerD4 (timeEvolution f) := by
+  obtain ⟨c, hf⟩ := hf
+  exact ⟨c * φ ^ 2, fun t => by simp only [timeEvolution, hf]; ring⟩
+
+theorem ker_D5_invariant (f : ℝ → ℝ) (hf : IsInKerD5 f) :
+    IsInKerD5 (timeEvolution f) := by
+  obtain ⟨a₀, a₁, hf⟩ := hf
+  exact ⟨a₀, a₁ * φ, fun t => by simp only [timeEvolution, hf]; ring⟩
+
+theorem D2_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D2 (timeEvolution f) x = φ * D2 f (φ * x) :=
+  D2_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
+
+theorem D3_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D3 (timeEvolution f) x = φ * D3 f (φ * x) :=
+  D3_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
+
+theorem D4_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D4 (timeEvolution f) x = φ * D4 f (φ * x) :=
+  D4_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
+
+theorem D5_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D5 (timeEvolution f) x = φ * D5 f (φ * x) :=
+  D5_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
+
+theorem ker_D6_invariant (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+    IsInKerD6 (timeEvolution f) := by
+  obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
+  use a₀, a₁ * φ, a₂ * φ^2
+  intro t
+  simp only [timeEvolution]
+  rw [hf_eq (φ * t)]
+  ring
+
+theorem D6_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
+    D6 (timeEvolution f) x = φ * D6 f (φ * x) :=
+  D6_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
+
+theorem timeEvolution_preserves_D6 (f : ℝ → ℝ) :
+    TimeExistsD6 f ↔ TimeExistsD6 (timeEvolution f) := by
+  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
+  constructor
+  · intro hf hker
+    apply hf
+    obtain ⟨a₀, a₁, a₂, h_eq⟩ := hker
+    use a₀, a₁ / φ, a₂ / φ^2
+    intro t
+    have hφ2 : φ^2 ≠ 0 := pow_ne_zero 2 hφ
+    have key := h_eq (t / φ)
+    simp only [timeEvolution] at key
+    have hsimp : φ * (t / φ) = t := by field_simp
+    rw [hsimp] at key
+    calc f t = a₀ + a₁ * (t / φ) + a₂ * (t / φ)^2 := key
+      _ = a₀ + a₁ / φ * t + a₂ / φ^2 * t^2 := by field_simp [hφ, hφ2]
+  · intro hf hker; exact hf (ker_D6_invariant f hker)
+
+theorem timeEvolution_preserves_D2 (f : ℝ → ℝ) :
+    TimeExistsD2 f ↔ TimeExistsD2 (timeEvolution f) := by
+  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
+  constructor
+  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
+    exact ⟨c, fun t => by
+      have h := hc (t / φ); simp only [timeEvolution] at h
+      rwa [mul_div_cancel₀ t hφ] at h⟩
+  · intro hf hker; exact hf (ker_D2_invariant f hker)
+
+theorem timeEvolution_preserves_D3 (f : ℝ → ℝ) :
+    TimeExistsD3 f ↔ TimeExistsD3 (timeEvolution f) := by
+  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
+  constructor
+  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
+    exact ⟨c, fun t => by
+      have h := hc (t / φ); simp only [timeEvolution] at h
+      rwa [mul_div_cancel₀ t hφ] at h⟩
+  · intro hf hker; exact hf (ker_D3_invariant f hker)
+
+theorem timeEvolution_preserves_D4 (f : ℝ → ℝ) :
+    TimeExistsD4 f ↔ TimeExistsD4 (timeEvolution f) := by
+  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
+  constructor
+  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
+    exact ⟨c / φ ^ 2, fun t => by
+      have h := hc (t / φ); simp only [timeEvolution] at h
+      rw [mul_div_cancel₀ t hφ] at h; rw [h]; field_simp⟩
+  · intro hf hker; exact hf (ker_D4_invariant f hker)
+
+theorem timeEvolution_preserves_D5 (f : ℝ → ℝ) :
+    TimeExistsD5 f ↔ TimeExistsD5 (timeEvolution f) := by
+  have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
+  constructor
+  · intro hf hker; apply hf; obtain ⟨a₀, a₁, hc⟩ := hker
+    exact ⟨a₀, a₁ / φ, fun t => by
+      have h := hc (t / φ); simp only [timeEvolution] at h
+      rw [mul_div_cancel₀ t hφ] at h; rw [h]; field_simp⟩
+  · intro hf hker; exact hf (ker_D5_invariant f hker)
+
+end TimeEvolution
+
+/-! ## Part 12: Entropy -/
+
+section Entropy
+
+noncomputable def entropyAtD2 (f : ℝ → ℝ) (t : ℝ) : ℝ := (perpProjectionD2 f t) ^ 2
+noncomputable def entropyAtD3 (f : ℝ → ℝ) (t : ℝ) : ℝ := (perpProjectionD3 f t) ^ 2
+noncomputable def entropyAtD4 (f : ℝ → ℝ) (t : ℝ) : ℝ := (perpProjectionD4 f t) ^ 2
+noncomputable def entropyAtD5 (f : ℝ → ℝ) (t : ℝ) : ℝ := (perpProjectionD5 f t) ^ 2
+
+theorem entropyAtD2_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAtD2 f t ≥ 0 := sq_nonneg _
+theorem entropyAtD3_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAtD3 f t ≥ 0 := sq_nonneg _
+theorem entropyAtD4_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAtD4 f t ≥ 0 := sq_nonneg _
+theorem entropyAtD5_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAtD5 f t ≥ 0 := sq_nonneg _
+
+theorem entropyAtD2_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    entropyAtD2 f t = 0 ↔ perpProjectionD2 f t = 0 := sq_eq_zero_iff
+theorem entropyAtD3_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    entropyAtD3 f t = 0 ↔ perpProjectionD3 f t = 0 := sq_eq_zero_iff
+theorem entropyAtD4_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    entropyAtD4 f t = 0 ↔ perpProjectionD4 f t = 0 := sq_eq_zero_iff
+theorem entropyAtD5_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    entropyAtD5 f t = 0 ↔ perpProjectionD5 f t = 0 := sq_eq_zero_iff
+
+theorem entropy_zero_iff_kerD2 (f : ℝ → ℝ) :
+    (∀ t, entropyAtD2 f t = 0) ↔ IsInKerD2 f := by
+  constructor
+  · intro h; exact perpD2_zero_implies_ker f (fun t => (entropyAtD2_zero_iff f t).mp (h t))
+  · intro hf t; rw [entropyAtD2_zero_iff]; exact kerD2_implies_perp_zero f hf t
+
+theorem entropy_zero_iff_kerD3 (f : ℝ → ℝ) :
+    (∀ t, entropyAtD3 f t = 0) ↔ IsInKerD3 f := by
+  constructor
+  · intro h; exact perpD3_zero_implies_ker f (fun t => (entropyAtD3_zero_iff f t).mp (h t))
+  · intro hf t; rw [entropyAtD3_zero_iff]; exact kerD3_implies_perp_zero f hf t
+
+theorem entropy_zero_iff_kerD4 (f : ℝ → ℝ) :
+    (∀ t, entropyAtD4 f t = 0) ↔ IsInKerD4 f := by
+  constructor
+  · intro h; exact perpD4_zero_implies_ker f (fun t => (entropyAtD4_zero_iff f t).mp (h t))
+  · intro hf t; rw [entropyAtD4_zero_iff]; exact kerD4_implies_perp_zero f hf t
+
+theorem entropy_zero_iff_kerD5 (f : ℝ → ℝ) :
+    (∀ t, entropyAtD5 f t = 0) ↔ IsInKerD5 f := by
+  constructor
+  · intro h; exact perpD5_zero_implies_ker f (fun t => (entropyAtD5_zero_iff f t).mp (h t))
+  · intro hf t; rw [entropyAtD5_zero_iff]; exact kerD5_implies_perp_zero f hf t
+
+noncomputable def entropyAtD6 (f : ℝ → ℝ) (t : ℝ) : ℝ := (perpProjectionD6 f t) ^ 2
+
+theorem entropyAtD6_nonneg (f : ℝ → ℝ) (t : ℝ) : entropyAtD6 f t ≥ 0 := sq_nonneg _
+
+theorem entropyAtD6_zero_iff (f : ℝ → ℝ) (t : ℝ) :
+    entropyAtD6 f t = 0 ↔ perpProjectionD6 f t = 0 := sq_eq_zero_iff
+
+theorem entropy_zero_iff_kerD6 (f : ℝ → ℝ) :
+    (∀ t, entropyAtD6 f t = 0) ↔ IsInKerD6 f := by
+  constructor
+  · intro h; exact perpD6_zero_implies_ker f (fun t => (entropyAtD6_zero_iff f t).mp (h t))
+  · intro hf t; rw [entropyAtD6_zero_iff]; exact kerD6_implies_perp_zero f hf t
+
+end Entropy
+
+/-! ## Part 13: Third Law -/
+
+section ThirdLaw
+
+theorem third_law_D2 (f : ℝ → ℝ) (hf : ¬IsInKerD2 f) :
+    ∃ t, entropyAtD2 f t > 0 := by
+  by_contra h; push_neg at h
+  exact hf ((entropy_zero_iff_kerD2 f).mp
+    (fun t => le_antisymm (h t) (entropyAtD2_nonneg f t)))
+
+theorem third_law_D3 (f : ℝ → ℝ) (hf : ¬IsInKerD3 f) :
+    ∃ t, entropyAtD3 f t > 0 := by
+  by_contra h; push_neg at h
+  exact hf ((entropy_zero_iff_kerD3 f).mp
+    (fun t => le_antisymm (h t) (entropyAtD3_nonneg f t)))
+
+theorem third_law_D4 (f : ℝ → ℝ) (hf : ¬IsInKerD4 f) :
+    ∃ t, entropyAtD4 f t > 0 := by
+  by_contra h; push_neg at h
+  exact hf ((entropy_zero_iff_kerD4 f).mp
+    (fun t => le_antisymm (h t) (entropyAtD4_nonneg f t)))
+
+theorem third_law_D5 (f : ℝ → ℝ) (hf : ¬IsInKerD5 f) :
+    ∃ t, entropyAtD5 f t > 0 := by
+  by_contra h; push_neg at h
+  exact hf ((entropy_zero_iff_kerD5 f).mp
+    (fun t => le_antisymm (h t) (entropyAtD5_nonneg f t)))
+
+theorem third_law_D6 (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+    ∃ t, entropyAtD6 f t > 0 := by
+  by_contra h; push_neg at h
+  exact hf ((entropy_zero_iff_kerD6 f).mp
+    (fun t => le_antisymm (h t) (entropyAtD6_nonneg f t)))
+
+end ThirdLaw
+
+/-! ## Part 14: Time Requires Deviation -/
+
+section TimeRequiresDeviation
+
+theorem time_requires_deviation_D2 (f : ℝ → ℝ)
+    (h : ∃ x, x ≠ 0 ∧ D2 f x ≠ 0) : ∃ t, perpProjectionD2 f t ≠ 0 := by
+  by_contra hAll; push_neg at hAll
+  have hker : IsInKerD2 f := perpD2_zero_implies_ker f hAll
+  obtain ⟨x, hx, hD2⟩ := h
+  exact hD2 (IsInKerD2_implies_D2_zero f hker x hx)
+
+theorem time_requires_deviation_D3 (f : ℝ → ℝ)
+    (h : ∃ x, x ≠ 0 ∧ D3 f x ≠ 0) : ∃ t, perpProjectionD3 f t ≠ 0 := by
+  by_contra hAll; push_neg at hAll
+  have hker : IsInKerD3 f := perpD3_zero_implies_ker f hAll
+  obtain ⟨x, hx, hD3⟩ := h
+  exact hD3 (IsInKerD3_implies_D3_zero f hker x hx)
+
+theorem time_requires_deviation_D4 (f : ℝ → ℝ)
+    (h : ∃ x, x ≠ 0 ∧ D4 f x ≠ 0) : ∃ t, perpProjectionD4 f t ≠ 0 := by
+  by_contra hAll; push_neg at hAll
+  have hker : IsInKerD4 f := perpD4_zero_implies_ker f hAll
+  obtain ⟨x, hx, hD4⟩ := h
+  exact hD4 (IsInKerD4_implies_D4_zero f hker x hx)
+
+theorem time_requires_deviation_D5 (f : ℝ → ℝ)
+    (h : ∃ x, x ≠ 0 ∧ D5 f x ≠ 0) : ∃ t, perpProjectionD5 f t ≠ 0 := by
+  by_contra hAll; push_neg at hAll
+  have hker : IsInKerD5 f := perpD5_zero_implies_ker f hAll
+  obtain ⟨x, hx, hD5⟩ := h
+  exact hD5 (IsInKerD5_implies_D5_zero f hker x hx)
+
+theorem time_requires_deviation_D6 (f : ℝ → ℝ)
+    (h : ∃ x, x ≠ 0 ∧ D6 f x ≠ 0) : ∃ t, perpProjectionD6 f t ≠ 0 := by
+  by_contra hAll; push_neg at hAll
+  have hker : IsInKerD6 f := perpD6_zero_implies_ker f hAll
+  obtain ⟨x, hx, hD6⟩ := h
+  exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
+
+end TimeRequiresDeviation
+
+/-! ## Part 15: Minimum Massive Degree -/
+
+section MinimumMassiveDegree
+
+theorem D2_minimum_massive_degree :
+    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
+    (∃ x, x ≠ 0 ∧ D2 id x ≠ 0) :=
+  ⟨fun x hx => D2_const 1 x hx, ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩⟩
+
+theorem D3_minimum_massive_degree :
+    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) :=
+  ⟨fun x hx => D3_const 1 x hx, ⟨1, one_ne_zero, D3_linear_ne_zero 1 one_ne_zero⟩⟩
+
+theorem D4_minimum_massive_degree :
+    (∀ x, x ≠ 0 → D4 (fun t => t ^ 2) x = 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) :=
+  ⟨D4_quadratic, D4_const_ne_zero⟩
+
+theorem D5_minimum_massive_degree :
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0) :=
+  ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+
+theorem mass_gap_existence_universal :
+    (∃ f, TimeExistsD2 f) ∧
+    (∃ f, TimeExistsD3 f) ∧
+    (∃ f, TimeExistsD4 f) ∧
+    (∃ f, TimeExistsD5 f) := by
+  refine ⟨⟨id, fun ⟨c, h⟩ => ?_⟩, ⟨id, fun ⟨c, h⟩ => ?_⟩,
+         ⟨fun _ => 1, fun ⟨c, h⟩ => ?_⟩, ⟨fun t => t ^ 2, fun ⟨a₀, a₁, h⟩ => ?_⟩⟩
+  · have h0 := h 0; have h1 := h 1; simp [id] at h0 h1; linarith
+  · have h0 := h 0; have h1 := h 1; simp [id] at h0 h1; linarith
+  · have h0 := h 0; simp at h0
+  · have h0 := h 0; have h1 := h 1; have h2 := h 2; simp at h0 h1 h2; nlinarith
+
+end MinimumMassiveDegree
+
+/-! ## Frourio Time Coordinate -/
 
 section FrourioFormulation
 
 open FUST.FrourioLogarithm
 
-/-- Frourio time coordinate -/
 noncomputable def frourioTime (x : ℝ) : ℝ := frourioLog x
 
-/-- Lagrangian in frourio coordinates: L(t) = (D6 f (𝔣^t))² -/
-noncomputable def FrourioLagrangian (f : ℝ → ℝ) (t : ℝ) : ℝ :=
-  (D6 f (frourioExp t))^2
-
-/-- Frourio Lagrangian is non-negative -/
-theorem frourio_lagrangian_nonneg (f : ℝ → ℝ) (t : ℝ) : FrourioLagrangian f t ≥ 0 :=
-  sq_nonneg _
-
-/-- Frourio Lagrangian zero iff D6 = 0 at that frourio time -/
-theorem frourio_lagrangian_zero_iff (f : ℝ → ℝ) (t : ℝ) :
-    FrourioLagrangian f t = 0 ↔ D6 f (frourioExp t) = 0 := sq_eq_zero_iff
-
-/-- Coordinate change: FUSTLagrangian at x = FrourioLagrangian at log_𝔣(x) -/
-theorem lagrangian_coordinate_change (f : ℝ → ℝ) (x : ℝ) (hx : 0 < x) :
-    FUSTLagrangian f x = FrourioLagrangian f (frourioLog x) := by
-  unfold FUSTLagrangian FrourioLagrangian
-  rw [frourioExp_frourioLog hx]
-
-/-- For ker(D6) states, Frourio Lagrangian is identically zero -/
-theorem frourio_lagrangian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (t : ℝ) :
-    FrourioLagrangian f t = 0 := by
-  rw [frourio_lagrangian_zero_iff]
-  have hexp_pos : frourioExp t > 0 := by
-    unfold frourioExp
-    exact Real.rpow_pos_of_pos frourioConst_pos t
-  have hexp_ne : frourioExp t ≠ 0 := ne_of_gt hexp_pos
-  exact IsInKerD6_implies_D6_zero f hf (frourioExp t) hexp_ne
-
-/-- Haar measure transformation: dx/x = log(𝔣) dt -/
-theorem haar_to_frourio_measure (a b : ℝ) :
-    Real.log b - Real.log a = Real.log frourioConst * (frourioLog b - frourioLog a) := by
-  unfold frourioLog
-  have hlog_ne : Real.log frourioConst ≠ 0 := log_frourioConst_ne_zero
-  field_simp [hlog_ne]
-
-/-- φ-scaling in frourio coordinates is time translation -/
 theorem phi_scale_is_time_shift (x : ℝ) (hx : 0 < x) :
     frourioTime (φ * x) = frourioTime x + phiStep := by
   unfold frourioTime
   exact phi_scale_is_translation hx
 
-/-- Time evolution preserves Lagrangian structure -/
-theorem time_evolution_lagrangian (f : ℝ → ℝ) (t : ℝ) :
-    FrourioLagrangian (fun s => f (φ * s)) t =
-    (D6 (fun s => f (φ * s)) (frourioExp t))^2 := rfl
-
-/-! ### Action as Path Integral in Frourio Time
-
-The action integral ∫ L dx/x becomes ∫ L dt in frourio coordinates.
-
-Key insight: In frourio space, the φ-scaling symmetry becomes translation symmetry,
-and the action integral is translation-invariant.
--/
-
-/-- Action density at frourio time t -/
-noncomputable def actionDensity (f : ℝ → ℝ) (t : ℝ) : ℝ := FrourioLagrangian f t
-
-/-- Action density is non-negative -/
-theorem action_density_nonneg (f : ℝ → ℝ) (t : ℝ) : actionDensity f t ≥ 0 :=
-  frourio_lagrangian_nonneg f t
-
-/-- ker(D6) states have zero action density everywhere -/
-theorem ker_zero_action_density (f : ℝ → ℝ) (hf : IsInKerD6 f) :
-    ∀ t, actionDensity f t = 0 := frourio_lagrangian_ker_zero f hf
-
-/-- Positive action density implies TimeExists -/
-theorem positive_action_density_implies_time (f : ℝ → ℝ) (t : ℝ)
-    (hpos : actionDensity f t > 0) : TimeExists f := by
-  intro hker
-  have hzero := ker_zero_action_density f hker t
-  linarith
-
-/-! ### The Beautiful Reformulation
-
-In frourio coordinates, the least action theorem becomes:
-
-1. **Time = Frourio coordinate**: t = log_𝔣(x)
-2. **Lagrangian** L(t) = (D6 f(𝔣^t))² is uniform in t
-3. **Action** A = ∫ L(t) dt measures deviation from timelessness
-4. **Timeless states**: L(t) = 0 for all t ⟺ f ∈ ker(D6)
-5. **Massive states**: ∃t, L(t) > 0 ⟺ proper time exists
--/
-
-/-- Complete frourio formulation of least action -/
-theorem frourio_least_action_formulation :
-    -- (A) Coordinate change preserves Lagrangian
-    (∀ f x, 0 < x → FUSTLagrangian f x = FrourioLagrangian f (frourioLog x)) ∧
-    -- (B) ker(D6) states have zero action density
-    (∀ f, IsInKerD6 f → ∀ t, FrourioLagrangian f t = 0) ∧
-    -- (C) Positive action density implies time exists
-    (∀ f t, FrourioLagrangian f t > 0 → TimeExists f) ∧
-    -- (D) φ-scaling becomes time translation
-    (∀ x, 0 < x → frourioTime (φ * x) = frourioTime x + phiStep) :=
-  ⟨lagrangian_coordinate_change,
-   frourio_lagrangian_ker_zero,
-   fun f t h => positive_action_density_implies_time f t h,
-   phi_scale_is_time_shift⟩
-
-/-- The essence: Time is the logarithmic deviation from scale invariance -/
-theorem time_is_log_deviation :
-    -- (A) Frourio time is logarithmic
-    (∀ x, 0 < x → frourioTime x = frourioLog x) ∧
-    -- (B) Time step is uniform in frourio space
-    (∀ x, 0 < x → frourioTime (φ * x) - frourioTime x = phiStep) ∧
-    -- (C) Timeless states have zero Lagrangian
-    (∀ f, IsInKerD6 f → ∀ t, FrourioLagrangian f t = 0) :=
-  ⟨fun _ _ => rfl,
-   fun x hx => by rw [phi_scale_is_time_shift x hx]; ring,
-   frourio_lagrangian_ker_zero⟩
-
-/-- TimeExists is equivalent to having nonzero D6 somewhere -/
-def TimeExistsAtPoint (f : ℝ → ℝ) : Prop := ∃ x : ℝ, x ≠ 0 ∧ D6 f x ≠ 0
-
-/-- TimeExistsAtPoint implies TimeExists -/
-theorem time_exists_at_point_implies_time (f : ℝ → ℝ) (h : TimeExistsAtPoint f) :
-    TimeExists f := by
-  obtain ⟨x, hx_ne, hD6_ne⟩ := h
-  exact D6_nonzero_implies_time f x hx_ne hD6_ne
-
-/-- TimeExistsAtPoint implies positive Lagrangian -/
-theorem time_exists_at_point_positive_lagrangian (f : ℝ → ℝ) (h : TimeExistsAtPoint f) :
-    ∃ x : ℝ, x ≠ 0 ∧ FUSTLagrangian f x > 0 := by
-  obtain ⟨x, hx_ne, hD6_ne⟩ := h
-  exact ⟨x, hx_ne, D6_nonzero_implies_positive_lagrangian f x hD6_ne⟩
-
-/-- Positive Lagrangian implies TimeExistsAtPoint -/
-theorem positive_lagrangian_time_exists_at_point (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0)
-    (hpos : FUSTLagrangian f x > 0) : TimeExistsAtPoint f := by
-  use x, hx
-  intro hD6_eq
-  simp only [FUSTLagrangian, hD6_eq, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
-    zero_pow, gt_iff_lt, lt_self_iff_false] at hpos
-
-/-- Complete equivalence in frourio formulation -/
-theorem frourio_time_equivalence :
-    -- (A) TimeExistsAtPoint implies TimeExists
-    (∀ f, TimeExistsAtPoint f → TimeExists f) ∧
-    -- (B) TimeExistsAtPoint implies positive Lagrangian
-    (∀ f, TimeExistsAtPoint f → ∃ x, x ≠ 0 ∧ FUSTLagrangian f x > 0) ∧
-    -- (C) Positive Lagrangian implies TimeExistsAtPoint
-    (∀ f x, x ≠ 0 → FUSTLagrangian f x > 0 → TimeExistsAtPoint f) :=
-  ⟨time_exists_at_point_implies_time,
-   time_exists_at_point_positive_lagrangian,
-   positive_lagrangian_time_exists_at_point⟩
-
 end FrourioFormulation
 
 end FUST.LeastAction
-
-namespace FUST.Dim
-
-/-- Lagrangian density L(f,x) = (D₆ f x)² with derived dimension -/
-noncomputable def lagrangian_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ dimLagrangian :=
-  ⟨FUST.LeastAction.FUSTLagrangian f x⟩
-
-theorem lagrangian_dim_val (f : ℝ → ℝ) (x : ℝ) :
-    (lagrangian_dim f x).val = (D6 f x) ^ 2 := rfl
-
-theorem lagrangian_dim_nonneg (f : ℝ → ℝ) (x : ℝ) :
-    (lagrangian_dim f x).val ≥ 0 :=
-  sq_nonneg _
-
-/-- ker(D₆) functions have zero Lagrangian -/
-theorem lagrangian_ker_zero (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f)
-    (x : ℝ) (hx : x ≠ 0) :
-    (lagrangian_dim f x).val = 0 := by
-  simp only [lagrangian_dim, FUST.LeastAction.FUSTLagrangian]
-  rw [FUST.LeastAction.IsInKerD6_implies_D6_zero f hf x hx]
-  simp
-
-end FUST.Dim

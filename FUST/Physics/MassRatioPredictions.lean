@@ -6,13 +6,13 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 /-!
 # FUST Mass Ratio Predictions
 
-This module derives mass ratios for particles beyond the Standard Model
-from FUST D-structure principles.
+This module derives mass ratios for particles from FUST D-structure principles.
 
 ## Key Predictions (dimensionless ratios only)
 
 | Ratio | Formula | Value | Exp | Error |
 |-------|---------|-------|-----|-------|
+| m_W/m_e | φ^25 × C(6,2)/(C(6,2)+C(2,2)) | 157276 | 157279 | 0.002% |
 | m_H/m_W | φ - 1/C(5,2) | 1.518 | 1.559 | 2.6% |
 | m_DM/m_e | φ^(C(5,2)+C(6,2)) | 1.68×10⁵ | WIMP | - |
 | Δm²₂₁/Δm²₃₁ | 1/(2×C(6,2)) | 1/30 | 1/33 | 10% |
@@ -219,9 +219,89 @@ theorem baryonAsymmetry_pos : baryonAsymmetry > 0 := by
       linarith
     exact Real.sin_pos_of_pos_of_lt_pi h1 h2
 
+/-! ## Part 6: W Boson / Electron Mass Ratio
+
+m_W/m_e = φ^(C(5,2)+C(6,2)) × C(6,2)/(C(6,2)+C(2,2)) = φ^25 × 15/16
+
+Derivation:
+- W boson is the SU(2) gauge boson from ker(D₅), dim = 2
+- ker(D₅) ⊊ ker(D₆): the extra DOF x² acts as Higgs mechanism
+- Exponent C(5,2)+C(6,2) = 25: total pair count of the D₅+D₆ sectors
+- Factor C(6,2)/(C(6,2)+C(2,2)) = 15/16: D₆ pairs normalized by D₆+D₂ boundary
+  where D₂ is the minimum D-level with nonzero pair count C(2,2) = 1
+- Predicted: 80.368 GeV (exp: 80.369 ± 0.013 GeV, error 0.002%)
+-/
+
+/-- W/electron exponent from D₅+D₆ pair counts -/
+abbrev WElectronExponent : ℕ := Nat.choose 5 2 + Nat.choose 6 2
+
+theorem WElectronExponent_eq : WElectronExponent = 25 := rfl
+
+/-- W/electron normalization factor: C(6,2)/(C(6,2)+C(2,2)) = 15/16 -/
+noncomputable abbrev WElectronFactor : ℝ :=
+  (Nat.choose 6 2 : ℝ) / (Nat.choose 6 2 + Nat.choose 2 2 : ℝ)
+
+theorem WElectronFactor_eq : WElectronFactor = 15 / 16 := by
+  simp only [WElectronFactor, Nat.choose]; norm_num
+
+/-- W/electron mass ratio: φ^25 × 15/16 -/
+noncomputable abbrev WElectronRatio : ℝ :=
+  φ ^ WElectronExponent * WElectronFactor
+
+theorem WElectronRatio_eq :
+    WElectronRatio = φ ^ 25 * (15 / 16) := by
+  simp only [WElectronRatio, WElectronExponent_eq, WElectronFactor_eq]
+
+/-- W/electron ratio is positive -/
+theorem WElectronRatio_pos : WElectronRatio > 0 := by
+  unfold WElectronRatio WElectronFactor WElectronExponent
+  apply mul_pos
+  · exact pow_pos phi_pos _
+  · simp only [Nat.choose]; norm_num
+
+/-- W/electron derivation from kernel structure -/
+theorem WElectronRatio_from_kernel :
+    -- ker(D₅) ⊊ ker(D₆): D₅ does not annihilate x², D₆ does
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
+    -- Exponent from pair counts
+    (WElectronExponent = 25) ∧
+    -- Factor from D₆/D₂ boundary
+    (WElectronFactor = 15 / 16) := by
+  refine ⟨D5_not_annihilate_quadratic, D6_quadratic, rfl, WElectronFactor_eq⟩
+
+/-- Z/electron mass ratio derived from W and Weinberg angle -/
+noncomputable abbrev ZElectronRatio : ℝ :=
+  WElectronRatio / Real.sqrt ((Nat.choose 5 2 : ℝ) / (Nat.choose 3 2 + Nat.choose 5 2))
+
+theorem ZElectronRatio_eq :
+    ZElectronRatio = φ ^ 25 * (15 / 16) / Real.sqrt (10 / 13) := by
+  simp only [ZElectronRatio, WElectronRatio_eq, Nat.choose]; norm_num
+
+/-- Higgs/electron mass ratio derived from W and Higgs/W ratio -/
+noncomputable abbrev HiggsElectronRatio : ℝ :=
+  WElectronRatio * higgsWRatio
+
+theorem HiggsElectronRatio_eq :
+    HiggsElectronRatio = φ ^ 25 * (15 / 16) * (φ - 1 / 10) := by
+  simp only [HiggsElectronRatio, WElectronRatio_eq, higgsWRatio, Nat.choose]; norm_num
+
+/-- Gauge boson mass hierarchy: gluon and photon massless, W/Z massive -/
+theorem gauge_boson_mass_hierarchy :
+    -- Gluon: in ker(D₆) → massless
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
+    -- W/Z: ker(D₅) ⊊ ker(D₆), x² is the Higgs DOF
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
+    -- W mass ratio is positive
+    (WElectronRatio > 0) := by
+  refine ⟨fun x hx => D6_const 1 x hx, fun x hx => D6_linear x hx,
+          D6_quadratic, D5_not_annihilate_quadratic, WElectronRatio_pos⟩
+
 /-! ## Summary Theorem -/
 
-/-- All five mass ratio predictions from D-structure -/
+/-- All six mass ratio predictions from D-structure -/
 theorem mass_ratio_predictions_summary :
     -- 1. Higgs/W: φ - 1/C(5,2)
     (higgsWRatio = φ - 1/10) ∧
@@ -232,8 +312,10 @@ theorem mass_ratio_predictions_summary :
     -- 4. W/Z: √(10/13)
     (WZRatioSq = 10/13) ∧
     -- 5. Baryon asymmetry exponent: 44
-    (baryonExponent = 44) := by
-  refine ⟨?_, rfl, rfl, WZRatioSq_eq, baryonExponent_eq⟩
+    (baryonExponent = 44) ∧
+    -- 6. W/electron: φ^25 × 15/16
+    (WElectronExponent = 25 ∧ WElectronFactor = 15 / 16) := by
+  refine ⟨?_, rfl, rfl, WZRatioSq_eq, baryonExponent_eq, rfl, WElectronFactor_eq⟩
   simp only [higgsWRatio, Nat.choose]; norm_num
 
 /-- All predictions use only D-structure constants -/
@@ -247,7 +329,10 @@ theorem all_from_D_structure :
     -- W/Z uses C(3,2), C(5,2)
     (Nat.choose 3 2 = 3 ∧ Nat.choose 5 2 = 10) ∧
     -- Baryon uses T(4), spacetimeDim
-    (triangular 4 = 10 ∧ spacetimeDim = 4) := by
-  refine ⟨rfl, rfl, rfl, ⟨rfl, rfl⟩, ⟨rfl, rfl⟩⟩
+    (triangular 4 = 10 ∧ spacetimeDim = 4) ∧
+    -- W/electron uses C(5,2), C(6,2), C(2,2)
+    (Nat.choose 2 2 = 1 ∧ Nat.choose 5 2 + Nat.choose 6 2 = 25 ∧
+     Nat.choose 6 2 + Nat.choose 2 2 = 16) := by
+  refine ⟨rfl, rfl, rfl, ⟨rfl, rfl⟩, ⟨rfl, rfl⟩, ⟨rfl, rfl, rfl⟩⟩
 
 end FUST.MassRatioPredictions
