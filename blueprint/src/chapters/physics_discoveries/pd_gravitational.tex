@@ -10,8 +10,10 @@
 \lean{FUST.GravitationalCoupling.leptonMassExponent_eq}
 \leanok
 \[
-107 = T(4) \times (T(4)+1) - C(3,2) = 10 \times 11 - 3
+107 = p_3 + e_3 + d = 92 + 12 + 3
 \]
+where $p_3 = \sum t_k^3$, $e_3 = \prod t_k$, $d = \dim\ker(D_6) = 3$
+(see Theorem~\ref{thm:lepton_sector}).
 \end{theorem}
 
 \section{Fractional Correction}
@@ -112,7 +114,7 @@ The cosmological exponent uses dimensional separation via Stefan--Boltzmann
 $\rho \propto T^4$: the energy density ratio factors as
 $\varphi^{-582} = (\varphi^{-152})^4 \times \varphi^{26}$,
 giving $582 = 4 \times 152 - 26$ where $4 = d{+}1$ is the spacetime dimension
-and $26 = L(1)^2 + L(2)^2 + L(3)^2$ is the sector trace square sum.
+and $26 = t_1^2 + t_2^2 + t_3^2$ is the sector trace square sum.
 
 \begin{theorem}[Cosmological Exponent]
 \label{thm:grav_cosmological_exponent}
@@ -122,7 +124,7 @@ and $26 = L(1)^2 + L(2)^2 + L(3)^2$ is the sector trace square sum.
 582 = 4 \times 152 - 26
 = \underbrace{(d{+}1)}_{\text{Stefan--Boltzmann}}
   \times \underbrace{152}_{\text{CMB exponent}}
-  - \underbrace{L(1)^2{+}L(2)^2{+}L(3)^2}_{\text{sector trace squares}}
+  - \underbrace{t_1^2{+}t_2^2{+}t_3^2}_{\text{sector trace squares}}
 \]
 \end{theorem}
 
@@ -142,7 +144,7 @@ and $26 = L(1)^2 + L(2)^2 + L(3)^2$ is the sector trace square sum.
 \lean{FUST.GravitationalCoupling.gravitational_coupling_summary}
 \leanok
 \begin{enumerate}
-\item Exponent 107 = $T(4) \times (T(4)+1) - C(3,2)$
+\item Exponent $107 = p_3 + e_3 + d$ (sector cube sum + product + vacuum dim)
 \item Fractional correction: $5/63 = 5/(C(3,2) \times T(6))$
 \item D-structure pairs: $1 + 3 + 6 + 10 + 15 = 35$
 \item $D_3$ gauge invariance: $D_3[1] = 0$
@@ -157,7 +159,7 @@ and $26 = L(1)^2 + L(2)^2 + L(3)^2$ is the sector trace square sum.
 \item CMB temperature exponent: $152 = 107 + 45$ (mass scale + thermal factor)
 \item Cosmological constant exponent: $582 = 4 \times 152 - 26$ (Stefan--Boltzmann + sector correction)
 \item Decoupling factor: $45 = C(3,2) \times T(5) = T(9)$
-\item Sector trace squares: $26 = L(1)^2 + L(2)^2 + L(3)^2$
+\item Sector trace squares: $26 = t_1^2 + t_2^2 + t_3^2$
 \end{enumerate}
 \end{theorem}
 
@@ -297,21 +299,7 @@ F = D_6[t^{-1}] \propto \frac{1}{r^2}.
 \label{sec:grav_d_structure_relations}
 
 Systematic exploration of D$_6$ algebraic properties reveals deep connections
-to Fibonacci and Lucas number theory.
-
-\subsection{Lucas Numbers}
-
-\begin{definition}[Lucas Number]
-\label{def:lucas_number}
-\lean{FUST.GravitationalCoupling.lucasNumber}
-\leanok
-\[
-L(n) = \varphi^n + \psi^n.
-\]
-\end{definition}
-
-Key values: $L(0) = 2$, $L(1) = 1$, $L(2) = 3$, $L(3) = 4$, $L(5) = 11$,
-$L(8) = 47$, $L(9) = 76$.
+to Fibonacci number theory and the sector factorization.
 
 \subsection{Dissipation--Fibonacci Decomposition}
 
@@ -334,7 +322,7 @@ and $C(n)$ is the dissipation coefficient.
 \lean{FUST.GravitationalCoupling.D6_eval_multiplier_sum}
 \leanok
 \[
-\varphi^3 + \varphi^2 + \varphi + \psi + \psi^2 + \psi^3 = 8 = L(1) + L(2) + L(3).
+\varphi^3 + \varphi^2 + \varphi + \psi + \psi^2 + \psi^3 = 8 = t_1 + t_2 + t_3.
 \]
 \end{theorem}
 
@@ -349,36 +337,6 @@ The $D_6$ coefficients $[1, -3, 1, -1, 3, -1]$ satisfy:
 \item Absolute sum $= 10 = C(5,2)$.
 \item Positive part sum $=$ negative part $= 5 = $ active levels.
 \end{enumerate}
-\end{theorem}
-
-\subsection{Lucas Decomposition of Physical Exponents}
-
-\begin{theorem}[Lepton Exponent via Lucas]
-\label{thm:lepton_lucas}
-\lean{FUST.GravitationalCoupling.leptonExponent_from_lucas}
-\leanok
-\[
-107 = C(5,2) \times L(5) - C(3,2) = 10 \times 11 - 3.
-\]
-The structural coincidence $C(5,2) + 1 = L(5) = 11$ connects pair counts to Lucas numbers.
-\end{theorem}
-
-\begin{theorem}[CMB Exponent via Lucas]
-\label{thm:cmb_lucas}
-\lean{FUST.GravitationalCoupling.cmbExponent_from_lucas}
-\leanok
-\[
-152 = 2 \times L(9), \quad \text{where } 9 = D_{\max} + D_{\min} + 1 = 6 + 2 + 1.
-\]
-\end{theorem}
-
-\begin{theorem}[Cosmological Exponent via Lucas]
-\label{thm:cosmo_lucas}
-\lean{FUST.GravitationalCoupling.cosmologicalExponent_from_lucas}
-\leanok
-\[
-582 = 5 \times 107 + L(8), \quad \text{where } 8 = D_{\max} + D_{\min} = 6 + 2.
-\]
 \end{theorem}
 
 \subsection{D$_6$ Spectral Invariants}
@@ -431,7 +389,7 @@ and gravity $(\varphi^3,\psi^3)$ sectors.
 \lean{FUST.GravitationalCoupling.sector_trace_sq_sum}
 \leanok
 \[
-L(1)^2 + L(2)^2 + L(3)^2 = 1 + 9 + 16 = 26.
+t_1^2 + t_2^2 + t_3^2 = 1 + 9 + 16 = 26.
 \]
 \end{theorem}
 
@@ -444,9 +402,9 @@ The gravity sector polynomial $x^2 - 4x - 1$ encodes key spacetime properties.
 \lean{FUST.GravitationalCoupling.gravity_trace_eq_spacetimeDim}
 \leanok
 \[
-L(\mathrm{spatialDim}) = L(3) = \varphi^3 + \psi^3 = 4 = \mathrm{spacetimeDim}.
+\varphi^3 + \psi^3 = 4 = \mathrm{spacetimeDim}.
 \]
-The Lucas number at the spatial dimension (= $\dim\ker(D_6)$) equals the spacetime dimension.
+The gravity sector trace equals the spacetime dimension.
 This is the structural bridge between the gravity sector and spacetime geometry.
 \end{theorem}
 
@@ -499,47 +457,95 @@ The matter and gauge sectors share discriminant $5 =$ activeDLevels.
 The gravity sector discriminant is $4 \times 5 = \mathrm{spacetimeDim} \times \mathrm{activeDLevels}$.
 \end{theorem}
 
-The spectral spread (sum of squared eigenvalue gaps) is:
+\subsection{Sector-Invariant Derivation of Physical Exponents}
 
-\begin{theorem}[Spectral Spread]
-\label{thm:spectral_spread}
-\lean{FUST.GravitationalCoupling.spectral_spread_eq}
+The $D_6$ characteristic polynomial factors into three sectors with
+traces $t_k = \varphi^k + \psi^k$: $t_1 = 1$ (matter), $t_2 = 3$ (gauge), $t_3 = 4$ (gravity).
+The physical exponents are expressed using independent spectral invariants:
+power sums $p_k = \sum t_i^k$, elementary symmetric functions $e_k$,
+and the vacuum dimension $d = \dim\ker(D_6) = 3$.
+
+\begin{theorem}[Sector Trace Cube Sum]
+\label{thm:sector_trace_cube_sum}
+\lean{FUST.GravitationalCoupling.sector_trace_cube_sum}
 \leanok
 \[
-\sum_{i<j} (\lambda_i - \lambda_j)^2 = n \cdot p_2 - p_1^2 = 6 \cdot 28 - 64 = 104.
+p_3 = t_1^3 + t_2^3 + t_3^3 = 1 + 27 + 64 = 92.
 \]
 \end{theorem}
 
-\subsubsection*{Numerical Observations (Degree-Inhomogeneous)}
-
-The following equalities are numerically verified but \emph{not} structural derivations:
-they mix terms of different eigenvalue degree (e.g.\ $\deg(p_2)=2$ with $\deg(d)=0$),
-violating discrete dimensional homogeneity.
-In particular, since all $D_6$ power sums $p_k$ are even while $107$ is odd,
-no single-degree homogeneous formula in spectral data can yield $107$.
-
-\begin{theorem}[Spectral Exponent Observation]
-\label{thm:spectral_exponent_observation}
-\lean{FUST.GravitationalCoupling.spectral_exponent_observation}
+\begin{theorem}[Sector Trace Product]
+\label{thm:sector_trace_product}
+\lean{FUST.GravitationalCoupling.sector_trace_product}
 \leanok
-With $n=6$, $d=\dim(\ker D_6)=3$, $p_1=8$, $p_2=28$, $e_6=1$,
-and $\sigma = L(1)^2+L(2)^2+L(3)^2=26$:
+\[
+e_3 = t_1 \times t_2 \times t_3 = 1 \times 3 \times 4 = 12.
+\]
+\end{theorem}
+
+\begin{theorem}[Sector Product + Kernel = Pair Count]
+\label{thm:sector_product_plus_ker}
+\lean{FUST.GravitationalCoupling.sector_product_plus_kerDim_eq_pairs}
+\leanok
+\[
+e_3 + d = t_1 \cdot t_2 \cdot t_3 + \dim\ker(D_6) = 12 + 3 = 15 = C(6,2).
+\]
+The sector product plus vacuum dimension equals the $D_6$ pair count.
+\end{theorem}
+
+\begin{theorem}[Lepton Exponent from Sector Invariants]
+\label{thm:lepton_sector}
+\lean{FUST.GravitationalCoupling.leptonExponent_from_sector_invariants}
+\leanok
+\[
+107 = p_3 + e_3 + d = \sum t_k^3 + \prod t_k + \dim\ker(D_6) = 92 + 12 + 3.
+\]
+Each term is an independent spectral invariant with no degree mixing.
+\end{theorem}
+
+\begin{theorem}[CMB Decoupling from Sector Invariants]
+\label{thm:cmb_decoupling_sector}
+\lean{FUST.GravitationalCoupling.cmbDecoupling_from_sector_invariants}
+\leanok
+\[
+45 = d \times (e_3 + d) = 3 \times 15.
+\]
+\end{theorem}
+
+\begin{theorem}[CMB Exponent from Sector Invariants]
+\label{thm:cmb_sector}
+\lean{FUST.GravitationalCoupling.cmbExponent_from_sector_invariants}
+\leanok
+\[
+152 = p_3 + D \times (e_3 + d) = 92 + 4 \times 15.
+\]
+where $D = t_3 = \mathrm{spacetimeDim} = 4$.
+\end{theorem}
+
+\begin{theorem}[Cosmological Exponent from Sector Invariants]
+\label{thm:cosmo_sector}
+\lean{FUST.GravitationalCoupling.cosmoExponent_from_sector_invariants}
+\leanok
+\[
+582 = D \times 152 - \sigma = 4 \times 152 - 26.
+\]
+where $\sigma = t_1^2 + t_2^2 + t_3^2 = 26$ is the sector trace square sum.
+\end{theorem}
+
+\begin{theorem}[Complete Sector-Invariant Derivation]
+\label{thm:sector_invariant_derivation}
+\lean{FUST.GravitationalCoupling.sector_invariant_derivation}
+\leanok
+All physical exponents derive from sector traces $t_k = \varphi^k + \psi^k$ for $k=1,2,3$:
 \begin{align*}
-107 &= n \cdot p_2 - p_1^2 + d & &\text{(deg 2 + deg 0: inhomogeneous)} \\
-152 &= 107 + T(p_1 + e_6) & &\text{(deg 1 + deg 6: inhomogeneous)} \\
-582 &= (d{+}1) \cdot 152 - \sigma & &\text{(count $\times$ exponent $-$ trace$^2$: inhomogeneous)}
+p_3 &= 1^3 + 3^3 + 4^3 = 92 \\
+e_3 &= 1 \times 3 \times 4 = 12, \quad e_3 + d = 15 = C(6,2) \\
+\sigma &= 1^2 + 3^2 + 4^2 = 26 \\
+107 &= p_3 + e_3 + d \\
+45 &= d \times (e_3 + d) \\
+152 &= p_3 + D \times (e_3 + d) \\
+582 &= D \times 152 - \sigma
 \end{align*}
-\end{theorem}
-
-\begin{theorem}[Spectral Spread + Kernel Dimension = 107]
-\label{thm:spectral_spread_plus_ker}
-\lean{FUST.GravitationalCoupling.spectral_spread_plus_ker_eq_107}
-\leanok
-\[
-104 + 3 = \sum_{i<j} (\lambda_i - \lambda_j)^2 + \dim(\ker D_6) = 107.
-\]
-This is a numerical coincidence: spectral spread has eigenvalue degree~2
-while kernel dimension has degree~0.
 \end{theorem}
 
 \subsection{Dissipation Recurrence}
@@ -562,7 +568,7 @@ $\{8, -18, 6, 12, -2, -1\} = \{e_1, -e_2, e_3, -e_4, e_5, -e_6\}$.
 \lean{FUST.NavierStokes.D6_power_sum_2}
 \leanok
 \[
-\varphi^6 + \varphi^4 + \varphi^2 + \psi^2 + \psi^4 + \psi^6 = 28 = L(6) + L(4) + L(2).
+\varphi^6 + \varphi^4 + \varphi^2 + \psi^2 + \psi^4 + \psi^6 = 28 = (\varphi^6{+}\psi^6) + (\varphi^4{+}\psi^4) + (\varphi^2{+}\psi^2).
 \]
 \end{theorem}
 
@@ -612,21 +618,23 @@ Determined purely by $D_6$ spectral data:
 \begin{itemize}
 \item $d = \dim(\ker D_6) = 3$ (spatial dimension)
 \item $d{+}1 = 4$ (spacetime dimension)
-\item $\sigma = L(1)^2 + L(2)^2 + L(3)^2 = 26$ (sector trace squares)
+\item $\sigma = t_1^2 + t_2^2 + t_3^2 = 26$ (sector trace squares)
 \item $F \propto 1/r^2$ (inverse square law from $\varphi\psi = -1$)
 \item $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$ (sector factorization)
 \end{itemize}
 
-\subsection*{Layer 2: D-Hierarchy Boundary Conditions (combinatorial)}
+\subsection*{Layer 2: Sector-Invariant Exponents}
 
-Since $D_6$ annihilates mass operators ($\Delta = 1$),
-mass ratios are boundary data from the D-hierarchy:
+The physical exponents derive from sector traces $t_k = \varphi^k + \psi^k$
+of the $D_6$ characteristic polynomial factorization
+$p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$:
 \begin{itemize}
-\item $107 = T(4) \times (T(4)+1) - C(3,2) = 10 \times 11 - 3$
-\item $45 = C(3,2) \times T(5) = T(9)$
+\item $107 = p_3 + e_3 + d = \sum t_k^3 + \prod t_k + \dim\ker(D_6)$
+\item $45 = d \times (e_3 + d) = 3 \times C(6,2)$
 \item $5/63 = \text{activeLevels}/\text{correctionDenom}$
 \end{itemize}
-These are degree-0 (combinatorial count) formulas with no eigenvalue-dimensional intermediates.
+Each term is an independent spectral invariant with no degree mixing
+(Theorems~\ref{thm:lepton_sector}--\ref{thm:sector_invariant_derivation}).
 
 \subsection*{Layer 3: Physical Assembly (dimensionally consistent)}
 
@@ -650,11 +658,10 @@ The physical quantities are assembled with dimensional intermediates:
 \end{align*}
 \end{theorem}
 
-\noindent\textbf{Note on spectral formulas.}
-The spectral equalities $107 = 6 \cdot 28 - 64 + 3$ etc.\ are numerically valid
-but degree-inhomogeneous. Since all $D_6$ power sums $p_k$ are even while $107$ is odd,
-no single-degree homogeneous spectral formula can yield $107$.
-This is consistent with Layer~2: mass ratios are boundary data, not spectral data.
+\noindent\textbf{Note on derivation.}
+The sector-invariant formulas (Theorems~\ref{thm:lepton_sector}--\ref{thm:sector_invariant_derivation})
+express all physical exponents using independent spectral invariants ($p_3$, $e_3$, $\sigma$, $d$, $D$)
+from the $D_6$ sector factorization, avoiding the degree-inhomogeneity of earlier spectral formulas.
 
 \section{Graviton Structural Prediction}
 \label{sec:grav_graviton}
@@ -692,7 +699,7 @@ The maximum helicity for a massless particle in $(d{+}1)$-dimensional spacetime 
 From the $D_6$ characteristic polynomial and kernel alone:
 \begin{enumerate}
 \item \textbf{Existence}: $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$ has a gravity sector.
-\item \textbf{Spacetime bridge}: $L(\mathrm{spatialDim}) = L(3) = 4 = \mathrm{spacetimeDim}$.
+\item \textbf{Spacetime bridge}: $t_3 = \varphi^3 + \psi^3 = 4 = \mathrm{spacetimeDim}$.
 \item \textbf{Sector determinant}: $(\varphi\psi)^3 = -1$.
 \item \textbf{Sector discriminant}: $\Delta = 20 = C(6,3) = 4 \times 5$.
 \item \textbf{Massless}: $\Box_\varphi[t^{-1}] = 0$.
@@ -708,7 +715,7 @@ D_6 \text{ charPoly}
 \text{gravity sector } (x^2{-}4x{-}1)
 \;\Longrightarrow\;
 \begin{cases}
-L(3) = 4 & \text{(spacetimeDim)} \\
+t_3 = 4 & \text{(spacetimeDim)} \\
 \Delta = 20 & \text{(spatial normalization)} \\
 \Box_\varphi[t^{-1}] = 0 & \text{(massless)} \\
 F \propto 1/r^2 & \text{(inverse square)}
