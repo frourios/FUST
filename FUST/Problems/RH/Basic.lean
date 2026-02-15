@@ -1436,18 +1436,7 @@ theorem theorem_IV_mellin_axis :
     (MellinPlancherelAxis = {s : ℂ | s.re = 1/2}) :=
   ⟨critical_line_from_haar, mellin_axis_from_haar_weight, mellin_axis_is_critical_line⟩
 
-/-- **Theorem V: L² Power Function Constraint**
-    x^s ∈ L²(ℝ₊, dx/x) requires Re(s) = 1/2 -/
-theorem theorem_V_L2_constraint :
-    -- L² condition definition
-    (∀ s : ℂ, L2PowerCondition s ↔ s.re = 1/2) ∧
-    -- Critical line eigenfunctions satisfy L²
-    (∀ E : ℝ, L2PowerCondition (1/2 + I * E)) ∧
-    -- Eigenfunction real part
-    (∀ E : ℝ, (1/2 + I * E : ℂ).re = 1/2) :=
-  ⟨fun _ => Iff.rfl, critical_line_satisfies_L2, mellin_exponent_re⟩
-
-/-- **Theorem VI: Functional Equation Symmetry**
+/-- **Theorem V: Functional Equation Symmetry**
     ξ(s) = ξ(1-s) with fixed point at Re = 1/2 -/
 theorem theorem_VI_functional_equation :
     -- Functional equation
@@ -1462,17 +1451,6 @@ theorem theorem_VI_functional_equation :
    fun ρ h => by rw [completedRiemannZeta₀_one_sub]; exact h,
    functional_eq_fixed_points,
    unique_symmetry_fixed_point⟩
-
-/-- **Theorem VII: Spectral-Zeta Correspondence**
-    The key bridge from FUST to RH -/
-theorem theorem_VII_spectral_correspondence :
-    -- Forward direction: L² condition implies Re = 1/2
-    (∀ s : ℂ, L2PowerCondition s → s.re = 1/2) ∧
-    -- Spectral resonances are on critical line under physical-sheet L² condition
-    (ResonanceL2Condition → ∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
-    -- Spectral axis is critical line
-    (∀ E : ℝ, (spectralToComplex E).re = 1/2) :=
-  ⟨fun _ h => h, fun hL2 ρ hρ => resonance_on_critical_line hL2 ρ hρ, spectral_re_half⟩
 
 /-- **Theorem VIII: Critical Strip Properties**
     Structural properties of zeros in critical strip -/
@@ -1508,103 +1486,6 @@ theorem theorem_IX_scattering_identity :
     (∀ E : ℝ, completedRiemannZeta₀ (1/2 + I * E) = 0 → (1/2 + I * E : ℂ).re = 1/2) :=
   ⟨fun E => by simp [Complex.add_re, Complex.mul_re],
    fun E _ => by simp [Complex.add_re, Complex.mul_re]⟩
-
-/-- **Theorem X: Zeta-Spectral Correspondence**
-
-By the FUST-Scattering Zeta Identity (Theorem IX):
-  ζ(ρ) = 0 in critical strip ⟺ ρ is a spectral resonance of H_FUST
-
-This is derived from:
-1. Definition of spectral resonance (resolvent pole)
-2. Analytic continuation of spectral determinant
-3. Selberg-type trace formula for H_FUST
-4. Haar-L² uniqueness eliminates boundary terms
-
-The L² constraint on the "physical sheet" then forces Re(ρ) = 1/2.
--/
-def ZetaSpectralCorrespondence : Prop :=
-  ∀ ρ : ℂ, IsZetaZeroInStrip ρ → IsSpectralResonance ρ ∧ L2PowerCondition ρ
-
-/-- **Main Theorem: RH from FUST**
-
-Given the Zeta-Spectral Correspondence (Theorem X), RH follows:
-1. ζ(ρ) = 0 with 0 < Re(ρ) < 1
-2. → ρ is a spectral resonance (by ZetaSpectralCorrespondence)
-3. → ρ satisfies L² condition (by IsSpectralResonance definition)
-4. → Re(ρ) = 1/2 (by L2PowerCondition)
--/
-theorem rh_from_zeta_spectral_correspondence (h : ZetaSpectralCorrespondence) :
-    ∀ ρ : ℂ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → ρ.re = 1/2 := by
-  intro ρ hz hpos hlt
-  have hstrip : IsZetaZeroInStrip ρ := ⟨hz, hpos, hlt⟩
-  have hres : IsSpectralResonance ρ ∧ L2PowerCondition ρ := h ρ hstrip
-  exact hres.2
-
-/-- **Complete FUST-RH Proof Requirements Summary**
-
-All premises that must hold for the RH proof:
--/
-theorem fust_rh_complete_requirements :
-    -- (I) D6 eigenvalue structure
-    (φ * ψ = -1 ∧ φ + ψ = 1 ∧ φ > 1 ∧ |ψ| < 1) ∧
-    -- (II) Hamiltonian positivity
-    (∀ f x, FUSTHamiltonian f x ≥ 0) ∧
-    -- (III) Haar measure derivation
-    (∀ α : ℝ, PhiScalingUnitaryCondition (fun x => x ^ α) ↔ α = -1) ∧
-    -- (IV) Mellin axis derivation
-    (mellinAxisFromWeight haarL2Weight = 1/2) ∧
-    -- (V) L² constraint
-    (∀ s : ℂ, L2PowerCondition s → s.re = 1/2) ∧
-    -- (VI) Functional equation
-    (∀ s : ℂ, completedRiemannZeta₀ (1 - s) = completedRiemannZeta₀ s) ∧
-    -- (VII) Spectral correspondence conclusion under physical-sheet L² condition
-    (ResonanceL2Condition → ∀ ρ : ℂ, IsSpectralResonance ρ → ρ.re = 1/2) ∧
-    -- (VIII) Critical strip symmetry
-    (∀ ρ : ℂ, IsInCriticalStrip ρ → IsInCriticalStrip (1 - ρ)) :=
-  ⟨⟨phi_mul_psi, phi_add_psi, φ_gt_one, abs_psi_lt_one⟩,
-   hamiltonian_nonneg,
-   power_weight_uniqueness,
-   mellin_axis_from_haar_weight,
-   fun _ h => h,
-   completedRiemannZeta₀_one_sub,
-   fun hL2 ρ hρ => resonance_on_critical_line hL2 ρ hρ,
-   critical_strip_symmetric⟩
-
-/-- **Derivation of ZetaSpectralCorrespondence**
-
-The ZetaSpectralCorrespondence (Theorem X) states:
-  ∀ ρ, ζ(ρ) = 0 ∧ 0 < Re(ρ) < 1 → IsSpectralResonance ρ
-
-**Why this is a theorem (derived from FUST structure)**:
-
-By the FUST-Scattering Zeta Identity (Theorem IX / Theorem 1 in HilbertPolya.lean):
-  det(H - E) ∝ ξ(1/2 + iE)
-
-This identity is derived from:
-1. H = D6†D6 spectral determinant definition
-2. Selberg-type trace formula computation
-3. Haar-L² uniqueness (boundary terms vanish)
-
-**Corollary**: ξ(ρ) = 0 ⟺ ρ is a resonance of H
-
-Since ξ(ρ) = 0 ⟺ riemannZeta(ρ) = 0 in critical strip, we get:
-  Zeta zeros = Spectral resonances of H_FUST
-
-ZetaSpectralCorrespondence follows from:
-- Definition (spectral resonance = resolvent pole)
-- Analysis (analytic continuation)
-- Trace formula (FUST-Scattering Zeta Identity)
--/
-theorem zeta_spectral_correspondence_status :
-    -- If the correspondence holds, RH follows
-    (ZetaSpectralCorrespondence →
-     ∀ ρ : ℂ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → ρ.re = 1/2) ∧
-    -- The correspondence is equivalent to: all critical strip zeros satisfy L²
-    (ZetaSpectralCorrespondence ↔
-     ∀ ρ : ℂ, riemannZeta ρ = 0 → 0 < ρ.re → ρ.re < 1 → L2PowerCondition ρ) :=
-  ⟨rh_from_zeta_spectral_correspondence,
-   ⟨fun h ρ hz hpos hlt => (h ρ ⟨hz, hpos, hlt⟩).2,
-    fun h ρ ⟨hz, hpos, hlt⟩ => ⟨⟨hz, hpos, hlt⟩, h ρ hz hpos hlt⟩⟩⟩
 
 end RHProofSummary
 
