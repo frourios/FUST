@@ -1,3 +1,25 @@
+import FUST.Chemistry.AminoAcids
+import FUST.Chemistry.BondGeometry
+import FUST.Chemistry.CarbonIsotopes
+import FUST.Chemistry.CarbonMolecules
+import FUST.Chemistry.CrossDomain
+import FUST.Chemistry.Denaturation
+import FUST.Chemistry.DihydrogenMolecules
+import FUST.Chemistry.GeneticCode
+import FUST.Chemistry.HeliumInertness
+import FUST.Chemistry.HydrogenIsotopes
+import FUST.Chemistry.LaplaceDemon
+import FUST.Chemistry.MixturePhase
+import FUST.Chemistry.Mutation
+import FUST.Chemistry.NitrogenIsotopes
+import FUST.Chemistry.Nucleotides
+import FUST.Chemistry.OxygenIsotopes
+import FUST.Chemistry.PhosphorusAtom
+import FUST.Chemistry.ProteinFolding
+import FUST.Chemistry.SulfurAtom
+import FUST.Chemistry.Translation
+import FUST.Chemistry.WaterMolecules
+
 import FUST.Biology.Brain
 import FUST.Biology.Life
 import FUST.Biology.Observer
@@ -20,6 +42,7 @@ import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassRatios
 import FUST.Physics.MellinSampling
 import FUST.Physics.NeutrinoMass
+import FUST.Physics.Nuclear
 import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PhiBloch
@@ -59,5 +82,6 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
+import FUST.DiscreteTag
 import FUST.FrourioLogarithm
 import FUST.SpectralCoefficients
