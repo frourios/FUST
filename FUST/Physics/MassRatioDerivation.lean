@@ -5,11 +5,9 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 /-!
 # FUST Mass Ratio Derivation
 
-Fermion mass ratios derived from ker(D₆) = {1, x, x²} (dim = 3 → 3 generations).
-Each basis element maps to a generation via D₃/D₄ pair counts:
-1. ker(D₆) basis {1, x, x²} → 3 generations (x³ ∉ ker → no 4th generation)
-2. Triangular numbers T(k) = C(k+1, 2) from D_{k+1} evaluation pair counts
-3. Transition correction δ ∈ {0, 1}: hierarchy descent D₄ → D₃
+Fermion mass ratios derived from D₃/D₄ pair counts and hierarchy transitions:
+1. Triangular numbers T(k) = C(k+1, 2) from D_{k+1} evaluation pair counts
+2. Transition correction δ ∈ {0, 1}: hierarchy descent D₄ → D₃
 -/
 
 namespace FUST.MassRatioDerivation
@@ -62,39 +60,7 @@ theorem D6_full_kernel :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
   ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic⟩
 
-/-! ## Part 2: Generation from ker(D₆) Basis
-
-ker(D₆) = {1, x, x²} (dim = 3) gives exactly 3 generations.
-Each basis element tⁿ has a distinct D₃/D₄ response determining its mass:
-- x² (τ): D₅(x²)≠0, heaviest, uses D₃ pair count T(3) = 6
-- x¹ (μ): D₃(x)≠0, intermediate, uses D₃ pair count T(3) = 6
-- x⁰ (e): D₃(1)=0 (gauge-invariant), lightest, uses D₄ pair count T(4) = 10
--/
-
-/-- Generation assignment: ker(D₆) basis → D-operator index for mass exponent -/
-structure GenerationAssignment where
-  D : Fin 3 → ℕ
-  h_valid : ∀ i, D i = 3 ∨ D i = 4
-  h_heavy : D ⟨2, by omega⟩ = 3
-  h_descent : ∃ i, D i = 4
-
-/-- The unique valid assignment: x⁰→D₄, x¹→D₃, x²→D₃ -/
-def uniqueAssignment : GenerationAssignment where
-  D := ![4, 3, 3]
-  h_valid := by intro i; fin_cases i <;> simp [Matrix.cons_val_zero, Matrix.cons_val_one]
-  h_heavy := by simp
-  h_descent := ⟨⟨0, by omega⟩, by simp [Matrix.cons_val_zero]⟩
-
-/-- At least one generation uses D₄ -/
-theorem assignment_has_D4 (a : GenerationAssignment) :
-    a.D ⟨0, by omega⟩ = 4 ∨ a.D ⟨1, by omega⟩ = 4 ∨ a.D ⟨2, by omega⟩ = 4 := by
-  obtain ⟨i, hi⟩ := a.h_descent
-  fin_cases i
-  · left; exact hi
-  · right; left; exact hi
-  · right; right; exact hi
-
-/-! ## Part 3: Correction Values from Hierarchy Transition -/
+/-! ## Part 2: Correction Values from Hierarchy Transition -/
 
 /-- Correction δ for transition from D_k to D_j: δ = 1 for descent (k > j), 0 otherwise -/
 abbrev transitionCorrection (k j : ℕ) : ℤ := if k > j then 1 else 0
@@ -109,7 +75,7 @@ theorem correction_in_zero_one (k j : ℕ) :
     transitionCorrection k j = 0 ∨ transitionCorrection k j = 1 := by
   unfold transitionCorrection; split_ifs <;> simp
 
-/-! ## Part 4: Mass Exponent Formula (Fully Derived) -/
+/-! ## Part 3: Mass Exponent Formula (Fully Derived) -/
 
 /-- Mass exponent formula: n = T(k) + δ = C(k+1, 2) + δ -/
 abbrev massExponent (k j : ℕ) : ℤ := (triangular k : ℤ) + transitionCorrection k j
@@ -126,7 +92,7 @@ theorem mu_e_exponent : massExponent 4 3 = 11 := by
 theorem tau_e_exponent : massExponent 3 3 + massExponent 4 3 = 17 := by
   rw [tau_mu_exponent, mu_e_exponent]; rfl
 
-/-! ## Part 5: Mass Ratios (No Free Parameters) -/
+/-! ## Part 4: Mass Ratios (No Free Parameters) -/
 
 /-- Mass ratios are φ^n where n is derived from D-structure -/
 noncomputable abbrev massRatio (k j : ℕ) : ℝ := φ ^ (massExponent k j)
@@ -145,7 +111,7 @@ theorem tau_e_ratio : massRatio 3 3 * massRatio 4 3 = φ ^ 17 := by
   rw [← Real.rpow_natCast, ← Real.rpow_natCast, ← Real.rpow_add phi_pos]
   norm_num
 
-/-! ## Part 6: Summary - No Fitting Parameters -/
+/-! ## Part 5: Summary - No Fitting Parameters -/
 
 /-- Complete derivation summary: All values come from structure, not fitting. -/
 theorem no_fitting_parameters :
@@ -161,7 +127,7 @@ theorem no_fitting_parameters :
          ⟨tau_mu_exponent, mu_e_exponent⟩,
          ⟨rfl, rfl⟩, D3_gauge_invariance⟩
 
-/-! ## Part 7: Verification Against Known Physics -/
+/-! ## Part 6: Verification Against Known Physics -/
 
 /-- Experimental consistency check:
     - m_μ/m_e ≈ 206.77 ≈ φ^11 ≈ 199.0 (error ~4%)
@@ -172,7 +138,7 @@ theorem experimental_verification :
     triangular 4 + 1 = 11 := by
   unfold triangular; decide
 
-/-! ## Part 8: D5/D6 Coefficient Corrections
+/-! ## Part 7: D5/D6 Coefficient Corrections
 
 The coefficients are uniquely determined by drift annihilation conditions:
 - D5: a = -1, b = -4 (from C0: D5[1]=0, C1: D5[x]=0)

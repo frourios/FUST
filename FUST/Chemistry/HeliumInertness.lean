@@ -101,7 +101,9 @@ theorem closedShell_2 : closedShellElectronCount 2 = 10 := by decide
 
 private theorem shellCapacity_ge_two (n : ℕ) (hn : n ≥ 1) :
     Nuclear.shellCapacity n ≥ 2 := by
-  unfold Nuclear.shellCapacity Nuclear.spinDegeneracy
+  unfold Nuclear.shellCapacity
+  have h2 : Nuclear.spinDegeneracy = 2 := Nuclear.spinDegeneracy_eq
+  rw [h2]
   nlinarith [Nat.one_le_iff_ne_zero.mpr (by omega : n ≠ 0)]
 
 -- closedShellElectronCount is strictly increasing for n ≥ 1

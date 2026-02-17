@@ -130,6 +130,12 @@ Combined with $m_W/m_e = \varphi^{25} \times 15/16$ (Chapter~\ref{chap:pd_mass_r
 The Z boson mass is fully determined by $\varphi$ and pair counts,
 with no free parameters.
 
+\textbf{Note on dimensional type}: In Lean, $m_Z^2$ is represented as \texttt{DimSum2 dimZSqComp1 dimZSqComp2},
+a formal sum of two ScaleQ with different FDim $(40,-48,-52)$ and $(42,-46,-52)$.
+The $\mathbb{R}$-evaluation recovers the physical $m_Z^2 = m_W^2 \times 13/10$.
+This dimensional splitting reflects the distinct origins of the two contributions
+($m_W^2$ from the $D_6^2$ sector, $m_W^2 \sin^2\theta_W / \cos^2\theta_W$ from the mixed sector).
+
 \section{Summary}
 \label{sec:weinberg_summary}
 

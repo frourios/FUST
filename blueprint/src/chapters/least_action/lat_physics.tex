@@ -250,7 +250,7 @@ The dimensional type system classifies the quantities in this chapter:
 Quantity & Type & Dimension / Value \\
 \hline
 $L_{\mathrm{FUST}} = \|D_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
-$\Delta = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ \\
+$\Delta = m_e = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ = dimElectron \\
 $\Delta^2 = 144/625$ (energy threshold) & ScaleQuantity & $(-10, 2, -2)$ \\
 Spacetime dimension & CountQuantity & $4$ \\
 $f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
@@ -258,7 +258,7 @@ $f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
 \end{tabular}
 \end{center}
 
-The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2, -2)$, which is dimensionally consistent. $\Delta = 12/25$ (ScaleQuantity from $D_6$ gauge-invariant output) has dimension $(-5, 1, -1) = \dim(t_{\mathrm{FUST}})^{-1}$.
+The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2, -2)$, which is dimensionally consistent. $\Delta = 12/25$ (ScaleQuantity from $D_6$ gauge-invariant output) has dimension $(-5, 1, -1) = \mathrm{dimElectron}$, the electron baseline. Other particles acquire distinct FDim via $\varphi$-scaling (see Chapter~\ref{chap:pd_mass_ratios}).
 
-Lean: \texttt{FUST.massGap}$\Delta$ (ScaleQ $\dim(t)^{-1}$), \texttt{FUST.Dim.massGap}$\Delta$.
+Lean: \texttt{FUST.massGap}$\Delta$ (ScaleQ dimElectron), \texttt{FUST.Dim.electronMass}.
 

@@ -426,7 +426,7 @@ noncomputable def D2Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D2 f x) ^ 2
 noncomputable def D3Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D3 f x) ^ 2
 noncomputable def D4Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D4 f x) ^ 2
 noncomputable def D5Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D5 f x) ^ 2
-noncomputable def D6Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D6 f x)^2
+noncomputable def D6Lagrangian (f : ℝ → ℝ) (x : ℝ) : ℝ := (D6 f x) ^ 2
 
 theorem D2_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D2Lagrangian f x ≥ 0 := sq_nonneg _
 theorem D3_lagrangian_nonneg (f : ℝ → ℝ) (x : ℝ) : D3Lagrangian f x ≥ 0 := sq_nonneg _

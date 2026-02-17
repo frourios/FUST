@@ -197,6 +197,29 @@ theorem operatorKerDim_6_justified :
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
   ⟨rfl, fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
 
+/-! ### D5half FDim: half-order operator between D₅ and D₆
+
+D5half shares D₅'s denominator structure (φ-ψ)⁴ → p = -4,
+is antisymmetric → δ = 0, and has kerDim = 1 → τ = 2-1 = 1.
+Justified by D5half_const, D5half_linear_ne_zero from DifferenceOperators.lean. -/
+
+def deriveFDim_D5half : FDim := ⟨-4, 0, 1⟩
+
+theorem deriveFDim_D5half_justified :
+    -- kerDim = 1: annihilates constants but not linear
+    (∀ c x, x ≠ 0 → D5half (fun _ => c) x = 0) ∧
+    (∀ x, x ≠ 0 → D5half id x ≠ 0) ∧
+    -- p = -4: same denominator order as D₅
+    deriveFDim_D5half.p = -4 ∧
+    -- δ = 0: antisymmetric (odd-type)
+    deriveFDim_D5half.delta = 0 ∧
+    -- τ = 1: kerDim = 1
+    deriveFDim_D5half.tau = 1 :=
+  ⟨D5half_const, D5half_linear_ne_zero, rfl, rfl, rfl⟩
+
+theorem deriveFDim_D5half_ne_D5 : deriveFDim_D5half ≠ deriveFDim 5 := by decide
+theorem deriveFDim_D5half_ne_D6 : deriveFDim_D5half ≠ deriveFDim 6 := by decide
+
 end DeriveFDim
 
 section DerivedDimConstants

@@ -1,41 +1,73 @@
 import FUST.Physics.ParticleSpectrum
-import FUST.Physics.WaveEquation
+import FUST.Physics.MassRatios
 import FUST.DifferenceOperators
+import FUST.DimensionalAnalysis
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
 # Nuclear and Atomic Structure from D-operators
 
-Derives shell structure, period lengths, quark charges, and magic numbers
+Derives shell structure, quark charges, and magic numbers
 from ker(D₅) = 2 (spin degeneracy) and ker(D₆) = 3 (spatial dimension).
 -/
 
 namespace FUST.Nuclear
 
-open FUST
+open FUST FUST.Dim
 
 /-! ## Section 1: Kernel Dimensions from D-operators -/
 
--- Spin degeneracy = dim ker(D₅) = 2
--- Witness: D5_not_annihilate_quadratic proves x² ∉ ker(D₅), so ker = span{1, x}
-abbrev spinDegeneracy : ℕ := 2
+-- dim ker(D₅) = 2: D5 annihilates {1, x} but not x²
+abbrev spinDegeneracy : ℕ := operatorKerDim 5
 
--- D₅ kernel witness: x² ∉ ker(D₅)
-theorem spinDeg_witness (x : ℝ) (hx : x ≠ 0) : D5 (fun t => t ^ 2) x ≠ 0 :=
-  D5_not_annihilate_quadratic x hx
+theorem spinDegeneracy_eq : spinDegeneracy = 2 := rfl
 
--- D₆ kernel witness: x³ ∉ ker(D₆)
-theorem spatialDim_witness (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t ^ 3) x ≠ 0 :=
-  D6_not_annihilate_cubic x hx
+theorem spinDegeneracy_justified :
+    spinDegeneracy = 2 ∧
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0) :=
+  operatorKerDim_5_justified
 
-/-! ## Section 2: Harmonic Polynomial Dimensions -/
+-- dim ker(D₆) = 3 = spatialDim: D6 annihilates {1, x, x²} but not x³
+theorem spatialDim_from_kerD6 :
+    WaveEquation.spatialDim = operatorKerDim 6 := rfl
 
--- Fischer decomposition: d=3 harmonic polynomials of degree l have dimension 2l+1
+theorem spatialDim_justified :
+    WaveEquation.spatialDim = 3 ∧
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
+  ⟨rfl, (operatorKerDim_6_justified).2.1,
+   (operatorKerDim_6_justified).2.2.1,
+   (operatorKerDim_6_justified).2.2.2.1,
+   (operatorKerDim_6_justified).2.2.2.2⟩
+
+/-! ## Section 2: Harmonic Polynomial Dimensions
+
+In d dimensions, spherical harmonics of degree l have dimension
+C(l+d-1, d-1) - C(l+d-3, d-1). For d = spatialDim = 3, this simplifies to 2l+1.
+-/
+
+-- d=3 specialization: harmonicDim(l) = 2l+1
 abbrev harmonicDim (l : ℕ) : ℕ := 2 * l + 1
 
-theorem harmonicDim_values :
-  harmonicDim 0 = 1 ∧ harmonicDim 1 = 3 ∧
-  harmonicDim 2 = 5 ∧ harmonicDim 3 = 7 := ⟨rfl, rfl, rfl, rfl⟩
+-- C(l+2, 2) = (2l+1) + C(l, 2): spherical harmonic count in d=3
+theorem binomial_harmonicDim (l : ℕ) :
+    Nat.choose (l + 2) 2 = 2 * l + 1 + Nat.choose l 2 := by
+  induction l with
+  | zero => decide
+  | succ k ih =>
+    have step1 : Nat.choose (k + 3) 2 = Nat.choose (k + 2) 1 + Nat.choose (k + 2) 2 := by
+      rw [show (k + 3) = (k + 2).succ from rfl, show (2 : ℕ) = 1 + 1 from rfl]
+      exact Nat.choose_succ_succ (k + 2) 1
+    have step2 : Nat.choose (k + 2) 1 = k + 2 := Nat.choose_one_right (k + 2)
+    have step3 : Nat.choose (k + 1) 2 = k + Nat.choose k 2 := by
+      rw [show (k + 1) = k.succ from rfl, show (2 : ℕ) = 1 + 1 from rfl]
+      rw [Nat.choose_succ_succ k 1, Nat.choose_one_right]
+    rw [show k + 1 + 2 = k + 3 from by ring] at *
+    omega
 
 -- Σ_{l=0}^{n-1} (2l+1) = n²
 theorem harmonicDim_sum (n : ℕ) :
@@ -74,9 +106,12 @@ theorem shellCapacity_values :
   shellCapacity 1 = 2 ∧ shellCapacity 2 = 8 ∧
   shellCapacity 3 = 18 ∧ shellCapacity 4 = 32 := ⟨rfl, rfl, rfl, rfl⟩
 
-/-! ## Section 4: Period Structure -/
+/-! ## Section 4: Period Structure
 
--- Period length = shellCapacity(⌈p/2⌉), periods come in pairs
+Madelung (n+l) rule: periods pair up as shellCapacity(⌈p/2⌉).
+This is an empirical ordering rule, not derived from D-structure.
+-/
+
 def periodLength (p : ℕ) : ℕ := shellCapacity ((p + 2) / 2)
 
 theorem periodLength_values :
@@ -84,14 +119,13 @@ theorem periodLength_values :
   periodLength 4 = 18 ∧ periodLength 5 = 18 ∧
   periodLength 6 = 32 ∧ periodLength 7 = 32 := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
--- 7 periods give exactly 118 elements
 theorem total_elements_118 :
   periodLength 1 + periodLength 2 + periodLength 3 + periodLength 4 +
   periodLength 5 + periodLength 6 + periodLength 7 = 118 := rfl
 
 /-! ## Section 5: Quark Charge from D₃ Structure -/
 
--- Charge denominator = C(3,2) from D₃ structure
+-- Charge denominator = C(spatialDim, 2) from D₃ structure
 abbrev chargeDenom : ℕ := Nat.choose WaveEquation.spatialDim 2
 
 theorem chargeDenom_eq : chargeDenom = 3 := rfl
@@ -129,7 +163,6 @@ theorem neutron_quark_count : neutronQuarks.length = WaveEquation.spatialDim := 
 theorem proton_charge : baryonCharge protonQuarks = chargeDenom := rfl
 theorem neutron_charge : baryonCharge neutronQuarks = 0 := rfl
 
--- Quark composition is uniquely determined by charge and quark count
 theorem proton_composition_unique (n_up n_down : ℕ)
     (hcount : n_up + n_down = WaveEquation.spatialDim)
     (hcharge : n_up * (QuarkFlavor.chargeNum .up) + n_down * (QuarkFlavor.chargeNum .down) =
@@ -145,17 +178,43 @@ theorem neutron_composition_unique (n_up n_down : ℕ)
   simp only [WaveEquation.spatialDim, QuarkFlavor.chargeNum] at *
   omega
 
-/-! ## Section 6: Nuclear Shell Model -/
+/-! ## Section 5b: Connection to Mass Derivations
 
-structure Nucleus where
-  Z : ℕ
-  N : ℕ
-  hZ : Z > 0
-  deriving Repr
+chargeDenom = C(3,2) appears in protonMass normalization C(3,2)+C(5,2) = 13.
+m_u/m_d = C(2,2)/2 = 1/2 (from QuarkMassRatios) determines the isospin splitting.
+-/
 
-def Nucleus.massNumber (nuc : Nucleus) : ℕ := nuc.Z + nuc.N
+-- C(3,2) in protonMass denominator is the charge denominator
+theorem chargeDenom_in_baryon_normalization :
+    (chargeDenom : ℕ) + Nat.choose 5 2 = 13 := rfl
 
--- 3D harmonic oscillator degeneracy: C(N+2, 2)
+-- Neutron has one extra down quark → m_n - m_p ∝ m_d - m_u
+theorem neutron_down_excess :
+    neutronQuarks.count .down - protonQuarks.count .down = 1 ∧
+    protonQuarks.count .up - neutronQuarks.count .up = 1 := by decide
+
+-- m_u/m_d = 1/2 from MassRatios (D₂ isospin)
+theorem quark_mass_ratio_from_isospin :
+    muMdRatio.val = 1 / 2 := muMdRatio_val
+
+-- Splitting connects to isospin: φ² = φ + C(2,2) where C(2,2) = m_u/m_d numerator
+theorem splitting_isospin_connection :
+    neutronMass.val - protonMass.val =
+    electronMass.val * (φ + Nat.choose 2 2) * 29 / 30 :=
+  splitting_from_isospin
+
+-- β-decay: neutron → proton + electron + ν̄ₑ is kinematically allowed
+theorem beta_decay_from_quark_structure :
+    neutronMass.val > protonMass.val + electronMass.val :=
+  beta_decay_possible
+
+/-! ## Section 6: Nuclear Shell Model
+
+Nuclei are identified by (Z, N) via DTagged .protonNum / .neutronNum
+in DiscreteTag.lean. No separate Nucleus structure needed.
+Mass number A = Z + N = atomDegree Z N 0 (ion degree, defined in OxygenIsotopes). -/
+
+-- 3D harmonic oscillator degeneracy: C(N + spatialDim - 1, spatialDim - 1)
 def hoDegeneracy (N : ℕ) : ℕ :=
   Nat.choose (N + WaveEquation.spatialDim - 1) (WaveEquation.spatialDim - 1)
 
@@ -188,22 +247,25 @@ theorem hoMagic_cumulative :
   hoMagic 3 = hoLevelCapacity 0 + hoLevelCapacity 1 + hoLevelCapacity 2 +
     hoLevelCapacity 3 := by decide
 
-/-! ## Section 7: Intruder State Correction -/
+/-! ## Section 7: Intruder State Correction
 
--- Spin-orbit intruder: j = l + 1/2 stretch state from shell N has l = N
--- Degeneracy = 2j+1 = 2(N+1/2)+1 = 2N+2 = harmonicDim(N) + 1
+Spin-orbit coupling promotes the j = l + 1/2 stretched state from shell N (l = N)
+into the gap below. Degeneracy = 2j + 1 = spinDegeneracy × (N + 1).
+This is empirical: the spin-orbit strength ordering is not derived from D-structure.
+-/
+
 def intruderDeg (N : ℕ) : ℕ := spinDegeneracy * (N + 1)
 
 theorem intruderDeg_eq_harmonicDim_succ (N : ℕ) :
     intruderDeg N = harmonicDim N + 1 := by
-  simp [intruderDeg, harmonicDim, spinDegeneracy]; ring
+  simp [intruderDeg, harmonicDim, spinDegeneracy, operatorKerDim]; ring
 
 theorem intruderDeg_values :
   intruderDeg 0 = 2 ∧ intruderDeg 1 = 4 ∧ intruderDeg 2 = 6 ∧
   intruderDeg 3 = 8 ∧ intruderDeg 4 = 10 ∧ intruderDeg 5 = 12 ∧
   intruderDeg 6 = 14 := by decide
 
--- N ≤ 2: pure harmonic oscillator; N ≥ 3: hoMagic(N-1) + intruderDeg(N)
+-- N ≤ 2: pure harmonic oscillator; N ≥ 3: spin-orbit intruder correction (empirical)
 def nuclearMagic : ℕ → ℕ
   | 0 => hoMagic 0
   | 1 => hoMagic 1
@@ -215,46 +277,56 @@ theorem nuclearMagic_values :
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 := by decide
 
-theorem low_magic_universal :
+-- N ≤ 2 magic numbers are pure harmonic oscillator (no empirical input)
+theorem low_magic_from_ho :
   nuclearMagic 0 = hoMagic 0 ∧
   nuclearMagic 1 = hoMagic 1 ∧
   nuclearMagic 2 = hoMagic 2 := ⟨rfl, rfl, rfl⟩
 
 theorem magic_even : ∀ n, n < 7 → nuclearMagic n % 2 = 0 := by decide
 
-structure DoubleMagicNucleus where
-  Z : ℕ
-  N : ℕ
-  hZ_magic : ∃ i, i < 7 ∧ nuclearMagic i = Z
-  hN_magic : ∃ i, i < 7 ∧ nuclearMagic i = N
+-- Predicate: n is a magic number
+def IsMagic (n : ℕ) : Prop := ∃ i, i < 7 ∧ nuclearMagic i = n
 
-def He4 : DoubleMagicNucleus := ⟨2, 2, ⟨0, by omega, rfl⟩, ⟨0, by omega, rfl⟩⟩
-def O16 : DoubleMagicNucleus := ⟨8, 8, ⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩⟩
-def Ca40 : DoubleMagicNucleus := ⟨20, 20, ⟨2, by omega, rfl⟩, ⟨2, by omega, rfl⟩⟩
-def Ca48 : DoubleMagicNucleus := ⟨20, 28, ⟨2, by omega, rfl⟩, ⟨3, by omega, rfl⟩⟩
-def Ni78 : DoubleMagicNucleus := ⟨28, 50, ⟨3, by omega, rfl⟩, ⟨4, by omega, rfl⟩⟩
-def Sn132 : DoubleMagicNucleus := ⟨50, 82, ⟨4, by omega, rfl⟩, ⟨5, by omega, rfl⟩⟩
-def Pb208 : DoubleMagicNucleus := ⟨82, 126, ⟨5, by omega, rfl⟩, ⟨6, by omega, rfl⟩⟩
+-- Double-magic: both Z and N are magic numbers
+def IsDoubleMagic (Z N : ℕ) : Prop := IsMagic Z ∧ IsMagic N
 
-theorem He4_is_alpha : He4.Z + He4.N = 4 := rfl
-theorem Pb208_mass_number : Pb208.Z + Pb208.N = 208 := rfl
+theorem He4_double_magic : IsDoubleMagic 2 2 :=
+  ⟨⟨0, by omega, rfl⟩, ⟨0, by omega, rfl⟩⟩
+theorem O16_double_magic : IsDoubleMagic 8 8 :=
+  ⟨⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩⟩
+theorem Ca40_double_magic : IsDoubleMagic 20 20 :=
+  ⟨⟨2, by omega, rfl⟩, ⟨2, by omega, rfl⟩⟩
+theorem Ca48_double_magic : IsDoubleMagic 20 28 :=
+  ⟨⟨2, by omega, rfl⟩, ⟨3, by omega, rfl⟩⟩
+theorem Ni78_double_magic : IsDoubleMagic 28 50 :=
+  ⟨⟨3, by omega, rfl⟩, ⟨4, by omega, rfl⟩⟩
+theorem Sn132_double_magic : IsDoubleMagic 50 82 :=
+  ⟨⟨4, by omega, rfl⟩, ⟨5, by omega, rfl⟩⟩
+theorem Pb208_double_magic : IsDoubleMagic 82 126 :=
+  ⟨⟨5, by omega, rfl⟩, ⟨6, by omega, rfl⟩⟩
+
+theorem He4_mass_number : 2 + 2 = 4 := rfl
+theorem Pb208_mass_number : 82 + 126 = 208 := rfl
 theorem iron_peak_near_magic : nuclearMagic 3 = 28 := rfl
 
 /-! ## Section 8: Summary -/
 
 theorem nuclear_structure_from_D_operators :
-  spinDegeneracy = 2 ∧ WaveEquation.spatialDim = 3 ∧
-  -- Subshell capacities: s=2, p=6, d=10, f=14
+  -- Derived from D-operators
+  spinDegeneracy = operatorKerDim 5 ∧
+  WaveEquation.spatialDim = operatorKerDim 6 ∧
+  -- Subshell capacities: spinDeg × harmonicDim
   Subshell.maxElectrons ⟨1, 0⟩ = 2 ∧
   Subshell.maxElectrons ⟨2, 1⟩ = 6 ∧
   Subshell.maxElectrons ⟨3, 2⟩ = 10 ∧
   Subshell.maxElectrons ⟨4, 3⟩ = 14 ∧
-  -- 7 periods = 118 elements
+  -- 7 periods = 118 elements (Madelung ordering is empirical)
   periodLength 1 + periodLength 2 + periodLength 3 + periodLength 4 +
   periodLength 5 + periodLength 6 + periodLength 7 = 118 ∧
-  -- Low magic numbers from pure harmonic oscillator
+  -- Pure harmonic oscillator magic numbers (derived)
   hoMagic 0 = 2 ∧ hoMagic 1 = 8 ∧ hoMagic 2 = 20 ∧
-  -- Quark charge denominator = 3
-  chargeDenom = 3 := by decide
+  -- Quark charge denominator = C(spatialDim, 2)
+  chargeDenom = Nat.choose WaveEquation.spatialDim 2 := by decide
 
 end FUST.Nuclear

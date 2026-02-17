@@ -55,15 +55,14 @@ Experimental: 3.0 (error 0\%, exact match).
 where $7 = C(4,2) + C(2,2)$ and $5 = C(4,2) - C(2,2)$. Experimental: 40.8 (error 1.7\%).
 \end{theorem}
 
-\section{Lepton Mass Ratios from $\ker(D_6)$ Basis}
+\section{Lepton Mass Ratios from D-Operator Pair Counts}
 \label{sec:mass_lepton}
 
-The three lepton generations correspond to $\ker(D_6) = \{1, x, x^2\}$.
-Each basis element $t^n$ maps to a $D$-operator index $k$, with mass exponent $T(k) + \delta$:
+Each $\ker(D_6)$ basis element $t^n$ maps to a $D$-operator index $k$, with mass exponent $T(k) + \delta$:
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-$\ker(D_6)$ basis & Generation & $D$-index & Exponent & Reason \\
+$\ker(D_6)$ basis & Lepton & $D$-index & Exponent & Reason \\
 \hline
 $x^0 = 1$ & $e$ (lightest) & $D_4$ & $T(4)+1=11$ & $1 \in \ker(D_3)$, descent $D_4 \to D_3$ \\
 $x^1$ & $\mu$ (middle) & $D_3$ & $T(3)+0=6$ & $D_3(x) \neq 0$ \\
@@ -125,14 +124,17 @@ Electron uses $D_4$ (since $1 \in \ker(D_3)$, requiring higher pair count); $\de
 \section{Dimensioned Particle Masses}
 \label{sec:mass_dimensioned}
 
-Mass in FUST has dimension $\dim_F = (-5, 1, -1) = \mathrm{dimTime}^{-1}$, the $D_6$ gauge-invariant output dimension.
+Each particle has a unique FDim $= \mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$.
+The electron baseline $(-5, 1, -1)$ corresponds to $a=1, n=0$;
+other particles acquire distinct FDim via the $\varphi$-scaling index $n$.
+All $\mathbb{R}$-valued mass ratios are invariant under FDim relabeling.
 
 \begin{theorem}[Electron Mass]
 \label{thm:mass_electron}
 \lean{FUST.Dim.electronMass_eq_massGap}
 \leanok
 \[
-m_e = \Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimTime}^{-1}]
+m_e = \Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimElectron} = (-5,1,-1)]
 \]
 The electron, as the lightest \emph{charged} fermion, is identified with the mass gap. Neutrinos acquire mass via $\ker(D_5) \subset \ker(D_6)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\Delta$.
 \end{theorem}
@@ -142,7 +144,7 @@ The electron, as the lightest \emph{charged} fermion, is identified with the mas
 \lean{FUST.Dim.protonMass_val}
 \leanok
 \[
-m_p = \Delta \times \varphi^{11} \times \frac{C(6,3) \times C(4,2)}{C(3,2)+C(5,2)} = \frac{12}{25} \cdot \varphi^{11} \cdot \frac{120}{13} \quad [\mathrm{dimTime}^{-1}]
+m_p = \Delta \times \varphi^{11} \times \frac{C(6,3) \times C(4,2)}{C(3,2)+C(5,2)} = \frac{12}{25} \cdot \varphi^{11} \cdot \frac{120}{13} \quad [\mathrm{dimProton} = (9,-13,-15)]
 \]
 \end{theorem}
 
@@ -163,22 +165,29 @@ Structural decomposition of $120/13$:
 \item $C(3,2)+C(5,2) = 13$: kernel and $D_5$ pair normalization
 \end{itemize}
 
-All dimensioned masses share dimension $\mathrm{dimTime}^{-1} = (-5,1,-1)$:
+Each particle has a unique FDim determined by its $\varphi$-scaling index:
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Particle & Formula & $\dim_F$ \\
+Particle & Formula & FDim $(\sqrt{5}, \delta, \tau)$ & Lean \\
 \hline
-$e$ & $\Delta$ & $(-5,1,-1)$ \\
-$\mu$ & $\Delta \cdot \varphi^{11}$ & $(-5,1,-1)$ \\
-$\tau$ & $\Delta \cdot \varphi^{17}$ & $(-5,1,-1)$ \\
-$p$ & $\Delta \cdot \varphi^{11} \cdot 120/13$ & $(-5,1,-1)$ \\
-$W$ & $\Delta \cdot \varphi^{25} \cdot 15/16$ & $(-5,1,-1)$ \\
-$Z$ & $m_W / \sqrt{10/13}$ & $(-5,1,-1)$ \\
-$H$ & $m_W \cdot (\varphi - 1/10)$ & $(-5,1,-1)$ \\
+$e$ & $\Delta$ & $(-5,1,-1)$ & \texttt{dimElectron} \\
+$\mu$ & $\Delta \cdot \varphi^{11}$ & $(6,-10,-12)$ & \texttt{dimMuon} \\
+$\tau$ & $\Delta \cdot \varphi^{17}$ & $(12,-16,-18)$ & \texttt{dimTau} \\
+$p$ & $\Delta \cdot \varphi^{11} \cdot 120/13$ & $(9,-13,-15)$ & \texttt{dimProton} \\
+$n$ & $m_p \times n_p$ & $(8,-12,-14)$ & \texttt{dimNeutron} \\
+$W$ & $\Delta \cdot \varphi^{25} \cdot 15/16$ & $(20,-24,-26)$ & \texttt{dimWBoson} \\
+DM & $\Delta \cdot \varphi^{25}$ & $(21,-25,-24)$ & \texttt{dimDarkMatter} \\
+$\nu_3$ & $\Delta^2 \cdot \varphi^{-32}$ & $(-42,34,30)$ & \texttt{dimNu3} \\
+$\nu_2$ & $m_{\nu_3} \cdot \sqrt{1/30}$ & $(-43,35,31)$ & \texttt{dimNu2} \\
+\hline
+$Z$ & \texttt{DimSum2} & $(40,-48,-52) \oplus (42,-46,-52)$ & \texttt{zBosonMassSq} \\
+$H$ & \texttt{DimSum2} & $(21,-25,-27) \oplus (18,-22,-24)$ & \texttt{higgsMass} \\
 \hline
 \end{tabular}
 \end{center}
+$Z$ and $H$ are \texttt{DimSum2}: formal sums of two ScaleQ with different FDim.
+The $\mathbb{R}$-evaluation (\texttt{.eval}) recovers the physical mass value.
 
 \section{Gauge Boson Masses}
 \label{sec:mass_gauge_bosons}
@@ -210,20 +219,23 @@ Experimental: $m_W/m_e \approx 157\,279$, predicted $\approx 157\,276$ (error $0
 \lean{FUST.Dim.wBosonMass_val}
 \leanok
 \[
-m_W = \Delta \times \varphi^{25} \times \frac{15}{16} \quad [\mathrm{dimTime}^{-1}]
+m_W = \Delta \times \varphi^{25} \times \frac{15}{16} \quad [\mathrm{dimWBoson} = (20,-24,-26)]
 \]
 \end{theorem}
 
 \subsection{Z Boson Mass}
 
-\begin{theorem}[Z Boson Mass]
+\begin{theorem}[Z Boson Mass Squared]
 \label{thm:mass_z}
 \lean{FUST.Dim.zBosonMass_val}
 \leanok
+$m_Z^2$ is a \texttt{DimSum2} with two components of different FDim:
 \[
-m_Z = \frac{m_W}{\cos\theta_W} = m_W \times \sqrt{\frac{C(3,2)+C(5,2)}{C(5,2)}} = \frac{m_W}{\sqrt{10/13}}
+m_Z^2 = \underbrace{m_W^2}_{\mathrm{dimZSqComp1} = (40,-48,-52)}
++ \underbrace{m_W^2 \times \frac{3}{10}}_{\mathrm{dimZSqComp2} = (42,-46,-52)}
 \]
-using $\sin^2\theta_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13$ (Chapter~\ref{chap:pd_weinberg}).
+where $3/10 = C(3,2)/C(5,2) = \sin^2\theta_W / \cos^2\theta_W$.
+The $\mathbb{R}$-evaluation gives $m_Z^2.\mathrm{eval} = m_W^2 \times 13/10$, recovering $m_Z = m_W / \sqrt{10/13}$.
 \end{theorem}
 
 \begin{theorem}[W/Z Ratio]
@@ -252,9 +264,12 @@ Experimental: 1.559 (error 2.6\%).
 \label{thm:mass_higgs_dimensioned}
 \lean{FUST.Dim.higgsMass_val}
 \leanok
+$m_H$ is a \texttt{DimSum2} with two components:
 \[
-m_H = m_W \times \left(\varphi - \frac{1}{10}\right) \quad [\mathrm{dimTime}^{-1}]
+m_H = \underbrace{m_W \cdot \varphi}_{\mathrm{dimHiggsVacuum} = (21,-25,-27)}
++ \underbrace{(-m_W / 10)}_{\mathrm{dimHiggsCorrection} = (18,-22,-24)}
 \]
+The $\mathbb{R}$-evaluation gives $m_H.\mathrm{eval} = m_W \times (\varphi - 1/10)$.
 \end{theorem}
 
 \subsection{Gauge Boson Mass Mechanism}
@@ -265,15 +280,15 @@ m_H = m_W \times \left(\varphi - \frac{1}{10}\right) \quad [\mathrm{dimTime}^{-1
 \leanok
 The mass/massless distinction follows from kernel structure:
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-Particle & Source & Mass mechanism & Mass \\
+Particle & Source & Mass mechanism & Mass & FDim \\
 \hline
-gluon & $\ker(D_6)$, $\dim = 3$ & $D_6(\text{gluon}) = 0$ & massless \\
-$\gamma$ & grading symmetry & preserved by all $D_m$ & massless \\
-$W^\pm$ & $\ker(D_5)$, $\dim = 2$ & $D_5(x^2) \neq 0$ & $m_e \times \varphi^{25} \times 15/16$ \\
-$Z$ & $\ker(D_5)$, $\dim = 2$ & $m_W / \cos\theta_W$ & $m_W / \sqrt{10/13}$ \\
-$H$ & $x^2 \in \ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & $m_W \times (\varphi - 1/10)$ \\
+gluon & $\ker(D_6)$ & $D_6 = 0$ & 0 & --- \\
+$\gamma$ & grading & all $D_m$ preserve & 0 & --- \\
+$W^\pm$ & $\ker(D_5)$ & $D_5(x^2) \neq 0$ & ScaleQ & $(20,-24,-26)$ \\
+$Z$ & $\ker(D_5)$ & $m_W / \cos\theta_W$ & DimSum2 & $(40,...) \oplus (42,...)$ \\
+$H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & DimSum2 & $(21,...) \oplus (18,...)$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -293,14 +308,15 @@ All gauge boson masses are determined by $\Delta$, $\varphi$, and pair counts $C
 
 \subsection{Numerical Comparison}
 
+Numerical predictions use $\mathbb{R}$-evaluation of each mass (\texttt{.val} or \texttt{.eval}):
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Particle & Mass formula & Predicted (GeV) & Experimental (GeV) & Error \\
 \hline
 $W^\pm$ & $m_e \times \varphi^{25} \times 15/16$ & 80.37 & 80.37 & 0.002\% \\
-$Z$ & $m_W \times \sqrt{13/10}$ & 91.66 & 91.19 & 0.5\% \\
-$H$ & $m_W \times (\varphi - 1/10)$ & 121.99 & 125.25 & 2.6\% \\
+$Z$ & $m_Z^2.\mathrm{eval} = m_W^2 \times 13/10$ & 91.66 & 91.19 & 0.5\% \\
+$H$ & $m_H.\mathrm{eval} = m_W(\varphi - 1/10)$ & 121.99 & 125.25 & 2.6\% \\
 gluon & 0 (in $\ker D_6$) & 0 & 0 & exact \\
 $\gamma$ & 0 (grading symmetry) & 0 & 0 & exact \\
 \hline
@@ -317,8 +333,13 @@ $\gamma$ & 0 (grading symmetry) & 0 & 0 & exact \\
 \[
 \frac{m_{DM}}{m_e} = \varphi^{C(5,2)+C(6,2)} = \varphi^{25} \approx 1.68 \times 10^5
 \]
-(WIMP scale $\sim 100$ GeV). Note that $m_{DM}/m_e$ shares the same exponent as $m_W/m_e$,
-differing only by the factor $15/16$.
+(WIMP scale $\sim 100$ GeV). The $\varphi$-exponent 25 is the same as for $m_W/m_e$,
+but dark matter belongs to the $D_{5\frac{1}{2}}$ sector:
+\[
+\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(D_{5\frac{1}{2}}) \times \mathrm{dimTimeD2}^{25} = (21, -25, -24)
+\neq (20, -24, -26) = \mathrm{dimWBoson}.
+\]
+The distinction arises from the sector base: $(-4,0,1)$ for $D_{5\frac{1}{2}}$ vs.\ $(-5,1,-1)$ for $D_6$.
 \end{theorem}
 
 \section{Neutrino Mass Hierarchy}
@@ -417,5 +438,5 @@ $\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(D_5) \times C(6,2)) = 1/30$ & Rat
 
 The exponents are CountQuantity: $T(3) = C(4,2) = 6$ (\texttt{msMdExponent}), $7 = C(4,2)+C(2,2)$ (\texttt{mtMbExpHigh}), $5 = C(4,2)-C(2,2)$ (\texttt{mtMbExpLow}). All exponents trace to D-structure pair counts, never hardcoded numerals.
 
-$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\Delta = 12/25$ (ScaleQuantity$(-5,1,-1)$, mass gap from $D_6$ gauge-invariant output).
+$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\Delta = 12/25$ (ScaleQuantity at dimElectron $= (-5,1,-1)$, mass gap from $D_6$ gauge-invariant output).
 

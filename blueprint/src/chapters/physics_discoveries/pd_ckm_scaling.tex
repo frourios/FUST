@@ -8,13 +8,13 @@ This chapter presents the $\varphi$-power scaling law for CKM matrix elements.
 \section{CKM Scaling Law}
 
 The CKM matrix elements follow a systematic $\varphi^{-3|i-j|}$ scaling
-based on generation gap.
+based on flavor gap.
 
 \begin{definition}[CKM Scaling]
 \label{def:ckm_scaling}
 \lean{FUST.PMNSMixingAngles.ckm_scaling}
 \leanok
-For generation difference $n$:
+For flavor difference $n$:
 \[
 |V_{ij}| \propto \varphi^{-3n} \quad \text{where } n = |i - j|
 \]
@@ -29,7 +29,7 @@ For generation difference $n$:
 \[
 |V_{us}| = \varphi^{-3} \approx 0.236
 \]
-Generation gap: 1
+Flavor gap: 1
 \end{definition}
 
 \begin{definition}[$|V_{cb}|$]
@@ -39,7 +39,7 @@ Generation gap: 1
 \[
 |V_{cb}| = \varphi^{-6} \approx 0.056
 \]
-Generation gap: 2
+Flavor gap: 2
 \end{definition}
 
 \begin{definition}[$|V_{ub}|$]
@@ -49,7 +49,7 @@ Generation gap: 2
 \[
 |V_{ub}| = \varphi^{-9} \approx 0.013
 \]
-Generation gap: 3
+Flavor gap: 3
 \end{definition}
 
 \section{Hierarchy Theorem}
@@ -92,7 +92,7 @@ Since $\varphi > 1$:
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Element & Gen. Gap & Prediction & Experiment & Error \\
+Element & Flavor Gap & Prediction & Experiment & Error \\
 \hline
 $|V_{us}|$ & 1 & $\varphi^{-3} \approx 0.236$ & $0.225$ & $5\%$ \\
 $|V_{cb}|$ & 2 & $\varphi^{-6} \approx 0.056$ & $0.041$ & $37\%$ \\
@@ -106,10 +106,10 @@ $|V_{ub}|$ & 3 & $\varphi^{-9} \approx 0.013$ & $0.0036$ & -- \\
 
 The factor of 3 in the exponent $\varphi^{-3n}$ relates to:
 \begin{itemize}
-\item 3 generations of quarks
+\item 3 quark flavors ($= \dim\ker(D_6)$)
 \item $D_3$ symmetry in the kernel hierarchy
 \item The triplet structure of $\ker(D_6)$
 \end{itemize}
 
 The scaling law suggests that flavor mixing amplitudes decay exponentially
-with generation gap, with the golden ratio determining the decay rate.
+with flavor gap, with the golden ratio determining the decay rate.

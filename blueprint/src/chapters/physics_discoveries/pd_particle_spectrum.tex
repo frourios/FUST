@@ -2,10 +2,8 @@
 \chapter{Particle Spectrum from D-Structure}
 \label{chap:pd_particle}
 
-\section{Generation Structure from $\ker(D_6)$}
-\label{sec:particle_generations}
-
-The number of fermion generations is not an input parameter but is derived from $\dim\ker(D_6) = 3$.
+\section{$\ker(D_6)$ Structure}
+\label{sec:particle_ker_d6}
 
 \begin{theorem}[$\ker(D_6)$ Basis]
 \label{thm:particle_D6_kernel_basis}
@@ -14,37 +12,25 @@ The number of fermion generations is not an input parameter but is derived from 
 $\ker(D_6) = \{1, x, x^2\}$: all three basis elements are annihilated by $D_6$.
 \end{theorem}
 
-\begin{theorem}[Maximum Generations $= \dim\ker(D_6)$]
-\label{thm:particle_max_generations}
-\lean{FUST.ParticleSpectrum.maxGenerations_eq}
-\leanok
-\[
-\text{maxGenerations} = \dim\ker(D_6) = 3
-\]
-Each basis element of $\ker(D_6)$ corresponds to one generation.
-\end{theorem}
-
-\begin{theorem}[Generation-Mass Separation]
-\label{thm:particle_generation_mass}
-\lean{FUST.ParticleSpectrum.generation_mass_separation}
-\leanok
-The $\ker(D_6)$ basis $\{1, x, x^2\}$ is separated by the responses of lower $D$-operators:
-\begin{itemize}
-\item $1 \in \ker(D_3) \cap \ker(D_5) \cap \ker(D_6)$: lightest (electron sector)
-\item $x \in \ker(D_6) \setminus \ker(D_3)$: intermediate mass (muon sector)
-\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: heaviest (tau sector)
-\end{itemize}
-Mass exponents derive from $D$-operator pair counts:
-$x^0 \to D_4$: $T(4)+1 = 11$, \quad $x^1 \to D_3$: $T(3) = 6$, \quad $x^2 \to D_3$: $T(3) = 6$.
-\end{theorem}
-
-\begin{theorem}[Fourth Generation Forbidden]
-\label{thm:particle_4th_gen_forbidden}
-\lean{FUST.ParticleSpectrum.fourth_generation_forbidden}
+\begin{theorem}[$D_6$ Ceiling]
+\label{thm:particle_D6_ceiling}
+\lean{FUST.ParticleSpectrum.D6_ceiling}
 \leanok
 $x^3 \notin \ker(D_6)$: $D_6$ detects cubic ($D_6[t^3](x) \neq 0$ for all $x \neq 0$).
 Additionally, $D_7$ projects to $D_6$ via Fibonacci recurrence.
 \end{theorem}
+
+\section{D-Operator Detection Boundaries}
+\label{sec:particle_detection}
+
+The $\ker(D_6)$ basis $\{1, x, x^2\}$ is separated by the responses of lower $D$-operators:
+\begin{itemize}
+\item $1 \in \ker(D_3) \cap \ker(D_5) \cap \ker(D_6)$
+\item $x \in \ker(D_6) \setminus \ker(D_3)$: $D_3$ detects linear
+\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: $D_5$ detects quadratic
+\end{itemize}
+Mass exponents derive from $D$-operator pair counts:
+$x^0 \to D_4$: $T(4)+1 = 11$, \quad $x^1 \to D_3$: $T(3) = 6$, \quad $x^2 \to D_3$: $T(3) = 6$.
 
 \section{Charge Constraint}
 \label{sec:particle_charges}
@@ -96,6 +82,7 @@ Colored lepton (hypercharge $Y = -1$, color = triplet) is forbidden by $D_3$-$D_
 \label{thm:particle_fermion_count}
 \lean{FUST.ParticleSpectrum.SM_fermion_count_eq}
 \leanok
+Fermion flavor count $= \dim\ker(D_6) = 3$.
 \begin{align}
 \text{Leptons} &= 2 \times 3 = 6 \\
 \text{Quarks} &= 2 \times 3 \times C(3,2) = 18 \\
@@ -150,9 +137,9 @@ See Chapter~\ref{chap:pd_gravitational}, \S\ref{sec:grav_graviton} for the full 
 
 \subsection{Neutrino Mass Structure at \texorpdfstring{$D_5$}{D5}}
 
-\begin{theorem}[Neutrino Generation Structure]
-\label{thm:neutrino_generation}
-\lean{FUST.ParticleSpectrum.neutrino_generation_structure}
+\begin{theorem}[Neutrino Kernel Structure]
+\label{thm:neutrino_kernel}
+\lean{FUST.ParticleSpectrum.neutrino_kernel_structure}
 \leanok
 3 neutrino flavors from $\dim\ker(D_6) = 3$ (SU(2) doublet with charged leptons).
 Mass states split by $\ker(D_5) \subset \ker(D_6)$:
@@ -164,8 +151,270 @@ Right-handed neutrinos predicted at $D_5$ level (spin-1/2).
 \end{theorem}
 
 \subsection{\texorpdfstring{$D_{5\frac{1}{2}}$}{D5.5} Dark Matter}
-Dark matter candidate between $D_5$ and $D_6$ with coupling suppression $\varphi^{-3/2}$.
-Mass: $m_{DM}/m_e = \varphi^{25}$ (same exponent as W boson, differing by factor $15/16$).
+
+$D_{5\frac{1}{2}}$ is a half-order operator between $D_5$ and $D_6$:
+\[
+D_{5\frac{1}{2}} f(x) = D_5 f(x) + \mu \cdot (f(\varphi x) - f(\psi x)), \quad \mu = \frac{2}{\varphi + 2}.
+\]
+
+Kernel hierarchy:
+$\ker(D_{5\frac{1}{2}}) \subset \ker(D_5) \subset \ker(D_6)$, \quad $\dim: 1 \to 2 \to 3$.
+\begin{itemize}
+\item $\ker(D_{5\frac{1}{2}}) = \{1\}$: only constants (same as $D_3$)
+\item $D_{5\frac{1}{2}}[x] \neq 0$: detects linear functions (unlike $D_5$ and $D_6$)
+\item Gauge-invariant output: $D_{5\frac{1}{2}}[x](x)/x = 2/\varphi \approx 1.236$
+\end{itemize}
+
+$\mathrm{deriveFDim}(D_{5\frac{1}{2}}) = (-4, 0, 1)$:
+same denominator structure as $D_5$ ($p = -4$), antisymmetric ($\delta = 0$),
+but $\ker\dim = 1$ gives $\tau = 2 - 1 = 1$ (vs.\ $D_5$: $\tau = 0$, $D_6$: $\tau = -1$).
+
+\begin{theorem}[Dark Matter FDim]
+\label{thm:dark_matter_fdim}
+\lean{FUST.ParticleSpectrum.dimDarkMatter_ne_dimWBoson}
+\leanok
+\[
+\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(D_{5\frac{1}{2}}) \times \mathrm{dimTimeD2}^{25} = (21, -25, -24)
+\]
+This is distinct from $\mathrm{dimWBoson} = (20, -24, -26)$: the $D_{5\frac{1}{2}}$ sector base
+$(-4,0,1)$ differs from the $D_6$ sector base $(-5,1,-1)$.
+Mass: $m_{DM}/m_e = \varphi^{25}$, coupling suppression $\varphi^{-3/2}$.
+\end{theorem}
+
+\section{Unique FDim Catalog}
+\label{sec:particle_fdim}
+
+Each massive particle has a unique FDim determined by its sector base and $\varphi$-scaling index $n$.
+Dimensions determine physical properties: no two distinct particles share the same FDim.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Particle & FDim $(p, \delta, \tau)$ & $n$ & Sector \\
+\hline
+$e$ & $(-5,1,-1)$ & 0 & $D_6$ \\
+$\mu$ & $(6,-10,-12)$ & 11 & $D_6$ \\
+$\tau$ & $(12,-16,-18)$ & 17 & $D_6$ \\
+$p$ & $(9,-13,-15)$ & 14 & $D_6$ \\
+$n$ & $(8,-12,-14)$ & 14 & $D_6 \times D_2$ \\
+$W$ & $(20,-24,-26)$ & 25 & $D_6$ \\
+DM & $(21,-25,-24)$ & 25 & $D_{5\frac{1}{2}}$ \\
+\hline
+$\nu_3$ & $(-42,34,30)$ & $-32$ & $D_6^2$ \\
+$\nu_2$ & $(-43,35,31)$ & $-32$ & $D_6^2 \times D_2$ \\
+$Z^2$ comp1 & $(40,-48,-52)$ & 50 & $D_6^2$ \\
+$Z^2$ comp2 & $(42,-46,-52)$ & --- & Mixed \\
+$H$ comp1 & $(21,-25,-27)$ & 26 & $D_6$ \\
+$H$ comp2 & $(18,-22,-24)$ & 23 & $D_6$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Massless Particles and FDim}
+
+Mass $= 0$ means $f \in \ker(D_6)$, but this does \emph{not} imply FDim $= (0,0,0)$.
+Each $\ker(D_6)$ basis element $x^d$ has $\mathrm{FDim} = \mathrm{dimTimeD2}^d$,
+and the $D$-operator detection matrix separates them:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Basis & FDim & $D_3$ & $D_{5\frac{1}{2}}$ & $D_5$ \\
+\hline
+$1$ ($d=0$) & $(0,0,0)$ & $= 0$ & $= 0$ & $= 0$ \\
+$x$ ($d=1$) & $(1,-1,-1)$ & $\neq 0$ & $\neq 0$ & $= 0$ \\
+$x^2$ ($d=2$) & $(2,-2,-2)$ & $\neq 0$ & $\neq 0$ & $\neq 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+This 3-layer structure within $\ker(D_6)$ distinguishes massless particle types:
+\begin{itemize}
+\item Layer 1 ($\ker(D_{5\frac{1}{2}})$): vacuum, truly gauge-invisible
+\item Layer 2 ($\ker(D_5) \setminus \ker(D_{5\frac{1}{2}})$): $D_{5\frac{1}{2}}$ detects $x$;
+  photon/gluon transitions
+\item Layer 3 ($\ker(D_6) \setminus \ker(D_5)$): $D_5$ detects $x^2$;
+  Higgs DOF, W/Z mass mechanism
+\end{itemize}
+
+\subsection{Sector Classification}
+
+\begin{itemize}
+\item \textbf{$D_6$ sector}: base $= \mathrm{deriveFDim}(6) = (-5,1,-1)$.
+  Electron, muon, tau, proton, W, Higgs components.
+\item \textbf{$D_{5\frac{1}{2}}$ sector}: base $= \mathrm{deriveFDim}(D_{5\frac{1}{2}}) = (-4,0,1)$.
+  Dark matter. Same $\varphi$-exponent as W ($n = 25$) but distinct FDim.
+\item \textbf{$D_6^2$ sector}: base $= \mathrm{deriveFDim}(6)^2 = (-10,2,-2)$.
+  Neutrinos, $Z^2$ comp1.
+\item \textbf{Mixed sector}: $Z^2$ comp2.
+  Involves $D_2$ and $D_3$ corrections.
+\item \textbf{Ratio sector}: pure $\mathrm{dimTimeD2}^n$.
+  Dimensionless mass ratios $m_s/m_d$, coupling constants.
+\end{itemize}
+
+\subsection{Dimension Uniqueness}
+
+\begin{theorem}[Particle Dimensions All Distinct]
+\label{thm:particle_dims_distinct}
+\lean{FUST.ParticleSpectrum.particleDims_all_distinct}
+\leanok
+All particle FDim values are pairwise distinct.
+This follows from the injectivity of the map $(a, n) \mapsto \mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$.
+\end{theorem}
+
+\section{Generation Structure}
+\label{sec:generation_structure}
+
+The number of fermion generations is not a free parameter but is determined
+by the minimal polynomial of $\varphi$.
+
+\subsection{Why 3 Generations}
+
+\begin{theorem}[Three Annihilation Conditions]
+\label{thm:three_annihilation}
+\lean{FUST.Dim.three_annihilation_conditions}
+\leanok
+$\ker(D_6) = \{1, x, x^2\}$ has dimension 3 because $D_6$'s coefficients
+$(1, -3, 1, -1, 3, -1)$ satisfy exactly 3 polynomial identities:
+\begin{align}
+d=0: &\quad 1 - 3 + 1 - 1 + 3 - 1 = 0 & \text{(coefficient sum)} \\
+d=1: &\quad \sum c_i s_i = 0 & \text{(uses } \varphi + \psi = 1\text{)} \\
+d=2: &\quad \sum c_i s_i^2 = 0 & \text{(uses } \varphi^2 + \psi^2 = 3, \; \varphi\psi = -1\text{)}
+\end{align}
+$d=3$ fails: $D_6[t^3](x) \neq 0$ for all $x \neq 0$.
+
+The golden ratio satisfies $x^2 - x - 1 = 0$ (degree 2), providing
+2 symmetric-function identities $(\sigma_1 = 1, \sigma_2 = -1)$
+plus the coefficient-sum constraint, giving exactly 3 annihilation conditions:
+\[
+\boxed{3 \text{ generations} = \deg(x^2 - x - 1) + 1 = 2 + 1 = 3}
+\]
+\end{theorem}
+
+\subsection{The \texorpdfstring{$D_4$}{D4} Anomaly}
+
+\begin{theorem}[$D_4$ Anomaly]
+\label{thm:D4_anomaly}
+\lean{FUST.Dim.D4_anomaly}
+\leanok
+$D_4$ has non-contiguous kernel: $\ker(D_4) = \{x^2\}$, not $\{1\}$.
+\begin{itemize}
+\item $D_4[1](x) \neq 0$: $D_4$ detects constants
+\item $D_4[x^2](x) = 0$: $D_4$ annihilates quadratics
+\end{itemize}
+The cancellation at $d=2$ arises because $D_4[x^2] = ((\varphi^2)^2 - \varphi^2 \cdot \varphi^2 + \psi^2 \cdot \psi^2 - (\psi^2)^2)x^2 = (\varphi^4 - \varphi^4 + \psi^4 - \psi^4)x^2 = 0$.
+\end{theorem}
+
+\begin{theorem}[$D_4$ Unique Constant Detector]
+\label{thm:D4_unique}
+\lean{FUST.Dim.D4_unique_constant_detector}
+\leanok
+$D_4$ is the only operator that detects constants within $\ker(D_6)$:
+\[
+D_2[1] = 0, \quad D_3[1] = 0, \quad D_4[1] \neq 0, \quad D_5[1] = 0, \quad D_6[1] = 0.
+\]
+\end{theorem}
+
+\subsection{Detection Matrix}
+
+The following table shows which $D_m$ detects which $x^d$ within $\ker(D_6)$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$d$ & $D_2$ & $D_3$ & $D_4$ & $D_5$ & $D_6$ \\
+\hline
+0 & $= 0$ & $= 0$ & $\neq 0$ & $= 0$ & $= 0$ \\
+1 & $\neq 0$ & $\neq 0$ & $\neq 0$ & $= 0$ & $= 0$ \\
+2 & $\neq 0$ & $\neq 0$ & $= 0$ & $\neq 0$ & $= 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theorem}[Detection Matrix]
+\label{thm:detection_matrix}
+\lean{FUST.Dim.detection_d0}
+\lean{FUST.Dim.detection_d1}
+\lean{FUST.Dim.detection_d2}
+\leanok
+Each row is formally verified:
+\begin{itemize}
+\item $d=0$: only $D_4$ detects (the $D_4$ anomaly)
+\item $d=1$: $D_2, D_3, D_4$ detect; $D_5, D_6$ annihilate
+\item $d=2$: $D_2, D_3, D_5$ detect; $D_4, D_6$ annihilate
+\end{itemize}
+\end{theorem}
+
+\subsection{Kernel Filtration}
+
+\begin{theorem}[Kernel Filtration]
+\label{thm:kernel_filtration}
+\lean{FUST.Dim.kernel_filtration}
+\leanok
+The 3-layer kernel filtration creates 3 generations:
+\[
+\ker(D_{5\frac{1}{2}}) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3.
+\]
+Each dimension increase corresponds to one fermion generation.
+\end{theorem}
+
+\subsection{Generation Exponents from Pair Counts}
+
+All mass exponents are sums of pair counts $C(m,2)$ of the 5 active $D$-operators.
+
+\begin{theorem}[Five Pair Counts]
+\label{thm:five_pair_counts}
+\lean{FUST.Dim.five_pair_counts}
+\leanok
+\[
+C(2,2) = 1, \quad C(3,2) = 3, \quad C(4,2) = 6, \quad C(5,2) = 10, \quad C(6,2) = 15.
+\]
+These are the first 5 triangular numbers $T(1), \ldots, T(5)$.
+\end{theorem}
+
+\begin{theorem}[Lepton Generation Exponents]
+\label{thm:lepton_exponents}
+\lean{FUST.Dim.lepton_generation_exponents}
+\leanok
+\begin{align}
+m_\mu / m_e &= \varphi^{11}, & 11 &= C(5,2) + C(2,2) \\
+m_\tau / m_\mu &= \varphi^{6}, & 6 &= C(4,2) \\
+m_\tau / m_e &= \varphi^{17}, & 17 &= C(5,2) + C(2,2) + C(4,2)
+\end{align}
+\begin{itemize}
+\item $e \to \mu$: $C(5,2) + C(2,2) = 11$ from $D_5$ kernel expansion ($\ker\dim: 1 \to 2$)
+  plus $D_2$ boundary.
+\item $\mu \to \tau$: $C(4,2) = 6$ from $D_4$'s anomalous kernel (the only operator
+  detecting constants but annihilating $x^2$).
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[W Boson Exponent]
+\label{thm:wboson_exponent}
+\lean{FUST.Dim.wBoson_exponent}
+\leanok
+\[
+m_W / m_e \propto \varphi^{25}, \quad 25 = C(5,2) + C(6,2) = 10 + 15.
+\]
+The W boson exponent is the total pair count of $D_5 + D_6$.
+\end{theorem}
+
+\begin{theorem}[Generation Structure Summary]
+\label{thm:generation_summary}
+\lean{FUST.Dim.generation_structure}
+\leanok
+The complete generation structure follows from 3 algebraic facts:
+\begin{enumerate}
+\item $\varphi^2 = \varphi + 1$ (minimal polynomial degree 2)
+  $\Rightarrow$ 3 annihilation conditions $\Rightarrow$ $\dim\ker(D_6) = 3$ $\Rightarrow$ 3 generations.
+\item $D_4[x^2] = 0$ but $D_4[1] \neq 0$ (anomalous kernel)
+  $\Rightarrow$ $\tau/\mu$ and $s/d$ exponent $C(4,2) = 6$.
+\item $\ker(D_5) \subsetneq \ker(D_6)$ (kernel inclusion chain)
+  $\Rightarrow$ $\mu/e$ exponent $C(5,2) + C(2,2) = 11$;
+  W exponent $C(5,2) + C(6,2) = 25$.
+\end{enumerate}
+No free parameters. Every mass exponent is built from $\{1, 3, 6, 10, 15\}$.
+\end{theorem}
 
 \section{Summary}
 \label{sec:particle_summary}
@@ -176,8 +425,8 @@ Mass: $m_{DM}/m_e = \varphi^{25}$ (same exponent as W boson, differing by factor
 \leanok
 \begin{enumerate}
 \item SM particle count = 37 (derived from D-structure)
-\item Maximum generations $= \dim\ker(D_6) = 3$
-\item $x^3 \notin \ker(D_6)$ prevents 4th generation; $D_7$ projects to $D_6$ prevents spin $> 2$
+\item Fermion flavor count $= \dim\ker(D_6) = 3$
+\item $x^3 \notin \ker(D_6)$: $D_6$ ceiling; $D_7$ projects to $D_6$ prevents spin $> 2$
 \item Allowed spins = spacetime dimension = 4
 \item Allowed charges from $D_3$ structure
 \item Graviton: spin-2, massless, $D$-level 6 (structurally derived)
@@ -187,25 +436,26 @@ Mass: $m_{DM}/m_e = \varphi^{25}$ (same exponent as W boson, differing by factor
 \section{Dimensional Types}
 \label{sec:particle_dim}
 
-All particle spectrum quantities are CountQuantity ($\mathbb{N}$), derived from kernel dimensions and pair counts:
+Particle spectrum quantities split into two categories:
+
+\textbf{CountQuantity} ($\mathbb{N}$): derived from kernel dimensions and pair counts.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
 Quantity & Value & Lean \\
 \hline
-Max generations & $\dim\ker(D_6) = 3$ & \texttt{maxGenerations} \\
+Fermion flavors & $\dim\ker(D_6) = 3$ & \texttt{fermionFlavorCount} \\
 SM fermions & $24$ & \texttt{smFermionCount} \\
 SM bosons & $13$ & \texttt{smBosonCount} \\
 SM total & $37$ & \texttt{smParticleCount} \\
 Allowed charges & $2 \times C(3,2) + 1 = 7$ & \texttt{allowedChargeCount} \\
 Allowed spins & spacetimeDim $= 4$ & \texttt{allowedSpinCount} \\
-$\dim \mathfrak{su}(2) = 3$ & $C(3,2)^2 - 1$ & \texttt{su2Dim} \\
-$\dim \mathfrak{su}(3) = 8$ & $C(3,2)^2 - 1$ & \texttt{su3Dim} \\
-Spatial dim $= 3$ & $\dim\ker(D_6)$ & \texttt{spatialDim} \\
-Spacetime dim $= 4$ & $\dim\ker(D_6) + 1$ & \texttt{spacetimeDim} \\
 \hline
 \end{tabular}
 \end{center}
 
-All definitions in \texttt{FUST\_dim.ParticleSpectrum} reference upstream FUST definitions, not hardcoded numerals.
+\textbf{ScaleQuantity / DimSum2}: dimensioned masses with unique FDim per particle.
+See \S\ref{sec:particle_fdim} for the complete catalog.
+Mass ratios computed via \texttt{.val} (ScaleQ) or \texttt{.eval} (DimSum2) are $\mathbb{R}$-valued
+and invariant under FDim relabeling.

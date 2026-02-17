@@ -1,5 +1,6 @@
 import FUST.Physics.GaugeSectors
 import FUST.Physics.WaveEquation
+import FUST.Physics.MassRatios
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
@@ -61,16 +62,10 @@ inductive Spin where
   | zero | half | one | two
   deriving DecidableEq, Repr
 
-/-- Generation number from D₄ → D₆ transition -/
-inductive Generation where
-  | first | second | third
-  deriving DecidableEq, Repr
-
 /-! ## Part 2: Particle Structure -/
 
 /-- Complete quantum numbers -/
 structure ParticleQuantumNumbers where
-  generation : Option Generation
   T3 : WeakIsospin
   Y : Hypercharge
   color : ColorCharge
@@ -79,41 +74,24 @@ structure ParticleQuantumNumbers where
 /-! ## Part 3: Standard Model Particles -/
 
 def electron : ParticleQuantumNumbers :=
-  { generation := some .first, T3 := .minus_half, Y := .minus_one,
-    color := .singlet, spin := .half }
+  { T3 := .minus_half, Y := .minus_one, color := .singlet, spin := .half }
 
 def electron_neutrino : ParticleQuantumNumbers :=
-  { generation := some .first, T3 := .plus_half, Y := .minus_one,
-    color := .singlet, spin := .half }
+  { T3 := .plus_half, Y := .minus_one, color := .singlet, spin := .half }
 
 def up_quark : ParticleQuantumNumbers :=
-  { generation := some .first, T3 := .plus_half, Y := .plus_one_third,
-    color := .triplet, spin := .half }
+  { T3 := .plus_half, Y := .plus_one_third, color := .triplet, spin := .half }
 
 def down_quark : ParticleQuantumNumbers :=
-  { generation := some .first, T3 := .minus_half, Y := .plus_one_third,
-    color := .triplet, spin := .half }
-
-def photon : ParticleQuantumNumbers :=
-  { generation := none, T3 := .zero, Y := .minus_one,
-    color := .singlet, spin := .one }
+  { T3 := .minus_half, Y := .plus_one_third, color := .triplet, spin := .half }
 
 def higgs : ParticleQuantumNumbers :=
-  { generation := none, T3 := .minus_half, Y := .plus_one,
-    color := .singlet, spin := .zero }
+  { T3 := .minus_half, Y := .plus_one, color := .singlet, spin := .zero }
 
-def graviton : ParticleQuantumNumbers :=
-  { generation := none, T3 := .zero, Y := .minus_one,
-    color := .singlet, spin := .two }
+/-! ## Part 4: ker(D₆) Structure
 
-/-! ## Part 4: Generation Structure from ker(D₆)
-
-ker(D₆) = {1, x, x²} has dimension 3.
-Each basis element corresponds to one generation:
-- x⁰ = 1: first generation (electron sector)
-- x¹: second generation (muon sector)
-- x²: third generation (tau sector)
-- x³ ∉ ker(D₆): fourth generation forbidden (D6_detects_cubic)
+ker(D₆) = {1, x, x²} has dimension Dim.operatorKerDim 6 = 3.
+x³ ∉ ker(D₆): D₆ ceiling forbids degree ≥ 3 states.
 -/
 
 /-- ker(D₆) basis: {1, x, x²} all annihilated by D₆ -/
@@ -127,25 +105,13 @@ theorem D6_kernel_basis :
 theorem D6_cubic_not_in_kernel :
     ∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0 := D6_detects_cubic
 
-/-- dim ker(D₆) = 3: exactly 3 independent basis elements -/
-abbrev kerDimD6 : ℕ := 3
-
-/-- maxGenerations = dim ker(D₆) = 3 -/
-abbrev maxGenerations : ℕ := kerDimD6
-
-theorem maxGenerations_eq : maxGenerations = 3 := rfl
-
-/-! ## Part 5: Mass Hierarchy from ker(D₆) Basis Action
-
-Each ker(D₆) basis element tⁿ (n=0,1,2) has distinct D₃/D₄ responses.
-D₃(1) = 0 but D₃(x) ≠ 0: separates first generation from heavier ones.
--/
+/-! ## Part 5: D₃/D₄/D₅ Detection Boundaries -/
 
 /-- D₃ annihilates constants (gauge invariance) -/
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
   fun x hx => D3_const 1 x hx
 
-/-- D₃ does not annihilate linear: x¹ ∈ ker(D₆) gives distinct mass state -/
+/-- D₃ does not annihilate linear -/
 theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
   use 1, one_ne_zero
   simp only [D3, one_ne_zero, ↓reduceIte, id_eq, mul_one]
@@ -158,7 +124,7 @@ theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
   rw [hnum, hdenom]
   norm_num
 
-/-- D₄ does not annihilate linear: x¹ ∈ ker(D₆) gives distinct mass state -/
+/-- D₄ does not annihilate linear -/
 theorem D4_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0 := by
   use 1, one_ne_zero
   simp only [D4, one_ne_zero, ↓reduceIte, id_eq, mul_one]
@@ -184,30 +150,16 @@ theorem D5_kernel_and_boundary :
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
   ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
 
-/-- Generation-mass correspondence: ker(D₆) basis {1,x,x²} separated by D₃/D₅ -/
-theorem generation_mass_separation :
-    -- 1 ∈ ker(D₃) ∩ ker(D₅) ∩ ker(D₆): lightest (electron)
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
-    -- x ∈ ker(D₆) \ ker(D₃): intermediate mass (muon)
-    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) ∧
-    -- x² ∈ ker(D₆) \ ker(D₅): heaviest (tau)
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    -- x³ ∉ ker(D₆): no fourth generation
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨D3_gauge_invariance, D3_not_annihilate_linear,
-   D5_not_annihilate_quadratic, D6_detects_cubic⟩
-
-/-! ## Part 6: FORBIDDEN - 4th Generation -/
+/-! ## Part 6: FORBIDDEN - D₆ Ceiling -/
 
 /-- D₇+ reduces to D₆ via Fibonacci recurrence -/
 abbrev projectToD6 (n : ℕ) : ℕ := min n 6
 
-/-- Fourth generation forbidden: x³ ∉ ker(D₆) and D₇ projects to D₆ -/
-theorem fourth_generation_forbidden :
+/-- D₆ ceiling: x³ ∉ ker(D₆) and D₇ projects to D₆ -/
+theorem D6_ceiling :
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    projectToD6 7 = 6 ∧
-    maxGenerations = 3 :=
-  ⟨D6_detects_cubic, rfl, rfl⟩
+    projectToD6 7 = 6 :=
+  ⟨D6_detects_cubic, rfl⟩
 
 /-! ## Part 7: FORBIDDEN - Exotic Charges -/
 
@@ -266,31 +218,10 @@ theorem colored_lepton_forbidden : ¬ValidParticle .minus_one .triplet := by
 
 /-! ## Part 10: PREDICTED Particles -/
 
-/-- Graviton at D₆ (spin-2, massless).
-    Derived from D₆ charPoly gravity sector (x²-4x-1) with roots φ³,ψ³. -/
-structure GravitonPrediction where
-  D_level : ℕ := 6
-  spin : Spin := .two
-  massless : Bool := true
-  gravity_sector_trace : ℕ := 4
-  gravity_sector_disc : ℕ := 20
-
-def gravitonPrediction : GravitonPrediction := {}
-
-/-- Graviton spin derived from spacetime structure -/
-theorem graviton_spin_derived :
-    gravitonPrediction.spin = Spin.two ∧
-    gravitonPrediction.D_level = 6 ∧
-    gravitonPrediction.massless = true ∧
-    gravitonPrediction.gravity_sector_trace = WaveEquation.spacetimeDim ∧
-    gravitonPrediction.gravity_sector_disc = Nat.choose 6 3 :=
-  ⟨rfl, rfl, rfl, rfl, rfl⟩
-
-/-- Neutrino generation structure from ker(D₅) ⊂ ker(D₆) -/
-theorem neutrino_generation_structure :
-    -- 3 flavors from ker(D₆) (SU(2) doublet with charged leptons)
-    kerDimD6 = 3 ∧
-    -- Mass states split by ker(D₅) ⊂ ker(D₆)
+/-- Neutrino mass splitting from ker(D₅) ⊂ ker(D₆) -/
+theorem neutrino_kernel_structure :
+    -- dim ker(D₆) = Dim.operatorKerDim 6 = 3
+    Dim.operatorKerDim 6 = 3 ∧
     -- ker(D₅) = {1, x} (dim 2): solar pair ν₁, ν₂
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) ∧
@@ -298,25 +229,11 @@ theorem neutrino_generation_structure :
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
   ⟨rfl, fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
 
-/-- Right-handed neutrino at D₅ -/
-structure RightHandedNeutrinoPrediction where
-  D_level : ℕ := 5
-  spin : Spin := .half
-
-def nuRPrediction : RightHandedNeutrinoPrediction := {}
-
-/-- D5½ dark matter candidate with φ^{-3/2} coupling suppression -/
-structure D5HalfDarkMatter where
-  between_D5_D6 : Bool := true
-  coupling_suppression : Bool := true
-
-def d5HalfDMPrediction : D5HalfDarkMatter := {}
-
 /-! ## Part 11: Particle Count
 
 Fermion count from D-structure:
-- Leptons: 2 × maxGenerations = 2 × 3 = 6 (e, ν per generation)
-- Quarks: 2 × maxGenerations × C(3,2) = 2 × 3 × 3 = 18 (u, d per generation × 3 colors)
+- Leptons: 2 × Dim.operatorKerDim 6 = 2 × 3 = 6 (e, ν per flavor)
+- Quarks: 2 × Dim.operatorKerDim 6 × C(3,2) = 2 × 3 × 3 = 18 (u, d per flavor × 3 colors)
 - Total fermions: 6 + 18 = 24
 
 Boson count from D-structure:
@@ -327,13 +244,18 @@ Boson count from D-structure:
 - Total bosons: 1 + 3 + 8 + 1 = 13
 -/
 
-/-- Lepton count = 2 × maxGenerations -/
-abbrev leptonCount : ℕ := 2 * maxGenerations
+/-- Fermion flavor count from D₆ kernel dimension -/
+abbrev fermionFlavorCount : ℕ := 3
+
+theorem fermionFlavorCount_from_kerDim : fermionFlavorCount = Dim.operatorKerDim 6 := rfl
+
+/-- Lepton count = 2 × fermionFlavorCount -/
+abbrev leptonCount : ℕ := 2 * fermionFlavorCount
 
 theorem leptonCount_eq : leptonCount = 6 := rfl
 
-/-- Quark count = 2 × maxGenerations × C(3,2) (color triplet) -/
-abbrev quarkCount : ℕ := 2 * maxGenerations * Nat.choose 3 2
+/-- Quark count = 2 × fermionFlavorCount × C(3,2) (color triplet) -/
+abbrev quarkCount : ℕ := 2 * fermionFlavorCount * Nat.choose 3 2
 
 theorem quarkCount_eq : quarkCount = 18 := rfl
 
@@ -366,9 +288,9 @@ theorem SM_plus_graviton : SM_particle_count + 1 = 38 := rfl
 
 /-- SM particle count derivation from D-structure -/
 theorem SM_count_derivation :
-    -- Fermions from generations and color
-    (leptonCount = 2 * maxGenerations) ∧
-    (quarkCount = 2 * maxGenerations * Nat.choose 3 2) ∧
+    -- Fermions from flavor count and color
+    (leptonCount = 2 * fermionFlavorCount) ∧
+    (quarkCount = 2 * fermionFlavorCount * Nat.choose 3 2) ∧
     (SM_fermion_count = leptonCount + quarkCount) ∧
     -- Bosons from gauge structure
     (gluonCount = Nat.choose 3 2 ^ 2 - 1) ∧
@@ -382,11 +304,11 @@ theorem SM_count_derivation :
 theorem particle_spectrum_summary :
     -- Particle count derived from D-structure
     (SM_particle_count = 37) ∧
-    -- Generation count = dim ker(D₆) = 3
-    (maxGenerations = kerDimD6) ∧
+    -- Fermion flavor count = Dim.operatorKerDim 6
+    (fermionFlavorCount = Dim.operatorKerDim 6) ∧
     -- D₆ ceiling: D₇ projects to D₆
     (projectToD6 7 = 6) ∧
-    -- x³ ∉ ker(D₆): fourth generation forbidden
+    -- x³ ∉ ker(D₆): D₆ ceiling
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     -- Spin limit = spacetimeDim
     (allowedSpinCount = 4) ∧
@@ -398,16 +320,16 @@ theorem particle_spectrum_summary :
   refine ⟨rfl, rfl, rfl, D6_detects_cubic, rfl, ?_, rfl, D3_gauge_invariance⟩
   decide
 
-/-- Complete derivation: all constants from ker(D₆) structure -/
+/-- Complete derivation: all constants from D-structure -/
 theorem all_constants_derived :
-    -- Generations = dim ker(D₆)
-    (maxGenerations = kerDimD6) ∧
+    -- Fermion flavors from Dim.operatorKerDim 6
+    (fermionFlavorCount = Dim.operatorKerDim 6) ∧
     -- Spins from spacetime dimension (ker D6 + time)
     (allowedSpinCount = WaveEquation.spacetimeDim) ∧
     -- Charges from D₃ pair count
     (allowedChargeCount = 2 * Nat.choose 3 2 + 1) ∧
-    -- Fermions from generations × color
-    (SM_fermion_count = 2 * maxGenerations + 2 * maxGenerations * Nat.choose 3 2) ∧
+    -- Fermions from flavor count × color
+    (SM_fermion_count = 2 * fermionFlavorCount + 2 * fermionFlavorCount * Nat.choose 3 2) ∧
     -- Gluons from SU(3) adjoint
     (gluonCount = Nat.choose 3 2 ^ 2 - 1) ∧
     -- Weak bosons from SU(2)
@@ -420,7 +342,7 @@ namespace FUST.Dim
 
 /-! ## Particle Counts as CountQ -/
 
-def maxGenerations : CountQ := ⟨FUST.ParticleSpectrum.maxGenerations⟩
+def fermionFlavorCount : CountQ := ⟨FUST.ParticleSpectrum.fermionFlavorCount⟩
 def leptonCount : CountQ := ⟨FUST.ParticleSpectrum.leptonCount⟩
 def quarkCount : CountQ := ⟨FUST.ParticleSpectrum.quarkCount⟩
 def smFermionCount : CountQ := ⟨FUST.ParticleSpectrum.SM_fermion_count⟩
@@ -429,7 +351,7 @@ def weakBosonCount : CountQ := ⟨FUST.ParticleSpectrum.weakBosonCount⟩
 def smBosonCount : CountQ := ⟨FUST.ParticleSpectrum.SM_boson_count⟩
 def smParticleCount : CountQ := ⟨FUST.ParticleSpectrum.SM_particle_count⟩
 
-theorem maxGenerations_val : maxGenerations.val = 3 := rfl
+theorem fermionFlavorCount_val : fermionFlavorCount.val = 3 := rfl
 theorem leptonCount_val : leptonCount.val = 6 := rfl
 theorem quarkCount_val : quarkCount.val = 18 := rfl
 theorem smFermionCount_val : smFermionCount.val = 24 := rfl
@@ -472,10 +394,383 @@ theorem fermion_count_derivation :
 theorem particle_count_derivation :
     smParticleCount.val = smFermionCount.val + smBosonCount.val := rfl
 
-theorem generation_from_kerDimD6 :
-    maxGenerations.val = FUST.ParticleSpectrum.kerDimD6 := rfl
-
 theorem spin_from_spacetime :
     allowedSpinCount.val = spacetimeDim.val := rfl
+
+/-! ## Unique FDim for Every Massive Particle
+
+Particle FDim definitions are in MassRatios.lean (leptons, baryons, gauge bosons)
+and NeutrinoMass.lean (neutrinos). This module adds quark ratio dims and proves
+all particle FDim triples are pairwise distinct. -/
+
+section ParticleFDim
+
+-- Lepton/baryon/boson FDim: from MassRatios.lean
+theorem dimElectron_eq : dimElectron = ⟨-5, 1, -1⟩ := by decide
+theorem dimMuon_eq : dimMuon = ⟨6, -10, -12⟩ := by decide
+theorem dimTau_eq : dimTau = ⟨12, -16, -18⟩ := by decide
+theorem dimProton_eq : dimProton = ⟨9, -13, -15⟩ := by decide
+theorem dimNeutron_eq : dimNeutron = ⟨8, -12, -14⟩ := by decide
+theorem dimWBoson_eq : dimWBoson = ⟨20, -24, -26⟩ := by decide
+
+-- Neutrino FDim: from NeutrinoMass.lean
+theorem dimNu3_eq : FUST.NeutrinoMass.dimNu3 = ⟨-42, 34, 30⟩ := by decide
+theorem dimNu2_eq : FUST.NeutrinoMass.dimNu2 = ⟨-43, 35, 31⟩ := by decide
+
+-- Quark mass ratio m_t/m_b = φ⁷ + φ⁵: DimSum2
+def dimTopBottomHigh : FDim := dimTimeD2 ^ (7 : ℤ)
+def dimTopBottomLow : FDim := dimTimeD2 ^ (5 : ℤ)
+
+theorem dimTopBottomHigh_eq : dimTopBottomHigh = ⟨7, -7, -7⟩ := by decide
+theorem dimTopBottomLow_eq : dimTopBottomLow = ⟨5, -5, -5⟩ := by decide
+
+-- Quark mass ratio m_s/m_d = φ⁶
+def dimStrangeDown : FDim := dimTimeD2 ^ (6 : ℤ)
+
+theorem dimStrangeDown_eq : dimStrangeDown = ⟨6, -6, -6⟩ := by decide
+
+-- Quark mass ratio m_b/m_c = C(3,2) = 3, dim = k × dimPhi = 2 × dimTimeD2
+def dimBottomCharm : FDim := dimTimeD2 ^ (2 : ℤ)
+
+theorem dimBottomCharm_eq : dimBottomCharm = ⟨2, -2, -2⟩ := by decide
+
+-- Dark matter: D5half sector. deriveFDim(D5half) = (-4,0,1), not deriveFDim(6) = (-5,1,-1).
+def dimDarkMatter : FDim := deriveFDim_D5half * dimTimeD2 ^ (25 : ℤ)
+
+theorem dimDarkMatter_eq : dimDarkMatter = ⟨21, -25, -24⟩ := by decide
+theorem dimDarkMatter_ne_dimWBoson : dimDarkMatter ≠ dimWBoson := by decide
+
+-- Baryon asymmetry: η = φ^(-44) × sin(2π/5)
+def dimBaryonAsymmetry : FDim := dimTimeD2 ^ (-(44 : ℤ))
+
+theorem dimBaryonAsymmetry_eq : dimBaryonAsymmetry = ⟨-44, 44, 44⟩ := by decide
+
+end ParticleFDim
+
+section ParticleFDimDistinctness
+
+/-- All ScaleQ massive particle dimensions are pairwise distinct. -/
+theorem particleDims_all_distinct :
+    dimElectron ≠ dimMuon ∧ dimElectron ≠ dimTau ∧
+    dimElectron ≠ FUST.NeutrinoMass.dimNu3 ∧ dimElectron ≠ FUST.NeutrinoMass.dimNu2 ∧
+    dimElectron ≠ dimProton ∧ dimElectron ≠ dimNeutron ∧
+    dimElectron ≠ dimWBoson ∧ dimElectron ≠ dimDarkMatter ∧
+    dimMuon ≠ dimTau ∧ dimMuon ≠ FUST.NeutrinoMass.dimNu3 ∧ dimMuon ≠ FUST.NeutrinoMass.dimNu2 ∧
+    dimMuon ≠ dimProton ∧ dimMuon ≠ dimNeutron ∧ dimMuon ≠ dimWBoson ∧
+    dimMuon ≠ dimDarkMatter ∧
+    dimTau ≠ FUST.NeutrinoMass.dimNu3 ∧ dimTau ≠ FUST.NeutrinoMass.dimNu2 ∧
+    dimTau ≠ dimProton ∧ dimTau ≠ dimNeutron ∧ dimTau ≠ dimWBoson ∧
+    dimTau ≠ dimDarkMatter ∧
+    FUST.NeutrinoMass.dimNu3 ≠ FUST.NeutrinoMass.dimNu2 ∧ FUST.NeutrinoMass.dimNu3 ≠ dimProton ∧
+    FUST.NeutrinoMass.dimNu3 ≠ dimNeutron ∧ FUST.NeutrinoMass.dimNu3 ≠ dimWBoson ∧
+    FUST.NeutrinoMass.dimNu3 ≠ dimDarkMatter ∧
+    FUST.NeutrinoMass.dimNu2 ≠ dimProton ∧
+    FUST.NeutrinoMass.dimNu2 ≠ dimNeutron ∧
+    FUST.NeutrinoMass.dimNu2 ≠ dimWBoson ∧
+    FUST.NeutrinoMass.dimNu2 ≠ dimDarkMatter ∧
+    dimProton ≠ dimNeutron ∧ dimProton ≠ dimWBoson ∧ dimProton ≠ dimDarkMatter ∧
+    dimNeutron ≠ dimWBoson ∧ dimNeutron ≠ dimDarkMatter ∧
+    dimWBoson ≠ dimDarkMatter := by decide
+
+/-- All DimSum2 component dimensions are pairwise distinct. -/
+theorem dimSum2Components_all_distinct :
+    dimZSqComp1 ≠ dimZSqComp2 ∧
+    dimZSqComp1 ≠ dimHiggsVacuum ∧ dimZSqComp1 ≠ dimHiggsCorrection ∧
+    dimZSqComp1 ≠ dimTopBottomHigh ∧ dimZSqComp1 ≠ dimTopBottomLow ∧
+    dimZSqComp2 ≠ dimHiggsVacuum ∧ dimZSqComp2 ≠ dimHiggsCorrection ∧
+    dimZSqComp2 ≠ dimTopBottomHigh ∧ dimZSqComp2 ≠ dimTopBottomLow ∧
+    dimHiggsVacuum ≠ dimHiggsCorrection ∧
+    dimHiggsVacuum ≠ dimTopBottomHigh ∧ dimHiggsVacuum ≠ dimTopBottomLow ∧
+    dimHiggsCorrection ≠ dimTopBottomHigh ∧ dimHiggsCorrection ≠ dimTopBottomLow ∧
+    dimTopBottomHigh ≠ dimTopBottomLow := by decide
+
+/-- No ScaleQ particle dim coincides with any DimSum2 component dim. -/
+theorem scaleQ_ne_dimSum2 :
+    dimElectron ≠ dimZSqComp1 ∧ dimElectron ≠ dimZSqComp2 ∧
+    dimElectron ≠ dimHiggsVacuum ∧ dimElectron ≠ dimHiggsCorrection ∧
+    dimMuon ≠ dimZSqComp1 ∧ dimMuon ≠ dimZSqComp2 ∧
+    dimMuon ≠ dimHiggsVacuum ∧ dimMuon ≠ dimHiggsCorrection ∧
+    dimTau ≠ dimZSqComp1 ∧ dimTau ≠ dimZSqComp2 ∧
+    dimTau ≠ dimHiggsVacuum ∧ dimTau ≠ dimHiggsCorrection ∧
+    dimProton ≠ dimZSqComp1 ∧ dimProton ≠ dimZSqComp2 ∧
+    dimProton ≠ dimHiggsVacuum ∧ dimProton ≠ dimHiggsCorrection ∧
+    dimNeutron ≠ dimZSqComp1 ∧ dimNeutron ≠ dimZSqComp2 ∧
+    dimNeutron ≠ dimHiggsVacuum ∧ dimNeutron ≠ dimHiggsCorrection ∧
+    dimWBoson ≠ dimZSqComp1 ∧ dimWBoson ≠ dimZSqComp2 ∧
+    dimWBoson ≠ dimHiggsVacuum ∧ dimWBoson ≠ dimHiggsCorrection := by decide
+
+end ParticleFDimDistinctness
+
+/-- Structural derivation: each FDim arises from a specific φ-power. -/
+theorem particleDim_from_phi_power :
+    dimElectron = dimTime⁻¹ ∧
+    dimMuon = dimTime⁻¹ * dimTimeD2 ^ (11 : ℤ) ∧
+    dimTau = dimTime⁻¹ * dimTimeD2 ^ (17 : ℤ) ∧
+    FUST.NeutrinoMass.dimNu3 = dimLagrangian * dimTimeD2 ^ (-(32 : ℤ)) ∧
+    FUST.NeutrinoMass.dimNu2 = FUST.NeutrinoMass.dimNu3 * deriveFDim 2 ∧
+    dimProton = dimTime⁻¹ * dimTimeD2 ^ (14 : ℤ) ∧
+    dimNeutron = dimProton * deriveFDim 2 ∧
+    dimWBoson = dimTime⁻¹ * dimTimeD2 ^ (25 : ℤ) :=
+  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+
+/-! ## Sector Classification by State Function
+
+Every particle FDim decomposes as deriveFDim(m)^a × dimTimeD2^n.
+The state function g(x) = x^d is detected by D_m if d > kerDim(D_m).
+
+Three fundamental sectors:
+1. D₆ sector (a=1): g(x) = x³, mass ∝ Δ × φ^n
+2. D₆² sector (a=2): mass ∝ Δ², e.g. neutrinos
+3. Ratio sector (a=0): pure dimTimeD2^n, mass ratios ∝ φ^n
+
+Mixed sectors involve D₂ corrections: neutron, ν₂, Z² comp2. -/
+
+section SectorClassification
+
+-- D₆ sector: dim = deriveFDim(6) × dimTimeD2^n, state function g(x)=x³
+theorem electron_D6_sector : dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) := by decide
+theorem muon_D6_sector : dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) := by decide
+theorem tau_D6_sector : dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) := by decide
+theorem proton_D6_sector : dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) := by decide
+theorem wBoson_D6_sector : dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) := by decide
+theorem higgsVac_D6_sector : dimHiggsVacuum = deriveFDim 6 * dimTimeD2 ^ (26 : ℤ) := by decide
+theorem higgsCorr_D6_sector :
+    dimHiggsCorrection = deriveFDim 6 * dimTimeD2 ^ (23 : ℤ) := by decide
+
+-- D₆² sector: dim = deriveFDim(6)² × dimTimeD2^n, mass ∝ Δ²
+theorem nu3_D6sq_sector :
+    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) := by decide
+theorem zSqComp1_D6sq_sector :
+    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) := by decide
+
+-- Ratio sector: dim = dimTimeD2^n (no D operator dimension)
+theorem topBottomH_ratio_sector : dimTopBottomHigh = dimTimeD2 ^ (7 : ℤ) := by decide
+theorem topBottomL_ratio_sector : dimTopBottomLow = dimTimeD2 ^ (5 : ℤ) := by decide
+theorem strangeDown_ratio_sector : dimStrangeDown = dimTimeD2 ^ (6 : ℤ) := by decide
+theorem bottomCharm_ratio_sector : dimBottomCharm = dimTimeD2 ^ (2 : ℤ) := by decide
+theorem baryonAsym_ratio_sector : dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) := by decide
+
+-- Mixed: D₆ × D₂ corrections
+theorem neutron_mixed_sector :
+    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) := by decide
+theorem nu2_mixed_sector :
+    FUST.NeutrinoMass.dimNu2 = deriveFDim 6 * deriveFDim 6 * deriveFDim 2 *
+    dimTimeD2 ^ (-(32 : ℤ)) := by decide
+theorem zSqComp2_mixed_sector :
+    dimZSqComp2 = deriveFDim 6 * deriveFDim 6 *
+    deriveFDim 2 * deriveFDim 2 * (deriveFDim 3 * deriveFDim 3)⁻¹ *
+    dimTimeD2 ^ (50 : ℤ) := by decide
+
+-- State function: D₆(x³)(x₀) = Δ·x₀², minimum massive cubic
+theorem D6_state_function :
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
+  ⟨D6_quadratic, D6_detects_cubic⟩
+
+-- D₂ detects x²: D₂(x²)(x₀) = F₂·x₀ = x₀
+theorem D2_state_function :
+    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D2 id x ≠ 0) :=
+  ⟨fun x hx => D2_const 1 x hx, D2_linear_ne_zero⟩
+
+-- Complete sector summary
+theorem sector_classification :
+    -- D₆ sector: electron, muon, tau, proton, W, Higgs
+    dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) ∧
+    dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) ∧
+    dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) ∧
+    dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) ∧
+    dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) ∧
+    -- D₆² sector: ν₃, Z²
+    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) ∧
+    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) ∧
+    -- Ratio sector: quark ratios, baryon asymmetry
+    dimTopBottomHigh = dimTimeD2 ^ (7 : ℤ) ∧
+    dimStrangeDown = dimTimeD2 ^ (6 : ℤ) ∧
+    dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) ∧
+    -- Mixed: neutron (D₆ × D₂), ν₂ (D₆² × D₂)
+    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) ∧
+    FUST.NeutrinoMass.dimNu2 = deriveFDim 6 * deriveFDim 6 * deriveFDim 2 *
+             dimTimeD2 ^ (-(32 : ℤ)) := by decide
+
+end SectorClassification
+
+/-! ## Generation Structure
+
+3 generations = deg(x²-x-1) + 1 = 2 + 1 = 3.
+The golden ratio's minimal polynomial degree determines the kernel dimension of D₆,
+hence the number of fermion generations. -/
+
+section GenerationStructure
+
+/-- 3 generations from dim ker(D₆) = operatorKerDim 6 = 3 -/
+theorem generation_count_from_kerDim :
+    FUST.ParticleSpectrum.fermionFlavorCount = Dim.operatorKerDim 6 := rfl
+
+/-- kerDim(D₆) = 3 arises from 3 annihilation conditions:
+    d=0: coefficient sum = 0, d=1: φ+ψ=1, d=2: φ²+ψ²=3 with φψ=-1.
+    d=3 fails: D₆ detects cubic. -/
+theorem three_annihilation_conditions :
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
+  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
+
+/-! ### D₄ Anomaly
+
+D₄ is the ONLY operator detecting constants: D₄[1]≠0.
+D₄ has non-contiguous kernel: ker(D₄) = {x²}, NOT {1}. -/
+
+/-- D₄ anomaly: detects constants but annihilates x² -/
+theorem D4_anomaly :
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) :=
+  ⟨D4_const_ne_zero, D4_quadratic⟩
+
+/-- D₄ is the only operator detecting constants within ker(D₆) -/
+theorem D4_unique_constant_detector :
+    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) :=
+  ⟨fun x hx => D2_const 1 x hx, fun x hx => D3_const 1 x hx,
+   D4_const_ne_zero, fun x hx => D5_const 1 x hx, fun x hx => D6_const 1 x hx⟩
+
+/-! ### Detection Matrix
+
+Which D_m detects which x^d within ker(D₆):
+       D₂  D₃  D₄  D₅  D₆
+d=0:   =0  =0  ≠0  =0  =0
+d=1:   ≠0  ≠0  ≠0  =0  =0
+d=2:   ≠0  ≠0  =0  ≠0  =0
+-/
+
+/-- Detection matrix row d=0: only D₄ detects -/
+theorem detection_d0 :
+    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) := D4_unique_constant_detector
+
+/-- Detection matrix row d=1: D₂, D₃, D₄ detect; D₅, D₆ annihilate -/
+theorem detection_d1 :
+    (∃ x : ℝ, x ≠ 0 ∧ D2 id x ≠ 0) ∧
+    (∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0) ∧
+    (∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) := by
+  refine ⟨⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩,
+          ⟨1, one_ne_zero, D3_linear_ne_zero 1 one_ne_zero⟩,
+          ⟨1, one_ne_zero, D4_linear_ne_zero 1 one_ne_zero⟩,
+          D5_linear, D6_linear⟩
+
+/-- Detection matrix row d=2: D₂, D₃, D₅ detect; D₄, D₆ annihilate -/
+theorem detection_d2 :
+    (∃ x : ℝ, x ≠ 0 ∧ D2 (fun t => t^2) x ≠ 0) ∧
+    (∃ x : ℝ, x ≠ 0 ∧ D3 (fun t => t^2) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) ∧
+    (∃ x : ℝ, x ≠ 0 ∧ D5 (fun t => t^2) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) := by
+  refine ⟨⟨1, one_ne_zero, ?_⟩, ⟨1, one_ne_zero, ?_⟩, D4_quadratic,
+          ⟨1, one_ne_zero, D5_not_annihilate_quadratic 1 one_ne_zero⟩, D6_quadratic⟩
+  · -- D₂[x²] ≠ 0 at x=1
+    simp only [D2, one_ne_zero, ↓reduceIte]
+    have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+    have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+    have hψ2 : ψ^2 = ψ + 1 := psi_sq
+    have hnum : (φ * 1) ^ 2 - (ψ * 1) ^ 2 = (φ - ψ) * (φ + ψ) := by ring
+    rw [hnum]
+    have hsum : φ + ψ = 1 := phi_add_psi
+    rw [hsum, mul_one]
+    exact div_ne_zero hφψ_ne hφψ_ne
+  · -- D₃[x²] ≠ 0 at x=1
+    simp only [D3, one_ne_zero, ↓reduceIte]
+    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+    have hψ2 : ψ^2 = ψ + 1 := psi_sq
+    have hsum : φ + ψ = 1 := phi_add_psi
+    have hnum : (φ * 1) ^ 2 - 2 * 1 ^ 2 + (ψ * 1) ^ 2 = φ ^ 2 + ψ ^ 2 - 2 := by ring
+    rw [hnum]
+    have hcoef : φ ^ 2 + ψ ^ 2 - 2 = 1 := by
+      calc φ ^ 2 + ψ ^ 2 - 2 = (φ + 1) + (ψ + 1) - 2 := by rw [hφ2, hψ2]
+        _ = φ + ψ := by ring
+        _ = 1 := hsum
+    rw [hcoef]
+    have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+    have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    exact div_ne_zero one_ne_zero (mul_ne_zero (pow_ne_zero 2 hφψ_ne) one_ne_zero)
+
+/-! ### Kernel Filtration
+
+ker(D₅.₅) ⊂ ker(D₅) ⊂ ker(D₆): dim 1 → 2 → 3.
+Each dimension increase creates one generation. -/
+
+/-- Kernel filtration: 3-layer structure within ker(D₆) -/
+theorem kernel_filtration :
+    -- Layer 1: ker(D₅.₅) = {1}, dim 1
+    (∀ x, x ≠ 0 → D5half (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5half id x ≠ 0) ∧
+    -- Layer 2: ker(D₅) = {1, x}, dim 2
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
+    -- Layer 3: ker(D₆) = {1, x, x²}, dim 3
+    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
+  ⟨D5half_const 1, D5half_linear_ne_zero,
+   fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic,
+   fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
+
+/-! ### Generation Exponents from Pair Counts
+
+All mass exponents are sums of pair counts C(m,2):
+  C(2,2)=1, C(3,2)=3, C(4,2)=6, C(5,2)=10, C(6,2)=15. -/
+
+/-- Five pair counts of the 5 active D-operators -/
+theorem five_pair_counts :
+    Nat.choose 2 2 = 1 ∧ Nat.choose 3 2 = 3 ∧ Nat.choose 4 2 = 6 ∧
+    Nat.choose 5 2 = 10 ∧ Nat.choose 6 2 = 15 :=
+  ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+/-- Lepton generation exponents from pair count sums -/
+theorem lepton_generation_exponents :
+    -- e→μ: C(5,2) + C(2,2) = 11
+    Nat.choose 5 2 + Nat.choose 2 2 = 11 ∧
+    -- μ→τ: C(4,2) = 6
+    Nat.choose 4 2 = 6 ∧
+    -- e→τ: C(5,2) + C(2,2) + C(4,2) = 17
+    Nat.choose 5 2 + Nat.choose 2 2 + Nat.choose 4 2 = 17 :=
+  ⟨rfl, rfl, rfl⟩
+
+/-- W boson exponent from D₅+D₆ total pair count -/
+theorem wBoson_exponent :
+    Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
+
+/-- Dark matter exponent = W boson exponent (same φ-power, different sector base) -/
+theorem darkMatter_exponent :
+    Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
+
+/-- Complete generation structure theorem -/
+theorem generation_structure :
+    -- 3 generations from ker(D₆)
+    (Dim.operatorKerDim 6 = 3) ∧
+    -- D₄ anomaly: only constant detector
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) ∧
+    -- Lepton exponents from pair counts
+    (Nat.choose 5 2 + Nat.choose 2 2 = 11) ∧
+    (Nat.choose 4 2 = 6) ∧
+    -- W exponent from D₅+D₆ pairs
+    (Nat.choose 5 2 + Nat.choose 6 2 = 25) ∧
+    -- Kernel filtration dimensions
+    (Dim.operatorKerDim 5 = 2) := by
+  exact ⟨rfl, D4_const_ne_zero, D4_quadratic, rfl, rfl, rfl, rfl⟩
+
+end GenerationStructure
 
 end FUST.Dim

@@ -41,7 +41,7 @@ theorem mu_md_from_D2 : (1 : ℚ) / 2 = 1 / 2 := rfl
 /-- D₂ has C(2,2) = 1 pair, 2 evaluation points -/
 theorem mu_md_justification : Nat.choose 2 2 = 1 := rfl
 
-/-! ## Part 2: m_s/m_d = φ^6 (Generation Gap)
+/-! ## Part 2: m_s/m_d = φ^6 (D₃ Pair Count)
 
 The exponent 6 = T(3) = C(4,2) comes from D₄ pair count.
 This matches the lepton τ/μ ratio (same D-structure origin).

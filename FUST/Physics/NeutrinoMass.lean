@@ -130,8 +130,12 @@ theorem D5Coeff_two_eq_choose : D5CoeffZ 2 = Nat.choose 4 2 := by
 
 /-! ## Part 5: Dimensioned Neutrino Masses
 
-Mass in FUST has dimension dimTime⁻¹. Neutrinos acquire mass via D₅ seesaw-like
-mechanism: m_ν₃ = Δ² × φ^(-32), m_ν₂ = m_ν₃ × √(1/30). -/
+Neutrinos have unique FDim in the D₆² sector:
+m_ν₃ = Δ² × φ^(-32), m_ν₂ = m_ν₃ × √(1/30). -/
+
+-- Neutrino FDim: D₆² sector
+def dimNu3 : FDim := dimLagrangian * dimTimeD2 ^ (-(32 : ℤ))
+def dimNu2 : FDim := dimNu3 * deriveFDim 2
 
 /-- Neutrino mass squared ratio as RatioQ -/
 def neutrinoMassSqRatio_dimQ : RatioQ :=
@@ -142,7 +146,7 @@ theorem neutrinoMassSqRatio_dimQ_val :
   simp only [neutrinoMassSqRatio_dimQ, kerDimD5, Nat.choose]; norm_num
 
 /-- m_ν₃ = Δ × Δ × φ^(-32) = Δ² × φ^(-2⁵) -/
-noncomputable def nu3Mass : ScaleQ dimTime⁻¹ :=
+noncomputable def nu3Mass : ScaleQ dimNu3 :=
   ⟨FUST.massGapΔ * nu3ElectronRatio⟩
 
 theorem nu3Mass_val :
@@ -158,7 +162,7 @@ theorem nu3_electron_ratio :
   field_simp
 
 /-- m_ν₂ = m_ν₃ × √(1/30) -/
-noncomputable def nu2Mass : ScaleQ dimTime⁻¹ :=
+noncomputable def nu2Mass : ScaleQ dimNu2 :=
   ⟨nu3Mass.val * Real.sqrt (1 / 30)⟩
 
 theorem nu2_nu3_ratio :

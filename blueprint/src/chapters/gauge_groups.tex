@@ -330,14 +330,17 @@ This extra degree of freedom $x^2$ acts as the \textbf{Higgs field}: it belongs 
 \subsection{Mass/Massless Classification}
 
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Gauge boson & Symmetry origin & Mass mechanism \\
+Gauge boson & Symmetry origin & Mass mechanism & FDim \\
 \hline
-Gluon (8) & $\ker(D_6)$, $\mathrm{SU}(3)$ & In $\ker(D_6)$: $D_6(\text{gluon}) = 0$ $\to$ massless \\
-Photon & Polynomial grading, $\mathrm{U}(1)$ & Grading preserved by all $D_m$ $\to$ massless \\
-$W^\pm, Z$ & $\ker(D_5)$, $\mathrm{SU}(2)$ & $D_5(x^2) \neq 0$: couples to Higgs DOF $\to$ massive \\
-Graviton & $D_6$ gravity sector & $\Box_\varphi[t^{-1}] = 0$ $\to$ massless \\
+Gluon (8) & $\ker(D_6)$, $\mathrm{SU}(3)$ & $D_6 = 0$ $\to$ massless & --- \\
+Photon & Grading, $\mathrm{U}(1)$ & all $D_m$ preserve $\to$ massless & --- \\
+$W^\pm$ & $\ker(D_5)$, $\mathrm{SU}(2)$ & $D_5(x^2) \neq 0$ $\to$ massive & $(20,-24,-26)$ \\
+$Z$ & $\ker(D_5)$, $\mathrm{SU}(2)$ & DimSum2 via $\theta_W$ & $(40,...) \oplus (42,...)$ \\
+$H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & $(21,...) \oplus (18,...)$ \\
+DM & $D_{5\frac{1}{2}}$ sector & $D_{5\frac{1}{2}}[x] \neq 0$ $\to$ massive & $(21,-25,-24)$ \\
+Graviton & $D_6$ gravity sector & $\Box_\varphi[t^{-1}] = 0$ $\to$ massless & --- \\
 \hline
 \end{tabular}
 \end{center}
@@ -346,5 +349,8 @@ The W boson mass is quantitatively determined:
 \[
 \frac{m_W}{m_e} = \varphi^{C(5,2)+C(6,2)} \times \frac{C(6,2)}{C(6,2)+C(2,2)} = \varphi^{25} \times \frac{15}{16}
 \]
-with 0.002\% agreement against PDG data. See Chapter~\ref{chap:pd_mass_ratios} for details.
+with 0.002\% agreement against PDG data.
+$m_Z^2$ and $m_H$ are \texttt{DimSum2}: formal sums of ScaleQ with different FDim,
+whose $\mathbb{R}$-evaluation gives the physical mass.
+See Chapter~\ref{chap:pd_mass_ratios} for details.
 
