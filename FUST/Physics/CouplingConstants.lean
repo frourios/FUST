@@ -252,9 +252,34 @@ noncomputable def cpPhase : ScaleQ 1 := ⟨FUST.CouplingConstants.cp_phase⟩
 
 theorem cpPhase_val : cpPhase.val = 2 * Real.pi / 5 := rfl
 
-/-! ## Fine Structure Constant as RatioQ (π-free, pure D-structure) -/
+/-! ## Fine Structure Constant — Unique FDim from EM Binding Constraint
 
-noncomputable def fineStructure : ScaleQ 1 := ⟨FUST.CouplingConstants.fine_structure⟩
+α₀ = φ⁻⁴/C(6,3) has nontrivial FDim, uniquely determined by:
+  E_bind = α₀² × m_e must have dim = dimTimeD2 (binding defect dimension).
+  dim(α₀²) = dimTimeD2 × dimElectron⁻¹ = (6,-2,0)
+  dim(α₀) = (3,-1,0), pure sector, effectiveDegree = -1.
+
+Other φ-involving constants (CKM, PMNS, Ω) are forced to dim = 1
+by unitarity or conservation sum constraints. -/
+
+def dimFineStructure : FDim := ⟨3, -1, 0⟩
+
+theorem dimFineStructure_eq : dimFineStructure = ⟨3, -1, 0⟩ := rfl
+
+theorem dimFineStructure_pureSector : dimFineStructure.isPureSector := by
+  unfold FDim.isPureSector; decide
+
+-- α₀² × m_e = dimTimeD2 (EM binding energy dimension)
+theorem fineStructure_binding_consistency :
+    dimFineStructure * dimFineStructure * dimTime⁻¹ = dimTimeD2 := by decide
+
+-- dim(α₀) ≠ dimTimeD2, dim(α₀) ≠ 1, dim(α₀) ≠ dimElectron
+theorem dimFineStructure_ne_dimTimeD2 : dimFineStructure ≠ dimTimeD2 := by decide
+theorem dimFineStructure_ne_one : dimFineStructure ≠ (1 : FDim) := by decide
+theorem dimFineStructure_ne_dimElectron : dimFineStructure ≠ dimTime⁻¹ := by decide
+
+noncomputable def fineStructure : ScaleQ dimFineStructure :=
+  ⟨FUST.CouplingConstants.fine_structure⟩
 
 theorem fineStructure_val :
     fineStructure.val = φ ^ (-(4 : ℤ)) / (Nat.choose 6 3 : ℝ) := rfl

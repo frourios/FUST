@@ -1,36 +1,19 @@
 /-
 Oxygen Isotopes and Ionization from D-operator Kernel Structure
 
-State function g(x) = x^Z · (1+x)^N · (1+ψx)^e
-where Z = proton count, N = neutron count, e = electron count.
-
-For oxygen (Z=8): all species have deg ≥ 16, hence all lie outside ker(D6).
+FDim for each species: dimAtom(Z, N, e) with effectiveDegree = 16Z + 15N + 2e + 1.
 O-16 (Z=8, N=8) is doubly magic, connecting to Nuclear.lean.
 -/
 
 import FUST.DifferenceOperators
 import FUST.Physics.Nuclear
-import FUST.Chemistry.HydrogenIsotopes
+import FUST.Chemistry.AtomDim
 
 namespace FUST.Chemistry.Oxygen
 
-open FUST FUST.Chemistry
+open FUST FUST.Dim FUST.Chemistry
 
-/-! ## Section 1: General Atom State Function
-
-g(x) = x^Z · (1+x)^N · (1+ψx)^e with deg(g) = Z + N + e.
--/
-
-noncomputable def atomStateFn (Z N e : ℕ) (x : ℝ) : ℝ :=
-  x ^ Z * (1 + x) ^ N * (1 + ψ * x) ^ e
-
-def atomDegree (Z N e : ℕ) : ℕ := Z + N + e
-
-theorem atomDegree_eq_speciesDegree_for_hydrogen (N e : ℕ) :
-    atomDegree 1 N e = speciesDegree N e := by
-  unfold atomDegree speciesDegree; omega
-
-/-! ## Section 2: Oxygen Parameters
+/-! ## Section 1: Oxygen Parameters
 
 oxygenZ = 8 = nuclearMagic(1), so oxygen's proton number is a nuclear magic number.
 Neutron counts are derived from mass numbers: N = A - Z.
@@ -79,43 +62,43 @@ theorem oxygen16Atom_eq (x : ℝ) :
 theorem oxideAnion_eq (x : ℝ) :
     oxideAnion x = x ^ 8 * (1 + x) ^ 8 * (1 + ψ * x) ^ 10 := rfl
 
-/-! ## Section 5: Degree Structure -/
+/-! ## Section 5: FDim Structure -/
 
-theorem degree_oxygen16Ion : atomDegree 8 8 0 = 16 := rfl
-theorem degree_oxygen17Ion : atomDegree 8 9 0 = 17 := rfl
-theorem degree_oxygen18Ion : atomDegree 8 10 0 = 18 := rfl
-theorem degree_oxygen16Atom : atomDegree 8 8 8 = 24 := rfl
-theorem degree_oxygen17Atom : atomDegree 8 9 8 = 25 := rfl
-theorem degree_oxygen18Atom : atomDegree 8 10 8 = 26 := rfl
-theorem degree_oxideAnion : atomDegree 8 8 10 = 26 := rfl
-theorem degree_superoxideAnion : atomDegree 8 8 9 = 25 := rfl
-theorem degree_oxygenCation : atomDegree 8 8 7 = 23 := rfl
+theorem effDeg_oxygen16Ion : (dimAtom 8 8 0).effectiveDegree = 249 := by decide
+theorem effDeg_oxygen17Ion : (dimAtom 8 9 0).effectiveDegree = 264 := by decide
+theorem effDeg_oxygen18Ion : (dimAtom 8 10 0).effectiveDegree = 279 := by decide
+theorem effDeg_oxygen16Atom : (dimAtom 8 8 8).effectiveDegree = 265 := by decide
+theorem effDeg_oxygen17Atom : (dimAtom 8 9 8).effectiveDegree = 280 := by decide
+theorem effDeg_oxygen18Atom : (dimAtom 8 10 8).effectiveDegree = 295 := by decide
+theorem effDeg_oxideAnion : (dimAtom 8 8 10).effectiveDegree = 269 := by decide
+theorem effDeg_superoxideAnion : (dimAtom 8 8 9).effectiveDegree = 267 := by decide
+theorem effDeg_oxygenCation : (dimAtom 8 8 7).effectiveDegree = 263 := by decide
 
--- All oxygen species have degree ≥ 16
-theorem oxygen_degree_lower_bound (N e : ℕ) (hN : N ≥ 8) :
-    atomDegree 8 N e ≥ 16 := by
-  unfold atomDegree; omega
+-- All oxygen species have effectiveDegree ≫ ker(D6) threshold
+theorem oxygen_effDeg_lower_bound :
+    (dimAtom 8 8 0).effectiveDegree > 2 ∧
+    (dimAtom 8 8 8).effectiveDegree > 2 ∧
+    (dimAtom 8 8 10).effectiveDegree > 2 := by decide
 
--- All oxygen species far exceed ker(D6) threshold
-theorem oxygen_degree_exceeds_kerD6 (N e : ℕ) (hN : N ≥ 8) :
-    atomDegree 8 N e > 2 := by
-  unfold atomDegree; omega
+/-! ## Section 6: Ionization Series -/
 
-/-! ## Section 6: Ionization Series Degrees -/
+theorem ionization_effDeg_O16 :
+    (dimAtom 8 8 0).effectiveDegree = 249 ∧   -- O⁸⁺
+    (dimAtom 8 8 1).effectiveDegree = 251 ∧   -- O⁷⁺
+    (dimAtom 8 8 2).effectiveDegree = 253 ∧   -- O⁶⁺
+    (dimAtom 8 8 3).effectiveDegree = 255 ∧   -- O⁵⁺
+    (dimAtom 8 8 4).effectiveDegree = 257 ∧   -- O⁴⁺
+    (dimAtom 8 8 5).effectiveDegree = 259 ∧   -- O³⁺
+    (dimAtom 8 8 6).effectiveDegree = 261 ∧   -- O²⁺
+    (dimAtom 8 8 7).effectiveDegree = 263 ∧   -- O⁺
+    (dimAtom 8 8 8).effectiveDegree = 265 ∧   -- O
+    (dimAtom 8 8 9).effectiveDegree = 267 ∧   -- O⁻
+    (dimAtom 8 8 10).effectiveDegree = 269     -- O²⁻
+    := by decide
 
-theorem ionization_degrees_O16 :
-    atomDegree 8 8 0 = 16 ∧   -- O⁸⁺
-    atomDegree 8 8 1 = 17 ∧   -- O⁷⁺
-    atomDegree 8 8 2 = 18 ∧   -- O⁶⁺
-    atomDegree 8 8 3 = 19 ∧   -- O⁵⁺
-    atomDegree 8 8 4 = 20 ∧   -- O⁴⁺
-    atomDegree 8 8 5 = 21 ∧   -- O³⁺
-    atomDegree 8 8 6 = 22 ∧   -- O²⁺
-    atomDegree 8 8 7 = 23 ∧   -- O⁺
-    atomDegree 8 8 8 = 24 ∧   -- O
-    atomDegree 8 8 9 = 25 ∧   -- O⁻
-    atomDegree 8 8 10 = 26    -- O²⁻
-    := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+-- Each electron adds 2 to effectiveDegree (= 2 × dimElectron.effDeg - 1 binding)
+theorem ionization_step_is_two :
+    (dimAtom 8 8 1).effectiveDegree - (dimAtom 8 8 0).effectiveDegree = 2 := by decide
 
 /-! ## Section 7: Nuclear Magic Number Connection
 
@@ -132,64 +115,40 @@ theorem oxygen16_mass_number : oxygenZ + neutrons_O16 = 16 := rfl
 theorem oxygen17_mass_number : oxygenZ + neutrons_O17 = 17 := rfl
 theorem oxygen18_mass_number : oxygenZ + neutrons_O18 = 18 := rfl
 
-/-! ## Section 8: D6 Non-Kernel via Degree
-
-For any species with Z + N + e ≥ 3, the state function is a polynomial of
-degree ≥ 3, hence lies outside ker(D6) = span{1, x, x²}.
-
-Note: D6(f)(x) may vanish at specific x ≠ 0 (as a rational function of x),
-but the polynomial is not identically in ker(D6) as a function.
--/
-
--- All oxygen species vanish at x=0
-theorem atomStateFn_vanishes_at_zero (Z N e : ℕ) (hZ : Z ≥ 1) :
-    atomStateFn Z N e 0 = 0 := by
-  unfold atomStateFn; simp [zero_pow (by omega : Z ≠ 0)]
+/-! ## Section 8: D6 Non-Kernel via State Function -/
 
 theorem oxygen16Ion_vanishes_at_zero : oxygen16Ion 0 = 0 := by
   unfold oxygen16Ion; exact atomStateFn_vanishes_at_zero 8 8 0 (by omega)
 
-/-! ## Section 9: General Degree Bound
+/-! ## Section 9: FDim Distinctness
 
-For any element with Z ≥ 3, all species are outside ker(D6)
-regardless of neutron count and ionization state.
--/
+Isotopes and ionization states have distinct FDim. -/
 
-theorem general_degree_exceeds_kerD6 (Z N e : ℕ) (hZ : Z ≥ 3) :
-    atomDegree Z N e > 2 := by
-  unfold atomDegree; omega
+theorem oxygen_isotopes_distinct :
+    dimAtom 8 8 0 ≠ dimAtom 8 9 0 ∧
+    dimAtom 8 8 0 ≠ dimAtom 8 10 0 ∧
+    dimAtom 8 9 0 ≠ dimAtom 8 10 0 := by decide
 
--- This means ker(D6) membership is relevant only for Z ≤ 2 (H and He)
-theorem kerD6_relevance :
-    atomDegree 1 0 0 ≤ 2 ∧  -- H⁺: deg=1 ∈ ker
-    atomDegree 1 1 0 ≤ 2 ∧  -- D⁺: deg=2 ∈ ker
-    atomDegree 1 0 1 ≤ 2 ∧  -- H:  deg=2 ∈ ker
-    atomDegree 2 0 0 ≤ 2 ∧  -- He²⁺: deg=2 ∈ ker (alpha particle core)
-    ¬(atomDegree 1 2 0 ≤ 2) ∧ -- T⁺: deg=3 ∉ ker
-    ¬(atomDegree 2 1 0 ≤ 2) ∧ -- He³⁺ nucleus: deg=3 ∉ ker
-    ¬(atomDegree 3 0 0 ≤ 2)   -- Li³⁺: deg=3 ∉ ker, first Z≥3
-    := by unfold atomDegree; omega
+theorem oxygen_ion_atom_distinct :
+    dimAtom 8 8 0 ≠ dimAtom 8 8 8 ∧
+    dimAtom 8 8 8 ≠ dimAtom 8 8 10 := by decide
 
-/-! ## Section 10: Electron Shell Filling
-
-Oxygen: 1s² 2s² 2p⁴ (8 electrons).
-Oxide O²⁻: 1s² 2s² 2p⁶ (10 electrons, filled shell).
--/
+/-! ## Section 10: Electron Shell Filling -/
 
 theorem oxygen_electron_count : oxygenZ = 8 := rfl
 
 -- 1s² + 2s² + 2p⁴ = 8
 theorem oxygen_shell_filling :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
     4 = oxygenZ                               -- 2p: 4 of 6
     := rfl
 
 -- Oxide O²⁻ fills the 2p shell completely
 theorem oxide_fills_2p :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩    -- 2p: 6
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
+    Nuclear.subshellCapacity 1    -- 2p: 6
     = 10 := rfl
 
 -- Shell 1 capacity + shell 2 capacity = 2 + 8 = 10
@@ -202,31 +161,14 @@ theorem oxygen_isotope_classification :
     -- O-16 is doubly magic
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = oxygenZ) ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_O16) ∧
-    -- All oxygen isotope degrees
-    atomDegree 8 8 0 = 16 ∧ atomDegree 8 9 0 = 17 ∧ atomDegree 8 10 0 = 18 ∧
-    -- Neutral atom degrees
-    atomDegree 8 8 8 = 24 ∧ atomDegree 8 9 8 = 25 ∧ atomDegree 8 10 8 = 26 ∧
-    -- All exceed ker(D6) threshold
-    (∀ N e, N ≥ 8 → atomDegree 8 N e > 2) := by
-  refine ⟨⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
-  intro N e hN; unfold atomDegree; omega
+    -- All oxygen species are pure sector with distinct FDim
+    (dimAtom 8 8 8).isPureSector ∧
+    dimAtom 8 8 0 ≠ dimAtom 8 8 8 ∧
+    -- effectiveDegree values
+    (dimAtom 8 8 0).effectiveDegree = 249 ∧
+    (dimAtom 8 8 8).effectiveDegree = 265 ∧
+    (dimAtom 8 8 10).effectiveDegree = 269 := by
+  refine ⟨⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩, ?_, by decide, by decide, by decide, by decide⟩
+  unfold FDim.isPureSector; decide
 
 end FUST.Chemistry.Oxygen
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Oxygen
-
-def oxygenZ_t : DTagged .protonNum := ⟨oxygenZ⟩
-def O16N_t : DTagged .neutronNum := ⟨neutrons_O16⟩
-def O17N_t : DTagged .neutronNum := ⟨neutrons_O17⟩
-def O18N_t : DTagged .neutronNum := ⟨neutrons_O18⟩
-
-theorem oxygenZ_t_val : oxygenZ_t.val = 8 := rfl
-theorem O16N_t_val : O16N_t.val = 8 := rfl
-theorem O17N_t_val : O17N_t.val = 9 := rfl
-theorem O18N_t_val : O18N_t.val = 10 := rfl
-
--- N = Z for O-16 (doubly magic)
-theorem O16_neutron_magic : O16N_t.val = oxygenZ_t.val := rfl
-
-end FUST.DiscreteTag

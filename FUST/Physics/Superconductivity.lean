@@ -19,7 +19,7 @@ import FUST.Physics.LeastAction
 
 namespace FUST.Physics.Superconductivity
 
-open FUST FUST.LeastAction
+open FUST FUST.Dim FUST.Chemistry FUST.LeastAction
 open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Copper FUST.Chemistry.Niobium
@@ -44,12 +44,10 @@ theorem cooperPair_charge_eq_spinDeg :
     cooperPairSize = Nuclear.spinDegeneracy := rfl
 
 -- Flux quantum denominator = cooperPairSize = spinDeg
--- Φ₀ = h/(cooperPairSize · e)
 theorem flux_quantum_denominator :
     cooperPairSize = 2 := rfl
 
 -- ker(D5) is affine: paired states are "linear" (bosonic)
--- Two ker(D5) functions are uniquely determined by spinDeg = 2 points
 theorem cooperPair_uniqueness (p q : ℝ → ℝ)
     (hp : IsInKerD5 p) (hq : IsInKerD5 q)
     (t₀ t₁ : ℝ) (h01 : t₀ ≠ t₁)
@@ -74,8 +72,6 @@ theorem spin_pair_embeds_in_spatial (f : ℝ → ℝ) (hf : IsInKerD5 f) :
 theorem condensate_dimension :
     kernelDimensions 2 - kernelDimensions 1 = 1 := rfl
 
--- The condensate mode is the quadratic part (x² term)
--- ker(D6) = ker(D5) ⊕ span{x²}
 -- The quadratic mode is NOT in ker(D5): D5(x²) ≠ 0
 theorem quadratic_not_in_kerD5 :
     ¬IsInKerD5 (fun t => t ^ 2) := by
@@ -87,9 +83,6 @@ theorem quadratic_not_in_kerD5 :
 
 /-! ## Section 3: Superconducting Gap from Spectral Structure
 
-The mass gap Δ = 12/25 provides the minimal energy scale.
-In a superconductor, the gap Δ_sc separates paired (condensate)
-from unpaired (quasiparticle) states.
 ker(D6) states: gapless (photon-like, supercurrent).
 ker(D6)⊥ states: gapped by Δ (quasiparticles).
 -/
@@ -145,7 +138,8 @@ theorem CuO2_N_eq : CuO2_N = 50 := rfl
 theorem CuO2_neutrons_magic :
     CuO2_N = Nuclear.nuclearMagic 4 := rfl
 
-theorem degree_CuO2 : atomDegree 45 50 45 = 140 := rfl
+set_option maxRecDepth 4096 in
+theorem effDeg_CuO2 : (dimAtom 45 50 45).effectiveDegree = 1561 := by decide
 
 /-! ## Section 5: d-Wave Pairing Symmetry
 
@@ -165,14 +159,13 @@ abbrev dWaveNodes : ℕ := 2 ^ Nuclear.spinDegeneracy
 theorem dWave_nodes_eq_baseCount : dWaveNodes = 4 := rfl
 
 -- d-wave has spinDeg positive and spinDeg negative lobes
--- Total lobes = baseCount, positive = negative = spinDeg
 theorem dWave_lobe_partition :
     dWaveNodes = Nuclear.spinDegeneracy + Nuclear.spinDegeneracy := rfl
 
 /-! ## Section 6: Conventional Superconductors — Niobium
 
 NbH is a known superconductor. Nb-93: N = nuclearMagic(4) + spinDeg.
-Adding H increases degree by spinDeg = 2 per atom.
+Adding H increases effectiveDegree by 18 per atom.
 -/
 
 -- NbH: Nb + 1 interstitial H
@@ -183,18 +176,19 @@ abbrev NbH_e : ℕ := niobiumZ + hydrogenZ  -- neutral
 theorem NbH_Z_eq : NbH_Z = 42 := rfl
 theorem NbH_N_eq : NbH_N = 52 := rfl
 
--- NbH degree = Nb degree + spinDeg
-theorem NbH_degree :
-    atomDegree NbH_Z NbH_N NbH_e = 136 := rfl
+-- NbH effectiveDegree
+set_option maxRecDepth 4096 in
+theorem NbH_effDeg :
+    (dimAtom NbH_Z NbH_N NbH_e).effectiveDegree = 1537 := by decide
 
-theorem NbH_degree_increase :
-    atomDegree NbH_Z NbH_N NbH_e =
-    atomDegree niobiumZ neutrons_Nb93 niobiumZ + Nuclear.spinDegeneracy := rfl
+set_option maxRecDepth 4096 in
+theorem NbH_effDeg_increase :
+    (dimAtom NbH_Z NbH_N NbH_e).effectiveDegree -
+    (dimAtom niobiumZ neutrons_Nb93 niobiumZ).effectiveDegree = 18 := by decide
 
 /-! ## Section 7: Hydride Superconductors Under Pressure
 
 LaH₁₀ (Tc ≈ 250K): La has N = 82 = nuclearMagic(5).
-H₃S (Tc ≈ 203K): high hydrogen content enables strong phonon coupling.
 Magic neutron numbers of the heavy atom correlate with high Tc.
 -/
 
@@ -210,19 +204,20 @@ abbrev LaH10_N : ℕ := neutrons_La139  -- H contributes N=0
 
 theorem LaH10_Z_eq : LaH10_Z = 67 := rfl
 
--- LaH₁₀ degree
-theorem degree_LaH10 :
-    atomDegree LaH10_Z LaH10_N LaH10_Z = 216 := rfl
+-- LaH₁₀ effectiveDegree
+set_option maxRecDepth 4096 in
+theorem effDeg_LaH10 :
+    (dimAtom LaH10_Z LaH10_N LaH10_Z).effectiveDegree = 2437 := by decide
 
--- Degree increase from La to LaH₁₀ = 10 × spinDeg = 20 = aminoAcidCount
-theorem LaH10_degree_increase :
-    atomDegree LaH10_Z LaH10_N LaH10_Z -
-    atomDegree lanthanumZ neutrons_La139 lanthanumZ = 20 := rfl
+-- Particle count increase from La to LaH₁₀ = 20
+theorem LaH10_particleCount_increase :
+    LaH10_Z + LaH10_N + LaH10_Z -
+    (lanthanumZ + neutrons_La139 + lanthanumZ) = 20 := rfl
 
--- Each H adds spinDeg = 2, so 10H adds 20
-theorem LaH10_degree_increase_structure :
-    atomDegree LaH10_Z LaH10_N LaH10_Z -
-    atomDegree lanthanumZ neutrons_La139 lanthanumZ =
+-- Each H adds 2 to particle count, so 10H adds 20
+theorem LaH10_particleCount_structure :
+    LaH10_Z + LaH10_N + LaH10_Z -
+    (lanthanumZ + neutrons_La139 + lanthanumZ) =
     10 * Nuclear.spinDegeneracy := rfl
 
 /-! ## Section 8: YBCO (YBa₂Cu₃O₇) — Prototypical High-Tc
@@ -247,7 +242,7 @@ theorem neutrons_Ba137_eq : neutrons_Ba137 = 81 := rfl
 theorem Ba_neutrons_near_magic :
     neutrons_Ba137 + hydrogenZ = Nuclear.nuclearMagic 5 := rfl
 
--- O-16: N = 8 = nuclearMagic(1) (already known from OxygenIsotopes)
+-- O-16: N = 8 = nuclearMagic(1)
 theorem O_neutrons_magic :
     (8 : ℕ) = Nuclear.nuclearMagic 1 := rfl
 
@@ -259,9 +254,10 @@ theorem YBCO_Z_eq : YBCO_Z = 294 := rfl
 abbrev YBCO_N : ℕ := neutrons_Y89 + 2 * neutrons_Ba137 + 3 * neutrons_Cu63 + 7 * neutrons_O16
 theorem YBCO_N_eq : YBCO_N = 370 := rfl
 
--- YBCO degree per formula unit
-theorem degree_YBCO :
-    atomDegree YBCO_Z YBCO_N YBCO_Z = 958 := rfl
+-- YBCO effectiveDegree per formula unit
+set_option maxRecDepth 8192 in
+theorem effDeg_YBCO :
+    (dimAtom YBCO_Z YBCO_N YBCO_Z).effectiveDegree = 10843 := by decide
 
 -- Number of CuO₂ planes per unit cell = spinDeg = 2 (for YBCO)
 theorem YBCO_CuO2_planes :
@@ -270,9 +266,6 @@ theorem YBCO_CuO2_planes :
 /-! ## Section 9: Coordination Number Hierarchy
 
 Crystal coordination numbers are multiples of baseCount = 4.
-CuO₂ plane: 4 = baseCount (square planar).
-BCC: 8 = 2 × baseCount = nuclearMagic(1).
-FCC/HCP: 12 = spatialDim × baseCount (close-packed).
 -/
 
 abbrev bccCoordination : ℕ := 2 * (2 ^ Nuclear.spinDegeneracy)
@@ -320,89 +313,3 @@ theorem superconductivity_classification :
   refine ⟨rfl, spin_pair_embeds_in_spatial, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.Physics.Superconductivity
-
-namespace FUST.DiscreteTag
-open FUST.Physics.Superconductivity
-
--- Cooper pair size = spinDeg
-theorem cooperPair_is_spinDeg :
-    (⟨cooperPairSize⟩ : DTagged .count) = kerToCount spinDeg_t := rfl
-
--- CuO₂ coordination = baseCount
-theorem cuprate_coord_is_baseCount :
-    (⟨cuprateCoordination⟩ : DTagged .count) = baseCount_t := rfl
-
--- d-wave nodes = baseCount
-theorem dWave_nodes_is_baseCount :
-    (⟨dWaveNodes⟩ : DTagged .count) = baseCount_t := rfl
-
--- BCC coordination = nuclearMagic(1)
-theorem bcc_coord_val : (⟨bccCoordination⟩ : DTagged .count).val = 8 := rfl
-
--- FCC coordination = 12
-theorem fcc_coord_val : (⟨fccCoordination⟩ : DTagged .count).val = 12 := rfl
-
-/-! ### Lanthanum -/
-
-def lanthanumZ_t : DTagged .protonNum := ⟨lanthanumZ⟩
-def La139N_t : DTagged .neutronNum := ⟨neutrons_La139⟩
-def lanthanumDeg_t : DTagged .degree := mkDegree lanthanumZ_t La139N_t lanthanumZ_t
-
-theorem lanthanumZ_t_val : lanthanumZ_t.val = 57 := rfl
-theorem La139N_t_val : La139N_t.val = 82 := rfl
-theorem lanthanumDeg_t_val : lanthanumDeg_t.val = 196 := rfl
-theorem La139N_is_magic : La139N_t.val = Nuclear.nuclearMagic 5 := rfl
-
-/-! ### Yttrium -/
-
-def yttriumZ_t : DTagged .protonNum := ⟨yttriumZ⟩
-def Y89N_t : DTagged .neutronNum := ⟨neutrons_Y89⟩
-def yttriumDeg_t : DTagged .degree := mkDegree yttriumZ_t Y89N_t yttriumZ_t
-
-theorem yttriumZ_t_val : yttriumZ_t.val = 39 := rfl
-theorem Y89N_t_val : Y89N_t.val = 50 := rfl
-theorem yttriumDeg_t_val : yttriumDeg_t.val = 128 := rfl
-theorem Y89N_is_magic : Y89N_t.val = Nuclear.nuclearMagic 4 := rfl
-
-/-! ### Barium -/
-
-def bariumZ_t : DTagged .protonNum := ⟨bariumZ⟩
-def Ba137N_t : DTagged .neutronNum := ⟨neutrons_Ba137⟩
-def bariumDeg_t : DTagged .degree := mkDegree bariumZ_t Ba137N_t bariumZ_t
-
-theorem bariumZ_t_val : bariumZ_t.val = 56 := rfl
-theorem Ba137N_t_val : Ba137N_t.val = 81 := rfl
-theorem bariumDeg_t_val : bariumDeg_t.val = 193 := rfl
-
-/-! ### CuO₂ Unit -/
-
-def CuO2Z_t : DTagged .protonNum := ⟨CuO2_Z⟩
-def CuO2N_t : DTagged .neutronNum := ⟨CuO2_N⟩
-def CuO2Deg_t : DTagged .degree := mkDegree CuO2Z_t CuO2N_t CuO2Z_t
-
-theorem CuO2Z_t_val : CuO2Z_t.val = 45 := rfl
-theorem CuO2N_t_val : CuO2N_t.val = 50 := rfl
-theorem CuO2Deg_t_val : CuO2Deg_t.val = 140 := rfl
-theorem CuO2N_is_magic : CuO2N_t.val = Nuclear.nuclearMagic 4 := rfl
-
-/-! ### LaH₁₀ -/
-
-def LaH10Z_t : DTagged .protonNum := ⟨LaH10_Z⟩
-def LaH10N_t : DTagged .neutronNum := ⟨LaH10_N⟩
-def LaH10Deg_t : DTagged .degree := mkDegree LaH10Z_t LaH10N_t LaH10Z_t
-
-theorem LaH10Z_t_val : LaH10Z_t.val = 67 := rfl
-theorem LaH10N_t_val : LaH10N_t.val = 82 := rfl
-theorem LaH10Deg_t_val : LaH10Deg_t.val = 216 := rfl
-
-/-! ### YBCO -/
-
-def YBCOZ_t : DTagged .protonNum := ⟨YBCO_Z⟩
-def YBCON_t : DTagged .neutronNum := ⟨YBCO_N⟩
-def YBCODeg_t : DTagged .degree := mkDegree YBCOZ_t YBCON_t YBCOZ_t
-
-theorem YBCOZ_t_val : YBCOZ_t.val = 294 := rfl
-theorem YBCON_t_val : YBCON_t.val = 370 := rfl
-theorem YBCODeg_t_val : YBCODeg_t.val = 958 := rfl
-
-end FUST.DiscreteTag

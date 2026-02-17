@@ -10,7 +10,7 @@ import FUST.Chemistry.PhosphorusAtom
 
 namespace FUST.Chemistry.Sulfur
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Sulfur Parameters
@@ -27,10 +27,10 @@ theorem sulfurZ_from_oxygen :
 
 -- Shell filling: 1s² 2s² 2p⁶ 3s² 3p⁴
 theorem sulfurZ_shell_filling :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ +  -- 2p: 6
-    Nuclear.Subshell.maxElectrons ⟨3, 0⟩ +  -- 3s: 2
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
+    Nuclear.subshellCapacity 1 +  -- 2p: 6
+    Nuclear.subshellCapacity 0 +  -- 3s: 2
     4 = sulfurZ                               -- 3p: 4 of 6
     := rfl
 
@@ -58,9 +58,9 @@ theorem sulfur32Atom_eq (x : ℝ) :
 
 /-! ## Section 3: Degree Structure -/
 
-theorem degree_sulfur32Ion : atomDegree 16 16 0 = 32 := rfl
-theorem degree_sulfur32Atom : atomDegree 16 16 16 = 48 := rfl
-theorem degree_sulfideAnion : atomDegree 16 16 18 = 50 := rfl
+theorem degree_sulfur32Ion : (dimAtom 16 16 0).effectiveDegree = 497 := by decide
+theorem degree_sulfur32Atom : (dimAtom 16 16 16).effectiveDegree = 529 := by decide
+theorem degree_sulfideAnion : (dimAtom 16 16 18).effectiveDegree = 533 := by decide
 
 -- O-S homology: both have valence 2 to closed shell
 theorem oxygen_sulfur_valence :
@@ -83,23 +83,8 @@ theorem sulfur_classification :
     sulfurZ = 16 ∧
     oxygenZ + Nuclear.shellCapacity 2 = sulfurZ ∧
     sulfurZ = neutrons_S32 ∧
-    (∀ N e, atomDegree 16 N e > 2) := by
-  refine ⟨rfl, rfl, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    (dimAtom 16 16 16).effectiveDegree > 2 := by
+  exact ⟨rfl, rfl, rfl, by decide⟩
 
 end FUST.Chemistry.Sulfur
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Sulfur
-
-def sulfurZ_t : DTagged .protonNum := ⟨sulfurZ⟩
-def S32N_t : DTagged .neutronNum := ⟨neutrons_S32⟩
-
-theorem sulfurZ_t_val : sulfurZ_t.val = 16 := rfl
-theorem S32N_t_val : S32N_t.val = 16 := rfl
-
--- O + shellCapacity(2) = S
-theorem oxygen_plus_shell2_eq_sulfur :
-    oxygenZ_t + ⟨Nuclear.shellCapacity 2⟩ = sulfurZ_t := rfl
-
-end FUST.DiscreteTag

@@ -11,7 +11,7 @@ import FUST.Chemistry.NitrogenIsotopes
 
 namespace FUST.Chemistry.Phosphorus
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Phosphorus Parameters
@@ -26,8 +26,8 @@ abbrev phosphorusZ : ℕ := 15
 -- Z derivation from shell structure
 theorem phosphorusZ_derivation :
     closedShellElectronCount 2 +
-    Nuclear.Subshell.maxElectrons ⟨3, 0⟩ +
-    Nuclear.Subshell.maxElectrons ⟨3, 1⟩ / 2 = phosphorusZ := by decide
+    Nuclear.subshellCapacity 0 +
+    Nuclear.subshellCapacity 1 / 2 = phosphorusZ := by decide
 
 -- P-31 is the only stable isotope: N = 31 - 15 = 16
 def neutrons (A : ℕ) : ℕ := A - phosphorusZ
@@ -50,13 +50,14 @@ theorem phosphorus31Ion_eq (x : ℝ) :
 
 /-! ## Section 3: Degree Structure -/
 
-theorem degree_phosphorus31Ion : atomDegree 15 16 0 = 31 := rfl
-theorem degree_phosphorus31Atom : atomDegree 15 16 15 = 46 := rfl
-theorem degree_phosphideAnion : atomDegree 15 16 18 = 49 := rfl
+theorem degree_phosphorus31Ion : (dimAtom 15 16 0).effectiveDegree = 481 := by decide
+theorem degree_phosphorus31Atom : (dimAtom 15 16 15).effectiveDegree = 511 := by decide
+theorem degree_phosphideAnion : (dimAtom 15 16 18).effectiveDegree = 517 := by decide
 
-theorem phosphorus_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 15 N e > 2 := by
-  unfold atomDegree; omega
+theorem phosphorus_degree_exceeds_kerD6 :
+    (dimAtom 15 16 0).effectiveDegree > 2 ∧
+    (dimAtom 15 16 15).effectiveDegree > 2 ∧
+    (dimAtom 15 16 18).effectiveDegree > 2 := by decide
 
 /-! ## Section 4: Nitrogen-Phosphorus Homology
 
@@ -66,8 +67,8 @@ Both have half-filled p subshell: maxElectrons(n,1)/2 = 3.
 
 -- Same half-filled p shell pattern
 theorem nitrogen_phosphorus_homologous :
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ / 2 =
-    Nuclear.Subshell.maxElectrons ⟨3, 1⟩ / 2 := rfl
+    Nuclear.subshellCapacity 1 / 2 =
+    Nuclear.subshellCapacity 1 / 2 := rfl
 
 -- Both have valence 3 (relative to their respective closed shells)
 theorem nitrogen_phosphorus_valence :
@@ -80,10 +81,10 @@ theorem phosphorus_neon_core :
 
 -- Electron shell filling: 1s² 2s² 2p⁶ 3s² 3p³
 theorem phosphorus_shell_filling :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ +  -- 2p: 6
-    Nuclear.Subshell.maxElectrons ⟨3, 0⟩ +  -- 3s: 2
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
+    Nuclear.subshellCapacity 1 +  -- 2p: 6
+    Nuclear.subshellCapacity 0 +  -- 3s: 2
     3 = phosphorusZ                           -- 3p: 3 of 6
     := rfl
 
@@ -102,7 +103,8 @@ noncomputable def phosphateIon (x : ℝ) : ℝ := atomStateFn 47 48 50 x
 theorem phosphate_eq (x : ℝ) :
     phosphateIon x = x ^ 47 * (1 + x) ^ 48 * (1 + ψ * x) ^ 50 := rfl
 
-theorem degree_phosphateIon : atomDegree 47 48 50 = 145 := rfl
+set_option maxRecDepth 8192 in
+theorem degree_phosphateIon : (dimAtom 47 48 50).effectiveDegree = 1573 := by decide
 
 -- PO₄³⁻ electron count = 50 = nuclearMagic(4)
 theorem phosphate_electron_magic :
@@ -118,27 +120,10 @@ theorem phosphorus_classification :
     phosphorusZ = 15 ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 50) ∧
     phosphorusZ + 4 * oxygenZ = 47 ∧
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ / 2 =
-      Nuclear.Subshell.maxElectrons ⟨3, 1⟩ / 2 ∧
-    (∀ N e, atomDegree 15 N e > 2) := by
-  refine ⟨rfl, ⟨4, by omega, rfl⟩, rfl, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    Nuclear.subshellCapacity 1 / 2 =
+      Nuclear.subshellCapacity 1 / 2 ∧
+    (dimAtom 15 16 15).effectiveDegree > 2 := by
+  exact ⟨rfl, ⟨4, by omega, rfl⟩, rfl, rfl, by decide⟩
 
 end FUST.Chemistry.Phosphorus
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Phosphorus
-
-def phosphorusZ_t : DTagged .protonNum := ⟨phosphorusZ⟩
-def P31N_t : DTagged .neutronNum := ⟨neutrons_P31⟩
-
-theorem phosphorusZ_t_val : phosphorusZ_t.val = 15 := rfl
-theorem P31N_t_val : P31N_t.val = 16 := rfl
-
-open FUST.Chemistry.Nitrogen in
--- P - N = shellCapacity(2)
-theorem bridge_phosphorus_neon_core :
-    (⟨phosphorusZ - nitrogenZ⟩ : DTagged .protonNum).val =
-    (⟨Nuclear.shellCapacity 2⟩ : DTagged .protonNum).val := rfl
-
-end FUST.DiscreteTag

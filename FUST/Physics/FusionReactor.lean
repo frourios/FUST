@@ -3,7 +3,7 @@ Fusion Reactor Bottleneck Analysis from D-operator Kernel Structure
 
 Four fundamental obstacles in fusion reactor engineering, formalized:
 1. Plasma turbulence = exit from ker(D6), detected by perpProjectionD6
-2. Tritium permeation = T⁺ ∉ ker(D6) vs D⁺ ∈ ker(D6) structural barrier
+2. Tritium permeation = FDim gap between D⁺ and T⁺ structural barrier
 3. Alpha heating = He4Ion ∉ ker(D6) → positive entropy (second law)
 4. Superconducting magnet = flux quantization from ker(D5) uniqueness
 -/
@@ -15,35 +15,40 @@ import FUST.Chemistry.CarbonIsotopes
 
 namespace FUST.Physics.FusionReactor
 
-open FUST FUST.LeastAction FUST.NavierStokes FUST.Thermodynamics
-open FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.LeastAction FUST.NavierStokes FUST.Thermodynamics
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Carbon
 open FUST.Chemistry.Niobium FUST.Physics.Superconductivity
 
-/-! ## Section 1: Fusion Fuel — D-T Kernel Classification
+/-! ## Section 1: Fusion Fuel — D-T FDim Structure
 
-D⁺(deg=2) ∈ ker(D6), T⁺(deg=3) ∉ ker(D6).
+D⁺ and T⁺ are massive with distinct FDim.
 -/
 
-theorem fuel_deuteron_deg : atomDegree 1 1 0 = 2 := rfl
-theorem fuel_triton_deg : atomDegree 1 2 0 = 3 := rfl
+theorem fuel_deuteron_effDeg : (dimAtom 1 1 0).effectiveDegree = 32 := by decide
+theorem fuel_triton_effDeg : (dimAtom 1 2 0).effectiveDegree = 47 := by decide
 
--- D⁺ confined in ker(D6)
-theorem deuteron_in_kerD6 (x : ℝ) (hx : x ≠ 0) :
-    D6 deuteronIon x = 0 := deuteronIon_in_kerD6 x hx
+open FUST.Dim in
+theorem deuteron_distinct : dimDeuteronIon ≠ dimProton ∧ dimDeuteronIon ≠ dimNeutron := by
+  decide
 
--- T⁺ unconfined: exits ker(D6)
-theorem triton_not_in_kerD6 (x : ℝ) (hx : x ≠ 0) :
-    D6 tritonIon x ≠ 0 := tritonIon_not_in_kerD6 x hx
+open FUST.Dim in
+theorem triton_distinct : dimTritonIon ≠ dimProton ∧ dimTritonIon ≠ dimDeuteronIon := by
+  decide
 
-/-! ## Section 2: D-T Reaction Degree Conservation
+/-! ## Section 2: D-T Reaction Conservation
 
 D⁺(1+1) + T⁺(1+2) → He-4(2+2) + n(0+1): baryon = 5.
 -/
 
-theorem DT_ion_degree_conservation :
-    atomDegree 1 1 0 + atomDegree 1 2 0 =
-    atomDegree 2 2 0 + atomDegree 0 1 0 := rfl
+-- Baryon conservation: particle counts match
+theorem DT_baryon_conservation :
+    (1 + 1) + (1 + 2) = (2 + 2) + (0 + 1) := rfl
+
+-- FDim conservation: dimAtom products match
+theorem DT_fdim_conservation :
+    dimAtom 1 1 0 * dimAtom 1 2 0 =
+    dimAtom 2 2 0 * dimAtom 0 1 0 := by decide
 
 -- Lithium: Z = spatialDim = 3
 abbrev lithiumZ : ℕ := WaveEquation.spatialDim
@@ -53,13 +58,17 @@ abbrev neutrons_Li7 : ℕ := lithiumZ + hydrogenZ
 theorem lithiumZ_eq_spatialDim : lithiumZ = WaveEquation.spatialDim := rfl
 theorem lithiumZ_eq : lithiumZ = 3 := rfl
 
--- Tritium breeding: n + Li-6 → He-4 + T
+-- Tritium breeding: n + Li-6 → He-4 + T (baryon conservation)
 theorem tritium_breeding_baryon_conservation :
-    atomDegree 0 1 0 + atomDegree lithiumZ neutrons_Li6 0 =
-    atomDegree 2 2 0 + atomDegree 1 2 0 := rfl
+    (0 + 1) + (3 + 3) = (2 + 2) + (1 + 2) := rfl
 
-theorem degree_Li6 : atomDegree 3 3 3 = 9 := rfl
-theorem degree_Li7 : atomDegree 3 4 3 = 10 := rfl
+-- Tritium breeding: FDim conservation
+theorem tritium_breeding_fdim_conservation :
+    dimAtom 0 1 0 * dimAtom 3 3 0 =
+    dimAtom 2 2 0 * dimAtom 1 2 0 := by decide
+
+theorem effDeg_Li6_atom : (dimAtom 3 3 3).effectiveDegree = 100 := by decide
+theorem effDeg_Li7_atom : (dimAtom 3 4 3).effectiveDegree = 115 := by decide
 
 /-! ## Section 3: Plasma Confinement and MHD Turbulence
 
@@ -95,25 +104,24 @@ theorem perturbation_growth (n : ℕ) (hn : n ≥ 1) : φ ^ n > 1 :=
 
 /-! ## Section 4: Tritium Permeation Structural Barrier
 
-T⁺ exits ker(D6), D⁺ stays — structural origin of differential permeation.
+Both D⁺ and T⁺ are massive. The FDim gap reflects
+the extra neutron in tritium, which is the structural origin of
+differential permeation.
 -/
 
+open FUST.Dim in
 theorem differential_permeation :
-    (∀ x, x ≠ 0 → D6 deuteronIon x = 0) ∧
-    (∀ x, x ≠ 0 → D6 tritonIon x ≠ 0) :=
-  ⟨deuteronIon_in_kerD6, tritonIon_not_in_kerD6⟩
+    dimDeuteronIon ≠ dimTritonIon ∧
+    (dimAtom 1 2 0).effectiveDegree - (dimAtom 1 1 0).effectiveDegree = 15 := by
+  exact ⟨by decide, by decide⟩
 
--- Tritium excess degree = 1 (extra neutron)
-theorem tritium_degree_excess :
-    atomDegree 1 2 0 - atomDegree 1 1 0 = 1 := rfl
+-- Tritium excess effectiveDegree = 15 (extra neutron contribution)
+theorem tritium_effDeg_excess :
+    (dimAtom 1 2 0).effectiveDegree - (dimAtom 1 1 0).effectiveDegree = 15 := by decide
 
--- Tritium atom deg > spatialDim = dim ker(D6)
+-- Tritium atom effDeg > spatialDim
 theorem tritium_exceeds_kerD6_dim :
-    atomDegree 1 2 1 > WaveEquation.spatialDim := by decide
-
--- Deuterium atom deg = spatialDim
-theorem deuterium_at_kerD6_dim :
-    atomDegree 1 1 1 = WaveEquation.spatialDim := rfl
+    (dimAtom 1 2 1).effectiveDegree > WaveEquation.spatialDim := by decide
 
 -- SiC permeation barrier: Z_total = nuclearMagic(2) = 20
 abbrev siliconZ : ℕ := 14
@@ -128,23 +136,24 @@ abbrev neutrons_Si28 : ℕ := 28 - siliconZ
 theorem SiC_N_is_magic :
     neutrons_Si28 + neutrons_C12 = Nuclear.nuclearMagic 2 := rfl
 
-theorem degree_SiC : atomDegree SiC_Z (neutrons_Si28 + neutrons_C12) SiC_Z = 60 := rfl
+set_option maxRecDepth 4096 in
+theorem effDeg_SiC :
+    (dimAtom SiC_Z (neutrons_Si28 + neutrons_C12) SiC_Z).effectiveDegree =
+    661 := by decide
 
 /-! ## Section 5: Alpha Particle Heating and Entropy Transfer
 
-He-4 ion (α particle) = x²(1+x)² is degree 4, outside ker(D6).
+He-4 ion (α particle) is outside ker(D6).
 -/
 
-theorem alpha_degree : atomDegree 2 2 0 = 4 := rfl
+theorem alpha_effDeg : (dimAtom 2 2 0).effectiveDegree = 63 := by decide
 
--- He-4 atom degree = carbonZ = 6
-theorem alpha_atom_deg_eq_carbonZ :
-    atomDegree 2 2 2 = carbonZ := rfl
+-- He-4 atom effectiveDegree
+theorem alpha_atom_effDeg : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
 
 -- He-4 ion is NOT in ker(D6)
 theorem He4Ion_not_in_kerD6 : ¬IsInKerD6 He4Ion := by
   intro ⟨a₀, a₁, a₂, h⟩
-  -- He4Ion t = t² * (1+t)²; evaluate at t = 0, 1, 2, 3
   have h0 := h 0
   have h1 := h 1
   have h2 := h 2
@@ -221,10 +230,10 @@ theorem vortex_structure :
 
 /-! ## Section 8: Summary -/
 
+open FUST.Dim in
 theorem fusion_reactor_classification :
-    -- D⁺ confined (ker D6), T⁺ unconfined
-    (∀ x, x ≠ 0 → D6 deuteronIon x = 0) ∧
-    (∀ x, x ≠ 0 → D6 tritonIon x ≠ 0) ∧
+    -- D⁺ and T⁺ have distinct FDim
+    dimDeuteronIon ≠ dimTritonIon ∧
     -- Turbulence = nonlinear coupling outside ker(D6)
     nonlinearCoeff 1 2 ≠ 0 ∧
     -- Alpha heating: He4Ion ∉ ker(D6) → positive entropy
@@ -233,43 +242,10 @@ theorem fusion_reactor_classification :
     cooperPairSize = Nuclear.spinDegeneracy ∧
     -- ker(D5) ⊂ ker(D6): pair embedding
     (∀ f, IsInKerD5 f → IsInKerD6 f) ∧
-    -- D-T degree conservation
-    atomDegree 1 1 0 + atomDegree 1 2 0 =
-      atomDegree 2 2 0 + atomDegree 0 1 0 := by
-  exact ⟨deuteronIon_in_kerD6, tritonIon_not_in_kerD6,
+    -- D-T baryon conservation
+    (1 + 1) + (1 + 2) = (2 + 2) + (0 + 1) := by
+  exact ⟨by decide,
          nonlinearCoeff_1_2_ne_zero, He4Ion_not_in_kerD6,
          rfl, spin_pair_embeds_in_spatial, rfl⟩
 
 end FUST.Physics.FusionReactor
-
-namespace FUST.DiscreteTag
-open FUST.Physics.FusionReactor
-
--- Lithium
-def lithiumZ_t : DTagged .protonNum := ⟨lithiumZ⟩
-def Li6N_t : DTagged .neutronNum := ⟨neutrons_Li6⟩
-def Li7N_t : DTagged .neutronNum := ⟨neutrons_Li7⟩
-def lithiumDeg_Li6_t : DTagged .degree := mkDegree lithiumZ_t Li6N_t lithiumZ_t
-def lithiumDeg_Li7_t : DTagged .degree := mkDegree lithiumZ_t Li7N_t lithiumZ_t
-
-theorem lithiumZ_t_val : lithiumZ_t.val = 3 := rfl
-theorem Li6N_t_val : Li6N_t.val = 3 := rfl
-theorem Li7N_t_val : Li7N_t.val = 4 := rfl
-theorem lithiumDeg_Li6_t_val : lithiumDeg_Li6_t.val = 9 := rfl
-theorem lithiumDeg_Li7_t_val : lithiumDeg_Li7_t.val = 10 := rfl
-theorem lithiumZ_is_spatialDim : lithiumZ_t.val = spatialDim_t.val := rfl
-
--- Silicon
-def siliconZ_t : DTagged .protonNum := ⟨siliconZ⟩
-def Si28N_t : DTagged .neutronNum := ⟨neutrons_Si28⟩
-
-theorem siliconZ_t_val : siliconZ_t.val = 14 := rfl
-theorem Si28N_t_val : Si28N_t.val = 14 := rfl
-
--- SiC
-def SiCZ_t : DTagged .protonNum := ⟨SiC_Z⟩
-
-theorem SiCZ_t_val : SiCZ_t.val = 20 := rfl
-theorem SiCZ_is_magic : SiCZ_t.val = Nuclear.nuclearMagic 2 := rfl
-
-end FUST.DiscreteTag

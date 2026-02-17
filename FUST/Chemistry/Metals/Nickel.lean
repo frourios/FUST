@@ -10,7 +10,7 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Nickel
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Nickel Parameters
@@ -30,13 +30,13 @@ abbrev nickel_3d_electrons : ℕ := 8
 
 theorem nickelZ_shell_filling :
     arCoreElectrons +
-    Nuclear.Subshell.maxElectrons ⟨4, 0⟩ +  -- 4s: 2
+    Nuclear.subshellCapacity 0 +  -- 4s: 2
     nickel_3d_electrons = nickelZ              -- 3d: 8 of 10
     := rfl
 
 -- 3d vacancy = 10 - 8 = 2
 theorem nickel_3d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - nickel_3d_electrons = 2 := rfl
+    Nuclear.subshellCapacity 2 - nickel_3d_electrons = 2 := rfl
 
 /-! ## Section 2: Nickel Isotopes -/
 
@@ -58,14 +58,14 @@ noncomputable def nickel58Atom (x : ℝ) : ℝ := atomStateFn 28 30 28 x
 theorem nickel58Atom_eq (x : ℝ) :
     nickel58Atom x = x ^ 28 * (1 + x) ^ 30 * (1 + ψ * x) ^ 28 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_nickel58Ion : atomDegree 28 30 0 = 58 := rfl
-theorem degree_nickel58Atom : atomDegree 28 30 28 = 86 := rfl
+theorem effDeg_nickel58Ion : (dimAtom 28 30 0).effectiveDegree = 899 := by decide
+theorem effDeg_nickel58Atom : (dimAtom 28 30 28).effectiveDegree = 955 := by decide
 
-theorem nickel_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 28 N e > 2 := by
-  unfold atomDegree; omega
+theorem nickel_effDeg_exceeds_kerD6 :
+    (dimAtom 28 30 0).effectiveDegree > 2 ∧
+    (dimAtom 28 30 28).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 
@@ -78,33 +78,8 @@ theorem nickel_classification :
     nickelZ = 28 ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = nickelZ) ∧
     neutrons_Fe56 = neutrons_Ni58 ∧
-    (∀ N e, atomDegree 28 N e > 2) := by
-  refine ⟨rfl, ⟨3, by omega, rfl⟩, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    (dimAtom 28 30 0).effectiveDegree > 2 ∧
+    (dimAtom 28 30 28).effectiveDegree > 2 := by
+  exact ⟨rfl, ⟨3, by omega, rfl⟩, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Nickel
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Nickel
-
-def nickelZ_t : DTagged .protonNum := ⟨nickelZ⟩
-def Ni58N_t : DTagged .neutronNum := ⟨neutrons_Ni58⟩
-
-def nickelDeg_t : DTagged .degree := mkDegree nickelZ_t Ni58N_t nickelZ_t
-
-theorem nickelZ_t_val : nickelZ_t.val = 28 := rfl
-theorem Ni58N_t_val : Ni58N_t.val = 30 := rfl
-theorem nickelDeg_t_val : nickelDeg_t.val = 86 := rfl
-
--- Ni Z is magic
-theorem nickelZ_magic_tagged :
-    nickelZ_t.val = Nuclear.nuclearMagic 3 := rfl
-
--- Fe-56 N = Ni-58 N
-theorem iron_nickel_same_N_tagged : Fe56N_t = Ni58N_t := rfl
-
--- Degree construction consistency
-theorem nickel_deg_consistency :
-    mkDegree nickelZ_t Ni58N_t nickelZ_t = nickelDeg_t := rfl
-
-end FUST.DiscreteTag

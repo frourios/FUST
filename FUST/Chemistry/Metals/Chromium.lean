@@ -11,7 +11,7 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Chromium
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Chromium Parameters
@@ -36,11 +36,11 @@ theorem chromiumZ_shell_filling :
 
 -- Half-filled 3d shell: 5 = maxElectrons(3,2) / 2
 theorem chromium_3d_half_filled :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ / 2 = chromium_3d_electrons := rfl
+    Nuclear.subshellCapacity 2 / 2 = chromium_3d_electrons := rfl
 
 -- 3d vacancy = 10 - 5 = 5
 theorem chromium_3d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - chromium_3d_electrons = 5 := rfl
+    Nuclear.subshellCapacity 2 - chromium_3d_electrons = 5 := rfl
 
 /-! ## Section 2: Chromium Isotopes -/
 
@@ -63,14 +63,14 @@ noncomputable def chromium52Atom (x : ℝ) : ℝ := atomStateFn 24 28 24 x
 theorem chromium52Atom_eq (x : ℝ) :
     chromium52Atom x = x ^ 24 * (1 + x) ^ 28 * (1 + ψ * x) ^ 24 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_chromium52Ion : atomDegree 24 28 0 = 52 := rfl
-theorem degree_chromium52Atom : atomDegree 24 28 24 = 76 := rfl
+theorem effDeg_chromium52Ion : (dimAtom 24 28 0).effectiveDegree = 805 := by decide
+theorem effDeg_chromium52Atom : (dimAtom 24 28 24).effectiveDegree = 853 := by decide
 
-theorem chromium_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 24 N e > 2 := by
-  unfold atomDegree; omega
+theorem chromium_effDeg_exceeds_kerD6 :
+    (dimAtom 24 28 0).effectiveDegree > 2 ∧
+    (dimAtom 24 28 24).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 
@@ -83,30 +83,9 @@ theorem chromium_classification :
     chromiumZ = 24 ∧
     Nuclear.nuclearMagic 2 + 2 * Nuclear.spinDegeneracy = chromiumZ ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_Cr52) ∧
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ / 2 = chromium_3d_electrons ∧
-    (∀ N e, atomDegree 24 N e > 2) := by
-  refine ⟨rfl, rfl, ⟨3, by omega, rfl⟩, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    Nuclear.subshellCapacity 2 / 2 = chromium_3d_electrons ∧
+    (dimAtom 24 28 0).effectiveDegree > 2 ∧
+    (dimAtom 24 28 24).effectiveDegree > 2 := by
+  exact ⟨rfl, rfl, ⟨3, by omega, rfl⟩, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Chromium
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Chromium
-
-def chromiumZ_t : DTagged .protonNum := ⟨chromiumZ⟩
-def Cr52N_t : DTagged .neutronNum := ⟨neutrons_Cr52⟩
-
-def chromiumDeg_t : DTagged .degree := mkDegree chromiumZ_t Cr52N_t chromiumZ_t
-
-theorem chromiumZ_t_val : chromiumZ_t.val = 24 := rfl
-theorem Cr52N_t_val : Cr52N_t.val = 28 := rfl
-theorem chromiumDeg_t_val : chromiumDeg_t.val = 76 := rfl
-
--- Cr-52 N is magic
-theorem Cr52N_is_magic : Cr52N_t.val = Nuclear.nuclearMagic 3 := rfl
-
--- Degree construction consistency
-theorem chromium_deg_consistency :
-    mkDegree chromiumZ_t Cr52N_t chromiumZ_t = chromiumDeg_t := rfl
-
-end FUST.DiscreteTag

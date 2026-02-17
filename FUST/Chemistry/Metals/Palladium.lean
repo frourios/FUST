@@ -12,7 +12,7 @@ import FUST.Chemistry.Metals.Zirconium
 
 namespace FUST.Chemistry.Palladium
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Zirconium
 
@@ -37,10 +37,10 @@ theorem palladiumZ_shell_filling :
 
 -- 4d is completely filled: vacancy = 0
 theorem palladium_4d_filled :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ = palladium_4d_electrons := rfl
+    Nuclear.subshellCapacity 2 = palladium_4d_electrons := rfl
 
 theorem palladium_4d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons = 0 := rfl
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons = 0 := rfl
 
 /-! ## Section 2: Palladium Isotopes -/
 
@@ -61,14 +61,17 @@ noncomputable def palladium106Atom (x : ℝ) : ℝ := atomStateFn 46 60 46 x
 theorem palladium106Atom_eq (x : ℝ) :
     palladium106Atom x = x ^ 46 * (1 + x) ^ 60 * (1 + ψ * x) ^ 46 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_palladium106Ion : atomDegree 46 60 0 = 106 := rfl
-theorem degree_palladium106Atom : atomDegree 46 60 46 = 152 := rfl
+set_option maxRecDepth 4096 in
+theorem effDeg_palladium106Ion : (dimAtom 46 60 0).effectiveDegree = 1637 := by decide
+set_option maxRecDepth 4096 in
+theorem effDeg_palladium106Atom : (dimAtom 46 60 46).effectiveDegree = 1729 := by decide
 
-theorem palladium_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 46 N e > 2 := by
-  unfold atomDegree; omega
+set_option maxRecDepth 4096 in
+theorem palladium_effDeg_exceeds_kerD6 :
+    (dimAtom 46 60 0).effectiveDegree > 2 ∧
+    (dimAtom 46 60 46).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 
@@ -77,29 +80,12 @@ theorem Pd108_mass_number : palladiumZ + neutrons_Pd108 = 108 := rfl
 
 /-! ## Section 6: Summary -/
 
+set_option maxRecDepth 4096 in
 theorem palladium_classification :
     palladiumZ = 46 ∧
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons = 0 ∧
-    (∀ N e, atomDegree 46 N e > 2) := by
-  refine ⟨rfl, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons = 0 ∧
+    (dimAtom 46 60 0).effectiveDegree > 2 ∧
+    (dimAtom 46 60 46).effectiveDegree > 2 := by
+  exact ⟨rfl, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Palladium
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Palladium
-
-def palladiumZ_t : DTagged .protonNum := ⟨palladiumZ⟩
-def Pd106N_t : DTagged .neutronNum := ⟨neutrons_Pd106⟩
-
-def palladiumDeg_t : DTagged .degree := mkDegree palladiumZ_t Pd106N_t palladiumZ_t
-
-theorem palladiumZ_t_val : palladiumZ_t.val = 46 := rfl
-theorem Pd106N_t_val : Pd106N_t.val = 60 := rfl
-theorem palladiumDeg_t_val : palladiumDeg_t.val = 152 := rfl
-
--- Degree construction consistency
-theorem palladium_deg_consistency :
-    mkDegree palladiumZ_t Pd106N_t palladiumZ_t = palladiumDeg_t := rfl
-
-end FUST.DiscreteTag

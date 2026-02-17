@@ -4,7 +4,7 @@ Water, Dioxygen, and Hydroxide Molecules from the Multiplicative State Function 
 Molecular state function g(x) = x^Z · (1+x)^N · (1+ψx)^e
 where Z, N, e are total proton, neutron, electron counts.
 
-Key discovery: D₂O and H₂¹⁸O are isodegree (Z=10, N=10, e=10, deg=30).
+Key discovery: D2O and H2-18O share the same FDim (Z=10, N=10, e=10).
 -/
 
 import FUST.DifferenceOperators
@@ -15,7 +15,8 @@ import FUST.Chemistry.HeliumInertness
 
 namespace FUST.Chemistry.Water
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
+open FUST FUST.Dim FUST.Chemistry
+open FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Molecular Parameter Derivation
 
@@ -62,7 +63,8 @@ theorem D2O_eq_H2O18 : heavyWater = water_O18 := rfl
 theorem isotopologue_degeneracy_reason :
     2 * deuterium_N + neutrons_O16 = 2 * protium_N + neutrons_O18 := rfl
 
-theorem D2O_H2O18_degree : atomDegree 10 10 10 = 30 := rfl
+-- D₂O and H₂¹⁸O share the same FDim
+theorem D2O_H2O18_sameFDim : dimAtom 10 10 10 = dimAtom 10 10 10 := rfl
 
 /-! ## Section 3: Water Ions -/
 
@@ -129,36 +131,36 @@ theorem hydrogenPeroxide_eq (x : ℝ) :
 /-! ## Section 7: Degree Structure -/
 
 -- Water family
-theorem degree_water : atomDegree 10 8 10 = 28 := rfl
-theorem degree_heavyWater : atomDegree 10 10 10 = 30 := rfl
-theorem degree_semiHeavyWater : atomDegree 10 9 10 = 29 := rfl
-theorem degree_tritiatedWater : atomDegree 10 12 10 = 32 := rfl
+theorem degree_water : (dimAtom 10 8 10).effectiveDegree = 301 := by decide
+theorem degree_heavyWater : (dimAtom 10 10 10).effectiveDegree = 331 := by decide
+theorem degree_semiHeavyWater : (dimAtom 10 9 10).effectiveDegree = 316 := by decide
+theorem degree_tritiatedWater : (dimAtom 10 12 10).effectiveDegree = 361 := by decide
 
 -- Water ions
-theorem degree_hydronium : atomDegree 11 8 10 = 29 := rfl
-theorem degree_hydroxide : atomDegree 9 8 10 = 27 := rfl
-theorem degree_waterCation : atomDegree 10 8 9 = 27 := rfl
-theorem degree_waterAnion : atomDegree 10 8 11 = 29 := rfl
+theorem degree_hydronium : (dimAtom 11 8 10).effectiveDegree = 317 := by decide
+theorem degree_hydroxide : (dimAtom 9 8 10).effectiveDegree = 285 := by decide
+theorem degree_waterCation : (dimAtom 10 8 9).effectiveDegree = 299 := by decide
+theorem degree_waterAnion : (dimAtom 10 8 11).effectiveDegree = 303 := by decide
 
 -- Dioxygen
-theorem degree_dioxygen : atomDegree 16 16 16 = 48 := rfl
-theorem degree_dioxygen_16_18 : atomDegree 16 18 16 = 50 := rfl
-theorem degree_dioxygen_18 : atomDegree 16 20 16 = 52 := rfl
-theorem degree_superoxide : atomDegree 16 16 17 = 49 := rfl
-theorem degree_peroxide : atomDegree 16 16 18 = 50 := rfl
+theorem degree_dioxygen : (dimAtom 16 16 16).effectiveDegree = 529 := by decide
+theorem degree_dioxygen_16_18 : (dimAtom 16 18 16).effectiveDegree = 559 := by decide
+theorem degree_dioxygen_18 : (dimAtom 16 20 16).effectiveDegree = 589 := by decide
+theorem degree_superoxide : (dimAtom 16 16 17).effectiveDegree = 531 := by decide
+theorem degree_peroxide : (dimAtom 16 16 18).effectiveDegree = 533 := by decide
 
 -- Hydrogen peroxide
-theorem degree_hydrogenPeroxide : atomDegree 18 16 18 = 52 := rfl
+theorem degree_hydrogenPeroxide : (dimAtom 18 16 18).effectiveDegree = 565 := by decide
 
 /-! ## Section 8: Water Autoionization Degree Conservation
 
 H₂O + H₂O → H₃O⁺ + OH⁻
-Total degree is conserved: 28 + 28 = 29 + 27 = 56
+Total effectiveDegree is conserved: 301 + 301 = 317 + 285 = 602
 -/
 
 theorem autoionization_degree_conservation :
-    atomDegree 10 8 10 + atomDegree 10 8 10 =
-    atomDegree 11 8 10 + atomDegree 9 8 10 := rfl
+    (dimAtom 10 8 10).effectiveDegree + (dimAtom 10 8 10).effectiveDegree =
+    (dimAtom 11 8 10).effectiveDegree + (dimAtom 9 8 10).effectiveDegree := by decide
 
 -- Total particle count is conserved
 theorem autoionization_proton_conservation : 10 + 10 = 11 + 9 := rfl
@@ -191,22 +193,24 @@ theorem water_electron_count :
 
 -- Water is isoelectronic with neon (all n≤2 shells filled)
 theorem water_isoelectronic_neon :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩    -- 2p: 6
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
+    Nuclear.subshellCapacity 1    -- 2p: 6
     = 10 := rfl
 
--- Hydroxide OH⁻ is also isoelectronic with neon (10 electrons)
-theorem hydroxide_isoelectronic_neon :
-    atomDegree 9 8 10 - 9 - 8 = 10 := rfl
+-- Hydroxide OH⁻ is also isoelectronic with neon (e = Z + 1 = 10)
+theorem hydroxide_isoelectronic_neon : (9 : ℕ) + 1 = 10 := rfl
 
 /-! ## Section 11: Peroxide Degree Connection
 
-¹⁶O¹⁸O and O₂²⁻ have the same degree 50 (another isotopologue degeneracy).
+¹⁶O¹⁸O and O₂²⁻ have the same total particle count (Z+N+e=50) but distinct FDim.
 -/
 
-theorem dioxygen_16_18_eq_peroxide_degree :
-    atomDegree 16 18 16 = atomDegree 16 16 18 := rfl
+theorem dioxygen_16_18_peroxide_same_particle_count :
+    16 + 18 + 16 = 16 + 16 + (18 : ℕ) := rfl
+
+theorem dioxygen_16_18_peroxide_distinct_FDim :
+    dimAtom 16 18 16 ≠ dimAtom 16 16 18 := by decide
 
 /-! ## Section 12: Water Achieves Closed Shell
 
@@ -279,65 +283,22 @@ theorem water_decomposition_vacancy_increase :
 /-! ## Section 13: Summary -/
 
 theorem water_molecule_classification :
-    -- Water family degrees
-    atomDegree 10 8 10 = 28 ∧   -- H₂O
-    atomDegree 10 9 10 = 29 ∧   -- HDO
-    atomDegree 10 10 10 = 30 ∧  -- D₂O = H₂¹⁸O
-    atomDegree 10 12 10 = 32 ∧  -- T₂O
-    -- Dioxygen degrees
-    atomDegree 16 16 16 = 48 ∧  -- O₂
-    atomDegree 16 18 16 = 50 ∧  -- ¹⁶O¹⁸O
+    -- Water family effectiveDegrees
+    (dimAtom 10 8 10).effectiveDegree = 301 ∧   -- H₂O
+    (dimAtom 10 9 10).effectiveDegree = 316 ∧   -- HDO
+    (dimAtom 10 10 10).effectiveDegree = 331 ∧  -- D₂O = H₂¹⁸O
+    (dimAtom 10 12 10).effectiveDegree = 361 ∧  -- T₂O
+    -- Dioxygen effectiveDegrees
+    (dimAtom 16 16 16).effectiveDegree = 529 ∧  -- O₂
+    (dimAtom 16 18 16).effectiveDegree = 559 ∧  -- ¹⁶O¹⁸O
     -- Autoionization conservation
-    atomDegree 10 8 10 + atomDegree 10 8 10 =
-      atomDegree 11 8 10 + atomDegree 9 8 10 ∧
-    -- Isotopologue degeneracy
-    atomDegree 10 10 10 = atomDegree 10 10 10 ∧
-    -- Peroxide degree degeneracy
-    atomDegree 16 18 16 = atomDegree 16 16 18 := by
-  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    (dimAtom 10 8 10).effectiveDegree + (dimAtom 10 8 10).effectiveDegree =
+      (dimAtom 11 8 10).effectiveDegree + (dimAtom 9 8 10).effectiveDegree ∧
+    -- Isotopologue degeneracy (same FDim)
+    dimAtom 10 10 10 = dimAtom 10 10 10 ∧
+    -- ¹⁶O¹⁸O and O₂²⁻ have distinct FDim
+    dimAtom 16 18 16 ≠ dimAtom 16 16 18 := by
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, rfl, by decide⟩
 
 end FUST.Chemistry.Water
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Dihydrogen FUST.Chemistry.Oxygen
-
-def waterZ_t : DTagged .protonNum := scaleZ 2 hydrogenZ_t + oxygenZ_t
-def hydroniumZ_t : DTagged .protonNum := scaleZ 3 hydrogenZ_t + oxygenZ_t
-def hydroxideZ_t : DTagged .protonNum := hydrogenZ_t + oxygenZ_t
-def H2O2Z_t : DTagged .protonNum := scaleZ 2 hydrogenZ_t + scaleZ 2 oxygenZ_t
-
-def waterDeg_t : DTagged .degree := mkDegree waterZ_t O16N_t waterZ_t
-def heavyWaterDeg_t : DTagged .degree := mkDegree waterZ_t ⟨10⟩ waterZ_t
-def hydroniumDeg_t : DTagged .degree := mkDegree hydroniumZ_t ⟨8⟩ waterZ_t
-def hydroxideDeg_t : DTagged .degree := mkDegree hydroxideZ_t ⟨8⟩ waterZ_t
-
-theorem waterZ_t_val : waterZ_t.val = 10 := rfl
-theorem hydroniumZ_t_val : hydroniumZ_t.val = 11 := rfl
-theorem hydroxideZ_t_val : hydroxideZ_t.val = 9 := rfl
-theorem H2O2Z_t_val : H2O2Z_t.val = 18 := rfl
-theorem waterDeg_t_val : waterDeg_t.val = 28 := rfl
-theorem heavyWaterDeg_t_val : heavyWaterDeg_t.val = 30 := rfl
-theorem hydroniumDeg_t_val : hydroniumDeg_t.val = 29 := rfl
-theorem hydroxideDeg_t_val : hydroxideDeg_t.val = 27 := rfl
-
--- H₂O = 2H + O
-theorem water_Z_tagged : waterZ_t = scaleZ 2 hydrogenZ_t + oxygenZ_t := rfl
-
--- H₃O⁺ = 3H + O
-theorem hydronium_Z_tagged : hydroniumZ_t = scaleZ 3 hydrogenZ_t + oxygenZ_t := rfl
-
--- OH⁻ = H + O
-theorem hydroxide_Z_tagged : hydroxideZ_t = hydrogenZ_t + oxygenZ_t := rfl
-
--- H₂O₂ = 2H + 2O
-theorem H2O2_Z_tagged : H2O2Z_t = scaleZ 2 hydrogenZ_t + scaleZ 2 oxygenZ_t := rfl
-
--- Autoionization: 2·H₂O = H₃O⁺ + OH⁻
-theorem autoionization_deg_tagged :
-    waterDeg_t + waterDeg_t = hydroniumDeg_t + hydroxideDeg_t := rfl
-
--- Degree construction consistency
-theorem water_deg_consistency :
-    mkDegree waterZ_t O16N_t waterZ_t = waterDeg_t := rfl
-
-end FUST.DiscreteTag

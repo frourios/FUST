@@ -42,6 +42,36 @@ instance : CommGroup FDim where
   mul_comm a b := FDim.ext (by simp [mul_p]; omega) (by simp [mul_delta]; omega)
     (by simp [mul_tau]; omega)
 
+@[simp] theorem npow_p (a : FDim) (n : ℕ) : (a ^ n).p = n * a.p := by
+  induction n with
+  | zero => simp [pow_zero, one_p]
+  | succ k ih => simp [pow_succ, mul_p, ih]; ring
+
+@[simp] theorem npow_delta (a : FDim) (n : ℕ) : (a ^ n).delta = n * a.delta := by
+  induction n with
+  | zero => simp [pow_zero, one_delta]
+  | succ k ih => simp [pow_succ, mul_delta, ih]; ring
+
+@[simp] theorem npow_tau (a : FDim) (n : ℕ) : (a ^ n).tau = n * a.tau := by
+  induction n with
+  | zero => simp [pow_zero, one_tau]
+  | succ k ih => simp [pow_succ, mul_tau, ih]; ring
+
+@[simp] theorem zpow_p (a : FDim) (n : ℤ) : (a ^ n).p = n * a.p := by
+  obtain ⟨n, rfl | rfl⟩ := n.eq_nat_or_neg
+  · simp [zpow_natCast]
+  · simp [zpow_neg, zpow_natCast, inv_p]
+
+@[simp] theorem zpow_delta (a : FDim) (n : ℤ) : (a ^ n).delta = n * a.delta := by
+  obtain ⟨n, rfl | rfl⟩ := n.eq_nat_or_neg
+  · simp [zpow_natCast]
+  · simp [zpow_neg, zpow_natCast, inv_delta]
+
+@[simp] theorem zpow_tau (a : FDim) (n : ℤ) : (a ^ n).tau = n * a.tau := by
+  obtain ⟨n, rfl | rfl⟩ := n.eq_nat_or_neg
+  · simp [zpow_natCast]
+  · simp [zpow_neg, zpow_natCast, inv_tau]
+
 section ScaleQuantity
 
 /-- Dimensioned real quantity parameterized by FUST dimension -/
@@ -409,5 +439,100 @@ theorem dimLightSpeed_tau_opposite :
     dimLightSpeedD2.tau = -dimLightSpeed.tau := by decide
 
 end DimStructuralComparison
+
+section StateClassDecomposition
+
+/-! ## FDim ↔ State Function Class correspondence
+
+Every FDim decomposes as deriveFDim(6)^a × deriveFDim(2)^c with (a,c) ∈ Z²
+for pure-sector particles (p + 3δ - 2τ = 0), uniquely determining:
+- sectorPower a: which D₆^a detects it
+- effectiveDegree d = δ - 2τ: polynomial degree of state function representative
+- detectionLevel n = d - 3a: D₂ iterations beyond D₆^a baseline -/
+
+/-- Effective polynomial degree of state function class: d = δ - 2τ -/
+def FDim.effectiveDegree (dim : FDim) : ℤ := dim.delta - 2 * dim.tau
+
+/-- Sector power: a = (δ - τ) / 2 (D₆ exponent) -/
+def FDim.sectorPower (dim : FDim) : ℤ := (dim.delta - dim.tau) / 2
+
+/-- Detection level beyond D₆^a baseline -/
+def FDim.detectionLevel (dim : FDim) : ℤ :=
+  dim.effectiveDegree - 3 * dim.sectorPower
+
+/-- Pure sector test: p + 3δ - 2τ = 0 means dim ∈ span{deriveFDim(6), deriveFDim(2)} -/
+def FDim.isPureSector (dim : FDim) : Prop := dim.p + 3 * dim.delta - 2 * dim.tau = 0
+
+instance (dim : FDim) : Decidable dim.isPureSector := by
+  unfold FDim.isPureSector; exact inferInstance
+
+/-- Forward map: FDim → (sectorPower, detectionLevel) for pure sectors -/
+def FDim.toSectorLevel (dim : FDim) : ℤ × ℤ :=
+  (dim.sectorPower, dim.detectionLevel)
+
+/-- Inverse map: (sectorPower a, detectionLevel n) → FDim -/
+def FDim.fromSectorLevel (a n : ℤ) : FDim :=
+  deriveFDim 6 ^ a * dimTimeD2 ^ n
+
+-- effectiveDegree verified on known particles
+theorem effectiveDegree_electron : dimTime⁻¹.effectiveDegree = 3 := by decide
+theorem effectiveDegree_muon : (dimTime⁻¹ * dimTimeD2 ^ (11 : ℤ)).effectiveDegree = 14 := by
+  decide
+theorem effectiveDegree_proton : (dimTime⁻¹ * dimTimeD2 ^ (14 : ℤ)).effectiveDegree = 17 := by
+  decide
+theorem effectiveDegree_tau : (dimTime⁻¹ * dimTimeD2 ^ (17 : ℤ)).effectiveDegree = 20 := by
+  decide
+theorem effectiveDegree_W : (dimTime⁻¹ * dimTimeD2 ^ (25 : ℤ)).effectiveDegree = 28 := by decide
+theorem effectiveDegree_nu3 :
+    (dimLagrangian * dimTimeD2 ^ (-(32 : ℤ))).effectiveDegree = -26 := by decide
+
+-- sectorPower verified
+theorem sectorPower_D6 : (deriveFDim 6).sectorPower = 1 := by decide
+theorem sectorPower_D6sq : (deriveFDim 6 * deriveFDim 6).sectorPower = 2 := by decide
+
+-- Pure sector: p + 3δ - 2τ = 0
+theorem dimTime_inv_isPureSector : dimTime⁻¹.isPureSector := by decide
+
+-- Inverse map produces correct FDim
+theorem fromSectorLevel_one_zero : FDim.fromSectorLevel 1 0 = deriveFDim 6 := by
+  unfold FDim.fromSectorLevel; decide
+theorem fromSectorLevel_one_11 :
+    FDim.fromSectorLevel 1 11 = dimTime⁻¹ * dimTimeD2 ^ (11 : ℤ) := by
+  unfold FDim.fromSectorLevel dimTime dimTimeD2; decide
+theorem fromSectorLevel_one_14 :
+    FDim.fromSectorLevel 1 14 = dimTime⁻¹ * dimTimeD2 ^ (14 : ℤ) := by
+  unfold FDim.fromSectorLevel dimTime dimTimeD2; decide
+theorem fromSectorLevel_two_neg32 :
+    FDim.fromSectorLevel 2 (-32) = dimLagrangian * dimTimeD2 ^ (-(32 : ℤ)) := by
+  unfold FDim.fromSectorLevel dimLagrangian dimTimeD2; decide
+
+-- Roundtrip: toSectorLevel ∘ fromSectorLevel = id (verified on concrete values)
+theorem roundtrip_electron :
+    FDim.toSectorLevel (FDim.fromSectorLevel 1 0) = (1, 0) := by
+  unfold FDim.toSectorLevel FDim.fromSectorLevel FDim.sectorPower
+    FDim.detectionLevel FDim.effectiveDegree; decide
+theorem roundtrip_muon :
+    FDim.toSectorLevel (FDim.fromSectorLevel 1 11) = (1, 11) := by
+  unfold FDim.toSectorLevel FDim.fromSectorLevel FDim.sectorPower
+    FDim.detectionLevel FDim.effectiveDegree; decide
+theorem roundtrip_proton :
+    FDim.toSectorLevel (FDim.fromSectorLevel 1 14) = (1, 14) := by
+  unfold FDim.toSectorLevel FDim.fromSectorLevel FDim.sectorPower
+    FDim.detectionLevel FDim.effectiveDegree; decide
+theorem roundtrip_nu3 :
+    FDim.toSectorLevel (FDim.fromSectorLevel 2 (-32)) = (2, -32) := by
+  unfold FDim.toSectorLevel FDim.fromSectorLevel FDim.sectorPower
+    FDim.detectionLevel FDim.effectiveDegree; decide
+
+-- Pure-sector particles are determined by (δ-τ) and effectiveDegree
+theorem pureSector_determined (dim₁ dim₂ : FDim)
+    (hp₁ : dim₁.isPureSector) (hp₂ : dim₂.isPureSector)
+    (hs : dim₁.delta - dim₁.tau = dim₂.delta - dim₂.tau)
+    (hd : dim₁.effectiveDegree = dim₂.effectiveDegree) : dim₁ = dim₂ := by
+  unfold FDim.isPureSector at hp₁ hp₂
+  unfold FDim.effectiveDegree at hd
+  apply FDim.ext <;> omega
+
+end StateClassDecomposition
 
 end FUST.Dim

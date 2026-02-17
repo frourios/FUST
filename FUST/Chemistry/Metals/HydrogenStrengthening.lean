@@ -1,12 +1,13 @@
 /-
-Hydrogen Strengthening from State Function Degree Theory
+Hydrogen Strengthening from FDim Theory
 
 Metals with magic neutron numbers form stable hydrides because
 interstitial hydrogen preserves neutron count (N is unchanged by
 protium absorption: ΔN = 0). The magic-N nuclear stability survives.
 
-Contrast with hydrogen embrittlement: Fe-56 has deg = 82 = nuclearMagic(5),
-and each interstitial H increases deg by 2, destroying the magic alignment.
+Contrast with hydrogen embrittlement: Fe-56 has particle count = 82 =
+nuclearMagic(5), and each interstitial H increases count by 2,
+destroying the magic alignment.
 
 Key insight: hydrogen strengthening ↔ magic neutron number preservation.
   V-51:  N = 28 = nuclearMagic(3) → VH₂ preserves magic N
@@ -23,7 +24,7 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.HydrogenStrengthening
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Vanadium FUST.Chemistry.Zirconium
 open FUST.Chemistry.Niobium FUST.Chemistry.Palladium
@@ -36,15 +37,13 @@ Protium (¹H) has N=0. Interstitial absorption adds ΔZ=1, ΔN=0, Δe=1.
 The neutron count of the host metal is invariant under H absorption.
 -/
 
--- Interstitial H does not change neutron count
+-- Interstitial H does not change neutron count: particle count increases by 2n
 theorem interstitial_H_preserves_N (Z N e n : ℕ) :
-    atomDegree (Z + n) N (e + n) - atomDegree Z N e = 2 * n := by
-  unfold atomDegree; omega
+    (Z + n) + N + (e + n) = Z + N + e + 2 * n := by omega
 
--- For neutral atoms: Δdeg = 2n, N unchanged
-theorem neutral_hydride_deg (Z N n : ℕ) :
-    atomDegree (Z + n) N (Z + n) = atomDegree Z N Z + 2 * n := by
-  unfold atomDegree; omega
+-- For neutral atoms: Δ(particle count) = 2n, N unchanged
+theorem neutral_hydride_particleCount (Z N n : ℕ) :
+    (Z + n) + N + (Z + n) = Z + N + Z + 2 * n := by omega
 
 /-! ## Section 2: Magic Neutron Number Preservation (Strengthening)
 
@@ -61,28 +60,29 @@ theorem vanadium_magic_N :
 theorem zirconium_magic_N :
     neutrons_Zr90 = Nuclear.nuclearMagic 4 := rfl
 
--- VH₂: Z=25, N=28(magic), e=25 → deg = 78
-theorem vanadium_dihydride_deg :
-    atomDegree (vanadiumZ + 2) neutrons_V51 (vanadiumZ + 2) = 78 := rfl
+-- VH₂: Z=25, N=28(magic), e=25 → effectiveDegree
+set_option maxRecDepth 4096 in
+theorem vanadium_dihydride_effDeg :
+    (dimAtom (vanadiumZ + 2) neutrons_V51 (vanadiumZ + 2)).effectiveDegree = 871 := by decide
 
--- VH₂ degree increase = 2 × spinDegeneracy
-theorem vanadium_dihydride_deltaDeg :
-    atomDegree (vanadiumZ + 2) neutrons_V51 (vanadiumZ + 2) -
-    atomDegree vanadiumZ neutrons_V51 vanadiumZ =
-    2 * Nuclear.spinDegeneracy := rfl
+-- VH₂ particle count
+theorem vanadium_dihydride_particleCount :
+    (vanadiumZ + 2) + neutrons_V51 + (vanadiumZ + 2) = 78 := rfl
 
--- ZrH₂: Z=42, N=50(magic), e=42 → deg = 134
-theorem zirconium_dihydride_deg :
-    atomDegree (zirconiumZ + 2) neutrons_Zr90 (zirconiumZ + 2) = 134 := rfl
+-- ZrH₂: Z=42, N=50(magic), e=42 → effectiveDegree
+set_option maxRecDepth 4096 in
+theorem zirconium_dihydride_effDeg :
+    (dimAtom (zirconiumZ + 2) neutrons_Zr90 (zirconiumZ + 2)).effectiveDegree = 1507 := by decide
 
--- ZrH₂ degree = Nb-93 degree (remarkable coincidence)
-theorem zirconium_dihydride_eq_niobium_deg :
-    atomDegree (zirconiumZ + 2) neutrons_Zr90 (zirconiumZ + 2) =
-    atomDegree niobiumZ neutrons_Nb93 niobiumZ := rfl
+-- ZrH₂ particle count = Nb-93 particle count
+set_option maxRecDepth 4096 in
+theorem zirconium_dihydride_eq_niobium_particleCount :
+    (zirconiumZ + 2) + neutrons_Zr90 + (zirconiumZ + 2) =
+    niobiumZ + neutrons_Nb93 + niobiumZ := rfl
 
-/-! ## Section 3: Magic Degree Destruction (Embrittlement)
+/-! ## Section 3: Magic Particle Count Destruction (Embrittlement)
 
-Fe-56 deg = 82 = nuclearMagic(5). Any H breaks this.
+Fe-56 particle count = 82 = nuclearMagic(5). Any H breaks this.
 Fe-56 N = 30 is NOT a magic number (30 ∉ {2,8,20,28,50,82,126}).
 So Fe has no magic-N protection either.
 -/
@@ -91,17 +91,17 @@ So Fe has no magic-N protection either.
 theorem iron56_N_not_magic :
     ∀ i, i < 7 → Nuclear.nuclearMagic i ≠ neutrons_Fe56 := by decide
 
--- Fe-56 has magic degree but non-magic N → vulnerable
-theorem iron_magic_deg_nonmagic_N :
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 ∧
+-- Fe-56 has magic particle count but non-magic N → vulnerable
+theorem iron_magic_particleCount_nonmagic_N :
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 ∧
     ∀ i, i < 7 → Nuclear.nuclearMagic i ≠ neutrons_Fe56 := by
   constructor
   · rfl
   · decide
 
--- Contrast: V-51 has non-magic degree but magic N → stable hydride
-theorem vanadium_nonmagic_deg_magic_N :
-    (∀ i, i < 7 → Nuclear.nuclearMagic i ≠ atomDegree vanadiumZ neutrons_V51 vanadiumZ) ∧
+-- Contrast: V-51 has non-magic particle count but magic N → stable hydride
+theorem vanadium_nonmagic_particleCount_magic_N :
+    (∀ i, i < 7 → Nuclear.nuclearMagic i ≠ vanadiumZ + neutrons_V51 + vanadiumZ) ∧
     neutrons_V51 = Nuclear.nuclearMagic 3 := by
   constructor
   · decide
@@ -115,30 +115,30 @@ Filled d-shell metals resist H-induced destabilization.
 
 -- Pd and Cu both have zero d-vacancy
 theorem palladium_copper_zero_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons = 0 ∧
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - copper_3d_electrons = 0 := ⟨rfl, rfl⟩
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons = 0 ∧
+    Nuclear.subshellCapacity 2 - copper_3d_electrons = 0 := ⟨rfl, rfl⟩
 
 -- Pd 4d electrons = Cu 3d electrons = subshell max
 theorem palladium_copper_filled_d :
-    palladium_4d_electrons = Nuclear.Subshell.maxElectrons ⟨4, 2⟩ ∧
-    copper_3d_electrons = Nuclear.Subshell.maxElectrons ⟨3, 2⟩ := ⟨rfl, rfl⟩
+    palladium_4d_electrons = Nuclear.subshellCapacity 2 ∧
+    copper_3d_electrons = Nuclear.subshellCapacity 2 := ⟨rfl, rfl⟩
 
 /-! ## Section 5: 4d Vacancy Values -/
 
 theorem zirconium_4d_vac_eq :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - zirconium_4d_electrons = 8 := rfl
+    Nuclear.subshellCapacity 2 - zirconium_4d_electrons = 8 := rfl
 
 theorem niobium_4d_vac_eq :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - niobium_4d_electrons = 6 := rfl
+    Nuclear.subshellCapacity 2 - niobium_4d_electrons = 6 := rfl
 
 theorem palladium_4d_vac_eq :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons = 0 := rfl
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons = 0 := rfl
 
 theorem d4_vacancy_ordering :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - zirconium_4d_electrons >
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - niobium_4d_electrons ∧
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - niobium_4d_electrons >
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons := by decide
+    Nuclear.subshellCapacity 2 - zirconium_4d_electrons >
+    Nuclear.subshellCapacity 2 - niobium_4d_electrons ∧
+    Nuclear.subshellCapacity 2 - niobium_4d_electrons >
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons := by decide
 
 /-! ## Section 6: Cross-Period d-Shell Analogy
 
@@ -161,10 +161,8 @@ theorem vanadium_zirconium_magic_N :
 
 The degree-theoretic classification:
 - H-strengthening: magic N → N preserved under H absorption
-- H-embrittlement: magic deg → deg destroyed by H absorption
+- H-embrittlement: magic particle count → count destroyed by H absorption
 - Filled d-shell: zero vacancy → stable H accommodation
-
-This is the central theorem: the dichotomy of hydrogen effects on metals.
 -/
 
 theorem hydrogen_strengthening_classification :
@@ -172,50 +170,16 @@ theorem hydrogen_strengthening_classification :
     neutrons_V51 = Nuclear.nuclearMagic 3 ∧
     -- Zr-90: magic N → strengthening
     neutrons_Zr90 = Nuclear.nuclearMagic 4 ∧
-    -- Fe-56: magic deg, non-magic N → embrittlement
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 ∧
+    -- Fe-56: magic particle count, non-magic N → embrittlement
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 ∧
     (∀ i, i < 7 → Nuclear.nuclearMagic i ≠ neutrons_Fe56) ∧
     -- Pd: filled d-shell → stable hydride
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - palladium_4d_electrons = 0 ∧
+    Nuclear.subshellCapacity 2 - palladium_4d_electrons = 0 ∧
     -- Cu: filled d-shell → HE resistant
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - copper_3d_electrons = 0 ∧
-    -- H preserves N: Δdeg = 2n, ΔN = 0
-    (∀ Z N n, atomDegree (Z + n) N (Z + n) = atomDegree Z N Z + 2 * n) := by
+    Nuclear.subshellCapacity 2 - copper_3d_electrons = 0 ∧
+    -- H preserves N: Δ(particle count) = 2n, ΔN = 0
+    (∀ Z N n, (Z + n) + N + (Z + n) = Z + N + Z + 2 * n) := by
   refine ⟨rfl, rfl, rfl, by decide, rfl, rfl, ?_⟩
-  intro Z N n; unfold atomDegree; omega
+  intro Z N n; omega
 
 end FUST.Chemistry.HydrogenStrengthening
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Vanadium FUST.Chemistry.Zirconium
-open FUST.Chemistry.Palladium FUST.Chemistry.Niobium
-open FUST.Chemistry.HydrogenStrengthening
-
--- VH₂ degree
-def vanadiumDihydrideDeg_t : DTagged .degree :=
-  mkDegree (vanadiumZ_t + scaleZ 2 hydrogenZ_t) V51N_t
-           (vanadiumZ_t + scaleZ 2 hydrogenZ_t)
-
-theorem vanadiumDihydrideDeg_t_val : vanadiumDihydrideDeg_t.val = 78 := by decide
-
--- ZrH₂ degree
-def zirconiumDihydrideDeg_t : DTagged .degree :=
-  mkDegree (zirconiumZ_t + scaleZ 2 hydrogenZ_t) Zr90N_t
-           (zirconiumZ_t + scaleZ 2 hydrogenZ_t)
-
-theorem zirconiumDihydrideDeg_t_val : zirconiumDihydrideDeg_t.val = 134 := by decide
-
--- ZrH₂ deg = Nb deg
-theorem zirconium_dihydride_eq_niobium_tagged :
-    zirconiumDihydrideDeg_t.val = niobiumDeg_t.val := by decide
-
--- 4d vacancy as count
-def zirconiumDVacancy_t : DTagged .count := ⟨8⟩
-def niobiumDVacancy_t : DTagged .count := ⟨6⟩
-def palladiumDVacancy_t : DTagged .count := ⟨0⟩
-
-theorem zirconiumDVacancy_t_val : zirconiumDVacancy_t.val = 8 := rfl
-theorem niobiumDVacancy_t_val : niobiumDVacancy_t.val = 6 := rfl
-theorem palladiumDVacancy_t_val : palladiumDVacancy_t.val = 0 := rfl
-
-end FUST.DiscreteTag

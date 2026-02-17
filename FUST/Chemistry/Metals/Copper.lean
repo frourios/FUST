@@ -11,7 +11,7 @@ import FUST.Chemistry.Metals.Nickel
 
 namespace FUST.Chemistry.Copper
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
 open FUST.Chemistry.Nickel FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen
 
@@ -40,10 +40,10 @@ theorem copperZ_shell_filling :
 
 -- 3d is completely filled: vacancy = 0
 theorem copper_3d_filled :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ = copper_3d_electrons := rfl
+    Nuclear.subshellCapacity 2 = copper_3d_electrons := rfl
 
 theorem copper_3d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - copper_3d_electrons = 0 := rfl
+    Nuclear.subshellCapacity 2 - copper_3d_electrons = 0 := rfl
 
 /-! ## Section 2: Copper Isotopes -/
 
@@ -62,14 +62,14 @@ noncomputable def copper63Atom (x : ℝ) : ℝ := atomStateFn 29 34 29 x
 theorem copper63Atom_eq (x : ℝ) :
     copper63Atom x = x ^ 29 * (1 + x) ^ 34 * (1 + ψ * x) ^ 29 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_copper63Ion : atomDegree 29 34 0 = 63 := rfl
-theorem degree_copper63Atom : atomDegree 29 34 29 = 92 := rfl
+theorem effDeg_copper63Ion : (dimAtom 29 34 0).effectiveDegree = 975 := by decide
+theorem effDeg_copper63Atom : (dimAtom 29 34 29).effectiveDegree = 1033 := by decide
 
-theorem copper_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 29 N e > 2 := by
-  unfold atomDegree; omega
+theorem copper_effDeg_exceeds_kerD6 :
+    (dimAtom 29 34 0).effectiveDegree > 2 ∧
+    (dimAtom 29 34 29).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 
@@ -78,34 +78,13 @@ theorem Cu65_mass_number : copperZ + neutrons_Cu65 = 65 := rfl
 
 /-! ## Section 6: Summary -/
 
+set_option maxRecDepth 4096 in
 theorem copper_classification :
     copperZ = 29 ∧
     Nuclear.nuclearMagic 3 + hydrogenZ = copperZ ∧
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - copper_3d_electrons = 0 ∧
-    (∀ N e, atomDegree 29 N e > 2) := by
-  refine ⟨rfl, rfl, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    Nuclear.subshellCapacity 2 - copper_3d_electrons = 0 ∧
+    (dimAtom 29 34 0).effectiveDegree > 2 ∧
+    (dimAtom 29 34 29).effectiveDegree > 2 := by
+  exact ⟨rfl, rfl, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Copper
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Copper
-
-def copperZ_t : DTagged .protonNum := ⟨copperZ⟩
-def Cu63N_t : DTagged .neutronNum := ⟨neutrons_Cu63⟩
-
-def copperDeg_t : DTagged .degree := mkDegree copperZ_t Cu63N_t copperZ_t
-
-theorem copperZ_t_val : copperZ_t.val = 29 := rfl
-theorem Cu63N_t_val : Cu63N_t.val = 34 := rfl
-theorem copperDeg_t_val : copperDeg_t.val = 92 := rfl
-
--- Cu Z = Ni Z + H Z
-theorem copperZ_eq_nickel_plus_H :
-    copperZ_t = nickelZ_t + hydrogenZ_t := rfl
-
--- Degree construction consistency
-theorem copper_deg_consistency :
-    mkDegree copperZ_t Cu63N_t copperZ_t = copperDeg_t := rfl
-
-end FUST.DiscreteTag

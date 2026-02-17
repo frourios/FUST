@@ -1,6 +1,7 @@
 import FUST.Physics.GaugeSectors
 import FUST.Physics.WaveEquation
 import FUST.Physics.MassRatios
+import FUST.Physics.CouplingConstants
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
@@ -472,6 +473,25 @@ theorem particleDims_all_distinct :
     dimNeutron ≠ dimWBoson ∧ dimNeutron ≠ dimDarkMatter ∧
     dimWBoson ≠ dimDarkMatter := by decide
 
+/-- dimFineStructure is distinct from all particle FDims. -/
+theorem dimFineStructure_ne_all_particles :
+    dimFineStructure ≠ dimElectron ∧ dimFineStructure ≠ dimMuon ∧
+    dimFineStructure ≠ dimTau ∧ dimFineStructure ≠ dimProton ∧
+    dimFineStructure ≠ dimNeutron ∧ dimFineStructure ≠ dimWBoson ∧
+    dimFineStructure ≠ FUST.NeutrinoMass.dimNu3 ∧
+    dimFineStructure ≠ FUST.NeutrinoMass.dimNu2 ∧
+    dimFineStructure ≠ dimDarkMatter ∧
+    dimFineStructure ≠ dimTopBottomHigh ∧
+    dimFineStructure ≠ dimTopBottomLow ∧
+    dimFineStructure ≠ dimStrangeDown ∧
+    dimFineStructure ≠ dimBottomCharm ∧
+    dimFineStructure ≠ dimBaryonAsymmetry := by decide
+
+/-- dimFineStructure is distinct from all DimSum2 component dimensions. -/
+theorem dimFineStructure_ne_dimSum2 :
+    dimFineStructure ≠ dimZSqComp1 ∧ dimFineStructure ≠ dimZSqComp2 ∧
+    dimFineStructure ≠ dimHiggsVacuum ∧ dimFineStructure ≠ dimHiggsCorrection := by decide
+
 /-- All DimSum2 component dimensions are pairwise distinct. -/
 theorem dimSum2Components_all_distinct :
     dimZSqComp1 ≠ dimZSqComp2 ∧
@@ -561,6 +581,13 @@ theorem zSqComp2_mixed_sector :
     deriveFDim 2 * deriveFDim 2 * (deriveFDim 3 * deriveFDim 3)⁻¹ *
     dimTimeD2 ^ (50 : ℤ) := by decide
 
+-- Fine structure constant: dim(α₀) = (3,-1,0), pure sector with effectiveDegree = -1
+theorem fineStructure_sector :
+    dimFineStructure = ⟨3, -1, 0⟩ ∧
+    dimFineStructure.isPureSector ∧
+    dimFineStructure.effectiveDegree = -1 := by
+  unfold FDim.isPureSector FDim.effectiveDegree; decide
+
 -- State function: D₆(x³)(x₀) = Δ·x₀², minimum massive cubic
 theorem D6_state_function :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
@@ -594,6 +621,52 @@ theorem sector_classification :
              dimTimeD2 ^ (-(32 : ℤ)) := by decide
 
 end SectorClassification
+
+section EffectiveDegree
+
+/-! ## Effective Degree: FDim → State Function Class
+
+effectiveDegree d = δ - 2τ maps each particle FDim to its state function
+equivalence class representative x^d ∈ Z[φ][x, x⁻¹]. All particles have
+distinct effective degrees, confirming FDim uniquely determines state class. -/
+
+open Dim in
+theorem effectiveDegree_all_distinct :
+    dimElectron.effectiveDegree = 3 ∧
+    dimMuon.effectiveDegree = 14 ∧
+    dimProton.effectiveDegree = 17 ∧
+    dimNeutron.effectiveDegree = 16 ∧
+    dimTau.effectiveDegree = 20 ∧
+    dimWBoson.effectiveDegree = 28 ∧
+    FUST.NeutrinoMass.dimNu3.effectiveDegree = -26 ∧
+    FUST.NeutrinoMass.dimNu2.effectiveDegree = -27 := by
+  unfold FDim.effectiveDegree; decide
+
+open Dim in
+theorem effectiveDegree_pairwise_ne :
+    dimElectron.effectiveDegree ≠ dimMuon.effectiveDegree ∧
+    dimElectron.effectiveDegree ≠ dimProton.effectiveDegree ∧
+    dimElectron.effectiveDegree ≠ dimTau.effectiveDegree ∧
+    dimElectron.effectiveDegree ≠ dimWBoson.effectiveDegree ∧
+    dimMuon.effectiveDegree ≠ dimProton.effectiveDegree ∧
+    dimMuon.effectiveDegree ≠ dimTau.effectiveDegree ∧
+    dimProton.effectiveDegree ≠ dimTau.effectiveDegree ∧
+    dimProton.effectiveDegree ≠ dimNeutron.effectiveDegree ∧
+    dimProton.effectiveDegree ≠ dimWBoson.effectiveDegree := by
+  unfold FDim.effectiveDegree; decide
+
+-- Pure-sector property for all D₆-sector particles
+open Dim in
+theorem D6_sector_isPureSector :
+    dimElectron.isPureSector ∧
+    dimMuon.isPureSector ∧
+    dimTau.isPureSector ∧
+    dimProton.isPureSector ∧
+    dimNeutron.isPureSector ∧
+    dimWBoson.isPureSector := by
+  unfold FDim.isPureSector; decide
+
+end EffectiveDegree
 
 /-! ## Generation Structure
 

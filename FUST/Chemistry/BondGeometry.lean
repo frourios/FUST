@@ -209,32 +209,3 @@ theorem bond_geometry_from_shell_structure :
 
 end FUST.Chemistry.BondGeometry
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.BondGeometry FUST.Chemistry.Carbon FUST.Chemistry.Oxygen
-
--- CO₂ lone pairs = 0
-theorem CO2_lonePairs_tagged :
-    (⟨lonePairCount carbonZ 4⟩ : DTagged .count) = ⟨0⟩ := rfl
-
--- H₂O lone pairs = spinDeg
-theorem H2O_lonePairs_is_spinDeg :
-    (⟨lonePairCount oxygenZ 2⟩ : DTagged .count) = kerToCount spinDeg_t := rfl
-
--- NH₃ lone pairs = hydrogenZ
-theorem NH3_lonePairs_is_hydrogenZ :
-    (⟨lonePairCount 7 3⟩ : DTagged .count).val = hydrogenZ_t.val := rfl
-
--- H₂O electron regions = baseCount
-theorem H2O_regions_is_baseCount :
-    (⟨electronRegions oxygenZ 2⟩ : DTagged .count) = baseCount_t := rfl
-
--- O electron pairs = baseCount (oxygenZ / spinDeg = 4)
-theorem oxygen_ePairs_is_baseCount :
-    (⟨oxygenZ / Nuclear.spinDegeneracy⟩ : DTagged .count) = baseCount_t := rfl
-
--- C electron pairs = spatialDim (carbonZ / spinDeg = 3)
-theorem carbon_ePairs_is_spatialDim :
-    (⟨carbonZ / Nuclear.spinDegeneracy⟩ : DTagged .count) =
-    kerToCount spatialDim_t := rfl
-
-end FUST.DiscreteTag

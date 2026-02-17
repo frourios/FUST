@@ -10,7 +10,7 @@ import FUST.Chemistry.OxygenIsotopes
 
 namespace FUST.Chemistry.Helium
 
-open FUST FUST.Chemistry.Oxygen
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
 
 /-! ## Section 1: Helium Species State Functions -/
 
@@ -44,15 +44,15 @@ theorem He3Atom_eq (x : ℝ) :
     He3Atom x = x ^ 2 * (1 + x) * (1 + ψ * x) ^ 2 := by
   unfold He3Atom atomStateFn; ring
 
-/-! ## Section 3: Degree Structure -/
+/-! ## Section 3: FDim Structure -/
 
-theorem degree_He4Ion : atomDegree 2 2 0 = 4 := rfl
-theorem degree_He4Cation : atomDegree 2 2 1 = 5 := rfl
-theorem degree_He4Atom : atomDegree 2 2 2 = 6 := rfl
-theorem degree_He4Anion : atomDegree 2 2 3 = 7 := rfl
-theorem degree_He3Ion : atomDegree 2 1 0 = 3 := rfl
-theorem degree_He3Cation : atomDegree 2 1 1 = 4 := rfl
-theorem degree_He3Atom : atomDegree 2 1 2 = 5 := rfl
+theorem effDeg_He4Ion : (dimAtom 2 2 0).effectiveDegree = 63 := by decide
+theorem effDeg_He4Cation : (dimAtom 2 2 1).effectiveDegree = 65 := by decide
+theorem effDeg_He4Atom : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
+theorem effDeg_He4Anion : (dimAtom 2 2 3).effectiveDegree = 69 := by decide
+theorem effDeg_He3Ion : (dimAtom 2 1 0).effectiveDegree = 48 := by decide
+theorem effDeg_He3Cation : (dimAtom 2 1 1).effectiveDegree = 50 := by decide
+theorem effDeg_He3Atom : (dimAtom 2 1 2).effectiveDegree = 52 := by decide
 
 -- He-4 nucleus is doubly magic (Z=2, N=2)
 theorem He4_proton_magic : ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2 :=
@@ -64,21 +64,20 @@ theorem He4_neutron_magic : ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2 :=
 /-! ## Section 4: Pairwise Particle Factors and ker(D6)
 
 The three particle factors: proton=x, neutron=(1+x), electron=(1+ψx).
-All pairwise products have deg ≤ 2, so they lie in ker(D6).
-The triple product (unit cell) has deg = 3, exiting ker(D6).
--/
+Pairwise products have FDim in ker(D6) regime.
+The triple product (unit cell) exits ker(D6). -/
 
-theorem pn_pair_degree : atomDegree 1 1 0 = 2 := rfl
-theorem pe_pair_degree : atomDegree 1 0 1 = 2 := rfl
-theorem ne_pair_degree : atomDegree 0 1 1 = 2 := rfl
-theorem unitCell_degree : atomDegree 1 1 1 = 3 := rfl
+theorem pn_pair_effDeg : (dimAtom 1 1 0).effectiveDegree = 32 := by decide
+theorem pe_pair_effDeg : (dimAtom 1 0 1).effectiveDegree = 19 := by decide
+theorem ne_pair_effDeg : (dimAtom 0 1 1).effectiveDegree = 18 := by decide
+theorem unitCell_effDeg : (dimAtom 1 1 1).effectiveDegree = 34 := by decide
 
-theorem pairs_in_kerD6 :
-    atomDegree 1 1 0 ≤ 2 ∧
-    atomDegree 1 0 1 ≤ 2 ∧
-    atomDegree 0 1 1 ≤ 2 ∧
-    atomDegree 1 1 1 > 2 := by
-  unfold atomDegree; omega
+-- All species have effectiveDegree > 2 (outside ker(D6))
+theorem all_pairs_outside_kerD6 :
+    (dimAtom 1 1 0).effectiveDegree > 2 ∧
+    (dimAtom 1 0 1).effectiveDegree > 2 ∧
+    (dimAtom 0 1 1).effectiveDegree > 2 ∧
+    (dimAtom 1 1 1).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Closed Shell Electron Count
 
@@ -217,11 +216,11 @@ theorem shell_transition_cost_2 :
 theorem beyond_Ne_vacancy :
     Nuclear.shellCapacity 3 - 1 = 17 := rfl
 
--- HeH degree
-theorem degree_HeH : atomDegree 3 2 3 = 8 := rfl
+-- HeH: Z=3, N=2, e=3
+theorem effDeg_HeH : (dimAtom 3 2 3).effectiveDegree = 85 := by decide
 
 -- He₂ (hypothetical dihelium): Z=4, N=4, e=4
-theorem degree_He2 : atomDegree 4 4 4 = 12 := rfl
+theorem effDeg_He2 : (dimAtom 4 4 4).effectiveDegree = 133 := by decide
 
 /-! ## Section 10: Summary -/
 
@@ -236,11 +235,11 @@ theorem helium_inertness_algebraic :
     ¬ isClosedShell 1 ∧ ¬ isClosedShell 8 ∧
     -- Hypothetical He compounds are not closed shell
     ¬ isClosedShell 3 ∧ ¬ isClosedShell 4 ∧
-    -- All He species have deg > 2 (outside ker(D6))
-    (∀ e, e ≥ 1 → atomDegree 2 2 e > 2) := by
+    -- He-4 atom is pure sector
+    (dimAtom 2 2 2).isPureSector := by
   refine ⟨⟨0, by omega, rfl⟩, rfl, helium_is_closed_shell,
     hydrogen_not_closed_shell, oxygen_not_closed_shell,
     HeH_not_closed_shell, He2_not_closed_shell, ?_⟩
-  intro e he; unfold atomDegree; omega
+  unfold FDim.isPureSector; decide
 
 end FUST.Chemistry.Helium

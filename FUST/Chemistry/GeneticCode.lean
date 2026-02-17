@@ -5,14 +5,15 @@ Codon length 3 = spatialDim = dim ker(D₆).
 Total codons 64 = 4³ = baseCount^spatialDim.
 Standard amino acids 20 = nuclearMagic(2).
 Stop codons 3 = spatialDim.
-DNA→RNA transcription: T→U substitution with degree change = 22.
+DNA→RNA transcription: T→U substitution with ΔeffDeg = 234.
 -/
 
 import FUST.Chemistry.Nucleotides
 
 namespace FUST.Chemistry.GeneticCode
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Nucleotide
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
+open FUST.Chemistry.Nucleotide
 open FUST.Chemistry.Carbon FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Codon Structure
@@ -57,14 +58,18 @@ abbrev senseCodonCount : ℕ := codonCount - stopCodonCount
 theorem senseCodonCount_eq : senseCodonCount = 61 := rfl
 
 -- Degeneracy: average codons per amino acid
-theorem codon_degeneracy_quotient : senseCodonCount / aminoAcidCount = 3 := rfl
-theorem codon_degeneracy_remainder : senseCodonCount % aminoAcidCount = 1 := rfl
+theorem codon_degeneracy_quotient :
+    senseCodonCount / aminoAcidCount = 3 := rfl
 
--- aminoAcidCount is a nuclear magic number (same as calcium-40 proton count)
+theorem codon_degeneracy_remainder :
+    senseCodonCount % aminoAcidCount = 1 := rfl
+
+-- aminoAcidCount is a nuclear magic number
 theorem aminoAcid_is_magic :
-    ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = aminoAcidCount := ⟨2, by omega, rfl⟩
+    ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = aminoAcidCount :=
+  ⟨2, by omega, rfl⟩
 
--- stopCodonCount = spatialDim = AT_hbonds + 1 = GC_hbonds
+-- stopCodonCount = spatialDim = GC_hbonds
 theorem stop_codon_spatial : stopCodonCount = GC_hbonds := rfl
 
 /-! ## Section 3: DNA vs RNA Transcription
@@ -75,42 +80,40 @@ T = U + methyl group (CH₂): ΔZ = carbonZ + 2·hydrogenZ = 8.
 
 -- T→U substitution Z change
 theorem transcription_Z_change :
-    thymine.Z - uracil.Z = carbonZ + 2 * hydrogenZ := rfl
+    thymineZ - uracilZ = carbonZ + 2 * hydrogenZ := rfl
 
-theorem transcription_Z_change_value : thymine.Z - uracil.Z = 8 := rfl
+theorem transcription_Z_change_value : thymineZ - uracilZ = 8 := rfl
 
 -- T→U substitution N change
-theorem transcription_N_change : thymine.N - uracil.N = 6 := rfl
+theorem transcription_N_change : thymineN - uracilN = 6 := rfl
 
--- T→U degree change per base
-theorem transcription_deg_change_per_base :
-    thymine.deg - uracil.deg = 22 := rfl
-
--- Per-strand transcription: each T→U reduces total degree by 22
--- For a DNA strand of length L with k thymines, total degree change = 22k
-
-/-! ## Section 4: Central Dogma Degree Algebra
+/-! ## Section 4: Central Dogma EffDeg Algebra
 
 DNA → RNA → Protein (Central Dogma).
-Each step has a well-defined degree transformation.
+Each step has a well-defined effectiveDegree transformation.
 -/
 
--- A codon (triplet) degree: sum of three base degrees
-def codonDeg (b1 b2 b3 : NucleoBase) : ℕ := b1.deg + b2.deg + b3.deg
+set_option maxRecDepth 8192
 
--- Start codon AUG degree
-theorem start_codon_deg :
-    codonDeg adenine uracil guanine = 205 + 170 + 229 := rfl
-
-theorem start_codon_deg_value : codonDeg adenine uracil guanine = 604 := rfl
+-- Start codon AUG effectiveDegree sum
+theorem start_codon_effDeg :
+    (dimAtom adenineZ adenineN adenineZ).effectiveDegree +
+    (dimAtom uracilZ uracilN uracilZ).effectiveDegree +
+    (dimAtom guanineZ guanineN guanineZ).effectiveDegree = 6591 := by
+  decide
 
 -- DNA version: ATG
-theorem start_codon_DNA_deg :
-    codonDeg adenine thymine guanine = 205 + 192 + 229 := rfl
+theorem start_codon_DNA_effDeg :
+    (dimAtom adenineZ adenineN adenineZ).effectiveDegree +
+    (dimAtom thymineZ thymineN thymineZ).effectiveDegree +
+    (dimAtom guanineZ guanineN guanineZ).effectiveDegree = 6825 := by
+  decide
 
--- Transcription degree change for start codon (ATG → AUG)
+-- Transcription effDeg change for start codon (ATG → AUG)
 theorem start_codon_transcription_change :
-    codonDeg adenine thymine guanine - codonDeg adenine uracil guanine = 22 := rfl
+    (dimAtom thymineZ thymineN thymineZ).effectiveDegree -
+    (dimAtom uracilZ uracilN uracilZ).effectiveDegree = 234 := by
+  decide
 
 /-! ## Section 5: Information Content
 
@@ -118,64 +121,24 @@ Information per base = log₂(baseCount) = log₂(4) = 2 bits = spinDegeneracy.
 Information per codon = codonLength × 2 = 6 bits = carbonZ.
 -/
 
--- Discrete information content (in units of spinDegeneracy)
 theorem info_per_base : Nuclear.spinDegeneracy = 2 := rfl
 theorem info_per_codon :
     codonLength * Nuclear.spinDegeneracy = carbonZ := rfl
 
--- Total information in genetic code = log₂(64) = 6 bits = carbonZ
 theorem genetic_code_info_bits :
     codonLength * Nuclear.spinDegeneracy = 6 := rfl
 
 /-! ## Section 6: Summary -/
 
 theorem genetic_code_classification :
-    -- Codon structure from D-operator kernels
     codonLength = WaveEquation.spatialDim ∧
     codonCount = 64 ∧
-    -- Amino acid count = nuclear magic number
     aminoAcidCount = Nuclear.nuclearMagic 2 ∧
     aminoAcidCount = 20 ∧
-    -- Stop codon count = spatial dimension
     stopCodonCount = WaveEquation.spatialDim ∧
-    -- Codon count = 2^carbonZ
     codonCount = 2 ^ carbonZ ∧
-    -- Transcription T→U change
-    thymine.Z - uracil.Z = 8 ∧
-    -- Information per codon = carbonZ
+    thymineZ - uracilZ = 8 ∧
     codonLength * Nuclear.spinDegeneracy = carbonZ :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.Chemistry.GeneticCode
-
-namespace FUST.DiscreteTag
-
--- baseCount = 2^spinDeg
-theorem baseCount_from_spin :
-    baseCount_t = countPow ⟨2⟩ (kerToCount spinDeg_t) := rfl
-
--- codonCount = baseCount^codonLength
-theorem codonCount_from_base :
-    codonCount_t = countPow baseCount_t codonLength_t := rfl
-
--- senseCodonCount = codonCount - stopCodonCount
-theorem senseCodonCount_from_parts :
-    senseCodonCount_t = codonCount_t - stopCodonCount_t := rfl
-
--- purine/pyrimidine split = spinDeg + spinDeg
-theorem purine_pyrimidine_tagged :
-    kerToCount spinDeg_t + kerToCount spinDeg_t = baseCount_t := rfl
-
--- codon degeneracy quotient
-theorem codon_degeneracy_quotient_tagged :
-    senseCodonCount_t.val / aminoAcidCount_t.val = stopCodonCount_t.val := rfl
-
--- codonCount = 2^carbonZ
-theorem bridge_codon_info :
-    codonCount_t.val = 2 ^ carbonZ_t.val := rfl
-
--- codonLength × spinDeg = carbonZ
-theorem bridge_info_per_codon :
-    codonLength_t.val * spinDeg_t.val = carbonZ_t.val := rfl
-
-end FUST.DiscreteTag

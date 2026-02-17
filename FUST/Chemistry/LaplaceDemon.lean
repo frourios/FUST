@@ -13,12 +13,12 @@ lattice. The D_n operators scan D(x) at points {φⁿx} spaced by log φ.
 Scale action U: D(x) → D(φx) preserves ℤ[φ]-coefficients.
 -/
 
-import FUST.Chemistry.MixturePhase
+import FUST.Chemistry.WaterMolecules
 import FUST.Physics.StateFunctionConstraint
 
 namespace FUST.Chemistry.LaplaceDemon
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.MixturePhase
+open FUST FUST.Chemistry FUST.Chemistry.Oxygen
 open FUST.StateFunctionConstraint FrourioAlgebra
 
 /-! ## Section 1: Shifted State Function over ℤ[φ]
@@ -59,11 +59,6 @@ theorem shifted_root_electron (Z N e : ℕ) (q : GoldenInt) (he : e ≥ 1) :
 /-! ## Section 3: Merge vs Separation
 
 Unshifted products collapse. Shifted products preserve identity. -/
-
-theorem atomStateFn_mul (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (x : ℝ) :
-    atomStateFn Z₁ N₁ e₁ x * atomStateFn Z₂ N₂ e₂ x =
-    atomStateFn (Z₁ + Z₂) (N₁ + N₂) (e₁ + e₂) x := by
-  unfold atomStateFn; rw [pow_add, pow_add, pow_add]; ring
 
 theorem shifted_roots_separate (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
     (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) (hne : q₁ ≠ q₂) :

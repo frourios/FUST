@@ -3,9 +3,9 @@ Carbon Molecules from the Multiplicative State Function Model
 
 Molecular state function g(x) = x^Z · (1+x)^N · (1+ψx)^e.
 
-CH₄ (methane): Z=10, N=6, e=10 — closed shell (isoelectronic with H₂O and Ne).
-CO₂ (carbon dioxide): Z=22, N=22, e=22 — triply symmetric (Z=N=e).
-CO (carbon monoxide): Z=14, N=14, e=14 — symmetric (Z=N=e).
+CH₄ (methane): Z=10, N=6, e=10 -- closed shell (isoelectronic with H₂O and Ne).
+CO₂ (carbon dioxide): Z=22, N=22, e=22 -- triply symmetric (Z=N=e).
+CO (carbon monoxide): Z=14, N=14, e=14 -- symmetric (Z=N=e).
 -/
 
 import FUST.DifferenceOperators
@@ -16,7 +16,8 @@ import FUST.Chemistry.WaterMolecules
 
 namespace FUST.Chemistry.CarbonMol
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
+open FUST FUST.Dim FUST.Chemistry
+open FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Carbon FUST.Chemistry.Helium
 
 /-! ## Section 1: Methane (CH₄)
@@ -91,12 +92,12 @@ theorem CO_eq_unitCell_pow (x : ℝ) :
 
 /-! ## Section 4: Degree Structure -/
 
-theorem degree_methane : atomDegree 10 6 10 = 26 := rfl
-theorem degree_CO2 : atomDegree 22 22 22 = 66 := rfl
-theorem degree_CO : atomDegree 14 14 14 = 42 := rfl
-
--- CO₂ degree = 3 × 22 = 66 (triple symmetry)
--- CO degree = 3 × 14 = 42
+theorem degree_methane :
+    (dimAtom 10 6 10).effectiveDegree = 271 := by decide
+theorem degree_CO2 :
+    (dimAtom 22 22 22).effectiveDegree = 727 := by decide
+theorem degree_CO :
+    (dimAtom 14 14 14).effectiveDegree = 463 := by decide
 
 /-! ## Section 5: Combustion: CH₄ + 2O₂ → CO₂ + 2H₂O -/
 
@@ -107,15 +108,17 @@ theorem combustion_Z_conservation :
 
 theorem combustion_N_conservation :
     (neutrons_C12 + 4 * protium_N) + 2 * (2 * neutrons_O16) =
-    (neutrons_C12 + 2 * neutrons_O16) + 2 * (2 * protium_N + neutrons_O16) := rfl
+    (neutrons_C12 + 2 * neutrons_O16) +
+      2 * (2 * protium_N + neutrons_O16) := rfl
 
--- Degree conservation
+-- EffectiveDegree conservation
 theorem combustion_degree_conservation :
-    atomDegree 10 6 10 + 2 * atomDegree 16 16 16 =
-    atomDegree 22 22 22 + 2 * atomDegree 10 8 10 := rfl
+    (dimAtom 10 6 10).effectiveDegree +
+      2 * (dimAtom 16 16 16).effectiveDegree =
+    (dimAtom 22 22 22).effectiveDegree +
+      2 * (dimAtom 10 8 10).effectiveDegree := by decide
 
 -- Vacancy analysis: O₂ is not closed shell, so reactants have vacancy
--- CH₄(vac=0) + 2·O₂(vac=12 each) → CO₂(vac=6) + 2·H₂O(vac=0)
 theorem combustion_vacancy_decrease :
     let lhs_vacancy := (closedShellElectronCount 2 - 10) +
                         2 * (closedShellElectronCount 3 - 16)
@@ -144,14 +147,19 @@ theorem acetylene_N : 2 * neutrons_C12 + 2 * protium_N = 12 := rfl
 
 noncomputable def acetylene (x : ℝ) : ℝ := atomStateFn 14 12 14 x
 
-theorem degree_ethane : atomDegree 18 12 18 = 48 := rfl
-theorem degree_ethylene : atomDegree 16 12 16 = 44 := rfl
-theorem degree_acetylene : atomDegree 14 12 14 = 40 := rfl
+theorem degree_ethane :
+    (dimAtom 18 12 18).effectiveDegree = 505 := by decide
+theorem degree_ethylene :
+    (dimAtom 16 12 16).effectiveDegree = 469 := by decide
+theorem degree_acetylene :
+    (dimAtom 14 12 14).effectiveDegree = 433 := by decide
 
--- Dehydrogenation degree pattern: each H₂ removal decreases degree by 4
+-- Dehydrogenation pattern: each H₂ removal decreases effectiveDegree by 36
 theorem dehydrogenation_pattern :
-    atomDegree 18 12 18 - atomDegree 16 12 16 = 4 ∧
-    atomDegree 16 12 16 - atomDegree 14 12 14 = 4 := ⟨rfl, rfl⟩
+    (dimAtom 18 12 18).effectiveDegree -
+      (dimAtom 16 12 16).effectiveDegree = 36 ∧
+    (dimAtom 16 12 16).effectiveDegree -
+      (dimAtom 14 12 14).effectiveDegree = 36 := by decide
 
 /-! ## Section 7: CH₄ and H₂O Isoelectronic Relationship -/
 
@@ -161,10 +169,12 @@ theorem methane_water_isoelectronic :
 
 -- But they differ in neutron count
 theorem methane_water_neutron_diff :
-    neutrons_C12 + 4 * protium_N ≠ 2 * protium_N + neutrons_O16 := by decide
+    neutrons_C12 + 4 * protium_N ≠
+      2 * protium_N + neutrons_O16 := by decide
 
 theorem degree_methane_vs_water :
-    atomDegree 10 6 10 = 26 ∧ atomDegree 10 8 10 = 28 := ⟨rfl, rfl⟩
+    (dimAtom 10 6 10).effectiveDegree = 271 ∧
+    (dimAtom 10 8 10).effectiveDegree = 301 := by decide
 
 /-! ## Section 8: Summary -/
 
@@ -174,79 +184,19 @@ theorem carbon_molecule_classification :
     -- Carbon valence = 4
     closedShellElectronCount 2 - carbonZ = 4 ∧
     -- CO₂ is triply symmetric (Z=N=e=22)
-    carbonZ + 2 * oxygenZ = neutrons_C12 + 2 * neutrons_O16 ∧
+    carbonZ + 2 * oxygenZ =
+      neutrons_C12 + 2 * neutrons_O16 ∧
     -- CO is triply symmetric (Z=N=e=14)
     carbonZ + oxygenZ = neutrons_C12 + neutrons_O16 ∧
-    -- Combustion degree conservation
-    atomDegree 10 6 10 + 2 * atomDegree 16 16 16 =
-      atomDegree 22 22 22 + 2 * atomDegree 10 8 10 ∧
+    -- Combustion effectiveDegree conservation
+    (dimAtom 10 6 10).effectiveDegree +
+      2 * (dimAtom 16 16 16).effectiveDegree =
+      (dimAtom 22 22 22).effectiveDegree +
+      2 * (dimAtom 10 8 10).effectiveDegree ∧
     -- CH₄ and H₂O are isoelectronic
-    carbonZ + 4 * hydrogenZ = 2 * hydrogenZ + oxygenZ := by
-  exact ⟨neon_is_closed_shell, by decide, rfl, rfl, rfl, rfl⟩
+    carbonZ + 4 * hydrogenZ =
+      2 * hydrogenZ + oxygenZ := by
+  exact ⟨neon_is_closed_shell, by decide, rfl, rfl,
+    by decide, rfl⟩
 
 end FUST.Chemistry.CarbonMol
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Carbon FUST.Chemistry.Dihydrogen FUST.Chemistry.Oxygen
-
-def methaneZ_t : DTagged .protonNum := carbonZ_t + scaleZ 4 hydrogenZ_t
-def CO2Z_t : DTagged .protonNum := carbonZ_t + scaleZ 2 oxygenZ_t
-def COZ_t : DTagged .protonNum := carbonZ_t + oxygenZ_t
-def dioxygenZ_t : DTagged .protonNum := scaleZ 2 oxygenZ_t
-def ethaneZ_t : DTagged .protonNum := scaleZ 2 carbonZ_t + scaleZ 6 hydrogenZ_t
-def ethyleneZ_t : DTagged .protonNum := scaleZ 2 carbonZ_t + scaleZ 4 hydrogenZ_t
-def acetyleneZ_t : DTagged .protonNum := scaleZ 2 carbonZ_t + scaleZ 2 hydrogenZ_t
-
-def methaneDeg_t : DTagged .degree := mkDegree methaneZ_t C12N_t methaneZ_t
-def CO2Deg_t : DTagged .degree := mkDegree CO2Z_t ⟨22⟩ CO2Z_t
-def CODeg_t : DTagged .degree := mkDegree COZ_t ⟨14⟩ COZ_t
-def dioxygenDeg_t : DTagged .degree := mkDegree dioxygenZ_t ⟨16⟩ dioxygenZ_t
-def dehydrogenationDeltaDeg_t : DTagged .deltaDeg :=
-  ⟨atomDegree 18 12 18 - atomDegree 16 12 16⟩
-
-theorem methaneZ_t_val : methaneZ_t.val = 10 := rfl
-theorem CO2Z_t_val : CO2Z_t.val = 22 := rfl
-theorem COZ_t_val : COZ_t.val = 14 := rfl
-theorem dioxygenZ_t_val : dioxygenZ_t.val = 16 := rfl
-theorem ethaneZ_t_val : ethaneZ_t.val = 18 := rfl
-theorem ethyleneZ_t_val : ethyleneZ_t.val = 16 := rfl
-theorem acetyleneZ_t_val : acetyleneZ_t.val = 14 := rfl
-theorem methaneDeg_t_val : methaneDeg_t.val = 26 := rfl
-theorem CO2Deg_t_val : CO2Deg_t.val = 66 := rfl
-theorem CODeg_t_val : CODeg_t.val = 42 := rfl
-theorem dioxygenDeg_t_val : dioxygenDeg_t.val = 48 := rfl
-theorem dehydrogenationDeltaDeg_t_val : dehydrogenationDeltaDeg_t.val = 4 := rfl
-
--- CH₄ = C + 4H
-theorem methane_Z_tagged : methaneZ_t = carbonZ_t + scaleZ 4 hydrogenZ_t := rfl
--- CO₂ = C + 2O
-theorem CO2_Z_tagged : CO2Z_t = carbonZ_t + scaleZ 2 oxygenZ_t := rfl
--- CO = C + O
-theorem CO_Z_tagged : COZ_t = carbonZ_t + oxygenZ_t := rfl
--- O₂ = 2O
-theorem dioxygen_Z_tagged : dioxygenZ_t = scaleZ 2 oxygenZ_t := rfl
-
--- CO₂ triple symmetry (Z = N = e → deg = 3Z)
-theorem CO2_deg_triple : CO2Deg_t = ⟨3 * CO2Z_t.val⟩ := rfl
--- CO triple symmetry
-theorem CO_deg_triple : CODeg_t = ⟨3 * COZ_t.val⟩ := rfl
-
--- CH₄ + 2O₂ → CO₂ + 2H₂O
-theorem combustion_deg_conservation :
-    methaneDeg_t.val + 2 * dioxygenDeg_t.val =
-    CO2Deg_t.val + 2 * waterDeg_t.val := rfl
-
--- Dehydrogenation per H₂ = 4
-theorem dehydrogenation_deltaDeg_tagged : dehydrogenationDeltaDeg_t = ⟨4⟩ := rfl
-
--- Degree construction consistency
-theorem methane_deg_consistency :
-    mkDegree methaneZ_t C12N_t methaneZ_t = methaneDeg_t := rfl
-theorem CO2_deg_consistency :
-    mkDegree CO2Z_t ⟨22⟩ CO2Z_t = CO2Deg_t := rfl
-theorem CO_deg_consistency :
-    mkDegree COZ_t ⟨14⟩ COZ_t = CODeg_t := rfl
-theorem dioxygen_deg_consistency :
-    mkDegree dioxygenZ_t ⟨16⟩ dioxygenZ_t = dioxygenDeg_t := rfl
-
-end FUST.DiscreteTag

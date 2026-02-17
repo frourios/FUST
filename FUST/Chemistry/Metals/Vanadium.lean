@@ -12,7 +12,7 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Vanadium
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 
 /-! ## Section 1: Vanadium Parameters
@@ -31,13 +31,13 @@ abbrev vanadium_3d_electrons : ℕ := 3
 
 theorem vanadiumZ_shell_filling :
     arCoreElectrons +
-    Nuclear.Subshell.maxElectrons ⟨4, 0⟩ +  -- 4s: 2
+    Nuclear.subshellCapacity 0 +  -- 4s: 2
     vanadium_3d_electrons = vanadiumZ         -- 3d: 3 of 10
     := rfl
 
 -- 3d vacancy = 10 - 3 = 7
 theorem vanadium_3d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ - vanadium_3d_electrons = 7 := rfl
+    Nuclear.subshellCapacity 2 - vanadium_3d_electrons = 7 := rfl
 
 /-! ## Section 2: Vanadium Isotopes -/
 
@@ -63,14 +63,14 @@ noncomputable def vanadium51Atom (x : ℝ) : ℝ := atomStateFn 23 28 23 x
 theorem vanadium51Atom_eq (x : ℝ) :
     vanadium51Atom x = x ^ 23 * (1 + x) ^ 28 * (1 + ψ * x) ^ 23 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_vanadium51Ion : atomDegree 23 28 0 = 51 := rfl
-theorem degree_vanadium51Atom : atomDegree 23 28 23 = 74 := rfl
+theorem effDeg_vanadium51Ion : (dimAtom 23 28 0).effectiveDegree = 789 := by decide
+theorem effDeg_vanadium51Atom : (dimAtom 23 28 23).effectiveDegree = 835 := by decide
 
-theorem vanadium_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 23 N e > 2 := by
-  unfold atomDegree; omega
+theorem vanadium_effDeg_exceeds_kerD6 :
+    (dimAtom 23 28 0).effectiveDegree > 2 ∧
+    (dimAtom 23 28 23).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 
@@ -84,29 +84,8 @@ theorem vanadium_classification :
     Nuclear.nuclearMagic 2 + WaveEquation.spatialDim = vanadiumZ ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_V51) ∧
     neutrons_V51 = neutrons_Fe54 ∧
-    (∀ N e, atomDegree 23 N e > 2) := by
-  refine ⟨rfl, by decide, ⟨3, by omega, rfl⟩, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    (dimAtom 23 28 0).effectiveDegree > 2 ∧
+    (dimAtom 23 28 23).effectiveDegree > 2 := by
+  exact ⟨rfl, by decide, ⟨3, by omega, rfl⟩, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Vanadium
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Vanadium
-
-def vanadiumZ_t : DTagged .protonNum := ⟨vanadiumZ⟩
-def V51N_t : DTagged .neutronNum := ⟨neutrons_V51⟩
-
-def vanadiumDeg_t : DTagged .degree := mkDegree vanadiumZ_t V51N_t vanadiumZ_t
-
-theorem vanadiumZ_t_val : vanadiumZ_t.val = 23 := rfl
-theorem V51N_t_val : V51N_t.val = 28 := rfl
-theorem vanadiumDeg_t_val : vanadiumDeg_t.val = 74 := rfl
-
--- V-51 N is magic
-theorem V51N_is_magic : V51N_t.val = Nuclear.nuclearMagic 3 := rfl
-
--- Degree construction consistency
-theorem vanadium_deg_consistency :
-    mkDegree vanadiumZ_t V51N_t vanadiumZ_t = vanadiumDeg_t := rfl
-
-end FUST.DiscreteTag

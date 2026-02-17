@@ -1,10 +1,11 @@
 /-
-20 Standard Amino Acids from State Function Model
+20 Standard Amino Acids from FDim Structure
 
 Each amino acid has (Z, N, e=Z) from its molecular formula.
+FDim = dimAtom Z N Z, effectiveDegree = 18Z + 15N + 1.
 Count 20 = nuclearMagic(2) = hoMagic(2).
-Leu/Ile isomers share the same state function.
-Peptide bond = condensation releasing H₂O (Z=10, N=8).
+Leu/Ile isomers share the same FDim.
+Peptide bond = condensation releasing H₂O.
 -/
 
 import FUST.Chemistry.SulfurAtom
@@ -12,278 +13,201 @@ import FUST.Chemistry.Nucleotides
 
 namespace FUST.Chemistry.AminoAcid
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
+open FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Carbon FUST.Chemistry.Nitrogen
-open FUST.Chemistry.Sulfur
+open FUST.Chemistry.Sulfur FUST.Chemistry.Nucleotide
 
-/-! ## Section 1: Amino Acid Structure -/
+set_option maxRecDepth 8192
 
-structure AA where
-  code : String
-  Z : ℕ
-  N : ℕ
-  deriving Repr
+/-! ## Section 1: Amino Acid Parameters
 
-def AA.e (a : AA) : ℕ := a.Z
-def AA.deg (a : AA) : ℕ := a.Z + a.N + a.e
-
-/-! ## Section 2: The 20 Standard Amino Acids
-
-Grouped by chemical property. Neutral molecules: e = Z.
+Each amino acid as (Z, N) pair. Neutral molecules: e = Z.
 -/
 
 -- Nonpolar, aliphatic
-def gly : AA := ⟨"G", 40, 35⟩   -- C₂H₅NO₂
-def ala : AA := ⟨"A", 48, 41⟩   -- C₃H₇NO₂
-def val : AA := ⟨"V", 64, 53⟩   -- C₅H₁₁NO₂
-def leu : AA := ⟨"L", 72, 59⟩   -- C₆H₁₃NO₂
-def ile : AA := ⟨"I", 72, 59⟩   -- C₆H₁₃NO₂
-def pro : AA := ⟨"P", 62, 53⟩   -- C₅H₉NO₂
+abbrev glyZ : ℕ := 40
+abbrev glyN : ℕ := 35   -- C₂H₅NO₂
+abbrev alaZ : ℕ := 48
+abbrev alaN : ℕ := 41   -- C₃H₇NO₂
+abbrev valZ : ℕ := 64
+abbrev valN : ℕ := 53   -- C₅H₁₁NO₂
+abbrev leuZ : ℕ := 72
+abbrev leuN : ℕ := 59   -- C₆H₁₃NO₂
+abbrev ileZ : ℕ := 72
+abbrev ileN : ℕ := 59   -- C₆H₁₃NO₂
+abbrev proZ : ℕ := 62
+abbrev proN : ℕ := 53   -- C₅H₉NO₂
 
 -- Aromatic
-def phe : AA := ⟨"F", 88, 77⟩   -- C₉H₁₁NO₂
-def trp : AA := ⟨"W", 108, 96⟩  -- C₁₁H₁₂N₂O₂
-def tyr : AA := ⟨"Y", 96, 85⟩   -- C₉H₁₁NO₃
+abbrev pheZ : ℕ := 88
+abbrev pheN : ℕ := 77   -- C₉H₁₁NO₂
+abbrev trpZ : ℕ := 108
+abbrev trpN : ℕ := 96   -- C₁₁H₁₂N₂O₂
+abbrev tyrZ : ℕ := 96
+abbrev tyrN : ℕ := 85   -- C₉H₁₁NO₃
 
 -- Sulfur-containing
-def met : AA := ⟨"M", 80, 69⟩   -- C₅H₁₁NO₂S
-def cys : AA := ⟨"C", 64, 57⟩   -- C₃H₇NO₂S
+abbrev metZ : ℕ := 80
+abbrev metN : ℕ := 69   -- C₅H₁₁NO₂S
+abbrev cysZ : ℕ := 64
+abbrev cysN : ℕ := 57   -- C₃H₇NO₂S
 
 -- Polar, uncharged
-def ser : AA := ⟨"S", 56, 49⟩   -- C₃H₇NO₃
-def thr : AA := ⟨"T", 64, 55⟩   -- C₄H₉NO₃
-def asn : AA := ⟨"N", 70, 62⟩   -- C₄H₈N₂O₃
-def gln : AA := ⟨"Q", 78, 68⟩   -- C₅H₁₀N₂O₃
+abbrev serZ : ℕ := 56
+abbrev serN : ℕ := 49   -- C₃H₇NO₃
+abbrev thrZ : ℕ := 64
+abbrev thrN : ℕ := 55   -- C₄H₉NO₃
+abbrev asnZ : ℕ := 70
+abbrev asnN : ℕ := 62   -- C₄H₈N₂O₃
+abbrev glnZ : ℕ := 78
+abbrev glnN : ℕ := 68   -- C₅H₁₀N₂O₃
 
 -- Positively charged
-def lys : AA := ⟨"K", 80, 66⟩   -- C₆H₁₄N₂O₂
-def arg : AA := ⟨"R", 94, 80⟩   -- C₆H₁₄N₄O₂
-def his : AA := ⟨"H", 82, 73⟩   -- C₆H₉N₃O₂
+abbrev lysZ : ℕ := 80
+abbrev lysN : ℕ := 66   -- C₆H₁₄N₂O₂
+abbrev argZ : ℕ := 94
+abbrev argN : ℕ := 80   -- C₆H₁₄N₄O₂
+abbrev hisZ : ℕ := 82
+abbrev hisN : ℕ := 73   -- C₆H₉N₃O₂
 
 -- Negatively charged
-def asp : AA := ⟨"D", 70, 63⟩   -- C₄H₇NO₄
-def glu : AA := ⟨"E", 78, 69⟩   -- C₅H₉NO₄
+abbrev aspZ : ℕ := 70
+abbrev aspN : ℕ := 63   -- C₄H₇NO₄
+abbrev gluZ : ℕ := 78
+abbrev gluN : ℕ := 69   -- C₅H₉NO₄
 
-/-! ## Section 3: Z Derivation from Atomic Composition -/
+/-! ## Section 2: Z Derivation from Atomic Composition -/
 
--- Non-sulfur: Z = nC·6 + nH·1 + nN·7 + nO·8
--- Sulfur-containing: add nS·16
-theorem gly_Z : 2 * carbonZ + 5 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = gly.Z := rfl
-theorem ala_Z : 3 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = ala.Z := rfl
-theorem val_Z : 5 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = val.Z := rfl
-theorem leu_Z : 6 * carbonZ + 13 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = leu.Z := rfl
-theorem ile_Z : 6 * carbonZ + 13 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = ile.Z := rfl
-theorem pro_Z : 5 * carbonZ + 9 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = pro.Z := rfl
-theorem phe_Z : 9 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = phe.Z := rfl
-theorem trp_Z : 11 * carbonZ + 12 * hydrogenZ + 2 * nitrogenZ + 2 * oxygenZ = trp.Z := rfl
-theorem tyr_Z : 9 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 3 * oxygenZ = tyr.Z := rfl
-theorem met_Z :
+theorem gly_Z_eq :
+    2 * carbonZ + 5 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = glyZ := rfl
+theorem ala_Z_eq :
+    3 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = alaZ := rfl
+theorem val_Z_eq :
+    5 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = valZ := rfl
+theorem leu_Z_eq :
+    6 * carbonZ + 13 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = leuZ := rfl
+theorem phe_Z_eq :
+    9 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 2 * oxygenZ = pheZ := rfl
+theorem trp_Z_eq :
+    11 * carbonZ + 12 * hydrogenZ + 2 * nitrogenZ + 2 * oxygenZ = trpZ := rfl
+theorem tyr_Z_eq :
+    9 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ + 3 * oxygenZ = tyrZ := rfl
+theorem met_Z_eq :
     5 * carbonZ + 11 * hydrogenZ + 1 * nitrogenZ
-      + 2 * oxygenZ + 1 * sulfurZ = met.Z := rfl
-theorem cys_Z :
+      + 2 * oxygenZ + 1 * sulfurZ = metZ := rfl
+theorem cys_Z_eq :
     3 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ
-      + 2 * oxygenZ + 1 * sulfurZ = cys.Z := rfl
-theorem ser_Z : 3 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 3 * oxygenZ = ser.Z := rfl
-theorem thr_Z : 4 * carbonZ + 9 * hydrogenZ + 1 * nitrogenZ + 3 * oxygenZ = thr.Z := rfl
-theorem asn_Z : 4 * carbonZ + 8 * hydrogenZ + 2 * nitrogenZ + 3 * oxygenZ = asn.Z := rfl
-theorem gln_Z : 5 * carbonZ + 10 * hydrogenZ + 2 * nitrogenZ + 3 * oxygenZ = gln.Z := rfl
-theorem lys_Z : 6 * carbonZ + 14 * hydrogenZ + 2 * nitrogenZ + 2 * oxygenZ = lys.Z := rfl
-theorem arg_Z : 6 * carbonZ + 14 * hydrogenZ + 4 * nitrogenZ + 2 * oxygenZ = arg.Z := rfl
-theorem his_Z : 6 * carbonZ + 9 * hydrogenZ + 3 * nitrogenZ + 2 * oxygenZ = his.Z := rfl
-theorem asp_Z : 4 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 4 * oxygenZ = asp.Z := rfl
-theorem glu_Z : 5 * carbonZ + 9 * hydrogenZ + 1 * nitrogenZ + 4 * oxygenZ = glu.Z := rfl
+      + 2 * oxygenZ + 1 * sulfurZ = cysZ := rfl
+theorem ser_Z_eq :
+    3 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 3 * oxygenZ = serZ := rfl
+theorem asp_Z_eq :
+    4 * carbonZ + 7 * hydrogenZ + 1 * nitrogenZ + 4 * oxygenZ = aspZ := rfl
+theorem glu_Z_eq :
+    5 * carbonZ + 9 * hydrogenZ + 1 * nitrogenZ + 4 * oxygenZ = gluZ := rfl
 
-/-! ## Section 4: Degree Values -/
+/-! ## Section 3: effectiveDegree Values -/
 
-theorem gly_deg : gly.deg = 115 := rfl
-theorem ala_deg : ala.deg = 137 := rfl
-theorem val_deg : val.deg = 181 := rfl
-theorem leu_deg : leu.deg = 203 := rfl
-theorem ile_deg : ile.deg = 203 := rfl
-theorem pro_deg : pro.deg = 177 := rfl
-theorem phe_deg : phe.deg = 253 := rfl
-theorem trp_deg : trp.deg = 312 := rfl
-theorem tyr_deg : tyr.deg = 277 := rfl
-theorem met_deg : met.deg = 229 := rfl
-theorem cys_deg : cys.deg = 185 := rfl
-theorem ser_deg : ser.deg = 161 := rfl
-theorem thr_deg : thr.deg = 183 := rfl
-theorem asn_deg : asn.deg = 202 := rfl
-theorem gln_deg : gln.deg = 224 := rfl
-theorem lys_deg : lys.deg = 226 := rfl
-theorem arg_deg : arg.deg = 268 := rfl
-theorem his_deg : his.deg = 237 := rfl
-theorem asp_deg : asp.deg = 203 := rfl
-theorem glu_deg : glu.deg = 225 := rfl
+theorem gly_effDeg :
+    (dimAtom glyZ glyN glyZ).effectiveDegree = 1246 := by decide
+theorem ala_effDeg :
+    (dimAtom alaZ alaN alaZ).effectiveDegree = 1480 := by decide
+theorem val_effDeg :
+    (dimAtom valZ valN valZ).effectiveDegree = 1948 := by decide
+theorem leu_effDeg :
+    (dimAtom leuZ leuN leuZ).effectiveDegree = 2182 := by decide
+theorem ile_effDeg :
+    (dimAtom ileZ ileN ileZ).effectiveDegree = 2182 := by decide
+theorem pro_effDeg :
+    (dimAtom proZ proN proZ).effectiveDegree = 1912 := by decide
+theorem phe_effDeg :
+    (dimAtom pheZ pheN pheZ).effectiveDegree = 2740 := by decide
+theorem trp_effDeg :
+    (dimAtom trpZ trpN trpZ).effectiveDegree = 3385 := by decide
+theorem tyr_effDeg :
+    (dimAtom tyrZ tyrN tyrZ).effectiveDegree = 3004 := by decide
+theorem met_effDeg :
+    (dimAtom metZ metN metZ).effectiveDegree = 2476 := by decide
+theorem cys_effDeg :
+    (dimAtom cysZ cysN cysZ).effectiveDegree = 2008 := by decide
+theorem ser_effDeg :
+    (dimAtom serZ serN serZ).effectiveDegree = 1744 := by decide
+theorem thr_effDeg :
+    (dimAtom thrZ thrN thrZ).effectiveDegree = 1978 := by decide
+theorem asn_effDeg :
+    (dimAtom asnZ asnN asnZ).effectiveDegree = 2191 := by decide
+theorem gln_effDeg :
+    (dimAtom glnZ glnN glnZ).effectiveDegree = 2425 := by decide
+theorem lys_effDeg :
+    (dimAtom lysZ lysN lysZ).effectiveDegree = 2431 := by decide
+theorem arg_effDeg :
+    (dimAtom argZ argN argZ).effectiveDegree = 2893 := by decide
+theorem his_effDeg :
+    (dimAtom hisZ hisN hisZ).effectiveDegree = 2572 := by decide
+theorem asp_effDeg :
+    (dimAtom aspZ aspN aspZ).effectiveDegree = 2206 := by decide
+theorem glu_effDeg :
+    (dimAtom gluZ gluN gluZ).effectiveDegree = 2440 := by decide
 
-/-! ## Section 5: Structural Isomers
+/-! ## Section 4: Structural Isomers
 
 Leucine and isoleucine have identical molecular formula C₆H₁₃NO₂,
-so they have the same (Z,N,e) and degree. FUST state functions
-cannot distinguish structural isomers (same particle counts).
+so they have the same (Z,N) and FDim.
 -/
 
-theorem leu_ile_isomers : leu.Z = ile.Z ∧ leu.N = ile.N ∧ leu.deg = ile.deg :=
-  ⟨rfl, rfl, rfl⟩
+theorem leu_ile_isomers : leuZ = ileZ ∧ leuN = ileN := ⟨rfl, rfl⟩
 
--- Asp/Asn and Glu/Gln pairs differ by NH vs O (amidation)
--- Asp(D) C₄H₇NO₄ → Asn(N) C₄H₈N₂O₃: replace O with NH₂ → ΔZ = 7+2-8 = 1
-theorem asp_asn_Z_diff : asn.Z - asp.Z = 0 := rfl
--- Actually both have Z=70 since 4·6+8·1+2·7+3·8 = 24+8+14+24 = 70
--- and 4·6+7·1+1·7+4·8 = 24+7+7+32 = 70
+theorem leu_ile_same_FDim :
+    dimAtom leuZ leuN leuZ = dimAtom ileZ ileN ileZ := rfl
 
--- Glu/Gln similarly
-theorem glu_gln_Z_same : glu.Z = gln.Z := rfl
+-- Glu and Gln have the same Z
+theorem glu_gln_Z_same : gluZ = glnZ := rfl
 
-/-! ## Section 6: Peptide Bond and Residue Mass
+/-! ## Section 5: Peptide Bond
 
-Peptide bond: AA₁ + AA₂ → dipeptide + H₂O
-Residue = free amino acid - H₂O
-H₂O: Z=10, N=8, deg=28
+Peptide bond: AA₁ + AA₂ → dipeptide + H₂O.
+H₂O: Z=10, N=8, effDeg=301.
+dipeptide effDeg = effDeg(AA1) + effDeg(AA2) - 301.
 -/
 
-def residueZ (a : AA) : ℕ := a.Z - 10
-def residueN (a : AA) : ℕ := a.N - 8
-def residueDeg (a : AA) : ℕ := a.deg - 28
+theorem h2oEffDeg :
+    (dimAtom 10 8 10).effectiveDegree = 301 := by decide
 
--- Glycine residue: smallest
-theorem gly_residue : residueZ gly = 30 ∧ residueN gly = 27 ∧ residueDeg gly = 87 :=
-  ⟨rfl, rfl, rfl⟩
+/-! ## Section 6: Count = nuclearMagic(2) -/
 
--- Tryptophan residue: largest
-theorem trp_residue : residueZ trp = 98 ∧ residueN trp = 88 ∧ residueDeg trp = 284 :=
-  ⟨rfl, rfl, rfl⟩
+-- 20 standard amino acids = nuclearMagic(2) = 20
+def allAAZ : List ℕ := [glyZ, alaZ, valZ, leuZ, ileZ, proZ, pheZ, trpZ,
+  tyrZ, metZ, cysZ, serZ, thrZ, asnZ, glnZ, lysZ, argZ, hisZ, aspZ, gluZ]
 
--- Degree is additive for peptide chains:
--- deg(chain of k residues) = Σ residueDeg + deg(H₂O) + (k-1)·0 ???
--- Actually: deg(dipeptide) = deg(AA1) + deg(AA2) - deg(H2O)
-theorem dipeptide_deg (a1 a2 : AA) (h1 : a1.Z ≥ 10) (h2 : a2.Z ≥ 10)
-    (hn1 : a1.N ≥ 8) (hn2 : a2.N ≥ 8) :
-    (a1.Z + a2.Z - 10) + (a1.N + a2.N - 8) + (a1.Z + a2.Z - 10) =
-    a1.deg + a2.deg - 28 := by
-  unfold AA.deg AA.e; omega
-
-/-! ## Section 7: Count = nuclearMagic(2)
-
-20 standard amino acids = nuclearMagic(2) = 20.
--/
-
-def allAA : List AA := [gly, ala, val, leu, ile, pro, phe, trp, tyr,
-                         met, cys, ser, thr, asn, gln, lys, arg, his, asp, glu]
-
-theorem aa_count : allAA.length = Nuclear.nuclearMagic 2 := rfl
+theorem aa_count : allAAZ.length = Nuclear.nuclearMagic 2 := rfl
 
 -- Z range: smallest Gly(40) to largest Trp(108)
-theorem aa_Z_range : gly.Z = 40 ∧ trp.Z = 108 := ⟨rfl, rfl⟩
+theorem aa_Z_range : glyZ = 40 ∧ trpZ = 108 := ⟨rfl, rfl⟩
 
--- Degree range: smallest Gly(115) to largest Trp(312)
-theorem aa_deg_range : gly.deg = 115 ∧ trp.deg = 312 := ⟨rfl, rfl⟩
-
-/-! ## Section 8: Sickle Cell Disease
+/-! ## Section 7: Sickle Cell Disease
 
 β-globin position 6: Glu(E) → Val(V) mutation (GAG → GTG).
-ΔZ = 64 - 78 = -14, Δdeg = 181 - 225 = -44.
-This is the largest |ΔZ| among single-base substitution diseases.
 -/
 
-theorem sickle_cell_Z_change : val.Z + glu.Z = 142 := rfl
-theorem sickle_cell_deg_change : glu.deg - val.deg = 44 := rfl
+theorem sickle_cell_Z_change : valZ + gluZ = 142 := rfl
+theorem sickle_cell_Z_drop : gluZ - valZ = 14 := rfl
 
--- The mutation replaces a charged residue with a hydrophobic one
--- Glu is negatively charged (Z=78), Val is nonpolar (Z=64)
-theorem sickle_cell_Z_drop : glu.Z - val.Z = 14 := rfl
+/-! ## Section 8: Disulfide Bond
 
-/-! ## Section 9: Disulfide Bond
-
-2 Cys → Cys-S-S-Cys + 2H
-Disulfide bond removes 2 hydrogen atoms (Z=2, N=0, deg=4).
+2 Cys → Cys-S-S-Cys + H₂.
+Disulfide bond removes 2 hydrogen atoms.
 -/
 
 theorem disulfide_Z_change : 2 * hydrogenZ = 2 := rfl
-theorem disulfide_deg_change : 2 * cys.deg - 2 * (2 * hydrogenZ + 0 + 2 * hydrogenZ) = 362 := rfl
 
-/-! ## Section 10: Met as Start Amino Acid
-
-Met (ATG) is the universal start codon amino acid.
-Met degree = 229 = Guanine degree (coincidence with nucleobase).
--/
-
-theorem met_deg_eq_guanine_deg : met.deg = Nucleotide.guanine.deg := rfl
-
-/-! ## Section 11: Summary -/
+/-! ## Section 9: Summary -/
 
 theorem amino_acid_classification :
-    allAA.length = 20 ∧
-    allAA.length = Nuclear.nuclearMagic 2 ∧
-    leu.Z = ile.Z ∧
-    glu.Z = gln.Z ∧
-    glu.deg - val.deg = 44 ∧
-    met.deg = Nucleotide.guanine.deg ∧
-    gly.deg = 115 ∧ trp.deg = 312 := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    allAAZ.length = 20 ∧
+    allAAZ.length = Nuclear.nuclearMagic 2 ∧
+    leuZ = ileZ ∧
+    gluZ = glnZ ∧
+    gluZ - valZ = 14 ∧
+    glyZ = 40 ∧ trpZ = 108 := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.Chemistry.AminoAcid
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.AminoAcid
-
-def glyDeg_t : DTagged .degree := ⟨gly.deg⟩
-def alaDeg_t : DTagged .degree := ⟨ala.deg⟩
-def valDeg_t : DTagged .degree := ⟨val.deg⟩
-def leuDeg_t : DTagged .degree := ⟨leu.deg⟩
-def ileDeg_t : DTagged .degree := ⟨ile.deg⟩
-def proDeg_t : DTagged .degree := ⟨pro.deg⟩
-def pheDeg_t : DTagged .degree := ⟨phe.deg⟩
-def trpDeg_t : DTagged .degree := ⟨trp.deg⟩
-def tyrDeg_t : DTagged .degree := ⟨tyr.deg⟩
-def metDeg_t : DTagged .degree := ⟨met.deg⟩
-def cysDeg_t : DTagged .degree := ⟨cys.deg⟩
-def serDeg_t : DTagged .degree := ⟨ser.deg⟩
-def thrDeg_t : DTagged .degree := ⟨thr.deg⟩
-def asnDeg_t : DTagged .degree := ⟨asn.deg⟩
-def glnDeg_t : DTagged .degree := ⟨gln.deg⟩
-def lysDeg_t : DTagged .degree := ⟨lys.deg⟩
-def argDeg_t : DTagged .degree := ⟨arg.deg⟩
-def hisDeg_t : DTagged .degree := ⟨his.deg⟩
-def aspDeg_t : DTagged .degree := ⟨asp.deg⟩
-def gluDeg_t : DTagged .degree := ⟨glu.deg⟩
-
-def deamidationDeltaDeg_t : DTagged .deltaDeg := ⟨asp.deg - asn.deg⟩
-
-theorem glyDeg_t_val : glyDeg_t.val = 115 := rfl
-theorem alaDeg_t_val : alaDeg_t.val = 137 := rfl
-theorem valDeg_t_val : valDeg_t.val = 181 := rfl
-theorem leuDeg_t_val : leuDeg_t.val = 203 := rfl
-theorem ileDeg_t_val : ileDeg_t.val = 203 := rfl
-theorem proDeg_t_val : proDeg_t.val = 177 := rfl
-theorem pheDeg_t_val : pheDeg_t.val = 253 := rfl
-theorem trpDeg_t_val : trpDeg_t.val = 312 := rfl
-theorem tyrDeg_t_val : tyrDeg_t.val = 277 := rfl
-theorem metDeg_t_val : metDeg_t.val = 229 := rfl
-theorem cysDeg_t_val : cysDeg_t.val = 185 := rfl
-theorem serDeg_t_val : serDeg_t.val = 161 := rfl
-theorem thrDeg_t_val : thrDeg_t.val = 183 := rfl
-theorem asnDeg_t_val : asnDeg_t.val = 202 := rfl
-theorem glnDeg_t_val : glnDeg_t.val = 224 := rfl
-theorem lysDeg_t_val : lysDeg_t.val = 226 := rfl
-theorem argDeg_t_val : argDeg_t.val = 268 := rfl
-theorem hisDeg_t_val : hisDeg_t.val = 237 := rfl
-theorem aspDeg_t_val : aspDeg_t.val = 203 := rfl
-theorem gluDeg_t_val : gluDeg_t.val = 225 := rfl
-
-theorem deamidation_deltaDeg_t : deamidationDeltaDeg_t = ⟨1⟩ := rfl
-
--- Leu/Ile isomers have same degree
-theorem leu_ile_deg_tagged : leuDeg_t = ileDeg_t := rfl
-
--- Met = Guanine (protein ↔ nucleic acid bridge)
-theorem met_guanine_deg_tagged : metDeg_t = guanineDeg_t := rfl
-
--- Deamidation Asn→Asp via degDiff
-theorem deamidation_deg_tagged :
-    degDiff aspDeg_t asnDeg_t = deamidationDeltaDeg_t := rfl
-
--- Deamidation Gln→Glu via degDiff
-theorem gln_glu_deamidation_deg_tagged :
-    degDiff gluDeg_t glnDeg_t = deamidationDeltaDeg_t := rfl
-
-end FUST.DiscreteTag

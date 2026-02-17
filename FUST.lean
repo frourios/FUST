@@ -17,6 +17,7 @@ import FUST.Chemistry.Metals.Vanadium
 import FUST.Chemistry.Metals.Zirconium
 
 import FUST.Chemistry.AminoAcids
+import FUST.Chemistry.AtomDim
 import FUST.Chemistry.BondGeometry
 import FUST.Chemistry.CarbonIsotopes
 import FUST.Chemistry.CarbonMolecules
@@ -29,7 +30,6 @@ import FUST.Chemistry.Homochirality
 import FUST.Chemistry.HydrogenIsotopes
 import FUST.Chemistry.HydrogenOrbital
 import FUST.Chemistry.LaplaceDemon
-import FUST.Chemistry.MixturePhase
 import FUST.Chemistry.Mutation
 import FUST.Chemistry.NitrogenIsotopes
 import FUST.Chemistry.Nucleotides
@@ -100,6 +100,5 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
-import FUST.DiscreteTag
 import FUST.FrourioLogarithm
 import FUST.SpectralCoefficients

@@ -1,9 +1,10 @@
 /-
-Hydrogen Embrittlement from State Function Degree Theory
+Hydrogen Embrittlement from FDim Theory
 
-Each interstitial hydrogen atom increases degree by 2 = spinDegeneracy.
-Fe-56 neutral atom sits at deg = 82 = nuclearMagic(5), a degree-theoretic
-magic stability point. Any absorbed hydrogen breaks this magic alignment,
+Each interstitial hydrogen atom adds ΔZ=1, ΔN=0, Δe=1 to the metal,
+increasing the particle count by 2 = spinDegeneracy.
+Fe-56 neutral atom particle count = 82 = nuclearMagic(5), a magic
+stability point. Any absorbed hydrogen breaks this magic alignment,
 providing a degree-based explanation for iron's vulnerability to HE.
 
 d-shell vacancy governs HE susceptibility:
@@ -19,59 +20,58 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.HydrogenEmbrittlement
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Iron FUST.Chemistry.Nickel
 open FUST.Chemistry.Titanium FUST.Chemistry.Aluminum
 open FUST.Chemistry.Copper FUST.Chemistry.Chromium
 
-/-! ## Section 1: Interstitial Hydrogen Degree Increase
+/-! ## Section 1: Interstitial Hydrogen Effect
 
 Each neutral protium atom absorbed interstitially adds ΔZ=1, ΔN=0, Δe=1
-to the metal atom, giving Δdeg = 2 = spinDegeneracy.
+to the metal atom, giving Δ(particle count) = 2 = spinDegeneracy.
+effectiveDegree increases by 18 per interstitial H.
 -/
 
--- General: each interstitial H adds 2 to neutral atom degree
-theorem interstitial_H_deltaDeg (Z N : ℕ) :
-    atomDegree (Z + 1) N (Z + 1) = atomDegree Z N Z + 2 := by
-  unfold atomDegree; omega
+-- Each interstitial H adds 2 to particle count
+theorem interstitial_H_particleCount (Z N : ℕ) :
+    (Z + 1) + N + (Z + 1) = (Z + N + Z) + 2 := by omega
 
--- n interstitial H atoms add 2n
-theorem interstitial_nH_deltaDeg (Z N n : ℕ) :
-    atomDegree (Z + n) N (Z + n) = atomDegree Z N Z + 2 * n := by
-  unfold atomDegree; omega
+-- n interstitial H atoms add 2n to particle count
+theorem interstitial_nH_particleCount (Z N n : ℕ) :
+    (Z + n) + N + (Z + n) = (Z + N + Z) + 2 * n := by omega
 
--- Δdeg per H = spinDegeneracy
-theorem interstitial_H_deltaDeg_eq_spinDeg :
+-- Δ(particle count) per H = spinDegeneracy
+theorem interstitial_H_delta_eq_spinDeg :
     2 = Nuclear.spinDegeneracy := rfl
 
-/-! ## Section 2: Iron — Magic Degree Destruction
+/-! ## Section 2: Iron — Magic Particle Count Destruction
 
-Fe-56 neutral atom has deg = 82 = nuclearMagic(5).
-This is a unique degree-theoretic stability point among transition metals.
+Fe-56 neutral atom has particle count = 82 = nuclearMagic(5).
+This is a unique stability point among transition metals.
 Interstitial hydrogen destroys this magic alignment.
 -/
 
--- Fe-56 sits at a magic degree
-theorem iron56_at_magic_degree :
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 := rfl
+-- Fe-56 sits at a magic particle count
+theorem iron56_at_magic_particleCount :
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 := rfl
 
--- Any interstitial H moves Fe past the magic degree
+-- Any interstitial H moves Fe past the magic particle count
 theorem iron_hydride_exceeds_magic (n : ℕ) (hn : n > 0) :
-    atomDegree (ironZ + n) neutrons_Fe56 (ironZ + n) > Nuclear.nuclearMagic 5 := by
+    (ironZ + n) + neutrons_Fe56 + (ironZ + n) > Nuclear.nuclearMagic 5 := by
   have : Nuclear.nuclearMagic 5 = 82 := by decide
-  rw [this]; unfold atomDegree neutrons_Fe56 Iron.neutrons ironZ; omega
+  rw [this]; unfold neutrons_Fe56 Iron.neutrons ironZ; omega
 
--- Fe + nH degree values
-theorem iron_hydride_deg_1H :
-    atomDegree (ironZ + 1) neutrons_Fe56 (ironZ + 1) = 84 := rfl
-theorem iron_hydride_deg_2H :
-    atomDegree (ironZ + 2) neutrons_Fe56 (ironZ + 2) = 86 := rfl
+-- Fe + nH effectiveDegree values
+theorem iron_hydride_effDeg_1H :
+    (dimAtom (ironZ + 1) neutrons_Fe56 (ironZ + 1)).effectiveDegree = 937 := by decide
+theorem iron_hydride_effDeg_2H :
+    (dimAtom (ironZ + 2) neutrons_Fe56 (ironZ + 2)).effectiveDegree = 955 := by decide
 
--- Fe + 2H degree = Ni-58 degree (iron with 2 interstitial H ≈ nickel)
-theorem iron_2H_deg_eq_nickel :
-    atomDegree (ironZ + 2) neutrons_Fe56 (ironZ + 2) =
-    atomDegree nickelZ neutrons_Ni58 nickelZ := rfl
+-- Fe + 2H effectiveDegree = Ni-58 effectiveDegree
+theorem iron_2H_effDeg_eq_nickel :
+    (dimAtom (ironZ + 2) neutrons_Fe56 (ironZ + 2)).effectiveDegree =
+    (dimAtom nickelZ neutrons_Ni58 nickelZ).effectiveDegree := by decide
 
 /-! ## Section 3: d-Shell Vacancy Classification
 
@@ -80,7 +80,7 @@ Higher vacancy → more available orbitals → greater HE susceptibility.
 -/
 
 -- 3d max capacity = 10
-abbrev d3_max : ℕ := Nuclear.Subshell.maxElectrons ⟨3, 2⟩
+abbrev d3_max : ℕ := Nuclear.subshellCapacity 2
 
 -- Vacancy = max - occupied
 abbrev titanium_3d_vacancy : ℕ := d3_max - titanium_3d_electrons
@@ -107,7 +107,7 @@ theorem d_vacancy_ordering :
 
 -- Al has no d-electrons (p-block metal)
 theorem aluminum_no_d_electrons :
-    aluminumZ < arCoreElectrons + Nuclear.Subshell.maxElectrons ⟨4, 0⟩ := by decide
+    aluminumZ < arCoreElectrons + Nuclear.subshellCapacity 0 := by decide
 
 /-! ## Section 4: Iron-Nickel Alloy Stability
 
@@ -122,10 +122,10 @@ theorem iron_nickel_neutron_identity :
 theorem iron_nickel_Z_diff :
     nickelZ - ironZ = Nuclear.spinDegeneracy := rfl
 
--- Iron-nickel degree gap = 2 × (Z_Ni - Z_Fe) = 4
-theorem iron_nickel_deg_gap :
-    atomDegree nickelZ neutrons_Ni58 nickelZ -
-    atomDegree ironZ neutrons_Fe56 ironZ = 4 := rfl
+-- Iron-nickel effectiveDegree gap
+theorem iron_nickel_effDeg_gap :
+    (dimAtom nickelZ neutrons_Ni58 nickelZ).effectiveDegree -
+    (dimAtom ironZ neutrons_Fe56 ironZ).effectiveDegree = 36 := by decide
 
 /-! ## Section 5: Chromium Passivation
 
@@ -139,33 +139,33 @@ theorem chromium_magic_neutron :
 
 -- Cr has half-filled d-shell (5 = 10/2)
 theorem chromium_half_filled_d :
-    chromium_3d_electrons = Nuclear.Subshell.maxElectrons ⟨3, 2⟩ / 2 := rfl
+    chromium_3d_electrons = Nuclear.subshellCapacity 2 / 2 := rfl
 
 -- Fe-Cr: Cr brings magic-N stability to Fe alloy
 theorem stainless_steel_magic :
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_Cr52) ∧
-    Nuclear.Subshell.maxElectrons ⟨3, 2⟩ / 2 = chromium_3d_electrons :=
+    Nuclear.subshellCapacity 2 / 2 = chromium_3d_electrons :=
   ⟨⟨3, by omega, rfl⟩, rfl⟩
 
-/-! ## Section 6: Degree-Magic Alignment Across Metals
+/-! ## Section 6: Magic Alignment Across Metals
 
-Transition metals with degrees near magic/hoMagic numbers
+Transition metals with particle counts near magic/hoMagic numbers
 show enhanced nuclear binding stability.
 -/
 
--- Ti-48 degree = hoMagic(4) = 70
-theorem titanium_magic_deg :
-    atomDegree titaniumZ neutrons_Ti48 titaniumZ = Nuclear.hoMagic 4 := rfl
+-- Ti-48 particle count = hoMagic(4) = 70
+theorem titanium_magic_particleCount :
+    titaniumZ + neutrons_Ti48 + titaniumZ = Nuclear.hoMagic 4 := rfl
 
--- Fe-56 degree = nuclearMagic(5) = 82
-theorem iron_magic_deg :
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 := rfl
+-- Fe-56 particle count = nuclearMagic(5) = 82
+theorem iron_magic_particleCount :
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 := rfl
 
--- Only Fe-56 among these metals has deg equal to a nuclearMagic number
-theorem iron_unique_magic_deg :
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 ∧
-    atomDegree nickelZ neutrons_Ni58 nickelZ ≠ Nuclear.nuclearMagic 5 ∧
-    atomDegree copperZ neutrons_Cu63 copperZ ≠ Nuclear.nuclearMagic 5 := by
+-- Only Fe-56 among these metals has particle count equal to a nuclearMagic number
+theorem iron_unique_magic_particleCount :
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 ∧
+    nickelZ + neutrons_Ni58 + nickelZ ≠ Nuclear.nuclearMagic 5 ∧
+    copperZ + neutrons_Cu63 + copperZ ≠ Nuclear.nuclearMagic 5 := by
   constructor
   · rfl
   constructor <;> decide
@@ -176,25 +176,20 @@ theorem titanium_iron_identity :
 
 /-! ## Section 7: Dihydrogen Dissociation at Metal Surface
 
-H₂ → 2H at metal surface: degree-conserving dissociation.
-H₂ deg = 4, each H atom deg = 2, total conserved.
-On metal: each H adds Δdeg = 2 to the metal coordination sphere.
+H₂ → 2H at metal surface: each H adds 18 to the metal's effectiveDegree.
 -/
 
--- H₂ degree = 2 × single H atom degree
-theorem dihydrogen_deg_split :
-    atomDegree 2 0 2 = 2 * atomDegree 1 0 1 := rfl
-
--- H₂ dissociation on Fe: net Δdeg = 2·spinDegeneracy = 4
-theorem iron_H2_absorption_deltaDeg :
-    atomDegree (ironZ + 2) neutrons_Fe56 (ironZ + 2) -
-    atomDegree ironZ neutrons_Fe56 ironZ = 2 * Nuclear.spinDegeneracy := rfl
+-- H₂ dissociation on Fe: net Δ(effectiveDegree) = 36
+theorem iron_H2_absorption_effDeg :
+    (dimAtom (ironZ + 2) neutrons_Fe56 (ironZ + 2)).effectiveDegree -
+    (dimAtom ironZ neutrons_Fe56 ironZ).effectiveDegree = 36 := by decide
 
 /-! ## Section 8: Summary -/
 
+set_option maxRecDepth 4096 in
 theorem hydrogen_embrittlement_classification :
-    -- Fe-56 at magic degree
-    atomDegree ironZ neutrons_Fe56 ironZ = Nuclear.nuclearMagic 5 ∧
+    -- Fe-56 at magic particle count
+    ironZ + neutrons_Fe56 + ironZ = Nuclear.nuclearMagic 5 ∧
     -- d-vacancy ordering: Ti(8) > Fe(4) > Ni(2) > Cu(0)
     titanium_3d_vacancy > iron_3d_vac ∧
     iron_3d_vac > nickel_3d_vac ∧
@@ -202,56 +197,10 @@ theorem hydrogen_embrittlement_classification :
     copper_3d_vac = 0 ∧
     -- Fe-Ni neutron identity
     neutrons_Fe56 = neutrons_Ni58 ∧
-    -- Ti-48 at hoMagic degree
-    atomDegree titaniumZ neutrons_Ti48 titaniumZ = Nuclear.hoMagic 4 ∧
+    -- Ti-48 at hoMagic particle count
+    titaniumZ + neutrons_Ti48 + titaniumZ = Nuclear.hoMagic 4 ∧
     -- Cr-52 magic N
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_Cr52) := by
   exact ⟨rfl, by decide, by decide, by decide, rfl, rfl, rfl, 3, by omega, rfl⟩
 
 end FUST.Chemistry.HydrogenEmbrittlement
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Iron FUST.Chemistry.Nickel
-open FUST.Chemistry.HydrogenEmbrittlement
-
--- Interstitial H Δdeg = spinDeg
-theorem interstitial_H_deltaDeg_eq_spinDeg_tagged :
-    (⟨2⟩ : DTagged .deltaDeg).val = spinDeg_t.val := rfl
-
--- Fe-56 magic degree
-theorem iron56_magic_deg_tagged :
-    ironDeg_t.val = Nuclear.nuclearMagic 5 := rfl
-
--- Fe + 1H degree
-def ironH1Deg_t : DTagged .degree :=
-  mkDegree (ironZ_t + hydrogenZ_t) Fe56N_t (ironZ_t + hydrogenZ_t)
-
-theorem ironH1Deg_t_val : ironH1Deg_t.val = 84 := rfl
-
--- Fe + 2H degree = Ni degree
-theorem iron_2H_eq_nickel_deg :
-    (mkDegree (ironZ_t + scaleZ 2 hydrogenZ_t) Fe56N_t
-              (ironZ_t + scaleZ 2 hydrogenZ_t)).val = nickelDeg_t.val := rfl
-
--- d-vacancy as count
-def titaniumDVacancy_t : DTagged .count := ⟨8⟩
-def chromiumDVacancy_t : DTagged .count := ⟨5⟩
-def ironDVacancy_t : DTagged .count := ⟨4⟩
-def nickelDVacancy_t : DTagged .count := ⟨2⟩
-def copperDVacancy_t : DTagged .count := ⟨0⟩
-
-theorem titaniumDVacancy_t_val : titaniumDVacancy_t.val = 8 := rfl
-theorem chromiumDVacancy_t_val : chromiumDVacancy_t.val = 5 := rfl
-theorem ironDVacancy_t_val : ironDVacancy_t.val = 4 := rfl
-theorem nickelDVacancy_t_val : nickelDVacancy_t.val = 2 := rfl
-theorem copperDVacancy_t_val : copperDVacancy_t.val = 0 := rfl
-
--- Fe d-vacancy = baseCount (4)
-theorem iron_dVacancy_eq_baseCount :
-    ironDVacancy_t = baseCount_t := rfl
-
--- Ni d-vacancy = spinDeg (both = 2)
-theorem nickel_dVacancy_eq_spinDeg :
-    nickelDVacancy_t = kerToCount spinDeg_t := rfl
-
-end FUST.DiscreteTag

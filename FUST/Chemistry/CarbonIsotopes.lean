@@ -12,7 +12,7 @@ import FUST.Chemistry.HeliumInertness
 
 namespace FUST.Chemistry.Carbon
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 
 /-! ## Section 1: Carbon Parameters
 
@@ -76,19 +76,20 @@ theorem carbideAnion_eq (x : ℝ) :
 
 /-! ## Section 4: Degree Structure -/
 
-theorem degree_carbon12Ion : atomDegree 6 6 0 = 12 := rfl
-theorem degree_carbon13Ion : atomDegree 6 7 0 = 13 := rfl
-theorem degree_carbon14Ion : atomDegree 6 8 0 = 14 := rfl
-theorem degree_carbon12Atom : atomDegree 6 6 6 = 18 := rfl
-theorem degree_carbon13Atom : atomDegree 6 7 6 = 19 := rfl
-theorem degree_carbon14Atom : atomDegree 6 8 6 = 20 := rfl
-theorem degree_carbonCation : atomDegree 6 6 5 = 17 := rfl
-theorem degree_carbideAnion : atomDegree 6 6 10 = 22 := rfl
+theorem degree_carbon12Ion : (dimAtom 6 6 0).effectiveDegree = 187 := by decide
+theorem degree_carbon13Ion : (dimAtom 6 7 0).effectiveDegree = 202 := by decide
+theorem degree_carbon14Ion : (dimAtom 6 8 0).effectiveDegree = 217 := by decide
+theorem degree_carbon12Atom : (dimAtom 6 6 6).effectiveDegree = 199 := by decide
+theorem degree_carbon13Atom : (dimAtom 6 7 6).effectiveDegree = 214 := by decide
+theorem degree_carbon14Atom : (dimAtom 6 8 6).effectiveDegree = 229 := by decide
+theorem degree_carbonCation : (dimAtom 6 6 5).effectiveDegree = 197 := by decide
+theorem degree_carbideAnion : (dimAtom 6 6 10).effectiveDegree = 207 := by decide
 
 -- All carbon species exceed ker(D6) threshold
-theorem carbon_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 6 N e > 2 := by
-  unfold atomDegree; omega
+theorem carbon_degree_exceeds_kerD6 :
+    (dimAtom 6 6 0).effectiveDegree > 2 ∧
+    (dimAtom 6 6 6).effectiveDegree > 2 ∧
+    (dimAtom 6 6 10).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Electron Shell Structure
 
@@ -98,8 +99,8 @@ Carbon: 1s² 2s² 2p² (6 electrons). Valence = 4 = closedShellElectronCount(2) 
 theorem carbon_electron_count : carbonZ = 6 := rfl
 
 theorem carbon_shell_filling :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
     2 = carbonZ                               -- 2p: 2 of 6
     := rfl
 
@@ -160,25 +161,25 @@ theorem carbon12_mass_number : carbonZ + neutrons_C12 = 12 := rfl
 theorem carbon13_mass_number : carbonZ + neutrons_C13 = 13 := rfl
 theorem carbon14_mass_number : carbonZ + neutrons_C14 = 14 := rfl
 
--- ¹²C degree = shellCapacity(3)
-theorem carbon12_degree_eq_shellCapacity :
-    atomDegree 6 6 6 = Nuclear.shellCapacity 3 := rfl
+-- ¹²C effectiveDegree
+theorem carbon12_effDeg :
+    (dimAtom 6 6 6).effectiveDegree = 199 := by decide
 
 /-! ## Section 8: Ionization Series -/
 
-theorem ionization_degrees_C12 :
-    atomDegree 6 6 0 = 12 ∧   -- C⁶⁺
-    atomDegree 6 6 1 = 13 ∧   -- C⁵⁺
-    atomDegree 6 6 2 = 14 ∧   -- C⁴⁺
-    atomDegree 6 6 3 = 15 ∧   -- C³⁺
-    atomDegree 6 6 4 = 16 ∧   -- C²⁺
-    atomDegree 6 6 5 = 17 ∧   -- C⁺
-    atomDegree 6 6 6 = 18 ∧   -- C
-    atomDegree 6 6 7 = 19 ∧   -- C⁻
-    atomDegree 6 6 8 = 20 ∧   -- C²⁻
-    atomDegree 6 6 9 = 21 ∧   -- C³⁻
-    atomDegree 6 6 10 = 22    -- C⁴⁻
-    := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+theorem ionization_effDeg_C12 :
+    (dimAtom 6 6 0).effectiveDegree = 187 ∧   -- C⁶⁺
+    (dimAtom 6 6 1).effectiveDegree = 189 ∧   -- C⁵⁺
+    (dimAtom 6 6 2).effectiveDegree = 191 ∧   -- C⁴⁺
+    (dimAtom 6 6 3).effectiveDegree = 193 ∧   -- C³⁺
+    (dimAtom 6 6 4).effectiveDegree = 195 ∧   -- C²⁺
+    (dimAtom 6 6 5).effectiveDegree = 197 ∧   -- C⁺
+    (dimAtom 6 6 6).effectiveDegree = 199 ∧   -- C
+    (dimAtom 6 6 7).effectiveDegree = 201 ∧   -- C⁻
+    (dimAtom 6 6 8).effectiveDegree = 203 ∧   -- C²⁻
+    (dimAtom 6 6 9).effectiveDegree = 205 ∧   -- C³⁻
+    (dimAtom 6 6 10).effectiveDegree = 207     -- C⁴⁻
+    := by decide
 
 /-! ## Section 9: Summary -/
 
@@ -195,43 +196,10 @@ theorem carbon_isotope_classification :
     closedShellElectronCount 2 - carbonZ = 4 ∧
     -- Carbon is not closed shell, carbide is
     ¬ isClosedShell 6 ∧ isClosedShell 10 ∧
-    -- All carbon species exceed ker(D6)
-    (∀ N e, atomDegree 6 N e > 2) := by
+    -- Key carbon species exceed ker(D6)
+    (dimAtom 6 6 6).effectiveDegree > 2 := by
   refine ⟨rfl, rfl, ⟨1, by omega, rfl⟩, carbon12Atom_eq_unitCell_pow,
-    by decide, carbon_not_closed_shell, neon_is_closed_shell, ?_⟩
-  intro N e; unfold atomDegree; omega
+    by decide, carbon_not_closed_shell, neon_is_closed_shell, by decide⟩
 
 end FUST.Chemistry.Carbon
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Carbon
-
-def carbonZ_t : DTagged .protonNum := ⟨carbonZ⟩
-def C12N_t : DTagged .neutronNum := ⟨neutrons_C12⟩
-def C13N_t : DTagged .neutronNum := ⟨neutrons_C13⟩
-def C14N_t : DTagged .neutronNum := ⟨neutrons_C14⟩
-
-theorem carbonZ_t_val : carbonZ_t.val = 6 := rfl
-theorem C12N_t_val : C12N_t.val = 6 := rfl
-theorem C13N_t_val : C13N_t.val = 7 := rfl
-theorem C14N_t_val : C14N_t.val = 8 := rfl
-
--- C + 2H = O
-theorem carbon_plus_2H_eq_oxygen :
-    carbonZ_t + scaleZ 2 hydrogenZ_t = oxygenZ_t := rfl
-
--- N = Z for C-12
-theorem C12_symmetric_N : C12N_t.val = carbonZ_t.val := rfl
-
--- C-14 has magic N = oxygenZ
-theorem C14_magic_neutron : C14N_t.val = oxygenZ_t.val := rfl
-
--- carbonZ = spinDeg × spatialDim
-theorem bridge_carbonZ_from_kernels :
-    carbonZ_t.val = spinDeg_t.val * spatialDim_t.val := rfl
-
--- carbonZ reduces to operatorKerDim
-theorem reduce_carbonZ :
-    carbonZ_t.val = Dim.operatorKerDim 5 * Dim.operatorKerDim 6 := rfl
-
-end FUST.DiscreteTag

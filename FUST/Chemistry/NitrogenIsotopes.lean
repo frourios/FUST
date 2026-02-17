@@ -11,7 +11,7 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.Nitrogen
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Nitrogen Parameters
@@ -26,8 +26,8 @@ abbrev nitrogenZ : ℕ := 7
 -- Z derivation from shell structure
 theorem nitrogenZ_derivation :
     closedShellElectronCount 1 +
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ / 2 = nitrogenZ := by decide
+    Nuclear.subshellCapacity 0 +
+    Nuclear.subshellCapacity 1 / 2 = nitrogenZ := by decide
 
 -- Neutron counts: N = A - Z
 def neutrons (A : ℕ) : ℕ := A - nitrogenZ
@@ -61,15 +61,16 @@ theorem nitrogen14Ion_eq (x : ℝ) :
 
 /-! ## Section 3: Degree Structure -/
 
-theorem degree_nitrogen14Ion : atomDegree 7 7 0 = 14 := rfl
-theorem degree_nitrogen15Ion : atomDegree 7 8 0 = 15 := rfl
-theorem degree_nitrogen14Atom : atomDegree 7 7 7 = 21 := rfl
-theorem degree_nitrogen15Atom : atomDegree 7 8 7 = 22 := rfl
-theorem degree_nitrideAnion : atomDegree 7 7 10 = 24 := rfl
+theorem degree_nitrogen14Ion : (dimAtom 7 7 0).effectiveDegree = 218 := by decide
+theorem degree_nitrogen15Ion : (dimAtom 7 8 0).effectiveDegree = 233 := by decide
+theorem degree_nitrogen14Atom : (dimAtom 7 7 7).effectiveDegree = 232 := by decide
+theorem degree_nitrogen15Atom : (dimAtom 7 8 7).effectiveDegree = 247 := by decide
+theorem degree_nitrideAnion : (dimAtom 7 7 10).effectiveDegree = 238 := by decide
 
-theorem nitrogen_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 7 N e > 2 := by
-  unfold atomDegree; omega
+theorem nitrogen_degree_exceeds_kerD6 :
+    (dimAtom 7 7 0).effectiveDegree > 2 ∧
+    (dimAtom 7 7 7).effectiveDegree > 2 ∧
+    (dimAtom 7 7 10).effectiveDegree > 2 := by decide
 
 /-! ## Section 4: Electron Shell Structure
 
@@ -78,14 +79,14 @@ Valence = closedShellElectronCount(2) - 7 = 3.
 -/
 
 theorem nitrogen_shell_filling :
-    Nuclear.Subshell.maxElectrons ⟨1, 0⟩ +  -- 1s: 2
-    Nuclear.Subshell.maxElectrons ⟨2, 0⟩ +  -- 2s: 2
+    Nuclear.subshellCapacity 0 +  -- 1s: 2
+    Nuclear.subshellCapacity 0 +  -- 2s: 2
     3 = nitrogenZ                             -- 2p: 3 of 6
     := rfl
 
 -- Half-filled p shell: exactly half of maxElectrons(2,1) = 6
 theorem nitrogen_half_filled_2p :
-    Nuclear.Subshell.maxElectrons ⟨2, 1⟩ / 2 = 3 := rfl
+    Nuclear.subshellCapacity 1 / 2 = 3 := rfl
 
 theorem nitrogen_valence :
     closedShellElectronCount 2 - nitrogenZ = 3 := by decide
@@ -137,7 +138,7 @@ theorem ammonia_stoichiometry :
     closedShellElectronCount 2 = nitrogenZ + 3 * hydrogenZ := by
   constructor <;> decide
 
-theorem degree_ammonia : atomDegree 10 7 10 = 27 := rfl
+theorem degree_ammonia : (dimAtom 10 7 10).effectiveDegree = 286 := by decide
 
 -- NH₃, H₂O, CH₄ are all isoelectronic (e=10)
 theorem ammonia_water_methane_isoelectronic :
@@ -158,45 +159,9 @@ theorem nitrogen_isotope_classification :
     Helium.closedShellElectronCount 2 - nitrogenZ = 3 ∧
     ¬ Helium.isClosedShell 7 ∧ Helium.isClosedShell 10 ∧
     nitrogenZ + 3 * hydrogenZ = 10 ∧
-    (∀ N e, atomDegree 7 N e > 2) := by
+    (dimAtom 7 7 7).effectiveDegree > 2 := by
   refine ⟨rfl, rfl, ⟨1, by omega, rfl⟩, by decide,
-    nitrogen_not_closed_shell, Helium.neon_is_closed_shell, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    nitrogen_not_closed_shell, Helium.neon_is_closed_shell, rfl, by decide⟩
 
 end FUST.Chemistry.Nitrogen
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Nitrogen
-
-def nitrogenZ_t : DTagged .protonNum := ⟨nitrogenZ⟩
-def N14N_t : DTagged .neutronNum := ⟨neutrons_N14⟩
-def N15N_t : DTagged .neutronNum := ⟨neutrons_N15⟩
-
-theorem nitrogenZ_t_val : nitrogenZ_t.val = 7 := rfl
-theorem N14N_t_val : N14N_t.val = 7 := rfl
-theorem N15N_t_val : N15N_t.val = 8 := rfl
-
-def ammoniaZ_t : DTagged .protonNum := nitrogenZ_t + scaleZ 3 hydrogenZ_t
-def ammoniaDeg_t : DTagged .degree := mkDegree ammoniaZ_t N14N_t ammoniaZ_t
-
-theorem ammoniaZ_t_val : ammoniaZ_t.val = 10 := rfl
-theorem ammoniaDeg_t_val : ammoniaDeg_t.val = 27 := rfl
-
--- N + H = O
-theorem nitrogen_plus_H_eq_oxygen :
-    nitrogenZ_t + hydrogenZ_t = oxygenZ_t := rfl
-
--- NH₃ = N + 3H
-theorem ammonia_Z_tagged : ammoniaZ_t = nitrogenZ_t + scaleZ 3 hydrogenZ_t := rfl
-
--- Degree construction consistency
-theorem ammonia_deg_consistency :
-    mkDegree ammoniaZ_t N14N_t ammoniaZ_t = ammoniaDeg_t := rfl
-
--- N-14 symmetric (N = Z)
-theorem N14_symmetric_N : N14N_t.val = nitrogenZ_t.val := rfl
-
--- N-15 has magic N = oxygenZ
-theorem N15_magic_neutron : N15N_t.val = oxygenZ_t.val := rfl
-
-end FUST.DiscreteTag

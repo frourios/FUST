@@ -15,7 +15,7 @@ import FUST.FrourioLogarithm
 
 namespace FUST.Chemistry.Homochirality
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
+open FUST FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode
 open FUST.FrourioLogarithm
 
@@ -249,15 +249,3 @@ theorem homochirality_classification :
 
 end FUST.Chemistry.Homochirality
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Homochirality FUST.Chemistry.Nucleotide
-
--- Chiral center substituents = baseCount
-theorem chiral_center_is_baseCount :
-    (⟨baseCount⟩ : DTagged .count) = baseCount_t := rfl
-
--- Nucleic acid sugar types = spinDeg
-theorem sugar_types_is_spinDeg :
-    (⟨nucleicAcidSugarTypes⟩ : DTagged .count) = kerToCount spinDeg_t := rfl
-
-end FUST.DiscreteTag

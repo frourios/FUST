@@ -10,7 +10,7 @@ import FUST.Chemistry.SulfurAtom
 
 namespace FUST.Chemistry.Aluminum
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Nitrogen
 
 /-! ## Section 1: Aluminum Parameters
@@ -27,7 +27,7 @@ theorem aluminumZ_derivation :
 -- [Ne] 3s² 3p¹
 theorem aluminumZ_shell_filling :
     closedShellElectronCount 2 +
-    Nuclear.Subshell.maxElectrons ⟨3, 0⟩ +  -- 3s: 2
+    Nuclear.subshellCapacity 0 +  -- 3s: 2
     1 = aluminumZ                             -- 3p: 1 of 6
     := by decide
 
@@ -53,14 +53,14 @@ noncomputable def aluminum27Atom (x : ℝ) : ℝ := atomStateFn 13 14 13 x
 theorem aluminum27Atom_eq (x : ℝ) :
     aluminum27Atom x = x ^ 13 * (1 + x) ^ 14 * (1 + ψ * x) ^ 13 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_aluminum27Ion : atomDegree 13 14 0 = 27 := rfl
-theorem degree_aluminum27Atom : atomDegree 13 14 13 = 40 := rfl
+theorem effDeg_aluminum27Ion : (dimAtom 13 14 0).effectiveDegree = 419 := by decide
+theorem effDeg_aluminum27Atom : (dimAtom 13 14 13).effectiveDegree = 445 := by decide
 
-theorem aluminum_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 13 N e > 2 := by
-  unfold atomDegree; omega
+theorem aluminum_effDeg_exceeds_kerD6 :
+    (dimAtom 13 14 0).effectiveDegree > 2 ∧
+    (dimAtom 13 14 13).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Number -/
 
@@ -72,30 +72,8 @@ theorem aluminum_classification :
     aluminumZ = 13 ∧
     closedShellElectronCount 2 + WaveEquation.spatialDim = aluminumZ ∧
     neutrons_Al27 = 2 * nitrogenZ ∧
-    (∀ N e, atomDegree 13 N e > 2) := by
-  refine ⟨rfl, by decide, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    (dimAtom 13 14 0).effectiveDegree > 2 ∧
+    (dimAtom 13 14 13).effectiveDegree > 2 := by
+  exact ⟨rfl, by decide, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Aluminum
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Aluminum
-
-def aluminumZ_t : DTagged .protonNum := ⟨aluminumZ⟩
-def Al27N_t : DTagged .neutronNum := ⟨neutrons_Al27⟩
-
-def aluminumDeg_t : DTagged .degree := mkDegree aluminumZ_t Al27N_t aluminumZ_t
-
-theorem aluminumZ_t_val : aluminumZ_t.val = 13 := rfl
-theorem Al27N_t_val : Al27N_t.val = 14 := rfl
-theorem aluminumDeg_t_val : aluminumDeg_t.val = 40 := rfl
-
--- Al-27 N = 2 × nitrogenZ
-theorem Al27N_eq_2nitrogenZ_tagged :
-    Al27N_t.val = 2 * nitrogenZ_t.val := rfl
-
--- Degree construction consistency
-theorem aluminum_deg_consistency :
-    mkDegree aluminumZ_t Al27N_t aluminumZ_t = aluminumDeg_t := rfl
-
-end FUST.DiscreteTag

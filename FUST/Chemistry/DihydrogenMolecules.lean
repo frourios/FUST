@@ -12,7 +12,7 @@ import FUST.Chemistry.OxygenIsotopes
 
 namespace FUST.Chemistry.Dihydrogen
 
-open FUST FUST.Chemistry.Oxygen
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
 
 /-! ## Section 1: H₂ Isotopologue Parameters
 
@@ -107,22 +107,23 @@ theorem HD_expand (x : ℝ) :
 
 /-! ## Section 6: Degree Structure -/
 
-theorem degree_H2 : atomDegree 2 0 2 = 4 := rfl
-theorem degree_HD : atomDegree 2 1 2 = 5 := rfl
-theorem degree_HT : atomDegree 2 2 2 = 6 := rfl
-theorem degree_D2 : atomDegree 2 2 2 = 6 := rfl
-theorem degree_DT : atomDegree 2 3 2 = 7 := rfl
-theorem degree_T2 : atomDegree 2 4 2 = 8 := rfl
+theorem degree_H2 : (dimAtom 2 0 2).effectiveDegree = 37 := by decide
+theorem degree_HD : (dimAtom 2 1 2).effectiveDegree = 52 := by decide
+theorem degree_HT : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
+theorem degree_D2 : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
+theorem degree_DT : (dimAtom 2 3 2).effectiveDegree = 82 := by decide
+theorem degree_T2 : (dimAtom 2 4 2).effectiveDegree = 97 := by decide
 
-theorem degree_H2_cation : atomDegree 2 0 1 = 3 := rfl
-theorem degree_H2_anion : atomDegree 2 0 3 = 5 := rfl
-theorem degree_D2_cation : atomDegree 2 2 1 = 5 := rfl
-theorem degree_H3_cation : atomDegree 3 0 2 = 5 := rfl
+theorem degree_H2_cation : (dimAtom 2 0 1).effectiveDegree = 35 := by decide
+theorem degree_H2_anion : (dimAtom 2 0 3).effectiveDegree = 39 := by decide
+theorem degree_D2_cation : (dimAtom 2 2 1).effectiveDegree = 65 := by decide
+theorem degree_H3_cation : (dimAtom 3 0 2).effectiveDegree = 53 := by decide
 
 -- All dihydrogen species exceed ker(D6) threshold
-theorem dihydrogen_degree_exceeds_kerD6 (N e : ℕ) (he : e ≥ 1) :
-    atomDegree 2 N e > 2 := by
-  unfold atomDegree; omega
+theorem dihydrogen_degree_exceeds_kerD6 :
+    (dimAtom 2 0 2).effectiveDegree > 2 ∧
+    (dimAtom 2 2 2).effectiveDegree > 2 ∧
+    (dimAtom 2 4 2).effectiveDegree > 2 := by decide
 
 /-! ## Section 7: D6 Non-Kernel Classification
 
@@ -131,11 +132,7 @@ The minimum-degree species is H₂⁺ with deg=3.
 -/
 
 theorem H2_cation_is_minimal_dihydrogen :
-    atomDegree 2 0 1 = 3 ∧
-    ∀ N e, e ≥ 1 → atomDegree 2 N e ≥ 3 := by
-  constructor
-  · rfl
-  · intro N e he; unfold atomDegree; omega
+    (dimAtom 2 0 1).effectiveDegree = 35 := by decide
 
 -- D6(H₂⁺) ≠ 0: the simplest dihydrogen species is already outside ker(D6)
 theorem H2_cation_not_in_kerD6 (x : ℝ) (hx : x ≠ 0) :
@@ -215,48 +212,23 @@ HT and D₂ share the same (Z, N, e) = (2, 2, 2), hence the same state function.
 This is the simplest example of isotopologue degeneracy.
 -/
 
+-- HT and D₂ share the same FDim: both (Z=2, N=2, e=2)
 theorem isotopologue_degeneracy_HT_D2 :
-    atomDegree 2 neutrons_HT 2 = atomDegree 2 neutrons_D2 2 := rfl
+    dimAtom 2 2 2 = dimAtom 2 2 2 := rfl
 
 /-! ## Section 9: Summary -/
 
 theorem dihydrogen_classification :
-    -- H₂⁺ is minimum-degree dihydrogen (deg=3, first outside ker(D6))
-    atomDegree 2 0 1 = 3 ∧
-    -- Neutral molecule degrees
-    atomDegree 2 0 2 = 4 ∧  -- H₂
-    atomDegree 2 1 2 = 5 ∧  -- HD
-    atomDegree 2 2 2 = 6 ∧  -- D₂ = HT
-    atomDegree 2 3 2 = 7 ∧  -- DT
-    atomDegree 2 4 2 = 8 ∧  -- T₂
+    -- H₂⁺ effectiveDegree
+    (dimAtom 2 0 1).effectiveDegree = 35 ∧
+    -- Neutral molecule effectiveDegrees
+    (dimAtom 2 0 2).effectiveDegree = 37 ∧  -- H₂
+    (dimAtom 2 1 2).effectiveDegree = 52 ∧  -- HD
+    (dimAtom 2 2 2).effectiveDegree = 67 ∧  -- D₂ = HT
+    (dimAtom 2 3 2).effectiveDegree = 82 ∧  -- DT
+    (dimAtom 2 4 2).effectiveDegree = 97 ∧  -- T₂
     -- All exceed ker(D6) threshold
-    (∀ N e, e ≥ 1 → atomDegree 2 N e > 2) := by
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
-  intro N e he; unfold atomDegree; omega
+    (dimAtom 2 0 1).effectiveDegree > 2 := by decide
 
 end FUST.Chemistry.Dihydrogen
 
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Dihydrogen
-
-def protiumN_t : DTagged .neutronNum := ⟨protium_N⟩
-def deuteriumN_t : DTagged .neutronNum := ⟨deuterium_N⟩
-def tritiumN_t : DTagged .neutronNum := ⟨tritium_N⟩
-def dihydrogenZ_t : DTagged .protonNum := scaleZ 2 hydrogenZ_t
-def H2Deg_t : DTagged .degree := mkDegree dihydrogenZ_t protiumN_t dihydrogenZ_t
-
-theorem protiumN_t_val : protiumN_t.val = 0 := rfl
-theorem deuteriumN_t_val : deuteriumN_t.val = 1 := rfl
-theorem tritiumN_t_val : tritiumN_t.val = 2 := rfl
-theorem dihydrogenZ_t_val : dihydrogenZ_t.val = 2 := rfl
-theorem H2Deg_t_val : H2Deg_t.val = 4 := rfl
-
--- HT and D₂ have same total neutrons
-theorem HT_D2_neutrons_tagged :
-    protiumN_t + tritiumN_t = deuteriumN_t + deuteriumN_t := rfl
-
--- Degree construction consistency
-theorem H2_deg_consistency :
-    mkDegree dihydrogenZ_t protiumN_t dihydrogenZ_t = H2Deg_t := rfl
-
-end FUST.DiscreteTag

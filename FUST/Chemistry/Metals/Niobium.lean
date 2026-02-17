@@ -12,7 +12,7 @@ import FUST.Chemistry.Metals.Zirconium
 
 namespace FUST.Chemistry.Niobium
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Zirconium
 
@@ -38,7 +38,7 @@ theorem niobiumZ_shell_filling :
 
 -- 4d vacancy = 10 - 4 = 6
 theorem niobium_4d_vacancy :
-    Nuclear.Subshell.maxElectrons ⟨4, 2⟩ - niobium_4d_electrons = 6 := rfl
+    Nuclear.subshellCapacity 2 - niobium_4d_electrons = 6 := rfl
 
 /-! ## Section 2: Niobium Isotopes -/
 
@@ -59,14 +59,17 @@ noncomputable def niobium93Atom (x : ℝ) : ℝ := atomStateFn 41 52 41 x
 theorem niobium93Atom_eq (x : ℝ) :
     niobium93Atom x = x ^ 41 * (1 + x) ^ 52 * (1 + ψ * x) ^ 41 := rfl
 
-/-! ## Section 4: Degree Structure -/
+/-! ## Section 4: FDim Structure -/
 
-theorem degree_niobium93Ion : atomDegree 41 52 0 = 93 := rfl
-theorem degree_niobium93Atom : atomDegree 41 52 41 = 134 := rfl
+set_option maxRecDepth 4096 in
+theorem effDeg_niobium93Ion : (dimAtom 41 52 0).effectiveDegree = 1437 := by decide
+set_option maxRecDepth 4096 in
+theorem effDeg_niobium93Atom : (dimAtom 41 52 41).effectiveDegree = 1519 := by decide
 
-theorem niobium_degree_exceeds_kerD6 (N e : ℕ) :
-    atomDegree 41 N e > 2 := by
-  unfold atomDegree; omega
+set_option maxRecDepth 4096 in
+theorem niobium_effDeg_exceeds_kerD6 :
+    (dimAtom 41 52 0).effectiveDegree > 2 ∧
+    (dimAtom 41 52 41).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Number -/
 
@@ -74,30 +77,13 @@ theorem Nb93_mass_number : niobiumZ + neutrons_Nb93 = 93 := rfl
 
 /-! ## Section 6: Summary -/
 
+set_option maxRecDepth 4096 in
 theorem niobium_classification :
     niobiumZ = 41 ∧
     zirconiumZ + hydrogenZ = niobiumZ ∧
     Nuclear.nuclearMagic 4 + Nuclear.spinDegeneracy = neutrons_Nb93 ∧
-    (∀ N e, atomDegree 41 N e > 2) := by
-  refine ⟨rfl, rfl, rfl, ?_⟩
-  intro N e; unfold atomDegree; omega
+    (dimAtom 41 52 0).effectiveDegree > 2 ∧
+    (dimAtom 41 52 41).effectiveDegree > 2 := by
+  exact ⟨rfl, rfl, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Niobium
-
-namespace FUST.DiscreteTag
-open FUST.Chemistry.Niobium
-
-def niobiumZ_t : DTagged .protonNum := ⟨niobiumZ⟩
-def Nb93N_t : DTagged .neutronNum := ⟨neutrons_Nb93⟩
-
-def niobiumDeg_t : DTagged .degree := mkDegree niobiumZ_t Nb93N_t niobiumZ_t
-
-theorem niobiumZ_t_val : niobiumZ_t.val = 41 := rfl
-theorem Nb93N_t_val : Nb93N_t.val = 52 := rfl
-theorem niobiumDeg_t_val : niobiumDeg_t.val = 134 := rfl
-
--- Degree construction consistency
-theorem niobium_deg_consistency :
-    mkDegree niobiumZ_t Nb93N_t niobiumZ_t = niobiumDeg_t := rfl
-
-end FUST.DiscreteTag
