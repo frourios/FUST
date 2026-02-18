@@ -76,10 +76,14 @@ import FUST.Problems.RH.Basic
 import FUST.Problems.RH.CompleteDifferential
 import FUST.Problems.RH.ContinuousDiscreteEquivalence
 import FUST.Problems.RH.EulerSpectralBridge
+import FUST.Problems.RH.GoldenPrimeSumNonneg
+import FUST.Problems.RH.GoldenZeroFree
 import FUST.Problems.RH.HilbertPolya
 import FUST.Problems.RH.HurwitzTransfer
 import FUST.Problems.RH.LFunctionSeparation
 import FUST.Problems.RH.SpectralHadamardProduct
+import FUST.Problems.RH.SpectralProduct
+import FUST.Problems.RH.SpectralUnification
 import FUST.Problems.RH.SpectralZeta
 
 import FUST.Problems.ABC
