@@ -1,5 +1,4 @@
 import FUST.Physics.TimeTheorem
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import FUST.DifferenceOperators
 import Mathlib.Algebra.Ring.Parity
@@ -318,11 +317,6 @@ theorem hodge_D6_dichotomy (bound : ℝ) (k : ℕ) :
 /-- D6 completeness: higher dimensions project to D6 -/
 theorem hodge_D6_completeness (d : ℕ) (hd : d ≥ 7) :
     projectToD6 d = 6 := D6_completeness d hd
-
-/-- In D6, time flows forward (from TimeTheorem) -/
-theorem D6_hodge_time_forward :
-    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-    O.symbolic.level = 100 := fun _ _ h => h.2.1
 
 /-! ### D6 Interior: Finite Cohomology with Provable Structure -/
 

@@ -820,6 +820,14 @@ theorem lepton_generation_exponents :
     Nat.choose 5 2 + Nat.choose 2 2 + Nat.choose 4 2 = 17 :=
   ⟨rfl, rfl, rfl⟩
 
+/-- Proton exponent from D₅+D₃+D₂ pair counts: baryon = lepton-scale + color -/
+theorem proton_exponent :
+    Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14 := rfl
+
+/-- Proton exponent = muon exponent + color pair count C(3,2) -/
+theorem proton_exponent_from_muon_and_color :
+    (Nat.choose 5 2 + Nat.choose 2 2) + Nat.choose 3 2 = 14 := rfl
+
 /-- W boson exponent from D₅+D₆ total pair count -/
 theorem wBoson_exponent :
     Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
@@ -827,6 +835,29 @@ theorem wBoson_exponent :
 /-- Dark matter exponent = W boson exponent (same φ-power, different sector base) -/
 theorem darkMatter_exponent :
     Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
+
+/-- All D₆-sector particle exponents from pair count sums -/
+theorem all_particle_exponents :
+    -- electron: base (n=0)
+    (0 = 0) ∧
+    -- muon: D₅ + D₂
+    (Nat.choose 5 2 + Nat.choose 2 2 = 11) ∧
+    -- proton: D₅ + D₃ + D₂ (lepton-scale + color)
+    (Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14) ∧
+    -- tau: D₅ + D₄ + D₂
+    (Nat.choose 5 2 + Nat.choose 4 2 + Nat.choose 2 2 = 17) ∧
+    -- W boson: D₅ + D₆
+    (Nat.choose 5 2 + Nat.choose 6 2 = 25) :=
+  ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+/-- dimProton derived from pair count sum -/
+theorem dimProton_from_pair_counts :
+    dimProton = deriveFDim 6 * dimTimeD2 ^
+      (Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 : ℤ) := by decide
+
+/-- dimProton = dimMuon × dimTimeD2^C(3,2): muon-scale + color confinement -/
+theorem dimProton_from_muon_and_color :
+    dimProton = dimMuon * dimTimeD2 ^ (Nat.choose 3 2 : ℤ) := by decide
 
 /-- Complete generation structure theorem -/
 theorem generation_structure :
@@ -838,11 +869,13 @@ theorem generation_structure :
     -- Lepton exponents from pair counts
     (Nat.choose 5 2 + Nat.choose 2 2 = 11) ∧
     (Nat.choose 4 2 = 6) ∧
+    -- Proton exponent from pair counts
+    (Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14) ∧
     -- W exponent from D₅+D₆ pairs
     (Nat.choose 5 2 + Nat.choose 6 2 = 25) ∧
     -- Kernel filtration dimensions
     (Dim.operatorKerDim 5 = 2) := by
-  exact ⟨rfl, D4_const_ne_zero, D4_quadratic, rfl, rfl, rfl, rfl⟩
+  exact ⟨rfl, D4_const_ne_zero, D4_quadratic, rfl, rfl, rfl, rfl, rfl⟩
 
 end GenerationStructure
 

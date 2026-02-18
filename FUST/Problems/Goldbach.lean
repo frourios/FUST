@@ -1,5 +1,4 @@
 import FUST.Physics.TimeTheorem
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -124,11 +123,6 @@ theorem prime_count_frourio_asymptotic (n : ℕ) (hn : n ≥ 2) :
 /-- D6 completeness: higher dimensions project to D6 -/
 theorem goldbach_D6_completeness (d : ℕ) (hd : d ≥ 7) :
     projectToD6 d = 6 := D6_completeness d hd
-
-/-- In D6, time flows forward (from TimeTheorem) -/
-theorem D6_goldbach_time_forward :
-    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-    O.symbolic.level = 100 := fun _ _ h => h.2.1
 
 /-! ## Section 8: Structural Constraints -/
 

@@ -1244,8 +1244,129 @@ theorem D6_quartic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^4) x ≠ 0 
   have hx4_ne : x^4 ≠ 0 := pow_ne_zero 4 hx
   exact div_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hdiff_ne) hx4_ne) hden_ne
 
+/-! ## Parity Selection Principle
 
-end FUST
+For 6 Galois-paired points {φ³,φ²,φ,ψ,ψ²,ψ³}, symmetric coefficients [1,A,B,B,A,1]
+with D[1]=0 and D[x]=0 force A=-3/2, B=1/2 (non-integral), and D[x²]=9≠0.
+The antisymmetric form [1,-A,B,-B,A,-1] achieves D[x²]=0 with integral A=3, B=1.
+So antisymmetric D₆ has strictly larger kernel than any symmetric form on the same points. -/
+
+section ParitySelection
+
+/-- Symmetric D6: coefficients [1, A, B, B, A, 1] at {φ³,φ²,φ,ψ,ψ²,ψ³} -/
+noncomputable def D6_symmetric (A B : ℝ) (f : ℝ → ℝ) (x : ℝ) : ℝ :=
+  if x = 0 then 0 else
+    (f (φ^3 * x) + A * f (φ^2 * x) + B * f (φ * x) +
+     B * f (ψ * x) + A * f (ψ^2 * x) + f (ψ^3 * x)) / ((φ - ψ)^5 * x)
+
+/-- D6_sym[1]=0 ↔ A+B=-1 (uses 1 kernel condition) -/
+theorem D6_sym_C0 (A B : ℝ) :
+    (∀ x : ℝ, x ≠ 0 → D6_symmetric A B (fun _ => 1) x = 0) ↔ A + B = -1 := by
+  constructor
+  · intro h
+    have h1 := h 1 one_ne_zero
+    simp only [D6_symmetric, one_ne_zero, ↓reduceIte, mul_one] at h1
+    have hne : (φ - ψ) ^ 5 ≠ 0 := by
+      apply pow_ne_zero; rw [phi_sub_psi]
+      exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    have hnum : 1 + A + B + B + A + 1 = 0 := by
+      by_contra h_ne
+      exact absurd h1 (div_ne_zero h_ne hne)
+    linarith
+  · intro hab x hx
+    simp only [D6_symmetric, hx, ↓reduceIte]
+    have : 1 + A * 1 + B * 1 + B * 1 + A * 1 + 1 = 2 * (A + B + 1) := by ring
+    rw [this, hab]; ring
+
+/-- D6_sym[x]=0 ↔ 4+3A+B=0, using L₁=1, L₂=3, L₃=4 -/
+theorem D6_sym_C1 (A B : ℝ) :
+    (∀ x : ℝ, x ≠ 0 → D6_symmetric A B id x = 0) ↔ 4 + 3 * A + B = 0 := by
+  have hL1 : φ + ψ = 1 := phi_add_psi
+  have hL2 : φ ^ 2 + ψ ^ 2 = 3 := by
+    have := golden_ratio_property; have := psi_sq
+    nlinarith [phi_add_psi]
+  have hL3 : φ ^ 3 + ψ ^ 3 = 4 := by
+    have hφ3 : φ ^ 3 = 2 * φ + 1 := by
+      have := golden_ratio_property; nlinarith
+    have hψ3 : ψ ^ 3 = 2 * ψ + 1 := by
+      have := psi_sq; nlinarith
+    linarith [phi_add_psi]
+  constructor
+  · intro h
+    have h1 := h 1 one_ne_zero
+    simp only [D6_symmetric, one_ne_zero, ↓reduceIte, id_eq, mul_one] at h1
+    have hne : (φ - ψ) ^ 5 ≠ 0 := by
+      apply pow_ne_zero; rw [phi_sub_psi]
+      exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    have hnum : φ ^ 3 + A * φ ^ 2 + B * φ + B * ψ + A * ψ ^ 2 + ψ ^ 3 = 0 := by
+      by_contra h_ne
+      exact absurd h1 (div_ne_zero h_ne hne)
+    have hfact : φ ^ 3 + A * φ ^ 2 + B * φ + B * ψ + A * ψ ^ 2 + ψ ^ 3 =
+        (φ ^ 3 + ψ ^ 3) + A * (φ ^ 2 + ψ ^ 2) + B * (φ + ψ) := by ring
+    rw [hfact, hL3, hL2, hL1] at hnum
+    linarith
+  · intro hab x hx
+    simp only [D6_symmetric, hx, ↓reduceIte, id_eq]
+    have : φ ^ 3 * x + A * (φ ^ 2 * x) + B * (φ * x) + B * (ψ * x) +
+        A * (ψ ^ 2 * x) + ψ ^ 3 * x =
+        ((φ ^ 3 + ψ ^ 3) + A * (φ ^ 2 + ψ ^ 2) + B * (φ + ψ)) * x := by ring
+    rw [this, hL3, hL2, hL1]
+    have : (4 + A * 3 + B * 1) * x = (4 + 3 * A + B) * x := by ring
+    rw [this, hab]; ring
+
+/-- D6_sym with D[1]=0 and D[x]=0 forces A=-3/2, B=1/2 -/
+theorem D6_sym_coefficients (A B : ℝ)
+    (h0 : ∀ x : ℝ, x ≠ 0 → D6_symmetric A B (fun _ => 1) x = 0)
+    (h1 : ∀ x : ℝ, x ≠ 0 → D6_symmetric A B id x = 0) :
+    A = -3/2 ∧ B = 1/2 := by
+  have hab := (D6_sym_C0 A B).mp h0
+  have hab2 := (D6_sym_C1 A B).mp h1
+  constructor <;> linarith
+
+/-- Symmetric D6 does NOT annihilate x²: D6_sym(-3/2, 1/2)[x²] ≠ 0.
+    Numerator = L₆ + A·L₄ + B·L₂ = 18 + (-3/2)·7 + (1/2)·3 = 9 ≠ 0 -/
+theorem D6_sym_not_ker_quadratic (x : ℝ) (hx : x ≠ 0) :
+    D6_symmetric (-3/2) (1/2) (fun t => t^2) x ≠ 0 := by
+  simp only [D6_symmetric, hx, ↓reduceIte]
+  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
+  have hL1 : φ + ψ = 1 := phi_add_psi
+  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith
+  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith
+  have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith
+  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith
+  -- Numerator = (φ⁶+ψ⁶) + A(φ⁴+ψ⁴) + B(φ²+ψ²) = 18 - 21/2 + 3/2 = 9
+  have hnum : (φ ^ 3 * x) ^ 2 + (-3/2) * (φ ^ 2 * x) ^ 2 + (1/2) * (φ * x) ^ 2 +
+      (1/2) * (ψ * x) ^ 2 + (-3/2) * (ψ ^ 2 * x) ^ 2 + (ψ ^ 3 * x) ^ 2 =
+      9 * x ^ 2 := by nlinarith
+  rw [hnum]
+  have hden_ne : (φ - ψ) ^ 5 * x ≠ 0 := by
+    apply mul_ne_zero
+    · apply pow_ne_zero; rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+    · exact hx
+  exact div_ne_zero (mul_ne_zero (by norm_num) (pow_ne_zero 2 hx)) hden_ne
+
+/-- Parity Selection for D₆: antisymmetric form has strictly larger kernel.
+    Antisymmetric D₆ annihilates {1, x, x²} (3-dimensional kernel),
+    but ANY symmetric form on the same 6 points with D[1]=0 and D[x]=0
+    fails to annihilate x² (2-dimensional kernel). -/
+theorem parity_selection_D6 :
+    -- Antisymmetric D6 annihilates 1, x, x²
+    ((∀ c x, x ≠ 0 → D6 (fun _ => c) x = 0) ∧
+     (∀ x, x ≠ 0 → D6 id x = 0) ∧
+     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0)) ∧
+    -- Symmetric D6 with maximal kernel does NOT annihilate x²
+    (∀ A B : ℝ,
+      (∀ x, x ≠ 0 → D6_symmetric A B (fun _ => 1) x = 0) →
+      (∀ x, x ≠ 0 → D6_symmetric A B id x = 0) →
+      ∀ x, x ≠ 0 → D6_symmetric A B (fun t => t^2) x ≠ 0) := by
+  refine ⟨⟨D6_const, D6_linear, D6_quadratic⟩, ?_⟩
+  intro A B h0 h1
+  have ⟨hA, hB⟩ := D6_sym_coefficients A B h0 h1
+  subst hA; subst hB
+  exact D6_sym_not_ker_quadratic
+
+end ParitySelection
 
 /-! ## Justification of structural properties (§6.2)
 
@@ -1271,3 +1392,5 @@ theorem D6_is_terminal :
              (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
              (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
   FUST.D7_kernel_equals_D6_kernel
+
+end FUST

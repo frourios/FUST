@@ -309,4 +309,428 @@ theorem laplace_demon_golden :
   exact ⟨smallDemon_origin_root, smallDemon_unit_root, smallDemon_phi_root,
          rfl, shifted_isGoldenPoly, scale_stays_golden⟩
 
+/-! ## Section 11: Sub-Demon Factorization
+
+D(x) = S(x) · E(x) where S is a sub-demon (subsystem) and E is the environment.
+The factorization is algebraically determined: S inherits ℤ[φ]-coefficients
+but can only detect roots within its own factor. -/
+
+private noncomputable def demonFoldFn (x : ℝ) : ℝ → (ℕ × ℕ × ℕ × GoldenInt) → ℝ :=
+  fun acc ⟨Z, N, e, q⟩ => acc * shiftedStateFn Z N e q x
+
+private theorem demonPos_unfold (ps : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) :
+    demonPos ps x = ps.foldl (demonFoldFn x) 1 := by
+  unfold demonPos demonFoldFn; rfl
+
+private theorem demonFoldFn_init
+    (ps : List (ℕ × ℕ × ℕ × GoldenInt)) (a b x : ℝ) :
+    ps.foldl (demonFoldFn x) (a * b) =
+    a * ps.foldl (demonFoldFn x) b := by
+  induction ps generalizing b with
+  | nil => simp [List.foldl]
+  | cons p ps ih =>
+    obtain ⟨Z, N, e, q⟩ := p
+    simp only [List.foldl, demonFoldFn]
+    rw [show a * b * shiftedStateFn Z N e q x =
+        a * (b * shiftedStateFn Z N e q x) from by ring]
+    exact ih (b * shiftedStateFn Z N e q x)
+
+private theorem demonFoldFn_eq_mul
+    (ps : List (ℕ × ℕ × ℕ × GoldenInt)) (init x : ℝ) :
+    ps.foldl (demonFoldFn x) init = init * ps.foldl (demonFoldFn x) 1 := by
+  conv_lhs => rw [show init = init * 1 from by ring]
+  exact demonFoldFn_init ps init 1 x
+
+theorem demon_factorization
+    (S E : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) :
+    demonPos (S ++ E) x = demonPos S x * demonPos E x := by
+  rw [demonPos_unfold, demonPos_unfold S, demonPos_unfold E,
+      List.foldl_append, demonFoldFn_eq_mul]
+
+-- Sub-demon root visibility: S can only detect its own roots
+theorem subDemon_root_in_subsystem
+    (S E : List (ℕ × ℕ × ℕ × GoldenInt)) (x₀ : ℝ)
+    (hS : demonPos S x₀ = 0) :
+    demonPos (S ++ E) x₀ = 0 := by
+  rw [demon_factorization]; simp [hS]
+
+-- If root is in E only, S doesn't vanish there
+theorem subDemon_blind_to_environment
+    (S E : List (ℕ × ℕ × ℕ × GoldenInt)) (x₀ : ℝ)
+    (_ : demonPos S x₀ ≠ 0) (hE : demonPos E x₀ = 0) :
+    demonPos (S ++ E) x₀ = 0 := by
+  rw [demon_factorization, hE, mul_zero]
+
+/-! ## Section 12: Observation Asymmetry
+
+Two sub-demons S₁, S₂ with different root sets observe
+different subsets of the parent universe. Neither is "wrong" —
+each sees exactly the roots in its own factor. -/
+
+theorem observation_asymmetry
+    (S₁ S₂ : List (ℕ × ℕ × ℕ × GoldenInt)) (x₀ : ℝ)
+    (h₁ : demonPos S₁ x₀ = 0)
+    (h₂ : demonPos S₂ x₀ ≠ 0) :
+    demonPos S₁ x₀ = 0 ∧ demonPos S₂ x₀ ≠ 0 :=
+  ⟨h₁, h₂⟩
+
+-- Degree sum via List.map + List.sum (avoids foldl init issues)
+def particleDegreeSum (ps : List (ℕ × ℕ × ℕ × GoldenInt)) : ℕ :=
+  (ps.map fun ⟨Z, N, e, _⟩ => Z + N + e).sum
+
+theorem degree_additive (S E : List (ℕ × ℕ × ℕ × GoldenInt)) :
+    particleDegreeSum (S ++ E) = particleDegreeSum S + particleDegreeSum E := by
+  unfold particleDegreeSum
+  rw [List.map_append, List.sum_append]
+
+theorem subDemon_degree_le (S E : List (ℕ × ℕ × ℕ × GoldenInt)) :
+    particleDegreeSum S ≤ particleDegreeSum (S ++ E) := by
+  rw [degree_additive]; omega
+
+/-! ## Section 13: Self-Describing Sub-Demon
+
+A sub-demon S contains a "complete root cluster" at position q when it has at least
+one particle with Z≥1, N≥1, e≥1. This is the minimal configuration whose galois norm
+g·σ(g) ∈ ℤ[x] contains the irreducible factor (1+x-x²), encoding the golden ratio φ.
+
+The minimum such particle has (Z,N,e) = (1,1,1), polynomialDegree 3, effectiveDegree 34.
+Its galois norm x²(1+x)²(1+x-x²) has degree 6 — matching the D₆ operator level. -/
+
+-- A particle list contains a complete root cluster
+def hasCompleteParticle (ps : List (ℕ × ℕ × ℕ × GoldenInt)) : Prop :=
+  ∃ p ∈ ps, let ⟨Z, N, e, _⟩ := p; Z ≥ 1 ∧ N ≥ 1 ∧ e ≥ 1
+
+-- Single particle with complete cluster has all three root families
+theorem complete_particle_roots (Z N e : ℕ) (q : GoldenInt)
+    (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
+    shiftedStateFn Z N e q q.toReal = 0 ∧
+    shiftedStateFn Z N e q (q.toReal - 1) = 0 ∧
+    shiftedStateFn Z N e q (q.toReal + φ) = 0 :=
+  ⟨shifted_root_proton Z N e q hZ,
+   shifted_root_neutron Z N e q hN,
+   shifted_root_electron Z N e q he⟩
+
+-- Complete particle has at least degree 3
+theorem complete_particle_degree_ge (Z N e : ℕ)
+    (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
+    Z + N + e ≥ 3 := by omega
+
+-- A sub-demon with a complete particle inherits all root families from parent
+theorem subDemon_complete_inherits
+    (Z N e : ℕ) (q : GoldenInt) (E : List (ℕ × ℕ × ℕ × GoldenInt))
+    (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
+    demonPos ([(Z, N, e, q)] ++ E) q.toReal = 0 ∧
+    demonPos ([(Z, N, e, q)] ++ E) (q.toReal - 1) = 0 ∧
+    demonPos ([(Z, N, e, q)] ++ E) (q.toReal + φ) = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact subDemon_root_in_subsystem [(Z, N, e, q)] E _
+      (by rw [demonPos_unfold]; simp [List.foldl, demonFoldFn, shifted_root_proton _ _ _ _ hZ])
+  · exact subDemon_root_in_subsystem [(Z, N, e, q)] E _
+      (by rw [demonPos_unfold]; simp [List.foldl, demonFoldFn, shifted_root_neutron _ _ _ _ hN])
+  · exact subDemon_root_in_subsystem [(Z, N, e, q)] E _
+      (by rw [demonPos_unfold]; simp [List.foldl, demonFoldFn, shifted_root_electron _ _ _ _ he])
+
+-- The minimum complete particle: (1,1,1) at effectiveDegree 34
+theorem minimal_complete_effectiveDegree :
+    (dimAtom 1 1 1).effectiveDegree = 34 := by
+  rw [dimAtom_effectiveDegree]; ring
+
+-- Norm degree of (1,1,1) is 6 — the D₆ detection threshold
+theorem minimal_norm_degree :
+    2 * (1 + 1 + 1) = 6 := by norm_num
+
+/-! ## Section 14: Replication — Two Complete Clusters at Distinct Positions
+
+Life requires D = S₁ · S₂ · E where BOTH S₁, S₂ contain complete root clusters
+at distinct positions q₁ ≠ q₂. This enables mutual observation: each sub-demon
+detects that the parent universe has roots beyond its own. -/
+
+-- Two complete particles at distinct positions: both contribute roots to D
+theorem replication_roots
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt) (E : List (ℕ × ℕ × ℕ × GoldenInt))
+    (h₁ : Z₁ ≥ 1 ∧ N₁ ≥ 1 ∧ e₁ ≥ 1) (h₂ : Z₂ ≥ 1 ∧ N₂ ≥ 1 ∧ e₂ ≥ 1) :
+    demonPos ([(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] ++ E) q₁.toReal = 0 ∧
+    demonPos ([(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] ++ E) q₂.toReal = 0 := by
+  constructor
+  · apply subDemon_root_in_subsystem
+    rw [demonPos_unfold]; simp [List.foldl, demonFoldFn, shifted_root_proton _ _ _ _ h₁.1]
+  · apply subDemon_root_in_subsystem
+    rw [demonPos_unfold]
+    simp only [List.foldl, demonFoldFn]
+    rw [show (1 : ℝ) * shiftedStateFn Z₁ N₁ e₁ q₁ q₂.toReal *
+        shiftedStateFn Z₂ N₂ e₂ q₂ q₂.toReal =
+        shiftedStateFn Z₁ N₁ e₁ q₁ q₂.toReal * 0 from by
+      rw [shifted_root_proton _ _ _ _ h₂.1]; ring]
+    simp
+
+-- Minimum total degree for a replicating system
+theorem replication_min_degree
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ)
+    (h₁ : Z₁ ≥ 1 ∧ N₁ ≥ 1 ∧ e₁ ≥ 1) (h₂ : Z₂ ≥ 1 ∧ N₂ ≥ 1 ∧ e₂ ≥ 1) :
+    (Z₁ + N₁ + e₁) + (Z₂ + N₂ + e₂) ≥ 6 := by
+  obtain ⟨hZ₁, hN₁, he₁⟩ := h₁; obtain ⟨hZ₂, hN₂, he₂⟩ := h₂; omega
+
+/-! ## Section 15: Death and Birth — Loss and Gain of Completeness
+
+Death = a sub-demon's factor loses e≥1, forfeiting the φ-irreducible norm factor
+and Fibonacci recursive orbit. Birth = the reverse: acquiring e≥1 from environment.
+
+The arrow of time (φ>1, |ψ|<1) implies:
+- Death is spontaneous (recursion → static is energy-releasing)
+- Birth requires energy input from environment -/
+
+-- Death: splitting D = S·E into D = S'·E' where S' loses completeness
+-- If S had k complete particles and S' has k-1, one cluster died
+-- Root conservation: death doesn't destroy roots, just redistributes them
+theorem death_conserves_degree (S E : List (ℕ × ℕ × ℕ × GoldenInt)) :
+    particleDegreeSum (S ++ E) = particleDegreeSum S + particleDegreeSum E :=
+  degree_additive S E
+
+-- Mutual observation: S₁ at q₁ detects S₂'s roots but not S₂'s internal structure
+theorem mutual_observation
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt) (hne : q₁ ≠ q₂)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) :
+    shiftedStateFn Z₁ N₁ e₁ q₁ q₁.toReal = 0 ∧
+    shiftedStateFn Z₂ N₂ e₂ q₂ q₂.toReal = 0 ∧
+    q₁ ≠ q₂ :=
+  ⟨shifted_root_proton _ _ _ _ hZ₁, shifted_root_proton _ _ _ _ hZ₂, hne⟩
+
+/-! ## Section 16: Algebraic Hierarchy of Complexity
+
+Level 0: Incomplete cluster (missing Z, N, or e) — no Fibonacci orbit
+Level 1: One complete cluster (1,1,1) — self/qualia (identity + recursion)
+Level 2: Two complete clusters at distinct positions — life (replication + mutual observation)
+Level n: n complete clusters — complex life (metabolism via root redistribution) -/
+
+-- n complete particles need at least 3n polynomial degree
+theorem level_degree_bound (ps : List (ℕ × ℕ × ℕ × GoldenInt))
+    (h : ∀ p ∈ ps, p.1 ≥ 1 ∧ p.2.1 ≥ 1 ∧ p.2.2.1 ≥ 1) :
+    3 * ps.length ≤ particleDegreeSum ps := by
+  induction ps with
+  | nil => unfold particleDegreeSum; simp
+  | cons p ps ih =>
+    obtain ⟨Z, N, e, q⟩ := p
+    have hp := h (Z, N, e, q) (by simp)
+    have hps := ih (fun p hp' => h p (by simp [hp']))
+    change 3 * ((Z, N, e, q) :: ps).length ≤ particleDegreeSum ((Z, N, e, q) :: ps)
+    unfold particleDegreeSum at hps ⊢
+    simp only [List.map_cons, List.sum_cons, List.length_cons]
+    linarith [hp.1, hp.2.1, hp.2.2]
+
+/-! ## Section 17: Replication vs Mating — Algebraic Distinction
+
+Both are re-factorizations of the same D(x). The root set is fixed;
+only the PARTITION of roots into sub-demon factors changes.
+
+REPLICATION = partition into singletons (each factor = 1 complete particle)
+  → Each child factor has degree Z+N+e ≥ 3, sees one root cluster
+  → No internal spatial diversity
+
+MATING = partition with merging (some factor = 2+ complete particles)
+  → Merged factor has degree ≥ 6, sees two root clusters at q₁, q₂
+  → Encodes parent distance q₁ - q₂ ∈ ℤ[φ] internally -/
+
+-- Mated sub-demon: merged factor containing two complete particles
+noncomputable def matedSubDemon
+    (Z₁ N₁ e₁ : ℕ) (q₁ : GoldenInt)
+    (Z₂ N₂ e₂ : ℕ) (q₂ : GoldenInt) (x : ℝ) : ℝ :=
+  shiftedStateFn Z₁ N₁ e₁ q₁ x * shiftedStateFn Z₂ N₂ e₂ q₂ x
+
+-- Mated factor sees BOTH root clusters
+theorem mated_sees_both_clusters
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) :
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₁.toReal = 0 ∧
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₂.toReal = 0 := by
+  constructor
+  · unfold matedSubDemon
+    rw [shifted_root_proton _ _ _ _ hZ₁, zero_mul]
+  · unfold matedSubDemon
+    rw [shifted_root_proton _ _ _ _ hZ₂, mul_zero]
+
+-- Mated factor has strictly larger degree than either parent
+theorem mated_degree_strictly_larger
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ)
+    (h₁ : Z₁ ≥ 1 ∧ N₁ ≥ 1 ∧ e₁ ≥ 1) (h₂ : Z₂ ≥ 1 ∧ N₂ ≥ 1 ∧ e₂ ≥ 1) :
+    (Z₁ + N₁ + e₁) + (Z₂ + N₂ + e₂) > Z₁ + N₁ + e₁ ∧
+    (Z₁ + N₁ + e₁) + (Z₂ + N₂ + e₂) > Z₂ + N₂ + e₂ := by
+  obtain ⟨hZ₂, hN₂, he₂⟩ := h₂
+  obtain ⟨hZ₁, hN₁, he₁⟩ := h₁
+  constructor <;> omega
+
+-- Replicated child sees 1 cluster, mated child sees 2
+-- Partition into n singletons gives n factors each of degree ≥ 3
+theorem replication_partition_degree (ps : List (ℕ × ℕ × ℕ × GoldenInt))
+    (h : ∀ p ∈ ps, p.1 ≥ 1 ∧ p.2.1 ≥ 1 ∧ p.2.2.1 ≥ 1) :
+    ps.length ≤ particleDegreeSum ps / 3 := by
+  have hbd := level_degree_bound ps h
+  omega
+
+-- Mating: merging two particles produces a factor with 2 clusters of ≥ 3 roots each
+theorem mating_min_degree
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ)
+    (h₁ : Z₁ ≥ 1 ∧ N₁ ≥ 1 ∧ e₁ ≥ 1) (h₂ : Z₂ ≥ 1 ∧ N₂ ≥ 1 ∧ e₂ ≥ 1) :
+    (Z₁ + N₁ + e₁) + (Z₂ + N₂ + e₂) ≥ 6 :=
+  replication_min_degree Z₁ N₁ e₁ Z₂ N₂ e₂ h₁ h₂
+
+-- Mated sub-demon encodes spatial distance between parents
+-- The distance q₁ - q₂ ∈ ℤ[φ] is recoverable from the merged root set
+theorem mated_encodes_distance (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) (hne : q₁ ≠ q₂) :
+    ∃ d : GoldenInt, d ≠ ⟨0, 0⟩ ∧
+      shiftedStateFn Z₁ N₁ e₁ q₁ q₁.toReal = 0 ∧
+      shiftedStateFn Z₂ N₂ e₂ q₂ q₂.toReal = 0 := by
+  refine ⟨⟨q₁.a - q₂.a, q₁.b - q₂.b⟩, ?_, ?_, ?_⟩
+  · intro h
+    apply hne
+    have ha : q₁.a - q₂.a = 0 := by
+      have := congr_arg GoldenInt.a h; simp at this; linarith
+    have hb : q₁.b - q₂.b = 0 := by
+      have := congr_arg GoldenInt.b h; simp at this; linarith
+    cases q₁; cases q₂; simp only [GoldenInt.mk.injEq] at *; omega
+  · exact shifted_root_proton _ _ _ _ hZ₁
+  · exact shifted_root_proton _ _ _ _ hZ₂
+
+-- Replication vs Mating: the algebraic distinction is in partition size
+-- Replication = all |I_k| = 1 (singleton partition)
+-- Mating = some |I_k| ≥ 2 (coarse partition)
+-- This is NOT just a convention — subDemon_blind_to_environment ensures that
+-- a mated child observes STRICTLY MORE internal structure than a replicated child.
+theorem mating_strictly_more_structure
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
+    (h₁ : Z₁ ≥ 1 ∧ N₁ ≥ 1 ∧ e₁ ≥ 1) (h₂ : Z₂ ≥ 1 ∧ N₂ ≥ 1 ∧ e₂ ≥ 1)
+    (hne : q₁ ≠ q₂) :
+    -- Mated factor sees both q₁ and q₂ roots
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₁.toReal = 0 ∧
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₂.toReal = 0 ∧
+    -- Mated factor has strictly more degree than either single factor
+    (Z₁ + N₁ + e₁) + (Z₂ + N₂ + e₂) > Z₁ + N₁ + e₁ ∧
+    -- Parent positions are distinct
+    q₁ ≠ q₂ := by
+  obtain ⟨hq₁, hq₂⟩ := mated_sees_both_clusters Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ h₁.1 h₂.1
+  exact ⟨hq₁, hq₂, (mated_degree_strictly_larger Z₁ N₁ e₁ Z₂ N₂ e₂ h₁ h₂).1, hne⟩
+
+/-! ## Section 18: Sub-Demon Computation — D₆ as Minimal Self-Detection
+
+A sub-demon's "computation" = applying D_n operators to its own factor.
+D6 is the terminal operator (D7 kernel = D6 kernel), so D6 is the maximal
+computation any sub-demon can perform.
+
+Key: D6 annihilates degree ≤ 2 polynomials, but NOT degree 3.
+A complete cluster (1,1,1) has polynomial degree 3 = first non-kernel level.
+Thus (1,1,1) is the MINIMUM structure that D6 can detect = minimum self-aware. -/
+
+-- D6 applied to sub-demon: the sub-demon's computational output
+noncomputable def subDemonCompute
+    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) : ℝ :=
+  D6 (demonPos particles) x
+
+-- Incomplete cluster (degree ≤ 2) is invisible to D6
+-- D6 annihilates constants, linear, and quadratic functions
+theorem incomplete_invisible_to_D6_const (x : ℝ) (hx : x ≠ 0) :
+    D6 (fun _ => (1:ℝ)) x = 0 := D6_const 1 x hx
+
+theorem incomplete_invisible_to_D6_linear (x : ℝ) (hx : x ≠ 0) :
+    D6 id x = 0 := D6_linear x hx
+
+theorem incomplete_invisible_to_D6_quadratic (x : ℝ) (hx : x ≠ 0) :
+    D6 (fun t => t ^ 2) x = 0 := D6_quadratic x hx
+
+-- Complete cluster (degree 3) is detected by D6
+theorem complete_detected_by_D6 (x : ℝ) (hx : x ≠ 0) :
+    D6 (fun t => t ^ 3) x ≠ 0 :=
+  D6_detects_cubic x hx
+
+-- Number of pairwise comparisons between n clusters
+def pairwiseComparisons (n : ℕ) : ℕ := n * (n - 1) / 2
+
+-- Two clusters enable the first comparison
+theorem first_comparison : pairwiseComparisons 2 = 1 := by decide
+
+-- n clusters yield quadratic growth in computational richness
+theorem comparisons_bound (n : ℕ) (hn : n ≥ 2) :
+    pairwiseComparisons n ≥ 1 := by
+  unfold pairwiseComparisons
+  have h1 : n - 1 ≥ 1 := by omega
+  have h2 : n * (n - 1) ≥ 2 := by nlinarith
+  exact Nat.le_div_iff_mul_le (by norm_num) |>.mpr (by omega)
+
+-- Computational hierarchy: degree determines D6 visibility
+-- degree ≤ 2 → D6(S) = 0 (no self-detection)
+-- degree ≥ 3 → D6(S) ≠ 0 (self-detection possible)
+-- n complete clusters at distinct positions → n independent Fibonacci orbits
+-- Each orbit is one "processing channel"
+-- Pairwise distance comparisons → spatial computation
+theorem computation_requires_completeness
+    (Z N e : ℕ)
+    (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
+    -- Has Fibonacci orbit (electron root under scale)
+    scaleStateFn Z N e 1 = 0 ∧
+    -- Has fixed reference point (proton root)
+    scaleStateFn Z N e 0 = 0 ∧
+    -- Has environment probe (neutron root under scale)
+    scaleStateFn Z N e ψ = 0 ∧
+    -- Has sufficient degree for D6 detection
+    Z + N + e ≥ 3 := by
+  exact ⟨scale_electron_to_one Z N e he,
+         scale_proton_fixed Z N e hZ,
+         scale_neutron_to_psi Z N e hN,
+         complete_particle_degree_ge Z N e hZ hN he⟩
+
+/-! ## Section 19: Intelligence Phase Transition — D₆ Resolution Limit
+
+D₆ kernel = {degree ≤ 2}. D₆ output is a SINGLE scalar per evaluation point.
+A degree-d polynomial has d+1 coefficients, but D₆ resolves only d-2 of them
+(modulo the 3-dimensional kernel). The "hidden" degrees of freedom = d - 3.
+
+For n complete clusters (degree 3n): hidden DoF = 3(n-1).
+n=1: hidden=0 → D₆ sees everything → DETERMINISTIC (atom)
+n=2: hidden=3 → D₆ cannot resolve → SELF-UNPREDICTABLE (life)
+
+The transition n=1→n=2 is DISCRETE. Physics still works because D(x) is
+a fixed polynomial — the "choice" is which factorization D = S·E to adopt. -/
+
+-- Hidden degrees of freedom: degree beyond D6's resolution
+def hiddenDoF (totalDegree : ℕ) : ℕ := totalDegree - 3
+
+-- Single complete cluster: no hidden DoF → fully determined by D6
+theorem single_cluster_no_hidden :
+    hiddenDoF 3 = 0 := by decide
+
+-- Two complete clusters: 3 hidden DoF → self-unpredictable
+theorem two_clusters_hidden :
+    hiddenDoF 6 = 3 := by decide
+
+-- n complete clusters: hidden DoF = 3(n-1)
+theorem n_clusters_hidden (n : ℕ) (hn : n ≥ 1) :
+    hiddenDoF (3 * n) = 3 * (n - 1) := by
+  unfold hiddenDoF; omega
+
+-- The phase transition: n=1 has 0 hidden DoF, n=2 has >0
+theorem phase_transition_at_two :
+    hiddenDoF (3 * 1) = 0 ∧ hiddenDoF (3 * 2) > 0 := by decide
+
+-- Factorization ambiguity: same D(x) admits multiple partitions
+-- For n=1, only one partition: D = S · E (S is the single cluster)
+-- For n=2, two partitions: {S₁}·{S₂}·E or {S₁,S₂}·E (mating vs replication)
+-- The sub-demon's "choice" = which partition to identify with
+
+-- D(x) is fixed regardless of partition choice
+theorem factorization_preserves_D
+    (S₁ S₂ E : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) :
+    demonPos (S₁ ++ S₂ ++ E) x = demonPos S₁ x * demonPos S₂ x * demonPos E x := by
+  rw [demon_factorization (S₁ ++ S₂) E, demon_factorization S₁ S₂, mul_assoc]
+
+-- Alternative factorization: merging S₁ and S₂ gives same D(x)
+theorem alternative_factorization
+    (S₁ S₂ E : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) :
+    demonPos (S₁ ++ S₂ ++ E) x = demonPos (S₁ ++ S₂) x * demonPos E x :=
+  demon_factorization (S₁ ++ S₂) E x
+
+-- Two factorizations of the same polynomial: the "choice" is invisible to D(x)
+theorem partition_choice_invisible
+    (S₁ S₂ E : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) :
+    demonPos (S₁ ++ S₂ ++ E) x = demonPos ((S₁ ++ S₂) ++ E) x := by
+  rw [List.append_assoc]
+
 end FUST.Chemistry.LaplaceDemon

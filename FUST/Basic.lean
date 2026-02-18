@@ -452,4 +452,128 @@ theorem frourioConst_approx : 3.7 < frourioConst ∧ frourioConst < 4 := by
 
 end FrourioExponential
 
+/-! ## Golden Ratio Uniqueness — Why φ and not √2 or √3?
+
+For a real quadratic unit α with Galois conjugate β, define D₅ and D₆ operators
+at φ-power evaluation points. The operator coefficients are determined by
+kernel conditions (D[1]=0, D[x]=0, D[x²]=0).
+
+Theorem: Among all norm(-1) quadratic units (αβ = -1) with α > 1 > |β|,
+φ = (1+√5)/2 is the UNIQUE one for which D₆ has integer coefficients.
+
+Key identity: (s²+1)(s²+2) = (s²+s+2)(s²-s+2) - 2
+where s = α + β ∈ ℤ.
+
+D₆ coefficient A = (s²+1)(s²+2)/(s²-s+2), so A ∈ ℤ ⟺ (s²-s+2) | 2.
+Since s²-s+2 ≥ 2 for all s ∈ ℤ with equality iff s ∈ {0,1}, and s=0 is
+degenerate (α=1), the unique valid solution is s=1, giving α = φ. -/
+
+section GoldenUniqueness
+
+-- The key polynomial identity: (s²+1)(s²+2) = (s²+s+2)(s²-s+2) - 2
+theorem golden_key_identity (s : ℤ) :
+    (s^2 + 1) * (s^2 + 2) = (s^2 + s + 2) * (s^2 - s + 2) - 2 := by ring
+
+-- D₆ coefficient A for a norm(-1) unit with trace s
+noncomputable def D6_coeff_A (s : ℤ) : ℚ :=
+  ((s^2 + 1) * (s^2 + 2) : ℤ) / (s^2 - s + 2 : ℤ)
+
+-- s²-s+2 > 0 for all integers (it equals (2s-1)²/4 + 7/4 ≥ 7/4)
+theorem trace_denom_pos (s : ℤ) : s ^ 2 - s + 2 > 0 := by nlinarith [sq_nonneg (2*s - 1)]
+
+-- s²-s+2 ≥ 2 for all integers
+theorem trace_denom_ge_two (s : ℤ) : s ^ 2 - s + 2 ≥ 2 := by nlinarith [sq_nonneg (s - 1)]
+
+-- A is integral iff (s²-s+2) | 2
+theorem D6_integral_iff_dvd (s : ℤ) :
+    (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2) ↔
+    (s ^ 2 - s + 2 : ℤ) ∣ 2 := by
+  have hid := golden_key_identity s
+  have hpos : s ^ 2 - s + 2 > 0 := trace_denom_pos s
+  constructor
+  · intro ⟨k, hk⟩
+    refine ⟨(s ^ 2 + s + 2) - k, ?_⟩
+    nlinarith
+  · intro ⟨k, hk⟩
+    refine ⟨(s ^ 2 + s + 2) * 1 - k, ?_⟩
+    nlinarith
+
+-- The only integers s with (s²-s+2) | 2 are s = 0 and s = 1
+theorem trace_dvd_two_solutions (s : ℤ) :
+    (s ^ 2 - s + 2 : ℤ) ∣ 2 → s = 0 ∨ s = 1 := by
+  intro ⟨k, hk⟩
+  have hge : s ^ 2 - s + 2 ≥ 2 := trace_denom_ge_two s
+  -- s²-s+2 ≥ 2 and (s²-s+2)*k = 2, so k ≥ 1 and s²-s+2 ≤ 2, i.e. s²-s+2 = 2
+  have hk_pos : k > 0 := by nlinarith
+  have hle : s ^ 2 - s + 2 ≤ 2 := by nlinarith
+  have : s ^ 2 - s = 0 := by omega
+  have : s * (s - 1) = 0 := by nlinarith
+  rcases mul_eq_zero.mp this with h | h <;> omega
+
+-- s = 0 gives a degenerate unit: α² = 1, so α = ±1, not > 1
+-- s = 1 gives x² - x - 1 = 0, which is the golden ratio equation
+-- So φ is the unique non-degenerate solution.
+
+-- The golden ratio is the unique root > 1 of x² - x - 1 = 0
+-- (already known: golden_ratio_property : φ² = φ + 1)
+
+-- Main theorem: φ is unique among norm(-1) quadratic units with integer D₆
+theorem phi_unique_D6_integral (α β : ℝ)
+    (hprod : α * β = -1)
+    (hα_gt : α > 1)
+    (hD6 : ∃ s : ℤ, α + β = s ∧ (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2)) :
+    α + β = 1 := by
+  obtain ⟨s, hs, hdvd⟩ := hD6
+  have h02 := (D6_integral_iff_dvd s).mp hdvd
+  have h01 := trace_dvd_two_solutions s h02
+  rcases h01 with rfl | rfl
+  · -- s = 0: α + β = 0, αβ = -1 → α² = 1, contradicts α > 1
+    exfalso
+    push_cast at hs
+    have hβ : β = -α := by linarith
+    rw [hβ] at hprod
+    have hsq : α ^ 2 = 1 := by nlinarith
+    nlinarith [sq_nonneg (α - 1)]
+  · -- s = 1: α + β = 1 ✓
+    push_cast at hs; linarith
+
+-- The trace s=1 with norm p=-1 gives the golden ratio equation
+theorem trace_one_is_golden (α : ℝ) (hα_gt : α > 1) (hα_eq : α ^ 2 - α - 1 = 0) :
+    α = φ := by
+  have hφ : φ ^ 2 - φ - 1 = 0 := by have := golden_ratio_property; linarith
+  have hdiff : α ^ 2 - φ ^ 2 - (α - φ) = 0 := by linarith
+  have hfactor : (α - φ) * (α + φ - 1) = 0 := by nlinarith
+  rcases mul_eq_zero.mp hfactor with h | h
+  · linarith
+  · exfalso; nlinarith [phi_pos]
+
+-- Combined: D₆ integrality + norm(-1) + α > 1 → α = φ
+theorem phi_uniqueness (α β : ℝ)
+    (hprod : α * β = -1) (hα_gt : α > 1)
+    (hsum : ∃ s : ℤ, α + β = ↑s)
+    (hD6_int : ∀ s : ℤ, α + β = ↑s →
+      (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2)) :
+    α = φ := by
+  obtain ⟨s, hs⟩ := hsum
+  have hdvd := hD6_int s hs
+  have h02 := (D6_integral_iff_dvd s).mp hdvd
+  have h01 := trace_dvd_two_solutions s h02
+  rcases h01 with rfl | rfl
+  · -- s = 0: degenerate
+    exfalso
+    push_cast at hs
+    have : β = -α := by linarith
+    rw [this] at hprod
+    have : α ^ 2 = 1 := by nlinarith
+    have : α ≤ 1 := by nlinarith [sq_nonneg (α - 1)]
+    linarith
+  · -- s = 1: golden
+    push_cast at hs
+    have hβ : β = 1 - α := by linarith
+    rw [hβ] at hprod
+    have hα_eq : α ^ 2 - α - 1 = 0 := by nlinarith
+    exact trace_one_is_golden α hα_gt hα_eq
+
+end GoldenUniqueness
+
 end FUST

@@ -1,8 +1,3 @@
-import FUST.Biology.Brain
-import FUST.Biology.Life
-import FUST.Biology.Observer
-import FUST.Biology.Sleep
-
 import FUST.Chemistry.Metals.Aluminum
 import FUST.Chemistry.Metals.Chromium
 import FUST.Chemistry.Metals.Copper

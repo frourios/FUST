@@ -1,5 +1,4 @@
 import FUST.Physics.TimeTheorem
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -36,7 +35,7 @@ This is weaker than standard P ≠ NP but is PROVABLE.
 
 namespace FUST.PvsNP
 
-open FUST.TimeTheorem FUST.Biology
+open FUST.TimeTheorem
 
 /-! ## Section 1: D₆ Observer Computational Bounds -/
 
@@ -749,39 +748,6 @@ theorem D6_structural_pnp :
   ⟨rfl, φ_gt_one, abs_psi_lt_one, phi_psi_asymmetry,
    ⟨satLikeNP, D6_cannot_solve_satLike⟩⟩
 
-/-- D₆ channels are NECESSARY, not arbitrary -/
-theorem D6_channels_necessary :
-    -- Channels come from domain structure
-    (D6_channels = Nat.choose D6_domains 2) ∧
-    -- 6 domains is minimal for φ-self-completeness (6 critical channels)
-    (D6_domains = Biology.criticalChannels) ∧
-    -- φ self-reference requires this structure
-    (φ = 1 + 1/φ) :=
-  ⟨rfl, rfl, phi_self_reference_equation⟩
-
-/-- Why D₆ specifically: 6 critical channels for φ-self-completeness -/
-theorem D6_critical_channels :
-    -- 6 critical channels required for self-description
-    Biology.criticalChannels = 6 ∧
-    -- These enable φ-self-completeness
-    Biology.totalChannels = 15 ∧
-    -- 15 = C(6,2) integration channels
-    Biology.totalChannels = Nat.choose 6 2 :=
-  ⟨rfl, rfl, rfl⟩
-
-/-! ### Connection to Physical Realizability -/
-
-/-- D₆ observer defines physically realizable computation -/
-theorem D6_physical_realizability :
-    -- Time exists iff observer is D₆ (from TimeTheorem)
-    (∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-      O.symbolic.level = 100) ∧
-    -- D₆ computation bounded by 15 channels
-    (D6_channels = 15) ∧
-    -- This bounds ALL physically realizable TMs
-    (∀ k : ℕ, ∀ᶠ n in Filter.atTop, n^k < 2^n / D6_channels) :=
-  ⟨fun _ _ h2 => h2.2.1, rfl, channels_dont_help⟩
-
 /-- Complete D₆-structural P≠NP theorem -/
 theorem fust_d6_pnp_complete :
     -- PREMISE 1: D₆ structure from 6 sensory domains
@@ -879,11 +845,6 @@ theorem exp_dominates_poly_frourio (k : ℕ) :
     _ = (2 : ℝ)^(n : ℕ) := by simp
 
 /-! ### D6 Interior: Physical Computation with Provable P ⊊ NP -/
-
-/-- D6 interior has physical time from TimeTheorem -/
-theorem D6_interior_has_time :
-    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-    O.symbolic.level = 100 := fun _ _ h => h.2.1
 
 /-- D6 interior P ⊊ NP is provable -/
 theorem D6_interior_pnp_provable :

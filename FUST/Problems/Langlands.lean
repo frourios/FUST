@@ -1,6 +1,5 @@
 import FUST.Physics.TimeTheorem
 import FUST.Physics.LeastAction
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import Mathlib.Algebra.Ring.Parity
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

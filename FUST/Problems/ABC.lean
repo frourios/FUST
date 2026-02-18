@@ -1,5 +1,4 @@
 import FUST.Physics.TimeTheorem
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.Data.Nat.Factorization.Basic
@@ -168,11 +167,6 @@ theorem phi_scale_radical (n : ℕ) (hn : n ≥ 1) :
 /-- D6 completeness: higher dimensions project to D6 -/
 theorem abc_D6_completeness (d : ℕ) (hd : d ≥ 7) :
     projectToD6 d = 6 := D6_completeness d hd
-
-/-- In D6, time flows forward (from TimeTheorem) -/
-theorem D6_abc_time_forward :
-    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-    O.symbolic.level = 100 := fun _ _ h => h.2.1
 
 /-! ## Section 9: Structural Constraints -/
 

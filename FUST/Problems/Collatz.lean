@@ -1,5 +1,4 @@
 import FUST.Physics.TimeTheorem
-import FUST.Biology.Observer
 import FUST.FrourioLogarithm
 import Mathlib.Algebra.Ring.Parity
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -174,11 +173,6 @@ def CollatzBounded (n : ℕ) (C : ℝ) : Prop :=
 /-- D6 completeness: higher dimensions project to D6 -/
 theorem collatz_D6_completeness (d : ℕ) (hd : d ≥ 7) :
     projectToD6 d = 6 := D6_completeness d hd
-
-/-- In D6, time flows forward (from TimeTheorem) -/
-theorem D6_collatz_time_forward :
-    ∀ O : Biology.Observer, O.dLevel = 6 → Biology.isPhiSelfComplete O →
-    O.symbolic.level = 100 := fun _ _ h => h.2.1
 
 /-! ## Section 9: Structural Truth Statement -/
 

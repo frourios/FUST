@@ -442,4 +442,63 @@ theorem fuftMassParameter_in_goldenInt (n : ℤ) (c₁ c₂ c₃ : ℤ) (Δ₁ �
       φ^n * (1 + c₁ * φ^Δ₁ + c₂ * φ^Δ₂ + c₃ * φ^Δ₃) :=
   ⟨fuftMassParameter n c₁ c₂ c₃ Δ₁ Δ₂ Δ₃, fuftMassParameter_toReal n c₁ c₂ c₃ Δ₁ Δ₂ Δ₃⟩
 
+/-! ## Galois Conjugation σ: φ ↦ ψ
+
+The unique non-trivial automorphism of ℤ[φ]. -/
+
+theorem conj_add (x y : GoldenInt) :
+    GoldenInt.conj (add x y) = add (GoldenInt.conj x) (GoldenInt.conj y) := by
+  unfold GoldenInt.conj add; congr 1 <;> ring
+
+theorem conj_mul (x y : GoldenInt) :
+    GoldenInt.conj (mul x y) = mul (GoldenInt.conj x) (GoldenInt.conj y) := by
+  unfold GoldenInt.conj mul; congr 1 <;> ring
+
+theorem conj_one : GoldenInt.conj one = one := by
+  unfold GoldenInt.conj one; simp
+
+theorem conj_zero : GoldenInt.conj zero = zero := by
+  unfold GoldenInt.conj zero; simp
+
+theorem conj_neg (x : GoldenInt) :
+    GoldenInt.conj (neg x) = neg (GoldenInt.conj x) := by
+  unfold GoldenInt.conj neg; congr 1; ring
+
+theorem conj_involution (x : GoldenInt) :
+    GoldenInt.conj (GoldenInt.conj x) = x := by
+  unfold GoldenInt.conj; simp
+
+theorem conj_fixes_int (n : ℤ) : GoldenInt.conj (intCast n) = intCast n := by
+  cases n with
+  | ofNat m => unfold GoldenInt.conj intCast; simp
+  | negSucc m => unfold GoldenInt.conj intCast; simp
+
+theorem conj_phi : GoldenInt.conj phi = ⟨1, -1⟩ := by
+  unfold GoldenInt.conj phi; simp
+
+-- σ(φ).toReal = ψ
+theorem conj_phi_toReal : (GoldenInt.conj phi).toReal = ψ := by
+  rw [conj_phi]; unfold GoldenInt.toReal ψ φ; push_cast; ring
+
+-- norm preserved: N(σ(x)) = N(x)
+theorem conj_norm (x : GoldenInt) :
+    GoldenInt.norm (GoldenInt.conj x) = GoldenInt.norm x := by
+  unfold GoldenInt.conj GoldenInt.norm; ring
+
+-- σ(x) · x has integer b-component = 0 (product with conjugate is in ℤ)
+theorem conj_mul_self_in_Z (x : GoldenInt) :
+    (mul x (GoldenInt.conj x)).b = 0 := by
+  unfold mul GoldenInt.conj; simp; ring
+
+-- Product x · σ(x) equals (norm x, 0) ... actually let's verify:
+-- x = (a,b), conj(x) = (a+b,-b)
+-- x * conj(x) = (a(a+b) + b(-b), a(-b) + b(a+b) + b(-b))
+--             = (a² + ab - b², -ab + ab + b² - b²)
+--             = (a² + ab - b², 0)
+--             = (norm(x), 0)
+theorem conj_mul_self_eq_norm (x : GoldenInt) :
+    mul x (GoldenInt.conj x) = ⟨GoldenInt.norm x, 0⟩ := by
+  unfold mul GoldenInt.conj GoldenInt.norm
+  simp [GoldenInt.ext_iff]; constructor <;> ring
+
 end FUST.FrourioAlgebra
