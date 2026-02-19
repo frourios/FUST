@@ -52,13 +52,13 @@ def dimTritiumAtom : FDim := dimTritonIon * dimElectron * dimBindingDefect⁻¹
 
 /-! ## Section 3: Explicit FDim Values -/
 
-theorem dimHydrogenIon_eq : dimHydrogenIon = ⟨9, -13, -15⟩ := by decide
-theorem dimHydrogenAtom_eq : dimHydrogenAtom = ⟨3, -11, -15⟩ := by decide
-theorem dimHydrideAnion_eq : dimHydrideAnion = ⟨-3, -9, -15⟩ := by decide
-theorem dimDeuteronIon_eq : dimDeuteronIon = ⟨16, -24, -28⟩ := by decide
-theorem dimDeuteriumAtom_eq : dimDeuteriumAtom = ⟨10, -22, -28⟩ := by decide
-theorem dimTritonIon_eq : dimTritonIon = ⟨23, -35, -41⟩ := by decide
-theorem dimTritiumAtom_eq : dimTritiumAtom = ⟨17, -33, -41⟩ := by decide
+theorem dimHydrogenIon_eq : dimHydrogenIon = ⟨9, -13⟩ := by decide
+theorem dimHydrogenAtom_eq : dimHydrogenAtom = ⟨3, -11⟩ := by decide
+theorem dimHydrideAnion_eq : dimHydrideAnion = ⟨-3, -9⟩ := by decide
+theorem dimDeuteronIon_eq : dimDeuteronIon = ⟨16, -24⟩ := by decide
+theorem dimDeuteriumAtom_eq : dimDeuteriumAtom = ⟨10, -22⟩ := by decide
+theorem dimTritonIon_eq : dimTritonIon = ⟨23, -35⟩ := by decide
+theorem dimTritiumAtom_eq : dimTritiumAtom = ⟨17, -33⟩ := by decide
 
 /-! ## Section 4: Sector Decomposition
 
@@ -138,21 +138,7 @@ theorem hydrogenDims_ne_elementary :
     dimDeuteriumAtom ≠ dimProton ∧
     dimDeuteriumAtom ≠ dimNeutron := by decide
 
-/-! ## Section 7: Pure Sector
-
-All species satisfy p + 3δ - 2τ = 0 (pure sector). -/
-
-theorem hydrogenSpecies_pureSector :
-    dimHydrogenIon.isPureSector ∧
-    dimHydrogenAtom.isPureSector ∧
-    dimHydrideAnion.isPureSector ∧
-    dimDeuteronIon.isPureSector ∧
-    dimDeuteriumAtom.isPureSector ∧
-    dimTritonIon.isPureSector ∧
-    dimTritiumAtom.isPureSector := by
-  unfold FDim.isPureSector; decide
-
-/-! ## Section 8: Mass Defect Monotonicity
+/-! ## Section 7: Mass Defect Monotonicity
 
 Each binding lowers the effective degree by 1 relative to the free product.
 Free product effectiveDegree = sum of constituent effectiveDegrees.

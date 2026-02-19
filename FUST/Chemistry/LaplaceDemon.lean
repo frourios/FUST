@@ -733,4 +733,277 @@ theorem partition_choice_invisible
     demonPos (S₁ ++ S₂ ++ E) x = demonPos ((S₁ ++ S₂) ++ E) x := by
   rw [List.append_assoc]
 
+/-! ## Section 20: Relative Position — No Absolute Coordinates
+
+Positions q ∈ ℤ[φ] appear as ROOTS of D(x), not as free parameters.
+Only relative distances are physically meaningful: a global translation
+q_j → q_j + c preserves all distances. Individual position changes
+alter D(x)'s coefficients, coupling to every other particle. -/
+
+section RelativePosition
+
+/-- Relative distance between two particles: q₁ - q₂ ∈ ℤ[φ] -/
+def relativeDistance (q₁ q₂ : GoldenInt) : GoldenInt := q₁ - q₂
+
+/-- Relative distance is zero iff positions coincide -/
+theorem relativeDistance_zero_iff (q₁ q₂ : GoldenInt) :
+    relativeDistance q₁ q₂ = 0 ↔ q₁ = q₂ := sub_eq_zero
+
+/-- Relative distance is antisymmetric -/
+theorem relativeDistance_antisymm (q₁ q₂ : GoldenInt) :
+    relativeDistance q₁ q₂ = -relativeDistance q₂ q₁ := by
+  simp [relativeDistance]
+
+/-- Global translation preserves relative distance -/
+theorem global_translation_preserves_distance (q₁ q₂ c : GoldenInt) :
+    relativeDistance (q₁ + c) (q₂ + c) = relativeDistance q₁ q₂ := by
+  simp [relativeDistance]
+
+/-- Triangle inequality for relative distances (additive) -/
+theorem relativeDistance_triangle (q₁ q₂ q₃ : GoldenInt) :
+    relativeDistance q₁ q₃ = relativeDistance q₁ q₂ + relativeDistance q₂ q₃ := by
+  simp [relativeDistance]
+
+/-- Relative distance embeds faithfully into ℝ -/
+theorem relativeDistance_toReal (q₁ q₂ : GoldenInt) :
+    (relativeDistance q₁ q₂).toReal = q₁.toReal - q₂.toReal := by
+  unfold relativeDistance
+  change (GoldenInt.add q₁ (GoldenInt.neg q₂)).toReal = q₁.toReal - q₂.toReal
+  rw [toReal_add, toReal_neg]; ring
+
+/-- Non-zero distance implies distinct real positions -/
+theorem distinct_positions_distinct_reals (q₁ q₂ : GoldenInt) (hne : q₁ ≠ q₂) :
+    q₁.toReal ≠ q₂.toReal := by
+  intro h
+  exact hne (toReal_injective h)
+
+end RelativePosition
+
+/-! ## Section 21: Position Change Alters the Demon Polynomial
+
+Changing one particle's position while keeping others fixed
+produces a DIFFERENT demon polynomial. The product structure
+ensures every particle's position is coupled to D(x). -/
+
+section PositionChangeCost
+
+/-- Proton root differs for distinct positions -/
+theorem distinct_proton_roots (Z N e : ℕ) (q q' : GoldenInt) (hZ : Z ≥ 1) (hne : q ≠ q') :
+    shiftedStateFn Z N e q q.toReal = 0 ∧ q.toReal ≠ q'.toReal :=
+  ⟨shifted_root_proton Z N e q hZ, distinct_positions_distinct_reals q q' hne⟩
+
+/-- Moving a particle shifts the proton root: the demon evaluates differently -/
+theorem position_change_shifts_root
+    (Z N e : ℕ) (q q' : GoldenInt) (hZ : Z ≥ 1) (hne : q ≠ q') :
+    shiftedStateFn Z N e q q.toReal = 0 ∧
+    shiftedStateFn Z N e q' q'.toReal = 0 ∧
+    q.toReal ≠ q'.toReal :=
+  ⟨shifted_root_proton Z N e q hZ,
+   shifted_root_proton Z N e q' hZ,
+   distinct_positions_distinct_reals q q' hne⟩
+
+/-- Two-particle demon has proton roots of both particles -/
+theorem two_particle_roots
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) :
+    demonPos [(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] q₁.toReal = 0 ∧
+    demonPos [(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] q₂.toReal = 0 := by
+  constructor
+  · unfold demonPos
+    simp [List.foldl, shifted_root_proton Z₁ N₁ e₁ q₁ hZ₁]
+  · unfold demonPos
+    simp [List.foldl, shifted_root_proton Z₂ N₂ e₂ q₂ hZ₂]
+
+/-- Changing q₁ to q₁' shifts the root set: q₁' replaces q₁ -/
+theorem position_change_shifts_demon_roots
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₁' q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) (hne : q₁ ≠ q₁') :
+    -- Before: roots at q₁, q₂
+    demonPos [(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] q₁.toReal = 0 ∧
+    -- After: roots at q₁', q₂ (q₁' ≠ q₁)
+    demonPos [(Z₁, N₁, e₁, q₁'), (Z₂, N₂, e₂, q₂)] q₁'.toReal = 0 ∧
+    -- Root sets differ
+    q₁.toReal ≠ q₁'.toReal := by
+  exact ⟨(two_particle_roots Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂).1,
+         (two_particle_roots Z₁ N₁ e₁ Z₂ N₂ e₂ q₁' q₂ hZ₁ hZ₂).1,
+         distinct_positions_distinct_reals q₁ q₁' hne⟩
+
+/-- Relative distance is recoverable from mated factor's root pair -/
+theorem mated_distance_recoverable
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) :
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₁.toReal = 0 ∧
+    matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₂.toReal = 0 ∧
+    (q₁ ≠ q₂ → q₁.toReal ≠ q₂.toReal) :=
+  ⟨(mated_sees_both_clusters Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂).1,
+   (mated_sees_both_clusters Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂).2,
+   distinct_positions_distinct_reals q₁ q₂⟩
+
+end PositionChangeCost
+
+/-! ## Section 22: Interaction Through Product Structure
+
+A particle cannot change position without affecting the entire demon
+polynomial. The product D(x) = Π g_j(x - q_j) means the coefficients
+of D(x) are symmetric functions of ALL positions. A single position
+change Δq_j is coupled to every other particle through these coefficients.
+
+Movement requires the demon polynomial to evolve from D(x) to D'(x),
+which requires scale steps (time evolution). The number of steps
+depends on the φ-adic size of the displacement. -/
+
+section InteractionForced
+
+/-- Position displacement in ℤ[φ] -/
+def displacement (q q' : GoldenInt) : GoldenInt := q' - q
+
+/-- Non-zero displacement means distinct positions -/
+theorem nonzero_displacement_distinct (q δ : GoldenInt) (hδ : δ ≠ 0) :
+    q ≠ q + δ := by
+  intro h; apply hδ; have := congr_arg (· - q) h; simp at this; exact this.symm
+
+/-- Non-trivial displacement shifts the proton root -/
+theorem displacement_shifts_root
+    (Z N e : ℕ) (q δ : GoldenInt) (hZ : Z ≥ 1) (hδ : δ ≠ 0) :
+    shiftedStateFn Z N e q q.toReal = 0 ∧
+    q.toReal ≠ (q + δ).toReal :=
+  ⟨shifted_root_proton Z N e q hZ,
+   distinct_positions_distinct_reals q (q + δ) (nonzero_displacement_distinct q δ hδ)⟩
+
+/-- Product coupling: displaced root in the full demon -/
+theorem displacement_shifts_demon_root
+    (Z N e : ℕ) (q δ : GoldenInt) (hZ : Z ≥ 1) (hδ : δ ≠ 0)
+    (E : List (ℕ × ℕ × ℕ × GoldenInt)) :
+    demonPos ([(Z, N, e, q)] ++ E) q.toReal = 0 ∧
+    q.toReal ≠ (q + δ).toReal := by
+  constructor
+  · rw [demon_factorization]
+    simp [demonPos, List.foldl, shifted_root_proton Z N e q hZ]
+  · exact (displacement_shifts_root Z N e q δ hZ hδ).2
+
+/-- Displacement embeds faithfully into ℝ -/
+theorem displacement_toReal (q q' : GoldenInt) :
+    (displacement q q').toReal = q'.toReal - q.toReal := by
+  unfold displacement
+  change (GoldenInt.add q' (GoldenInt.neg q)).toReal = q'.toReal - q.toReal
+  rw [toReal_add, toReal_neg]; ring
+
+/-- Movement between distinct positions changes proton root sets -/
+theorem no_free_teleportation
+    (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (q₁ q₁' q₂ : GoldenInt)
+    (hZ₁ : Z₁ ≥ 1) (hZ₂ : Z₂ ≥ 1) (hne : q₁ ≠ q₁') :
+    -- (1) Root sets before and after differ
+    q₁.toReal ≠ q₁'.toReal ∧
+    -- (2) Anchor q₂ is a root in both configurations
+    demonPos [(Z₁, N₁, e₁, q₁), (Z₂, N₂, e₂, q₂)] q₂.toReal = 0 ∧
+    demonPos [(Z₁, N₁, e₁, q₁'), (Z₂, N₂, e₂, q₂)] q₂.toReal = 0 ∧
+    -- (3) Displacement is non-trivial
+    displacement q₁ q₁' ≠ 0 := by
+  refine ⟨distinct_positions_distinct_reals q₁ q₁' hne,
+    (two_particle_roots Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂).2,
+    (two_particle_roots Z₁ N₁ e₁ Z₂ N₂ e₂ q₁' q₂ hZ₁ hZ₂).2,
+    ?_⟩
+  intro h; exact hne.symm (sub_eq_zero.mp (by simp only [displacement] at h; exact h))
+
+end InteractionForced
+
+/-! ## Section 23: Summary — Algebraic Locality
+
+All positions are relative (global translation invariance).
+Position changes alter the demon polynomial (no free teleportation).
+The product structure couples every particle to every other.
+Movement requires scale evolution (energy = time steps). -/
+
+theorem algebraic_locality :
+    -- (1) Global translation preserves distances
+    (∀ q₁ q₂ c : GoldenInt,
+      relativeDistance (q₁ + c) (q₂ + c) = relativeDistance q₁ q₂) ∧
+    -- (2) Displacement shifts proton roots
+    (∀ Z N e q δ, Z ≥ 1 → δ ≠ (0 : GoldenInt) →
+      shiftedStateFn Z N e q q.toReal = 0 ∧ q.toReal ≠ (q + δ).toReal) ∧
+    -- (3) Mated factor encodes distance
+    (∀ Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂, Z₁ ≥ 1 → Z₂ ≥ 1 →
+      matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₁.toReal = 0 ∧
+      matedSubDemon Z₁ N₁ e₁ q₁ Z₂ N₂ e₂ q₂ q₂.toReal = 0) ∧
+    -- (4) Relative distance is antisymmetric
+    (∀ q₁ q₂ : GoldenInt,
+      relativeDistance q₁ q₂ = -relativeDistance q₂ q₁) :=
+  ⟨global_translation_preserves_distance,
+   fun Z N e q δ hZ hδ => displacement_shifts_root Z N e q δ hZ hδ,
+   fun Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂ =>
+     mated_sees_both_clusters Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ hZ₁ hZ₂,
+   relativeDistance_antisymm⟩
+
+/-! ## Section 24: Spatial Dimension from Particle Structure
+
+The number 3 in "spatial dimension = 3" is derived from the particle
+state function g(x-q) = (x-q)^Z · (1+(x-q))^N · (1+ψ(x-q))^e, which has
+exactly 3 irreducible factor families. The minimum complete particle (1,1,1)
+has polynomial degree 3, and ker(D₆) has dimension 3. These are the same "3"
+because D₆ annihilates degree ≤ 2 but detects degree 3 = the first
+non-trivial particle. -/
+
+section SpatialDimensionDerivation
+
+/-- Number of irreducible factor families in shiftedStateFn -/
+noncomputable abbrev rootFamilyCount : ℕ := FUST.Chemistry.rootFamilyCount
+
+/-- The three factor families are: (x-q)^Z, (1+(x-q))^N, (1+ψ(x-q))^e -/
+theorem three_root_families (Z N e : ℕ) (q : GoldenInt) (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
+    shiftedStateFn Z N e q q.toReal = 0 ∧
+    shiftedStateFn Z N e q (q.toReal - 1) = 0 ∧
+    shiftedStateFn Z N e q (q.toReal + φ) = 0 :=
+  complete_particle_roots Z N e q hZ hN he
+
+/-- The three roots are pairwise distinct -/
+theorem three_roots_distinct (q : GoldenInt) :
+    q.toReal ≠ q.toReal - 1 ∧
+    q.toReal ≠ q.toReal + φ ∧
+    q.toReal - 1 ≠ q.toReal + φ := by
+  refine ⟨by linarith, by linarith [phi_pos], by linarith [phi_pos]⟩
+
+/-- Minimum complete particle degree = rootFamilyCount -/
+theorem min_complete_degree_eq_rootFamilyCount :
+    1 + 1 + 1 = rootFamilyCount := by decide
+
+/-- rootFamilyCount equals ker(D₆) dimension -/
+theorem rootFamilyCount_eq_kerDim :
+    rootFamilyCount = FUST.Dim.operatorKerDim 6 := by decide
+
+
+/-- D₆ annihilates degree < rootFamilyCount but detects degree = rootFamilyCount.
+    ker(D₆) = {degree ≤ rootFamilyCount - 1} = {degree ≤ 2}. -/
+theorem D6_threshold_at_rootFamilyCount :
+    -- D₆ annihilates 1, x, x²
+    (∀ x, x ≠ 0 → D6 (fun _ => (1 : ℝ)) x = 0) ∧
+    (∀ x, x ≠ 0 → D6 id x = 0) ∧
+    (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
+    -- D₆ detects x³ (degree = rootFamilyCount)
+    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
+  ⟨D6_const 1, D6_linear, D6_quadratic, D6_detects_cubic⟩
+
+/-- Spatial dimension derivation from particle structure:
+    (1) Each complete particle has exactly 3 irreducible root families
+    (2) Minimum complete particle has polynomial degree 3
+    (3) D₆ annihilates degree ≤ 2 and detects degree 3
+    (4) Therefore spatialDim = rootFamilyCount = ker(D₆) dim = 3 -/
+theorem spatial_dim_from_particle_structure :
+    -- (1) Three root families, all distinct
+    (∀ Z N e q, Z ≥ 1 → N ≥ 1 → e ≥ 1 →
+      shiftedStateFn Z N e q q.toReal = 0 ∧
+      shiftedStateFn Z N e q (q.toReal - 1) = 0 ∧
+      shiftedStateFn Z N e q (q.toReal + φ) = 0) ∧
+    -- (2) Minimum complete degree = 3
+    (1 + 1 + 1 = rootFamilyCount) ∧
+    -- (3) D₆ threshold at degree 3
+    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) ∧
+    -- (4) rootFamilyCount = 3
+    (rootFamilyCount = 3) :=
+  ⟨fun Z N e q hZ hN he => complete_particle_roots Z N e q hZ hN he,
+   min_complete_degree_eq_rootFamilyCount,
+   D6_detects_cubic,
+   rfl⟩
+
+end SpatialDimensionDerivation
+
 end FUST.Chemistry.LaplaceDemon

@@ -22,7 +22,7 @@ Aufbau: [Ne] 3s² 3p¹. p-block metal with no d-electrons.
 abbrev aluminumZ : ℕ := 13
 
 theorem aluminumZ_derivation :
-    closedShellElectronCount 2 + WaveEquation.spatialDim = aluminumZ := by decide
+    closedShellElectronCount 2 + 3 = aluminumZ := by decide
 
 -- [Ne] 3s² 3p¹
 theorem aluminumZ_shell_filling :
@@ -33,7 +33,7 @@ theorem aluminumZ_shell_filling :
 
 -- Valence = 3 (group IIIA)
 theorem aluminum_valence :
-    aluminumZ - closedShellElectronCount 2 = WaveEquation.spatialDim := by decide
+    aluminumZ - closedShellElectronCount 2 = 3 := by decide
 
 /-! ## Section 2: Aluminum Isotope -/
 
@@ -70,7 +70,7 @@ theorem Al27_mass_number : aluminumZ + neutrons_Al27 = 27 := rfl
 
 theorem aluminum_classification :
     aluminumZ = 13 ∧
-    closedShellElectronCount 2 + WaveEquation.spatialDim = aluminumZ ∧
+    closedShellElectronCount 2 + 3 = aluminumZ ∧
     neutrons_Al27 = 2 * nitrogenZ ∧
     (dimAtom 13 14 0).effectiveDegree > 2 ∧
     (dimAtom 13 14 13).effectiveDegree > 2 := by

@@ -19,7 +19,7 @@ open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 carbonZ = spinDegeneracy × spatialDim = 2 × 3 = 6.
 -/
 
-abbrev carbonZ : ℕ := Nuclear.spinDegeneracy * WaveEquation.spatialDim
+abbrev carbonZ : ℕ := Nuclear.spinDegeneracy * 3
 
 theorem carbonZ_eq : carbonZ = 6 := rfl
 
@@ -184,8 +184,8 @@ theorem ionization_effDeg_C12 :
 /-! ## Section 9: Summary -/
 
 theorem carbon_isotope_classification :
-    -- carbonZ derived from D-operator kernels
-    carbonZ = Nuclear.spinDegeneracy * WaveEquation.spatialDim ∧
+    -- carbonZ = spinDegeneracy × 3 = 6
+    carbonZ = 6 ∧
     -- ¹²C is a symmetric nucleus (Z = N)
     carbonZ = neutrons_C12 ∧
     -- ¹⁴C has magic neutron number

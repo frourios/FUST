@@ -132,9 +132,9 @@ theorem cos_waterBondAngle : cos waterBondAngle = -1 / 4 := by
 -- CH₄ bond angle = arccos(-1/3) = tetrahedral (since -2/6 = -1/3)
 noncomputable def methaneBondAngle : ℝ := arccos (-1 / 3 : ℝ)
 
--- Derivation: carbonZ / spinDegeneracy = 3 = spatialDim
+-- Derivation: carbonZ / spinDegeneracy = 3
 theorem methane_electron_pairs :
-    carbonZ / Nuclear.spinDegeneracy = WaveEquation.spatialDim := by decide
+    carbonZ / Nuclear.spinDegeneracy = 3 := by decide
 
 theorem methaneBondAngle_eq_tetrahedral : methaneBondAngle = tetrahedralAngle := rfl
 

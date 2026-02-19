@@ -50,12 +50,12 @@ theorem DT_fdim_conservation :
     dimAtom 1 1 0 * dimAtom 1 2 0 =
     dimAtom 2 2 0 * dimAtom 0 1 0 := by decide
 
--- Lithium: Z = spatialDim = 3
-abbrev lithiumZ : ℕ := WaveEquation.spatialDim
+-- Lithium: Z = 3
+abbrev lithiumZ : ℕ := 3
 abbrev neutrons_Li6 : ℕ := lithiumZ
 abbrev neutrons_Li7 : ℕ := lithiumZ + hydrogenZ
 
-theorem lithiumZ_eq_spatialDim : lithiumZ = WaveEquation.spatialDim := rfl
+theorem lithiumZ_val : lithiumZ = 3 := rfl
 theorem lithiumZ_eq : lithiumZ = 3 := rfl
 
 -- Tritium breeding: n + Li-6 → He-4 + T (baryon conservation)
@@ -119,9 +119,9 @@ theorem differential_permeation :
 theorem tritium_effDeg_excess :
     (dimAtom 1 2 0).effectiveDegree - (dimAtom 1 1 0).effectiveDegree = 15 := by decide
 
--- Tritium atom effDeg > spatialDim
+-- Tritium atom effDeg > 3
 theorem tritium_exceeds_kerD6_dim :
-    (dimAtom 1 2 1).effectiveDegree > WaveEquation.spatialDim := by decide
+    (dimAtom 1 2 1).effectiveDegree > 3 := by decide
 
 -- SiC permeation barrier: Z_total = nuclearMagic(2) = 20
 abbrev siliconZ : ℕ := 14

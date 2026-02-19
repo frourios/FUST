@@ -83,7 +83,7 @@ theorem ice_coordination_lt_closePack :
 
 -- Ice uses only 1/spatialDim of close-pack coordination
 theorem ice_coord_ratio :
-    iceCoordination * WaveEquation.spatialDim =
+    iceCoordination * 3 =
       closePackCoordination := by decide
 
 /-! ## Section 3: Water Total Particle Count = Nuclear Magic Number
@@ -163,11 +163,11 @@ The inequality spatialDim < baseCount captures this transition.
 
 -- spatialDim (3) < baseCount (4): liquid can break 1 H-bond and densify
 theorem spatialDim_lt_baseCount :
-    WaveEquation.spatialDim < 2 ^ Nuclear.spinDegeneracy := by decide
+    3 < 2 ^ Nuclear.spinDegeneracy := by decide
 
 -- spatialDim + 1 = baseCount
 theorem spatialDim_succ_eq_baseCount :
-    WaveEquation.spatialDim + 1 = 2 ^ Nuclear.spinDegeneracy := by decide
+    3 + 1 = 2 ^ Nuclear.spinDegeneracy := by decide
 
 /-! ## Section 6: Grotthuss Proton Transfer
 
@@ -254,7 +254,7 @@ theorem water_anomaly_classification :
     -- Ice coordination < close-pack (open structure)
     iceCoordination < closePackCoordination ∧
     -- spatialDim < baseCount
-    WaveEquation.spatialDim < 2 ^ Nuclear.spinDegeneracy ∧
+    3 < 2 ^ Nuclear.spinDegeneracy ∧
     -- Autoionization conserves effectiveDegree
     (dimAtom 10 8 10).effectiveDegree +
       (dimAtom 10 8 10).effectiveDegree =

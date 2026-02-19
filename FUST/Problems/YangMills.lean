@@ -286,8 +286,6 @@ First massive mode: D₆(x³) = Δ·x₀² where Δ = 12/25 > 0. -/
 theorem yangMills_massGap_SU3 :
     -- Gauge group: dim ker(D₆) = 3 → SU(3), dim su(3) = 8
     (kernelDimensions 2 = 3 ∧ 3 ^ 2 - 1 = 8) ∧
-    -- Spacetime: R⁴ from 3 + 1
-    (spatialDimension + temporalDimension = 4) ∧
     -- Vacuum: ker(D₆) = span{1, x, x²}
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t ^ 2) x = 0) ∧
     -- Mass gap: Δ = 12/25 > 0, D₆(x³) = Δ · x₀²
@@ -297,7 +295,6 @@ theorem yangMills_massGap_SU3 :
     (∀ f g, IsInKerD6 f → IsInKerD6 g → IsInKerD6 (fun t => f t + g t)) ∧
     (∃ f g, IsInKerD6 f ∧ IsInKerD6 g ∧ ¬IsInKerD6 (fun t => f t * g t)) :=
   ⟨⟨rfl, by norm_num⟩,
-   spacetimeDimension_eq_4,
    fun x hx => ⟨D6_const 1 x hx, D6_linear x hx, D6_quadratic x hx⟩,
    ⟨FUST.massGapΔ_pos, rfl⟩,
    FUST.D6_cubic_eq_massGap_mul_sq,

@@ -4,15 +4,6 @@ namespace FUST.TimeTheorem
 
 open FUST.LeastAction
 
-/-- Time Existence Theorem (Complete Form) -/
-theorem time_existence_theorem :
-    (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExistsD6 f) ∧
-    (∀ f c x, c ≠ 0 → x ≠ 0 → D6 (fun t => f (c * t)) x = c * D6 f (c * x)) :=
-  ⟨IsInKerD6_implies_D6_zero,
-   fun f ⟨x, hx, hD6⟩ => D6_nonzero_implies_time f x hx hD6,
-   fun f c x hc hx => D6_gauge_scaling f c x hc hx⟩
-
 /-! ## Higher Order Reduction -/
 
 /-- Higher Order Reduction: ker(D7) = ker(D6) -/
@@ -22,7 +13,12 @@ theorem higher_order_reduction :
              (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
   FUST.D7_kernel_equals_D6_kernel
 
-/-! ## Arrow of Time from φ/ψ Asymmetry -/
+/-! ## Arrow of Time from φ/ψ Asymmetry
+
+The arrow of time is a shared property of ALL Dm operators (m ≥ 2).
+Time evolution f(t) ↦ f(φt) uses φ > 1, so |φ| > 1 and |ψ| < 1.
+This asymmetry is intrinsic to the golden ratio, not specific to D6.
+-/
 
 /-- |ψ| < 1 -/
 theorem abs_psi_lt_one : |ψ| < 1 := by
@@ -63,67 +59,14 @@ theorem phi_mul_abs_psi : φ * |ψ| = 1 := by
 
 /-! ## Time Evolution -/
 
-/-- φ is unique expansion factor > 1 -/
-theorem phi_unique_expansion : φ > 1 ∧ |ψ| < 1 :=
-  ⟨φ_gt_one, abs_psi_lt_one⟩
-
-/-! ## Entropy Increase -/
-
 /-- For tⁿ, time evolution amplifies by φⁿ -/
 theorem monomial_amplification (n : ℕ) (t : ℝ) :
     timeEvolution (fun s => s^n) t = φ^n * t^n := by
-  simp only [timeEvolution]
-  ring
+  simp only [timeEvolution]; ring
 
 /-- φⁿ > 1 for n ≥ 1 -/
 theorem phi_pow_gt_one (n : ℕ) (hn : n ≥ 1) : φ^n > 1 := by
   exact one_lt_pow₀ φ_gt_one (Nat.one_le_iff_ne_zero.mp hn)
-
-/-- φ^(2n) > 1 for n ≥ 1 -/
-theorem phi_pow_2n_gt_one (n : ℕ) (hn : n ≥ 1) : φ^(2*n) > 1 :=
-  phi_pow_gt_one (2*n) (by omega)
-
-/-- Entropy increase principle -/
-theorem entropy_increase_principle (f : ℝ → ℝ) (t : ℝ) :
-    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 := rfl
-
-/-- For tⁿ, perpProjectionD6 scaling -/
-theorem monomial_perp_scaling (n : ℕ) (t : ℝ) :
-    perpProjectionD6 (timeEvolution (fun s => s^n)) t =
-    φ^n * t^n - kernelProjectionD6 (timeEvolution (fun s => s^n)) t := by
-  simp only [perpProjectionD6, timeEvolution]
-  ring
-
-/-- Time direction unique -/
-theorem time_direction_unique : φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩
-
-/-! ## Summary Theorems -/
-
-/-- Arrow of time summary -/
-theorem arrow_of_time_summary :
-    (φ > 1) ∧
-    (|ψ| < 1) ∧
-    (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
-    (∀ f x, x ≠ 0 → D6 (timeEvolution f) x = φ * D6 f (φ * x)) :=
-  ⟨φ_gt_one, abs_psi_lt_one, ker_D6_invariant, D6_timeEvolution⟩
-
-/-- FUST Time Theorem: Complete statement -/
-theorem fust_time_theorem :
-    (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f : ℝ → ℝ, (∃ x, x ≠ 0 ∧ D6 f x ≠ 0) → TimeExistsD6 f) ∧
-    ((∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-     (∀ x, x ≠ 0 → D6 id x = 0) ∧
-     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0)) ∧
-    (∀ a : ℝ, (∀ k x, x ≠ 0 → FUST.D7_constrained a (fun _ => k) x = 0) ∧
-              (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
-              (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0)) ∧
-    (∀ f c x, c ≠ 0 → x ≠ 0 → D6 (fun t => f (c * t)) x = c * D6 f (c * x)) :=
-  ⟨IsInKerD6_implies_D6_zero,
-   fun f ⟨x, hx, hD6⟩ => D6_nonzero_implies_time f x hx hD6,
-   D6_kernel_dim_3,
-   higher_order_reduction,
-   fun f c x hc hx => D6_gauge_scaling f c x hc hx⟩
 
 /-- Adding kernel component doesn't change D6 -/
 theorem kernel_component_D6_invariant (f g : ℝ → ℝ) (hg : IsInKerD6 g) :
@@ -152,18 +95,83 @@ theorem kernel_component_D6_invariant (f g : ℝ → ℝ) (hg : IsInKerD6 g) :
     _ = (f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) /
       (D6Denom * x) := by ring_nf
 
-/-! ## Structural Minimum Time
+/-! ## Structural Minimum Time for All Operators
 
-The minimum time is derived structurally from D6, not by numerical fitting.
+Each Dm has its own structural minimum time derived from spectral structure:
+  t_min^Dm = (√5)^{m-1} / |C_{d_min}|
 
-Key insight:
-- ker(D6) = {1, x, x²} means D6 = 0 for these modes → no time defined
-- n = 3 is the minimum degree where D6 detects temporal change
-- C_3 = 12√5 is the minimum nonzero dissipation coefficient
-- Structural minimum time = (√5)⁵ / C_3 = 25/12
+where C_{d_min} is the spectral coefficient at the minimum massive degree.
+
+  D2: (√5)^1 / √5           = 1      (d_min = 1, C_1 = φ-ψ = √5)
+  D3: (√5)^2 / 1             = 5      (d_min = 1, |C_1| = |φ+ψ-2| = 1)
+  D4: (√5)^3 / √5            = 5      (d_min = 0, |C_0| = |-(φ²-ψ²)| = √5)
+  D5: (√5)^4 / 6             = 25/6   (d_min = 2, C_2 = 6)
+  D6: (√5)^4 / 12            = 25/12  (d_min = 3, |C_3| = 12√5)
 -/
 
-/-- C_3 = 12√5 (minimum nonzero dissipation coefficient) -/
+section StructuralMinTimes
+
+/-- D2: t_min = (√5)^1 / |C_1|, where C_1 = φ-ψ = √5 -/
+noncomputable def structuralMinTimeD2 : ℝ := Real.sqrt 5 / Real.sqrt 5
+
+/-- D3: t_min = (√5)^2 / |C_1|, where |C_1| = |φ+ψ-2| = 1 -/
+noncomputable def structuralMinTimeD3 : ℝ := (Real.sqrt 5)^2 / 1
+
+/-- D4: t_min = (√5)^3 / |C_0|, where |C_0| = √5 -/
+noncomputable def structuralMinTimeD4 : ℝ := (Real.sqrt 5)^3 / Real.sqrt 5
+
+/-- D5: t_min = (√5)^4 / C_2, where C_2 = 6 -/
+noncomputable def structuralMinTimeD5 : ℝ := (Real.sqrt 5)^4 / 6
+
+/-- D6: t_min = (√5)^5 / |C_3| = (√5)^4 / 12, since |C_3| = 12√5 -/
+noncomputable def structuralMinTimeD6 : ℝ := (Real.sqrt 5)^4 / 12
+
+private theorem sqrt5_sq : (Real.sqrt 5)^2 = 5 :=
+  Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+
+private theorem sqrt5_pow4 : (Real.sqrt 5)^4 = 25 := by
+  calc (Real.sqrt 5)^4 = ((Real.sqrt 5)^2)^2 := by ring
+    _ = 5^2 := by rw [sqrt5_sq]
+    _ = 25 := by norm_num
+
+private theorem sqrt5_pos : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5 : ℝ) > 0)
+
+private theorem sqrt5_ne_zero : Real.sqrt 5 ≠ 0 := ne_of_gt sqrt5_pos
+
+theorem structuralMinTimeD2_eq : structuralMinTimeD2 = 1 := by
+  simp only [structuralMinTimeD2]; exact div_self sqrt5_ne_zero
+
+theorem structuralMinTimeD3_eq : structuralMinTimeD3 = 5 := by
+  simp only [structuralMinTimeD3, div_one]; exact sqrt5_sq
+
+theorem structuralMinTimeD4_eq : structuralMinTimeD4 = 5 := by
+  simp only [structuralMinTimeD4]
+  rw [show (Real.sqrt 5)^3 = (Real.sqrt 5)^2 * Real.sqrt 5 from by ring]
+  rw [mul_div_cancel_of_imp fun h => absurd h sqrt5_ne_zero]
+  exact sqrt5_sq
+
+theorem structuralMinTimeD5_eq : structuralMinTimeD5 = 25 / 6 := by
+  simp only [structuralMinTimeD5]; rw [sqrt5_pow4]
+
+theorem structuralMinTimeD6_eq : structuralMinTimeD6 = 25 / 12 := by
+  simp only [structuralMinTimeD6]; rw [sqrt5_pow4]
+
+theorem structuralMinTimeD2_positive : structuralMinTimeD2 > 0 := by
+  rw [structuralMinTimeD2_eq]; norm_num
+
+theorem structuralMinTimeD3_positive : structuralMinTimeD3 > 0 := by
+  rw [structuralMinTimeD3_eq]; norm_num
+
+theorem structuralMinTimeD4_positive : structuralMinTimeD4 > 0 := by
+  rw [structuralMinTimeD4_eq]; norm_num
+
+theorem structuralMinTimeD5_positive : structuralMinTimeD5 > 0 := by
+  rw [structuralMinTimeD5_eq]; norm_num
+
+theorem structuralMinTimeD6_positive : structuralMinTimeD6 > 0 := by
+  rw [structuralMinTimeD6_eq]; norm_num
+
+/-- C_3 = 12√5 (D6 minimum nonzero spectral coefficient) -/
 theorem C3_eq_12_sqrt5 : φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 = 12 * Real.sqrt 5 := by
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ^2 = ψ + 1 := psi_sq
@@ -217,49 +225,27 @@ theorem C3_eq_12_sqrt5 : φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 = 12 * Real
     _ = 12 * (φ - ψ) := by ring
     _ = 12 * Real.sqrt 5 := by rw [phi_sub_psi]
 
-/-- Structural minimum time: (√5)⁵ / C_3 = (√5)⁴ / 12 = 25/12
-    This is the minimum time at which D6 detects temporal change.
-    Below this scale, all functions behave as ker(D6) = {1, x, x²}. -/
-noncomputable def structuralMinTime : ℝ := (Real.sqrt 5)^4 / 12
-
-/-- structuralMinTime equals 25/12 -/
-theorem structuralMinTime_eq : structuralMinTime = 25 / 12 := by
-  simp only [structuralMinTime]
-  have h5 : (Real.sqrt 5)^4 = 25 := by
-    have hsq : (Real.sqrt 5)^2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-    calc (Real.sqrt 5)^4 = ((Real.sqrt 5)^2)^2 := by ring
-      _ = 5^2 := by rw [hsq]
-      _ = 25 := by norm_num
-  rw [h5]
-
-/-- structuralMinTime is positive -/
-theorem structuralMinTime_positive : structuralMinTime > 0 := by
-  rw [structuralMinTime_eq]
-  norm_num
-
-/-- structuralMinTime derived from D6 structure:
-    t_min = (√5)⁵ / C_3 where C_3 = 12√5 is the minimum nonzero dissipation -/
-theorem structuralMinTime_from_D6 :
-    structuralMinTime = (Real.sqrt 5)^5 / (12 * Real.sqrt 5) := by
-  simp only [structuralMinTime]
-  have hsqrt5_pos : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5 : ℝ) > 0)
-  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := ne_of_gt hsqrt5_pos
+/-- D6 minimum time expressed as (√5)^5 / (12√5) -/
+theorem structuralMinTimeD6_from_D6 :
+    structuralMinTimeD6 = (Real.sqrt 5)^5 / (12 * Real.sqrt 5) := by
+  simp only [structuralMinTimeD6]
   have h12_ne : (12 : ℝ) ≠ 0 := by norm_num
-  have h12sqrt5_ne : 12 * Real.sqrt 5 ≠ 0 := mul_ne_zero h12_ne hsqrt5_ne
+  have h12sqrt5_ne : 12 * Real.sqrt 5 ≠ 0 := mul_ne_zero h12_ne sqrt5_ne_zero
   rw [div_eq_div_iff h12_ne h12sqrt5_ne]
   have h5 : (Real.sqrt 5)^5 = (Real.sqrt 5)^4 * Real.sqrt 5 := by ring
-  rw [h5]
-  ring
+  rw [h5]; ring
 
-/-- Why time cannot be divided below structuralMinTime:
-    ker(D6) = {1, x, x²} means D6 cannot detect changes in these modes.
-    n = 3 is the minimum degree where D6 detects temporal evolution. -/
-theorem minimum_time_structural_reason :
-    structuralMinTime > 0 ∧ structuralMinTime = 25/12 ∧
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨structuralMinTime_positive, structuralMinTime_eq, D6_const 1, D6_linear, D6_quadratic⟩
+/-- Hierarchy: t_D6 < t_D5 < t_D4 = t_D3 > t_D2 -/
+theorem structural_min_time_hierarchy :
+    structuralMinTimeD6 < structuralMinTimeD5 ∧
+    structuralMinTimeD5 < structuralMinTimeD4 ∧
+    structuralMinTimeD4 = structuralMinTimeD3 ∧
+    structuralMinTimeD2 < structuralMinTimeD3 := by
+  rw [structuralMinTimeD2_eq, structuralMinTimeD3_eq, structuralMinTimeD4_eq,
+      structuralMinTimeD5_eq, structuralMinTimeD6_eq]
+  norm_num
+
+end StructuralMinTimes
 
 end FUST.TimeTheorem
 
@@ -267,13 +253,13 @@ namespace FUST.Dim
 
 /-- Structural minimum time with derived dimension -/
 noncomputable def structuralMinTime_dim : ScaleQ dimTime :=
-  ⟨FUST.TimeTheorem.structuralMinTime⟩
+  ⟨FUST.TimeTheorem.structuralMinTimeD6⟩
 
 theorem structuralMinTime_dim_val : structuralMinTime_dim.val = 25 / 12 :=
-  FUST.TimeTheorem.structuralMinTime_eq
+  FUST.TimeTheorem.structuralMinTimeD6_eq
 
 /-- Time is positive -/
 theorem structuralMinTime_positive : structuralMinTime_dim.val > 0 :=
-  FUST.TimeTheorem.structuralMinTime_positive
+  FUST.TimeTheorem.structuralMinTimeD6_positive
 
 end FUST.Dim

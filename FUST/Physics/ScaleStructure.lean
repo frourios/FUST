@@ -21,19 +21,6 @@ theorem scaleLattice_hierarchy (n m : ℤ) (h : n < m) :
     (scaleLattice n).val < (scaleLattice m).val :=
   FUST.Cosmology.hierarchy_suppression_factor n m h
 
-/-! ## Energy Density Scale as ScaleQ -/
-
-noncomputable def energyDensityScale (k : ℕ) : ScaleQ 1 :=
-  ⟨FUST.Cosmology.energyDensityScale k⟩
-
-theorem energyDensityScale_eq (k : ℕ) :
-    (energyDensityScale k).val = φ ^ (-(4 * k : ℤ)) :=
-  FUST.Cosmology.energyDensityScale_eq k
-
-theorem energyDensityScale_decreasing (k : ℕ) :
-    (energyDensityScale (k + 1)).val < (energyDensityScale k).val :=
-  FUST.Cosmology.energyDensityScale_decreasing k
-
 /-! ## Black Hole Scales as ScaleQ -/
 
 noncomputable def discreteScale (n : ℤ) : ScaleQ 1 :=

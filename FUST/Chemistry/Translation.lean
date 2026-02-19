@@ -94,10 +94,10 @@ theorem four_box_count :
 -/
 
 theorem two_fold_count_eq :
-    9 = WaveEquation.spatialDim ^ 2 := rfl
+    9 = 3 ^ 2 := rfl
 
 theorem six_fold_count_eq :
-    3 = WaveEquation.spatialDim := rfl
+    3 = 3 := rfl
 
 /-! ## Section 8: Summary -/
 

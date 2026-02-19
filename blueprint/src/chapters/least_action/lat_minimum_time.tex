@@ -28,43 +28,68 @@ C_3 = \varphi^9 - 3\varphi^6 + \varphi^3 - \psi^3 + 3\psi^6 - \psi^9 = 12\sqrt{5
 
 The minimum scale at which $D_6$ begins to detect temporal change:
 
-\begin{definition}[Structural Minimum Time]
+\begin{definition}[Structural Minimum Time for $D_6$]
 \label{def:mat_min_time}
-\lean{FUST.structuralMinTime}
+\lean{FUST.TimeTheorem.structuralMinTimeD6}
 \leanok
 \[
-t_{\mathrm{FUST}} = \frac{(\sqrt{5})^5}{C_3} = \frac{(\sqrt{5})^5}{12\sqrt{5}} = \frac{(\sqrt{5})^4}{12} = \frac{25}{12}
+t_{\mathrm{FUST}} = \frac{(\sqrt{5})^4}{12} = \frac{25}{12}
 \]
+This is derived from the spectral formula $t_{\min}^{D_m} = (\sqrt{5})^{m-1} / |C_{d_{\min}}|$ at $m=6$, $d_{\min}=3$, $C_3 = 12\sqrt{5}$.
 \end{definition}
 
 \begin{theorem}[Structural Minimum Time Value]
 \label{thm:mat_min_time_value}
-\lean{FUST.structuralMinTime_eq}
+\lean{FUST.TimeTheorem.structuralMinTimeD6_eq}
 \leanok
 $t_{\mathrm{FUST}} = 25/12$
 \end{theorem}
 
 \begin{theorem}[Structural Minimum Time Positivity]
 \label{thm:mat_min_time_pos}
-\lean{FUST.structuralMinTime_positive}
+\lean{FUST.TimeTheorem.structuralMinTimeD6_positive}
 \leanok
 $t_{\mathrm{FUST}} > 0$
+\end{theorem}
+
+\subsection{Per-Operator Structural Minimum Times}
+
+Each operator $D_m$ has its own structural minimum time $t_{\min}^{D_m} = (\sqrt{5})^{m-1} / |C_{d_{\min}}|$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Operator & $\ker$ & $d_{\min}$ & $|C_{d_{\min}}|$ & Definition & $t_{\min}$ \\
+\hline
+$D_2$ & $\{1\}$ & 1 & $\sqrt{5}$ & $\sqrt{5}/\sqrt{5}$ & 1 \\
+$D_3$ & $\{1\}$ & 1 & 1 & $(\sqrt{5})^2/1$ & 5 \\
+$D_4$ & $\{x^2\}$ & 0 & $\sqrt{5}$ & $(\sqrt{5})^3/\sqrt{5}$ & 5 \\
+$D_5$ & $\{1,x\}$ & 2 & 6 & $(\sqrt{5})^4/6$ & 25/6 \\
+$D_6$ & $\{1,x,x^2\}$ & 3 & $12\sqrt{5}$ & $(\sqrt{5})^4/12$ & 25/12 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theorem}[Structural Minimum Time Hierarchy]
+\label{thm:mat_min_time_hierarchy}
+\lean{FUST.TimeTheorem.structural_min_time_hierarchy}
+\leanok
+$t_{\min}^{D_2} < t_{\min}^{D_6} < t_{\min}^{D_5} < t_{\min}^{D_3} = t_{\min}^{D_4}$, i.e.,
+\[
+1 < \frac{25}{12} < \frac{25}{6} < 5
+\]
 \end{theorem}
 
 \section{Why It Cannot Be Further Divided}
 \label{sec:mat_indivisible}
 
-\begin{theorem}[Structural Reason for Minimum Time]
-\label{thm:mat_min_time_reason}
-\lean{FUST.minimum_time_structural_reason}
-\leanok
+The structural reason for the minimum time is:
 \begin{enumerate}
 \item $\ker(D_6) = \{1, x, x^2\}$ is not detected by $D_6$
 \item Functions with $n \leq 2$ ``do not experience time''
 \item $n = 3$ is the minimum degree for temporal change
-\item $t_{\mathrm{FUST}} = 25/12$ is derived from this boundary
+\item $t_{\mathrm{FUST}} = 25/12$ is derived from this boundary via the spectral formula
 \end{enumerate}
-\end{theorem}
 
 \section{Physical Interpretation}
 \label{sec:mat_min_time_physics}
@@ -91,13 +116,11 @@ $t_{\mathrm{FUST}} = 25/12$ is:
 \section{Dimensional Analysis}
 \label{sec:mat_min_time_dim}
 
-The derivation $t_{\mathrm{FUST}} = (\sqrt{5})^5 / C_3$ has dimension:
+The derivation $t_{\mathrm{FUST}} = (\sqrt{5})^4 / 12$ has dimension:
 \[
-\dim(t_{\mathrm{FUST}}) = (5, 0, 0) - (0, 1, 0) + (0, 0, 1) = (5, -1, 1)
+\dim(t_{\mathrm{FUST}}) = (5, -1)
 \]
-where $(5,0,0)$ is the normalization denominator $(\sqrt{5})^5$, $(0,1,0)$ is the dissipation coefficient $C_3$, and $(0,0,1)$ marks this as a temporal quantity ($x^3 \notin \ker(D_6)$).
-
-The length dimension $\dim(l) = (5, -1, 0)$ shares $(\sqrt{5}, \delta) = (5, -1)$ with time but has $\tau = 0$ (spatial). The $\tau$ distinction is preserved by the type system: $\dim(c) = \dim(l) - \dim(t) = (0, 0, -1)$.
+where $p = 5$ is the $\sqrt{5}$-power and $\delta = -1$ is the dissipation component (inverse of $D_6$ output dimension).
 
 Lean: \texttt{FUST.Dim.structuralMinTime\_dim}.
 

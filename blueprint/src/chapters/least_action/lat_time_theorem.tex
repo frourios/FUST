@@ -7,7 +7,7 @@
 
 \begin{theorem}[Time Existence Theorem]
 \label{thm:mat_time_existence}
-\lean{FUST.TimeTheorem.time_existence_theorem}
+\lean{FUST.LeastAction.D6_polynomial_deg2, FUST.LeastAction.kerD6_implies_perp_zero}
 \leanok
 For a state function $f : \mathbb{R} \to \mathbb{R}$, the following are equivalent:
 \begin{enumerate}
@@ -22,7 +22,7 @@ For a state function $f : \mathbb{R} \to \mathbb{R}$, the following are equivale
 \begin{proof}
 $(1) \Rightarrow (2)$: Proven by \texttt{D6\_polynomial\_deg2}. When $f = a_0 + a_1 x + a_2 x^2$, by linearity of $D_6$ and annihilation of each basis element, $D_6 f = 0$.
 
-$(2) \Rightarrow (1)$: Proven in the second part of \texttt{causal\_boundary\_theorem}. If perpProjection is identically zero, then $f \in \ker(D_6)$.
+$(2) \Rightarrow (1)$: Proven by \texttt{kerD6\_implies\_perp\_zero} and \texttt{perpD6\_zero\_implies\_ker}. If perpProjection is identically zero, then $f \in \ker(D_6)$.
 \end{proof}
 
 \begin{corollary}[Relation Between Action Theorem and Time]

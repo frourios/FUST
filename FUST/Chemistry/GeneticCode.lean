@@ -1,7 +1,7 @@
 /-
-Genetic Code from D-operator Kernel Structure
+Genetic Code from Particle Root Structure
 
-Codon length 3 = spatialDim = dim ker(D₆).
+Codon length 3 = spatialDim (= particle root family count = dim ker(D₆)).
 Total codons 64 = 4³ = baseCount^spatialDim.
 Standard amino acids 20 = nuclearMagic(2).
 Stop codons 3 = spatialDim.
@@ -19,10 +19,10 @@ open FUST.Chemistry.Carbon FUST.Chemistry.Dihydrogen
 /-! ## Section 1: Codon Structure
 
 Codons are triplets of nucleotide bases.
-Codon length = spatialDim = 3 (three spatial dimensions from D₆ kernel).
+Codon length = spatialDim = 3 (three root families in particle structure).
 -/
 
-abbrev codonLength : ℕ := WaveEquation.spatialDim
+abbrev codonLength : ℕ := 3
 
 theorem codonLength_eq : codonLength = 3 := rfl
 
@@ -32,7 +32,7 @@ theorem codonCount_eq : codonCount = 64 := rfl
 
 -- 64 = 4³ = (2^spinDeg)^spatialDim = 2^(spinDeg × spatialDim) = 2^6
 theorem codonCount_binary :
-    codonCount = 2 ^ (Nuclear.spinDegeneracy * WaveEquation.spatialDim) := rfl
+    codonCount = 2 ^ (Nuclear.spinDegeneracy * 3) := rfl
 
 -- codonCount = 2^carbonZ (carbonZ = spinDeg × spatialDim = 6)
 theorem codonCount_eq_two_pow_carbonZ :
@@ -49,7 +49,7 @@ abbrev aminoAcidCount : ℕ := Nuclear.nuclearMagic 2
 
 theorem aminoAcidCount_eq : aminoAcidCount = 20 := rfl
 
-abbrev stopCodonCount : ℕ := WaveEquation.spatialDim
+abbrev stopCodonCount : ℕ := 3
 
 theorem stopCodonCount_eq : stopCodonCount = 3 := rfl
 
@@ -131,11 +131,11 @@ theorem genetic_code_info_bits :
 /-! ## Section 6: Summary -/
 
 theorem genetic_code_classification :
-    codonLength = WaveEquation.spatialDim ∧
+    codonLength = 3 ∧
     codonCount = 64 ∧
     aminoAcidCount = Nuclear.nuclearMagic 2 ∧
     aminoAcidCount = 20 ∧
-    stopCodonCount = WaveEquation.spatialDim ∧
+    stopCodonCount = 3 ∧
     codonCount = 2 ^ carbonZ ∧
     thymineZ - uracilZ = 8 ∧
     codonLength * Nuclear.spinDegeneracy = carbonZ :=

@@ -265,8 +265,8 @@ def dimZSqComp1 : FDim := dimWBoson * dimWBoson
 def dimZSqComp2 : FDim :=
   dimWBoson * dimWBoson * (deriveFDim 2 * deriveFDim 2 * (deriveFDim 3 * deriveFDim 3)⁻¹)
 
-theorem dimZSqComp1_eq : dimZSqComp1 = ⟨40, -48, -52⟩ := by decide
-theorem dimZSqComp2_eq : dimZSqComp2 = ⟨42, -46, -52⟩ := by decide
+theorem dimZSqComp1_eq : dimZSqComp1 = ⟨40, -48⟩ := by decide
+theorem dimZSqComp2_eq : dimZSqComp2 = ⟨42, -46⟩ := by decide
 
 /-- Z boson mass squared as DimSum2: m_Z² = m_W² + m_W² × 3/10.
 comp1 dim = dimZSqComp1 = dimWBoson², comp2 dim = dimZSqComp2. -/
@@ -284,8 +284,8 @@ theorem zBosonMassSq_dims_ne : dimZSqComp1 ≠ dimZSqComp2 := by decide
 def dimHiggsVacuum : FDim := dimWBoson * dimTimeD2
 def dimHiggsCorrection : FDim := dimWBoson * (dimTimeD2 * dimTimeD2)⁻¹
 
-theorem dimHiggsVacuum_eq : dimHiggsVacuum = ⟨21, -25, -27⟩ := by decide
-theorem dimHiggsCorrection_eq : dimHiggsCorrection = ⟨18, -22, -24⟩ := by decide
+theorem dimHiggsVacuum_eq : dimHiggsVacuum = ⟨21, -25⟩ := by decide
+theorem dimHiggsCorrection_eq : dimHiggsCorrection = ⟨18, -22⟩ := by decide
 
 /-- Higgs mass as DimSum2: m_H = m_W × φ + (-m_W / 10).
 eval gives m_W × (φ - 1/10). -/

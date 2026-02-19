@@ -112,17 +112,17 @@ Therefore ker(D₆) is the unique global minimum.
 section GlobalMinimum
 
 theorem vacuum_is_global_minimum :
-    (∀ f N, partialHamiltonian f N ≥ 0) ∧
-    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) :=
-  ⟨partialHamiltonian_nonneg, partialHamiltonian_ker_zero⟩
+    (∀ f N, partialHamiltonianD6 f N ≥ 0) ∧
+    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) :=
+  ⟨partialHamiltonianD6_nonneg, partialHamiltonianD6_ker_zero⟩
 
 theorem vacuum_energy_is_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
-    partialHamiltonian f N = 0 :=
-  partialHamiltonian_ker_zero f hf N
+    partialHamiltonianD6 f N = 0 :=
+  partialHamiltonianD6_ker_zero f hf N
 
 theorem excited_state_positive_energy :
-    HasPositiveHamiltonian (fun t => t ^ 3) :=
-  cubic_has_positive_hamiltonian
+    HasPositiveHamiltonianD6 (fun t => t ^ 3) :=
+  cubic_has_positive_hamiltonianD6
 
 end GlobalMinimum
 
@@ -135,13 +135,13 @@ The vacuum (H = 0) is therefore the absolute minimum.
 section NoLowerVacuum
 
 theorem no_negative_energy (f : ℝ → ℝ) (n : ℤ) :
-    hamiltonianContribution f n ≥ 0 :=
-  hamiltonianContribution_nonneg f n
+    hamiltonianContributionD6 f n ≥ 0 :=
+  hamiltonianContributionD6_nonneg f n
 
 theorem no_lower_vacuum_exists :
-    ¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonian f N < 0 := by
+    ¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonianD6 f N < 0 := by
   intro ⟨f, N, h⟩
-  linarith [partialHamiltonian_nonneg f N]
+  linarith [partialHamiltonianD6_nonneg f N]
 
 end NoLowerVacuum
 
@@ -163,8 +163,8 @@ theorem gap_region_empty (E : ℝ) (hpos : 0 < E) (hlt : E < massGapΔ ^ 2) :
 
 /-- The cubic mode (minimum massive mode) has positive Hamiltonian at scale 0 -/
 theorem cubic_mode_positive :
-    hamiltonianContribution (fun t => t ^ 3) 0 > 0 := by
-  simp only [hamiltonianContribution, zpow_zero]
+    hamiltonianContributionD6 (fun t => t ^ 3) 0 > 0 := by
+  simp only [hamiltonianContributionD6, zpow_zero]
   exact sq_pos_of_ne_zero (D6_not_annihilate_cubic 1 one_ne_zero)
 
 /-- D₆ output is nonzero for any polynomial degree ≥ 3 -/
@@ -187,8 +187,8 @@ theorem vacuum_time_invariant (f : ℝ → ℝ) (hf : IsInKerD6 f) :
   ker_D6_invariant f hf
 
 theorem vacuum_stable_under_evolution (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
-    partialHamiltonian (timeEvolution f) N = 0 :=
-  partialHamiltonian_ker_zero _ (ker_D6_invariant f hf) N
+    partialHamiltonianD6 (timeEvolution f) N = 0 :=
+  partialHamiltonianD6_ker_zero _ (ker_D6_invariant f hf) N
 
 end TimeInvariance
 
@@ -202,21 +202,21 @@ section TrueVacuum
 
 /-- A function is a true vacuum if it has zero Hamiltonian and no lower state exists -/
 def IsTrueVacuum (f : ℝ → ℝ) : Prop :=
-  (∀ N, partialHamiltonian f N = 0) ∧
-  (∀ g N, partialHamiltonian g N ≥ 0) ∧
+  (∀ N, partialHamiltonianD6 f N = 0) ∧
+  (∀ g N, partialHamiltonianD6 g N ≥ 0) ∧
   IsInKerD6 f
 
 theorem vacuum_is_true (f : ℝ → ℝ) (hf : IsInKerD6 f) : IsTrueVacuum f :=
-  ⟨partialHamiltonian_ker_zero f hf, partialHamiltonian_nonneg, hf⟩
+  ⟨partialHamiltonianD6_ker_zero f hf, partialHamiltonianD6_nonneg, hf⟩
 
 /-- A false vacuum would have a lower-energy state. This is impossible in FUST. -/
 def IsFalseVacuum (f : ℝ → ℝ) : Prop :=
-  (∀ N, partialHamiltonian f N = 0) ∧
-  (∃ g N, partialHamiltonian g N < 0)
+  (∀ N, partialHamiltonianD6 f N = 0) ∧
+  (∃ g N, partialHamiltonianD6 g N < 0)
 
 theorem no_false_vacuum_exists : ¬∃ f, IsFalseVacuum f := by
   intro ⟨f, _, g, N, hlt⟩
-  linarith [partialHamiltonian_nonneg g N]
+  linarith [partialHamiltonianD6_nonneg g N]
 
 end TrueVacuum
 
@@ -230,12 +230,12 @@ section NoDecay
 
 /-- A state can decay if there exists a lower-energy state -/
 def CanDecay (f : ℝ → ℝ) : Prop :=
-  ∃ g : ℝ → ℝ, ∃ N : ℕ, partialHamiltonian g N < partialHamiltonian f N
+  ∃ g : ℝ → ℝ, ∃ N : ℕ, partialHamiltonianD6 g N < partialHamiltonianD6 f N
 
 theorem vacuum_cannot_decay (f : ℝ → ℝ) (hf : IsInKerD6 f) : ¬CanDecay f := by
   intro ⟨g, N, h⟩
-  rw [partialHamiltonian_ker_zero f hf N] at h
-  linarith [partialHamiltonian_nonneg g N]
+  rw [partialHamiltonianD6_ker_zero f hf N] at h
+  linarith [partialHamiltonianD6_nonneg g N]
 
 /-- Vacuum decay is impossible in FUST -/
 theorem no_vacuum_decay :
@@ -286,8 +286,8 @@ theorem topBottomRatio_pos : 0 < topBottomRatio :=
 theorem top_does_not_destabilize :
     (0 < topBottomRatio) ∧
     (0 < lambda_FUST) ∧
-    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) :=
-  ⟨topBottomRatio_pos, lambda_FUST_pos, partialHamiltonian_ker_zero⟩
+    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) :=
+  ⟨topBottomRatio_pos, lambda_FUST_pos, partialHamiltonianD6_ker_zero⟩
 
 end TopQuark
 
@@ -323,9 +323,9 @@ section Complete
 /-- **Main Theorem**: Complete FUST vacuum stability -/
 theorem fust_vacuum_stability :
     -- 1. Hamiltonian is non-negative (no negative-energy states)
-    (∀ f N, partialHamiltonian f N ≥ 0) ∧
+    (∀ f N, partialHamiltonianD6 f N ≥ 0) ∧
     -- 2. ker(D₆) has exactly zero energy (vacuum state)
-    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) ∧
+    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) ∧
     -- 3. Spectral gap exists and is positive
     (0 < massGapΔ ^ 2) ∧
     -- 4. Gap region contains no physical states
@@ -335,13 +335,13 @@ theorem fust_vacuum_stability :
     -- 6. Vacuum is invariant under time evolution
     (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
     -- 7. No state has negative energy
-    (¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonian f N < 0) ∧
+    (¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonianD6 f N < 0) ∧
     -- 8. Degree constraint bounds physical modes (d_max = 3)
     (IsAdmissibleMode 3 1 ∧ ¬ IsAdmissibleMode 4 1) ∧
     -- 9. ker(D₆) has dimension 3 (three spatial dimensions)
     (kernelDimensions 2 = 3) :=
-  ⟨partialHamiltonian_nonneg,
-   partialHamiltonian_ker_zero,
+  ⟨partialHamiltonianD6_nonneg,
+   partialHamiltonianD6_ker_zero,
    massGapΔ_sq_pos,
    gap_excluded,
    lambda_FUST_pos,

@@ -75,7 +75,8 @@ This is a purely algebraic identity, not a physical assumption.
 theorem phi_psi_duality : φ * |ψ| = 1 := phi_mul_abs_psi
 
 theorem frame_duality :
-    φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 := time_direction_unique
+    φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
+  ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩
 
 /-- φⁿ · |ψ|ⁿ = 1: algebraic reversibility at every scale -/
 theorem algebraic_reversibility (n : ℕ) :
@@ -92,13 +93,7 @@ theorem unitarity_from_duality :
   rw [← zpow_add₀ (ne_of_gt phi_pos)]
   simp
 
-/-! ## Part 4: ker(D₆) Structure
-
-ker(D₆) = span{1, x, x²} (dimension 3).
-This determines spatial dimension without importing GR.
--/
-
-theorem spatial_from_kernel : spatialDim = 3 := rfl
+/-! ## Part 4: ker(D₆) Structure -/
 
 /-- ker(D₆) structure: {1, x, x²} annihilated, x³ detected -/
 theorem kernel_dimension :
@@ -163,9 +158,6 @@ This replaces Bekenstein-Hawking S ∝ A without importing continuous GR.
 /-- Degrees of freedom at k scale levels: ker(D₆) dim × k levels = 3k
     (This counts spatial modes per scale step from D₆ kernel structure) -/
 abbrev degreesOfFreedom (k : ℕ) : ℕ := 3 * k
-
-theorem dof_from_kernel_dim (k : ℕ) :
-    degreesOfFreedom k = spatialDim * k := rfl
 
 theorem dof_monotone (k : ℕ) :
     degreesOfFreedom k ≤ degreesOfFreedom (k + 1) := by
@@ -235,10 +227,10 @@ theorem abs_psi_eq_inv_phi : |ψ| = φ⁻¹ := by
   field_simp at h ⊢
   linarith
 
-/-- Mass × structuralMinTime = x₀² -/
+/-- Mass × structuralMinTimeD6 = x₀² -/
 theorem mass_time_identity (x₀ : ℝ) :
-    massGapΔ * x₀ ^ 2 * structuralMinTime = x₀ ^ 2 := by
-  have h := massGapΔ_mul_structuralMinTime
+    massGapΔ * x₀ ^ 2 * structuralMinTimeD6 = x₀ ^ 2 := by
+  have h := massGapΔ_mul_structuralMinTimeD6
   nlinarith
 
 /-- Critical scale: x₀·|ψ| (proper time stalls beyond this coordinate) -/
@@ -297,12 +289,10 @@ theorem all_from_D6_algebra :
     (∀ k : ℕ, scaleResolution k > 0) ∧
     -- Expansion-contraction identity
     (∀ n : ℕ, discreteScale (n : ℤ) * contractionScale n = 1) ∧
-    -- Spatial dimension from ker(D₆)
-    (spatialDim = 3) ∧
     -- D₆ detects massive states
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) := by
   exact ⟨no_singularity_from_D6_completeness, phi_psi_duality,
          discreteScale_pos, scaleResolution_pos,
-         expansion_contraction_identity, rfl, D6_cubic_nonzero⟩
+         expansion_contraction_identity, D6_cubic_nonzero⟩
 
 end FUST.BlackHole

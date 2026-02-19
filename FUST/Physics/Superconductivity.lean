@@ -269,7 +269,7 @@ Crystal coordination numbers are multiples of baseCount = 4.
 -/
 
 abbrev bccCoordination : ℕ := 2 * (2 ^ Nuclear.spinDegeneracy)
-abbrev fccCoordination : ℕ := WaveEquation.spatialDim * (2 ^ Nuclear.spinDegeneracy)
+abbrev fccCoordination : ℕ := 3 * (2 ^ Nuclear.spinDegeneracy)
 
 theorem bcc_coordination_eq : bccCoordination = 8 := rfl
 theorem fcc_coordination_eq : fccCoordination = 12 := rfl
@@ -277,8 +277,8 @@ theorem fcc_coordination_eq : fccCoordination = 12 := rfl
 theorem bcc_eq_double_baseCount :
     bccCoordination = 2 * cuprateCoordination := rfl
 
-theorem fcc_eq_spatialDim_times_baseCount :
-    fccCoordination = WaveEquation.spatialDim * cuprateCoordination := rfl
+theorem fcc_eq_three_times_baseCount :
+    fccCoordination = 3 * cuprateCoordination := rfl
 
 -- BCC coordination = nuclearMagic(1) = 8
 theorem bcc_coordination_magic :

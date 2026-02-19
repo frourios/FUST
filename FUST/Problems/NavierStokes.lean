@@ -816,7 +816,7 @@ end EnergyDecay
 
 /-! ## Clay NS Global Regularity via Planck-Scale Thermal Cutoff
 
-At structuralMinTime = 25/12, energy thermally dissipates
+At structuralMinTimeD6 = 25/12, energy thermally dissipates
 and D6 sampling falls below resolution. This makes the mode system
 finite-dimensional, guaranteeing global existence.
 
@@ -832,27 +832,27 @@ open FUST.TimeTheorem FUST.Thermodynamics Filter
 
 section PlanckResolutionLimit
 
-/-- Cutoff scale: minimum x where D6's outermost point φ³x reaches structuralMinTime -/
-noncomputable def planckCutoffScale : ℝ := structuralMinTime / φ^3
+/-- Cutoff scale: minimum x where D6's outermost point φ³x reaches structuralMinTimeD6 -/
+noncomputable def planckCutoffScale : ℝ := structuralMinTimeD6 / φ^3
 
 theorem planckCutoffScale_pos : planckCutoffScale > 0 := by
   simp only [planckCutoffScale]
-  exact div_pos structuralMinTime_positive (pow_pos (by linarith [φ_gt_one]) 3)
+  exact div_pos structuralMinTimeD6_positive (pow_pos (by linarith [φ_gt_one]) 3)
 
 /-- Below cutoff, D6 sampling points fall below structural minimum -/
 theorem D6_below_planck_unresolvable (x : ℝ) (_hx : 0 < x)
-    (hlt : x < planckCutoffScale) : φ^3 * x < structuralMinTime := by
+    (hlt : x < planckCutoffScale) : φ^3 * x < structuralMinTimeD6 := by
   simp only [planckCutoffScale] at hlt
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
-  calc φ^3 * x < φ^3 * (structuralMinTime / φ^3) := by nlinarith
-    _ = structuralMinTime := mul_div_cancel₀ _ (ne_of_gt hφ3_pos)
+  calc φ^3 * x < φ^3 * (structuralMinTimeD6 / φ^3) := by nlinarith
+    _ = structuralMinTimeD6 := mul_div_cancel₀ _ (ne_of_gt hφ3_pos)
 
 /-- At or above Planck cutoff, D6 resolves the structure -/
 theorem D6_above_planck_resolvable (x : ℝ) (hx : x ≥ planckCutoffScale) :
-    φ^3 * x ≥ structuralMinTime := by
+    φ^3 * x ≥ structuralMinTimeD6 := by
   simp only [planckCutoffScale] at hx
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
-  calc structuralMinTime = φ^3 * (structuralMinTime / φ^3) := by
+  calc structuralMinTimeD6 = φ^3 * (structuralMinTimeD6 / φ^3) := by
         rw [mul_div_cancel₀ _ (ne_of_gt hφ3_pos)]
     _ ≤ φ^3 * x := by nlinarith
 
@@ -867,14 +867,14 @@ theorem phi_pow_unbounded (M : ℝ) : ∃ N : ℕ, M < φ^N := by
 
 /-- For system size L, modes above some N have scale below structural minimum -/
 theorem planck_mode_cutoff (L : ℝ) (_hL : L > 0) :
-    ∃ N : ℕ, ∀ n, n ≥ N → L / φ^n < structuralMinTime := by
-  have hsml := structuralMinTime_positive
-  obtain ⟨N, hN⟩ := phi_pow_unbounded (L / structuralMinTime)
+    ∃ N : ℕ, ∀ n, n ≥ N → L / φ^n < structuralMinTimeD6 := by
+  have hsml := structuralMinTimeD6_positive
+  obtain ⟨N, hN⟩ := phi_pow_unbounded (L / structuralMinTimeD6)
   refine ⟨N, fun n hn => ?_⟩
   have hφn_pos : φ^n > 0 := pow_pos (by linarith [φ_gt_one]) n
   rw [div_lt_iff₀ hφn_pos]
   have hφN_le : φ^N ≤ φ^n := pow_le_pow_right₀ (le_of_lt φ_gt_one) hn
-  have h2 : L / structuralMinTime * structuralMinTime = L :=
+  have h2 : L / structuralMinTimeD6 * structuralMinTimeD6 = L :=
     div_mul_cancel₀ L (ne_of_gt hsml)
   nlinarith
 
@@ -884,10 +884,10 @@ section ThermalDissipationArgument
 
 /-- Thermodynamic justification: Planck scale is where thermal dissipation dominates -/
 theorem sub_planck_thermal_dissipation :
-    (structuralMinTime > 0) ∧
+    (structuralMinTimeD6 > 0) ∧
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     (∀ n ≥ 3, (dissipationCoeff n)^2 > 0) :=
-  ⟨structuralMinTime_positive,
+  ⟨structuralMinTimeD6_positive,
    third_law_massive_positive_entropy,
    dissipation_positive_outside_kernel⟩
 
@@ -1014,7 +1014,7 @@ noncomputable def ClayNSProblem.nMax (prob : ClayNSProblem) : ℕ :=
 
 open Classical in
 theorem ClayNSProblem.nMax_spec (prob : ClayNSProblem) :
-    ∀ n, n ≥ prob.nMax → prob.systemSize / φ^n < structuralMinTime :=
+    ∀ n, n ≥ prob.nMax → prob.systemSize / φ^n < structuralMinTimeD6 :=
   Nat.find_spec (planck_mode_cutoff prob.systemSize prob.systemSize_pos)
 
 /-- Clay NS Solution via Planck-scale finite-dimensional truncation -/
@@ -1067,7 +1067,6 @@ section Verification
 
 /-- Complete verification: Clay conditions + Planck cutoff + global existence -/
 theorem clay_conditions_verified :
-    (spatialDimension = 3) ∧
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
@@ -1079,11 +1078,10 @@ theorem clay_conditions_verified :
     (∀ n ≥ 4, dissipationCoeff n ≥ (1/3) * φ^(3*n)) ∧
     (∀ û N, N ≥ 3 → highModeEnergy û N > 0 → highModeDissipation û N > 0) ∧
     (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
-    (structuralMinTime > 0) ∧
-    (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < structuralMinTime) ∧
+    (structuralMinTimeD6 > 0) ∧
+    (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < structuralMinTimeD6) ∧
     ClayNSStatement :=
-  ⟨spatialDimension_eq_3,
-   D6_const 1, D6_linear, D6_quadratic, D6_not_annihilate_cubic,
+  ⟨D6_const 1, D6_linear, D6_quadratic, D6_not_annihilate_cubic,
    dissipation_positive_outside_kernel,
    nonlinearCoeff_1_2_ne_zero,
    polynomial_growth,
@@ -1091,7 +1089,7 @@ theorem clay_conditions_verified :
    dissipation_lower_bound,
    dissipation_strictly_positive,
    ker_D6_invariant,
-   structuralMinTime_positive,
+   structuralMinTimeD6_positive,
    planck_mode_cutoff,
    clay_ns_from_planck_cutoff⟩
 

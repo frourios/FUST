@@ -234,12 +234,9 @@ theorem helium_inertness_algebraic :
     -- H and O are not closed shell
     ¬ isClosedShell 1 ∧ ¬ isClosedShell 8 ∧
     -- Hypothetical He compounds are not closed shell
-    ¬ isClosedShell 3 ∧ ¬ isClosedShell 4 ∧
-    -- He-4 atom is pure sector
-    (dimAtom 2 2 2).isPureSector := by
-  refine ⟨⟨0, by omega, rfl⟩, rfl, helium_is_closed_shell,
+    ¬ isClosedShell 3 ∧ ¬ isClosedShell 4 := by
+  exact ⟨⟨0, by omega, rfl⟩, rfl, helium_is_closed_shell,
     hydrogen_not_closed_shell, oxygen_not_closed_shell,
-    HeH_not_closed_shell, He2_not_closed_shell, ?_⟩
-  unfold FDim.isPureSector; decide
+    HeH_not_closed_shell, He2_not_closed_shell⟩
 
 end FUST.Chemistry.Helium

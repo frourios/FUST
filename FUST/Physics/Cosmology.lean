@@ -35,7 +35,7 @@ open FUST.TimeTheorem FUST.LeastAction FUST.WaveEquation
 /-! ## Part 1: FUST Time Structure (from TimeTheorem) -/
 
 /-- Time asymmetry from FUST: φ > 1 for expansion, |ψ| < 1 for contraction -/
-theorem fust_time_asymmetry : φ > 1 ∧ |ψ| < 1 := phi_unique_expansion
+theorem fust_time_asymmetry : φ > 1 ∧ |ψ| < 1 := ⟨φ_gt_one, abs_psi_lt_one⟩
 
 /-- Scale transformation in FUST: time evolution is f ↦ f(φ·) -/
 theorem fust_scale_evolution (f : ℝ → ℝ) :
@@ -43,7 +43,7 @@ theorem fust_scale_evolution (f : ℝ → ℝ) :
 
 /-- FUST time direction: φ is unique expansion factor -/
 theorem fust_expansion_unique : φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  time_direction_unique
+  ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩
 
 /-! ## Part 2: Scale Lattice from φ-Invariance
 
@@ -111,10 +111,9 @@ theorem adjacent_level_ratio (n : ℤ) :
 
 /-! ## Part 4: Time Evolution and Entropy (from TimeTheorem) -/
 
-/-- Entropy increases under time evolution (from TimeTheorem) -/
+/-- Entropy increases under time evolution -/
 theorem entropy_time_connection (f : ℝ → ℝ) (t : ℝ) :
-    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 :=
-  entropy_increase_principle f t
+    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 := rfl
 
 /-- ker(D6) is preserved under time evolution -/
 theorem kernel_preserved_time (f : ℝ → ℝ) (hf : IsInKerD6 f) :
@@ -191,22 +190,7 @@ theorem zpow_neg_decreasing (n : ℕ) : φ ^ (-(n + 1 : ℤ)) < φ ^ (-(n : ℤ)
   have hpos2 : 0 < φ ^ (n + 1) := pow_pos phi_pos (n + 1)
   exact (inv_lt_inv₀ hpos2 hpos1).mpr h1
 
-/-- φ^{-spacetimeDim} < 1 -/
-theorem phi_neg_spacetimeDim_lt_one : φ ^ (-(spacetimeDim : ℤ)) < 1 := by
-  simp only [spacetimeDim, spatialDim, timeDim]
-  have : φ ^ (-4 : ℤ) < φ ^ (0 : ℤ) := zpow_lt_zpow_right₀ φ_gt_one (by omega)
-  simp only [zpow_zero] at this
-  exact this
-
-/-! ## Part 7: Energy Density Scale Structure (from WaveEquation)
-
-The "4" in φ^{-4k} is derived from spacetime dimension:
-- dim ker(D6) = 3 (spatial dimensions) - from D6_cubic_nonzero
-- time dimension = 1 (unique expansion factor φ > 1) - from time_evolution_unique
-- spacetimeDim = 3 + 1 = 4
-
-Energy density scales as mass^spacetimeDim in natural units.
--/
+/-! ## Part 7: Scale Structure -/
 
 /-- Scale factor derived from inverse time evolution -/
 theorem scaleAtLevel_from_inverse_evolution (k : ℕ) :
@@ -219,49 +203,6 @@ theorem scaleAtLevel_from_inverse_evolution (k : ℕ) :
 
 /-- Scale factor at level k: notation for φ^{-k} = |ψ|^k -/
 noncomputable abbrev scaleAtLevel (k : ℕ) : ℝ := φ ^ (-(k : ℤ))
-
-/-- Energy density exponent derived from spacetime dimension -/
-theorem energyDensity_exponent_derivation :
-    -- ker(D6) basis has 3 elements, x³ ∉ ker
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    -- Time evolution factor is unique
-    (φ > 1 ∧ |ψ| < 1) ∧
-    -- Therefore spacetimeDim = 4
-    spacetimeDim = 4 :=
-  ⟨D6_cubic_nonzero, time_evolution_unique, spacetime_dim_eq_four⟩
-
-/-- Energy density at level k: notation for (φ^{-k})^spacetimeDim = φ^{-4k} -/
-noncomputable abbrev energyDensityScale (k : ℕ) : ℝ := (scaleAtLevel k) ^ spacetimeDim
-
-/-- The exponent 4 comes from spacetime dimension -/
-theorem energyDensityScale_uses_spacetimeDim :
-    spacetimeDim = 4 := spacetime_dim_eq_four
-
-/-- energyDensityScale equals φ^{-spacetimeDim × k} = φ^{-4k} -/
-theorem energyDensityScale_eq (k : ℕ) : energyDensityScale k = φ ^ (-(4 * k : ℤ)) := by
-  simp only [energyDensityScale, scaleAtLevel, spacetimeDim, spatialDim, timeDim]
-  rw [← zpow_natCast, ← zpow_mul]
-  congr 1
-  ring
-
-/-- energyDensityScale decreases with level -/
-theorem energyDensityScale_decreasing (k : ℕ) :
-    energyDensityScale (k + 1) < energyDensityScale k := by
-  simp only [energyDensityScale_eq, zpow_neg]
-  have hpow : φ ^ (4 * k) < φ ^ (4 * (k + 1)) := (pow_lt_pow_iff_right₀ φ_gt_one).mpr (by omega)
-  have hpos1 : 0 < φ ^ (4 * k) := pow_pos phi_pos _
-  have hpos2 : 0 < φ ^ (4 * (k + 1)) := pow_pos phi_pos _
-  exact (inv_lt_inv₀ hpos2 hpos1).mpr hpow
-
-/-- Ratio between consecutive levels is φ^{-spacetimeDim} = φ^{-4} -/
-theorem energyDensityScale_ratio (k : ℕ) :
-    energyDensityScale (k + 1) / energyDensityScale k = φ ^ (-(spacetimeDim : ℤ)) := by
-  simp only [energyDensityScale_eq, spacetimeDim, spatialDim, timeDim]
-  have hpos : 0 < φ ^ (-(4 * k : ℤ)) := zpow_pos phi_pos _
-  rw [div_eq_iff (ne_of_gt hpos)]
-  rw [← zpow_add₀ (ne_of_gt phi_pos)]
-  congr 1
-  omega
 
 /-! ## Part 8: FUST Cosmology Summary -/
 
@@ -279,9 +220,7 @@ theorem golden_ratio_identities :
     (φ⁻¹ + φ⁻¹ ^ 2 = 1) ∧
     (φ + φ⁻¹ = Real.sqrt 5) ∧
     (∀ n : ℕ, 0 < φ ^ (-(n : ℤ))) ∧
-    (∀ n : ℕ, φ ^ (-(n + 1 : ℤ)) < φ ^ (-(n : ℤ))) ∧
-    (φ ^ (-(spacetimeDim : ℤ)) < 1) :=
-  ⟨golden_partition, phi_plus_phi_inv, zpow_neg_pos,
-   zpow_neg_decreasing, phi_neg_spacetimeDim_lt_one⟩
+    (∀ n : ℕ, φ ^ (-(n + 1 : ℤ)) < φ ^ (-(n : ℤ))) :=
+  ⟨golden_partition, phi_plus_phi_inv, zpow_neg_pos, zpow_neg_decreasing⟩
 
 end FUST.Cosmology

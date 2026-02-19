@@ -2,6 +2,7 @@ import FUST.DifferenceOperators
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 import FUST.Physics.PhiOrbitInitialValue
+import FUST.Physics.LeastAction
 
 /-!
 # Algebraic Constraint on State Functions
@@ -131,5 +132,131 @@ theorem poly_valuation_nonDecreasing [GoldenValuation]
     let β := GoldenInt.phiPow (-1)
     coeffValuation (twoPointDiff f α β) ≥ coeffValuation f :=
   valuation_nonDecreasing _ _ _ (GoldenInt.phiPow_isUnit 1) (GoldenInt.phiPow_isUnit (-1))
+
+/-!
+## State Complexity Bound
+
+The total complexity of a state is bounded by the number of time steps.
+At scale level k, at most k massive modes are accessible.
+At k = 0 (initial moment), no massive structure exists: only vacuum.
+-/
+
+section StateComplexityBound
+
+open FUST.LeastAction
+
+/-- Maximum polynomial degree at scale level k: ker basis (deg 2) + k massive modes -/
+def maxDegreeAtLevel (k : ℕ) : ℕ := 2 + k
+
+/-- State space dimension (rank over ℤ[φ]) at level k -/
+def stateSpaceDim (k : ℕ) : ℕ := 3 + k
+
+/-- Number of massive (non-kernel) modes accessible at level k -/
+def massiveModeCount (k : ℕ) : ℕ := k
+
+theorem maxDegreeAtLevel_growth (k : ℕ) :
+    maxDegreeAtLevel (k + 1) = maxDegreeAtLevel k + 1 := by
+  unfold maxDegreeAtLevel; omega
+
+theorem stateSpaceDim_growth (k : ℕ) :
+    stateSpaceDim (k + 1) = stateSpaceDim k + 1 := by
+  unfold stateSpaceDim; omega
+
+theorem stateSpaceDim_eq_maxDeg_succ (k : ℕ) :
+    stateSpaceDim k = maxDegreeAtLevel k + 1 := by
+  unfold stateSpaceDim maxDegreeAtLevel; omega
+
+/-- At k = 0, no massive mode is accessible -/
+theorem initial_no_massive : massiveModeCount 0 = 0 := by decide
+
+/-- A degree-bounded golden polynomial state at scale level k -/
+def IsBoundedGoldenState (k : ℕ) (g : ℝ → ℝ) : Prop :=
+  ∃ (deg : ℕ) (_ : deg ≤ maxDegreeAtLevel k) (coeffs : ℕ → GoldenInt),
+    g = fun x => evalGoldenPoly coeffs deg x
+
+/-- Every bounded state is a golden polynomial state -/
+theorem bounded_is_golden (k : ℕ) (g : ℝ → ℝ) (hg : IsBoundedGoldenState k g) :
+    IsGoldenPolynomialState g := by
+  obtain ⟨deg, _, coeffs, hgeq⟩ := hg
+  exact ⟨deg, coeffs, hgeq⟩
+
+/-- Scale action maps level k to level k+1 -/
+theorem bounded_state_closed_under_scale (k : ℕ) (g : ℝ → ℝ)
+    (hg : IsBoundedGoldenState k g) :
+    IsBoundedGoldenState (k + 1) (fun x => g (φ * x)) := by
+  obtain ⟨deg, hdeg, coeffs, hgeq⟩ := hg
+  have hle : maxDegreeAtLevel k ≤ maxDegreeAtLevel (k + 1) := by
+    unfold maxDegreeAtLevel; omega
+  refine ⟨deg, le_trans hdeg hle, scaleGoldenPoly coeffs, ?_⟩
+  ext x; rw [hgeq]; exact (scale_eval_eq coeffs deg x).symm
+
+/-- At level 0, the maximum degree is 2 -/
+theorem maxDeg_zero : maxDegreeAtLevel 0 = 2 := by decide
+
+/-- A degree ≤ 2 polynomial is in ker(D₆) -/
+theorem deg_le_2_in_kerD6 (coeffs : ℕ → GoldenInt) (deg : ℕ) (hdeg : deg ≤ 2) :
+    IsInKerD6 (fun x => evalGoldenPoly coeffs deg x) := by
+  interval_cases deg
+  · exact ⟨(coeffs 0).toReal, 0, 0, fun t => by
+      simp [evalGoldenPoly]⟩
+  · exact ⟨(coeffs 0).toReal, (coeffs 1).toReal, 0, fun t => by
+      simp [evalGoldenPoly, Finset.sum_range_succ]⟩
+  · exact ⟨(coeffs 0).toReal, (coeffs 1).toReal, (coeffs 2).toReal, fun t => by
+      simp [evalGoldenPoly, Finset.sum_range_succ]⟩
+
+/-- At level 0, every bounded state is in ker(D₆) (vacuum only) -/
+theorem initial_vacuum (g : ℝ → ℝ) (hg : IsBoundedGoldenState 0 g) :
+    IsInKerD6 g := by
+  obtain ⟨deg, hdeg, coeffs, hgeq⟩ := hg
+  rw [hgeq]
+  exact deg_le_2_in_kerD6 coeffs deg hdeg
+
+/-- At level 0, no state has a D₆-detectable structure -/
+theorem initial_no_time (g : ℝ → ℝ) (hg : IsBoundedGoldenState 0 g) :
+    ¬TimeExistsD6 g :=
+  fun h => h (initial_vacuum g hg)
+
+/-- Monotonicity: level k state is also a level (k+1) state -/
+theorem bounded_state_monotone (k : ℕ) (g : ℝ → ℝ)
+    (hg : IsBoundedGoldenState k g) :
+    IsBoundedGoldenState (k + 1) g := by
+  obtain ⟨deg, hdeg, coeffs, hgeq⟩ := hg
+  have hle : maxDegreeAtLevel k ≤ maxDegreeAtLevel (k + 1) := by
+    unfold maxDegreeAtLevel; omega
+  exact ⟨deg, le_trans hdeg hle, coeffs, hgeq⟩
+
+/-- At level 1, x³ becomes accessible (first massive mode) -/
+theorem level_one_cubic_accessible :
+    maxDegreeAtLevel 1 = 3 := by decide
+
+/-- x³ is NOT in ker(D₆) -/
+theorem cubic_not_in_ker : ¬IsInKerD6 (fun x => x ^ 3) := by
+  intro ⟨a₀, a₁, a₂, hf⟩
+  have h0 := hf 0; simp at h0
+  have h1 := hf 1; simp at h1
+  have h2 := hf 2; simp at h2
+  have h3 := hf 3; simp at h3
+  linarith
+
+/-- Summary: complexity grows linearly with time steps -/
+theorem state_complexity_bound :
+    -- (1) No massive modes at level 0
+    (massiveModeCount 0 = 0) ∧
+    -- (2) State space grows linearly
+    (∀ k, stateSpaceDim (k + 1) = stateSpaceDim k + 1) ∧
+    -- (3) Initial states are vacuum (ker D₆)
+    (∀ g, IsBoundedGoldenState 0 g → IsInKerD6 g) ∧
+    -- (4) Scale action respects level structure
+    (∀ k g, IsBoundedGoldenState k g →
+      IsBoundedGoldenState (k + 1) (fun x => g (φ * x))) ∧
+    -- (5) First massive mode appears at level 1
+    -- (5) First massive mode appears at level 1
+    (massiveModeCount 1 = 1) ∧
+    -- (6) x³ is not in ker(D₆)
+    (¬IsInKerD6 (fun x => x ^ 3)) :=
+  ⟨initial_no_massive, stateSpaceDim_growth, initial_vacuum,
+   bounded_state_closed_under_scale, rfl, cubic_not_in_ker⟩
+
+end StateComplexityBound
 
 end FUST.StateFunctionConstraint

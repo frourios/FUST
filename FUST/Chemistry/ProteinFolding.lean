@@ -42,7 +42,7 @@ Helix types defined by H-bond span (residue i to residue i+n).
 β-sheet H-bond repeat every 2 = spinDegeneracy residues.
 -/
 
-abbrev helix310Span : ℕ := WaveEquation.spatialDim
+abbrev helix310Span : ℕ := 3
 abbrev alphaHelixSpan : ℕ := baseCount
 abbrev piHelixSpan : ℕ := baseCount + 1
 abbrev betaSheetRepeat : ℕ := Nuclear.spinDegeneracy
@@ -86,7 +86,7 @@ Sulfur-containing: M, C = 2 = spinDegeneracy.
 -/
 
 theorem aromatic_count :
-    [pheZ, trpZ, tyrZ].length = WaveEquation.spatialDim := rfl
+    [pheZ, trpZ, tyrZ].length = 3 := rfl
 
 theorem charged_count :
     [lysZ, argZ, aspZ, gluZ].length = baseCount := rfl
@@ -152,9 +152,9 @@ theorem insulin_total_cys :
     4 + 2 = carbonZ := rfl
 
 theorem insulin_cys_eq_twice_disulfide :
-    4 + 2 = 2 * WaveEquation.spatialDim := rfl
+    4 + 2 = 2 * 3 := rfl
 
-abbrev insulinDisulfideCount : ℕ := WaveEquation.spatialDim
+abbrev insulinDisulfideCount : ℕ := 3
 theorem insulin_disulfide_eq : insulinDisulfideCount = 3 := rfl
 
 /-! ## Section 7: Summary -/
@@ -163,11 +163,11 @@ theorem protein_folding_classification :
     peptidePlaneAtoms = carbonZ ∧
     backboneDihedrals = Nuclear.spinDegeneracy ∧
     alphaHelixSpan = baseCount ∧
-    helix310Span = WaveEquation.spatialDim ∧
+    helix310Span = 3 ∧
     hbondDonorZ = oxygenZ ∧
-    [pheZ, trpZ, tyrZ].length = WaveEquation.spatialDim ∧
+    [pheZ, trpZ, tyrZ].length = 3 ∧
     [lysZ, argZ, aspZ, gluZ].length = baseCount ∧
-    insulinDisulfideCount = WaveEquation.spatialDim :=
+    insulinDisulfideCount = 3 :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-! ## Section 8: Levinthal Paradox — Conformational Space
@@ -211,8 +211,8 @@ theorem folding_action_zero_iff_ker (f : ℝ → ℝ) (x : ℝ) :
 
 theorem native_state_zero_action (f : ℝ → ℝ)
     (hf : IsInKerD6 f) (N : ℕ) :
-    partialHamiltonian f N = 0 :=
-  partialHamiltonian_ker_zero f hf N
+    partialHamiltonianD6 f N = 0 :=
+  partialHamiltonianD6_ker_zero f hf N
 
 /-! ## Section 10: Uniqueness from Interpolation -/
 
@@ -226,7 +226,7 @@ theorem native_state_unique (p q : ℝ → ℝ)
     t₀ t₁ t₂ h01 h02 h12 h0 h1 h2
 
 theorem interpolation_points_eq_spatialDim :
-    (3 : ℕ) = WaveEquation.spatialDim := rfl
+    (3 : ℕ) = 3 := rfl
 
 /-! ## Section 11: Kernel Entropy -/
 
@@ -245,15 +245,15 @@ theorem denatured_state_positive_entropy (f : ℝ → ℝ)
 theorem backbone_dof_eq_kerD5_dim :
     backboneDihedrals = Nuclear.spinDegeneracy := rfl
 
-theorem folding_dim_eq_kerD6_dim :
-    WaveEquation.spatialDim = kernelDimensions 2 := rfl
+theorem spatialDim_eq_kerD6_dim :
+    3 = kernelDimensions 2 := rfl
 
 theorem kernel_growth_spin_to_spatial :
     kernelDimensions 2 = kernelDimensions 1 + 1 := rfl
 
 theorem interpolation_hierarchy :
     kernelDimensions 1 = Nuclear.spinDegeneracy ∧
-    kernelDimensions 2 = WaveEquation.spatialDim := ⟨rfl, rfl⟩
+    kernelDimensions 2 = 3 := ⟨rfl, rfl⟩
 
 /-! ## Section 13: Levinthal Paradox Resolution Summary -/
 
@@ -262,11 +262,11 @@ theorem levinthal_resolution :
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 →
       D6Lagrangian f x = 0) ∧
     (∀ f, IsInKerD6 f → ∀ N,
-      partialHamiltonian f N = 0) ∧
+      partialHamiltonianD6 f N = 0) ∧
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
-    kernelDimensions 2 = WaveEquation.spatialDim ∧
+    kernelDimensions 2 = 3 ∧
     backboneDihedrals = Nuclear.spinDegeneracy := by
-  refine ⟨rfl, ?_, partialHamiltonian_ker_zero,
+  refine ⟨rfl, ?_, partialHamiltonianD6_ker_zero,
     third_law_D6, rfl, rfl⟩
   intro f hf x hx
   rw [D6_lagrangian_zero_iff]

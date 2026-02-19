@@ -161,14 +161,12 @@ theorem oxygen_isotope_classification :
     -- O-16 is doubly magic
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = oxygenZ) ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_O16) ∧
-    -- All oxygen species are pure sector with distinct FDim
-    (dimAtom 8 8 8).isPureSector ∧
+    -- All oxygen species have distinct FDim
     dimAtom 8 8 0 ≠ dimAtom 8 8 8 ∧
     -- effectiveDegree values
     (dimAtom 8 8 0).effectiveDegree = 249 ∧
     (dimAtom 8 8 8).effectiveDegree = 265 ∧
     (dimAtom 8 8 10).effectiveDegree = 269 := by
-  refine ⟨⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩, ?_, by decide, by decide, by decide, by decide⟩
-  unfold FDim.isPureSector; decide
+  exact ⟨⟨1, by omega, rfl⟩, ⟨1, by omega, rfl⟩, by decide, by decide, by decide, by decide⟩
 
 end FUST.Chemistry.Oxygen

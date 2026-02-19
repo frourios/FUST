@@ -6,7 +6,6 @@ atomStateFn(Z, N, e, x) = x^Z · (1+x)^N · (1+ψx)^e
 
 General theorems for ALL (Z, N, e):
 - effectiveDegree = 16Z + 15N + 2e + 1
-- isPureSector (universally true)
 - merge: dimAtom(A) * dimAtom(B) = dimAtom(A+B) * dimTimeD2
 -/
 
@@ -70,24 +69,11 @@ effectiveDegree = 16Z + 15N + 2e + 1 for all (Z, N, e). -/
 theorem dimAtom_effectiveDegree (Z N e : ℕ) :
     (dimAtom Z N e).effectiveDegree = 16 * Z + 15 * N + 2 * e + 1 := by
   unfold dimAtom FDim.effectiveDegree
-  simp only [mul_delta, mul_tau, zpow_delta, zpow_tau]
+  simp only [mul_p, mul_delta, zpow_p, zpow_delta]
   rw [dimProton_eq, dimNeutron_eq, dimElectron_eq, dimTimeD2_eq]
   push_cast; ring
 
-/-! ## Section 3: Universal Pure Sector
-
-All dimAtom lie on p + 3δ - 2τ = 0. -/
-
-theorem dimAtom_isPureSector (Z N e : ℕ) :
-    (dimAtom Z N e).isPureSector := by
-  unfold dimAtom FDim.isPureSector
-  simp only [mul_p, mul_delta, mul_tau, zpow_p, zpow_delta, zpow_tau]
-  rw [dimProton_eq, dimNeutron_eq, dimElectron_eq, dimTimeD2_eq]
-  push_cast; ring
-
-/-! ## Section 4: Merge
-
-Two species merging releases one dimTimeD2 binding defect. -/
+/-! ## Section 3: Merge -/
 
 theorem dimAtom_merge (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) :
     dimAtom Z₁ N₁ e₁ * dimAtom Z₂ N₂ e₂ =
@@ -95,10 +81,10 @@ theorem dimAtom_merge (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) :
   unfold dimAtom
   rw [dimTimeD2_eq]
   apply FDim.ext <;>
-    simp only [mul_p, mul_delta, mul_tau, zpow_p, zpow_delta, zpow_tau] <;>
+    simp only [mul_p, mul_delta, zpow_p, zpow_delta] <;>
     push_cast <;> ring
 
-/-! ## Section 5: Galois Conjugate State Function
+/-! ## Section 4: Galois Conjugate State Function
 
 σ(g)(x) = x^Z · (1+x)^N · (1+φx)^e replaces ψ with φ.
 Root set {0, -1, φ} maps to {0, -1, ψ} under conjugation. -/
@@ -127,7 +113,7 @@ theorem conjStateFn_mul (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (x : ℝ) :
     conjStateFn (Z₁ + Z₂) (N₁ + N₂) (e₁ + e₂) x := by
   unfold conjStateFn; rw [pow_add, pow_add, pow_add]; ring
 
-/-! ## Section 6: Galois Norm — Integer Polynomial
+/-! ## Section 5: Galois Norm — Integer Polynomial
 
 g(x) · σ(g)(x) ∈ ℤ[x]: the irrational parts cancel.
 
@@ -177,7 +163,7 @@ theorem norm_factor_root_phi : 1 + φ - φ ^ 2 = 0 := by
 theorem norm_factor_root_psi : 1 + ψ - ψ ^ 2 = 0 := by
   linarith [psi_sq]
 
-/-! ## Section 7: Conjugation Swaps Time Direction
+/-! ## Section 6: Conjugation Swaps Time Direction
 
 φ > 1 drives forward time evolution (expansion).
 ψ: |ψ| < 1 drives backward (contraction).
@@ -185,9 +171,9 @@ Galois conjugation σ: φ ↔ ψ reverses the arrow of time. -/
 
 theorem conjugation_reverses_time :
     φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  FUST.TimeTheorem.time_direction_unique
+  ⟨φ_gt_one, FUST.TimeTheorem.abs_psi_lt_one, FUST.TimeTheorem.phi_mul_abs_psi⟩
 
-/-! ## Section 8: Automorphism Uniqueness
+/-! ## Section 7: Automorphism Uniqueness
 
 The only ring endomorphism σ: ℤ[φ] → ℤ[φ] fixing ℤ and satisfying σ(φ)² = σ(φ) + 1
 is either id or conjugation. Since φ² = φ + 1, σ(φ) must be a root of x² - x - 1 = 0.
@@ -204,7 +190,7 @@ theorem golden_equation_roots (r : ℝ) (h : r ^ 2 = r + 1) :
   · left; linarith
   · right; linarith
 
-/-! ## Section 9: Minimal Complete Root Cluster
+/-! ## Section 8: Minimal Complete Root Cluster
 
 atomStateFn(Z,N,e) has root at 0 iff Z≥1, root at -1 iff N≥1, root at φ iff e≥1.
 The minimum (Z,N,e) with ALL three roots is (1,1,1). -/
@@ -247,7 +233,7 @@ theorem complete_cluster_minimal (Z N e : ℕ) (h : hasCompleteRootCluster Z N e
     Z + N + e ≥ 3 := by
   obtain ⟨hZ, hN, he⟩ := h; omega
 
-/-! ## Section 10: Galois Norm Irreducible Factor
+/-! ## Section 9: Galois Norm Irreducible Factor
 
 The norm factor (1+x-x²) = -(x²-x-1) is the minimal polynomial of φ over ℤ.
 It appears in the galois norm iff e ≥ 1. -/
@@ -292,7 +278,7 @@ theorem galois_norm_has_irrational_factor (Z N e : ℕ) (he : e ≥ 1) :
   · simp [atomStateFn_vanishes_at_phi Z N e he]
   · simp [conjStateFn_vanishes_at_psi Z N e he]
 
-/-! ## Section 11: Scale Action and Recursive Root Orbit
+/-! ## Section 10: Scale Action and Recursive Root Orbit
 
 U: g(x) → g(φx) maps roots of g to their φ-preimages.
 Proton root 0 is scale-fixed. Neutron root -1 maps to -1/φ = ψ.
@@ -362,7 +348,7 @@ theorem norm_factor_scale_golden (x : ℝ) :
     (1 - x) * (1 + φ ^ 2 * x) = (1 - x) * (1 + (φ + 1) * x) := by
   rw [golden_ratio_property]
 
-/-! ## Section 12: Electron Factor Uniqueness
+/-! ## Section 11: Electron Factor Uniqueness
 
 The electron factor (1+ψx) is uniquely determined among (1+αx) where α ∈ {φ, ψ, -φ, -ψ}
 (the four units with Norm(α)=-1 and minimal |Trace|=1) by requiring the root to exceed 1.
@@ -412,7 +398,7 @@ theorem electron_factor_unique (α : ℝ) (hα : α = φ ∨ α = ψ ∨ α = -�
     rw [this] at hroot
     linarith [neg_psi_factor_root_neg]
 
-/-! ## Section 13: Rational Root Selection
+/-! ## Section 12: Rational Root Selection
 
 Among rational linear factors (1+rx) with r ∈ ℤ, r ≠ 0:
   root = -1/r. The sign-spanning condition (roots include both < 0 and > 0)
@@ -427,7 +413,7 @@ theorem rational_root_is_neg_one (r : ℤ) (hr : r = 1 ∨ r = -1)
   · rfl
   · exfalso; push_cast at hroot_neg; linarith
 
-/-! ## Section 14: Complete atomStateFn Form Theorem
+/-! ## Section 13: Complete atomStateFn Form Theorem
 
 Combining all constraints: origin root, chirality, sign-spanning, minimality.
 
@@ -455,7 +441,7 @@ theorem root_triple_unique :
     (-1 : ℝ) < 0 ∧ 0 < φ :=
   ⟨by norm_num, rfl, φ_gt_one, by norm_num, phi_pos⟩
 
-/-! ## Section 15: Polynomial Necessity
+/-! ## Section 14: Polynomial Necessity
 
 Finite Observability: a particle's state has finitely many nonzero detectable coefficients.
 D₆ eigenvalues λₙ = 0 for n ≤ 2, λₙ ≠ 0 for n ≥ 3 (from D6_detects_cubic etc).
@@ -498,5 +484,31 @@ theorem polynomial_necessity (g eigval : ℕ → ℝ)
   obtain ⟨d, hd⟩ := finite_support_is_polynomial _ hfin_g
   exact ⟨d, fun n hn3 hnd => by
     have h := hd n hnd; simp only [ge_iff_le, hn3, ↓reduceIte] at h; exact h⟩
+
+/-! ## Root Families and Spatial Dimension
+
+atomStateFn has 3 irreducible factor families vanishing at {0, -1, φ}.
+spatialDim = |{0, -1, φ}| = 3. -/
+
+noncomputable def rootFamilies : List ℝ := [0, -1, φ]
+noncomputable def rootFamilyCount : ℕ := rootFamilies.length
+
+theorem rootFamilyCount_val : rootFamilyCount = 3 := by
+  unfold rootFamilyCount rootFamilies; simp
+
+theorem rootFamilies_roots_distinct :
+    (0 : ℝ) ≠ -1 ∧ (0 : ℝ) ≠ φ ∧ (-1 : ℝ) ≠ φ :=
+  ⟨by norm_num, by linarith [phi_pos], by linarith [phi_pos]⟩
+
+noncomputable def spatialDim : ℕ := rootFamilyCount
+def timeDim : ℕ := 1
+noncomputable def spacetimeDim : ℕ := spatialDim + timeDim
+
+theorem spatialDim_eq_rootFamilyCount : spatialDim = rootFamilyCount := rfl
+theorem spatialDim_val : spatialDim = 3 := by
+  unfold spatialDim; exact rootFamilyCount_val
+theorem timeDim_val : timeDim = 1 := rfl
+theorem spacetimeDim_val : spacetimeDim = 4 := by
+  unfold spacetimeDim spatialDim timeDim; simp [rootFamilyCount_val]
 
 end FUST.Chemistry

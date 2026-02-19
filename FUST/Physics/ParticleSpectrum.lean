@@ -185,8 +185,8 @@ theorem charge_one_fifth_forbidden : ∀ n : ℤ, (n : ℚ) / 3 ≠ 1 / 5 := by
 
 /-! ## Part 8: FORBIDDEN - Spin > 2 -/
 
-/-- Spin count = spacetimeDim = 4 from D-structure -/
-abbrev allowedSpinCount : ℕ := WaveEquation.spacetimeDim
+/-- Spin count = 4 from D-structure: {0, 1/2, 1, 2} -/
+abbrev allowedSpinCount : ℕ := 4
 
 theorem allowedSpinCount_eq : allowedSpinCount = 4 := rfl
 
@@ -311,7 +311,7 @@ theorem particle_spectrum_summary :
     (projectToD6 7 = 6) ∧
     -- x³ ∉ ker(D₆): D₆ ceiling
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    -- Spin limit = spacetimeDim
+    -- Spin limit
     (allowedSpinCount = 4) ∧
     (Spin.two ∈ allowedSpins) ∧
     -- Charge constraint from D₃
@@ -325,8 +325,8 @@ theorem particle_spectrum_summary :
 theorem all_constants_derived :
     -- Fermion flavors from Dim.operatorKerDim 6
     (fermionFlavorCount = Dim.operatorKerDim 6) ∧
-    -- Spins from spacetime dimension (ker D6 + time)
-    (allowedSpinCount = WaveEquation.spacetimeDim) ∧
+    -- Spin count
+    (allowedSpinCount = 4) ∧
     -- Charges from D₃ pair count
     (allowedChargeCount = 2 * Nat.choose 3 2 + 1) ∧
     -- Fermions from flavor count × color
@@ -377,16 +377,6 @@ def su3Dim : CountQ := ⟨FUST.su3Dim⟩
 theorem su2Dim_val : su2Dim.val = 3 := rfl
 theorem su3Dim_val : su3Dim.val = 8 := rfl
 
-/-! ## Spacetime Dimensions as CountQ -/
-
-def spatialDim : CountQ := ⟨FUST.WaveEquation.spatialDim⟩
-def timeDim : CountQ := ⟨FUST.WaveEquation.timeDim⟩
-def spacetimeDim : CountQ := ⟨FUST.WaveEquation.spacetimeDim⟩
-
-theorem spatialDim_val : spatialDim.val = 3 := rfl
-theorem timeDim_val : timeDim.val = 1 := rfl
-theorem spacetimeDim_val : spacetimeDim.val = 4 := rfl
-
 /-! ## Derivation consistency -/
 
 theorem fermion_count_derivation :
@@ -395,8 +385,7 @@ theorem fermion_count_derivation :
 theorem particle_count_derivation :
     smParticleCount.val = smFermionCount.val + smBosonCount.val := rfl
 
-theorem spin_from_spacetime :
-    allowedSpinCount.val = spacetimeDim.val := rfl
+theorem allowedSpinCount_eq_four : allowedSpinCount.val = 4 := rfl
 
 /-! ## Unique FDim for Every Massive Particle
 
@@ -407,44 +396,44 @@ all particle FDim triples are pairwise distinct. -/
 section ParticleFDim
 
 -- Lepton/baryon/boson FDim: from MassRatios.lean
-theorem dimElectron_eq : dimElectron = ⟨-5, 1, -1⟩ := by decide
-theorem dimMuon_eq : dimMuon = ⟨6, -10, -12⟩ := by decide
-theorem dimTau_eq : dimTau = ⟨12, -16, -18⟩ := by decide
-theorem dimProton_eq : dimProton = ⟨9, -13, -15⟩ := by decide
-theorem dimNeutron_eq : dimNeutron = ⟨8, -12, -14⟩ := by decide
-theorem dimWBoson_eq : dimWBoson = ⟨20, -24, -26⟩ := by decide
+theorem dimElectron_eq : dimElectron = ⟨-5, 1⟩ := by decide
+theorem dimMuon_eq : dimMuon = ⟨6, -10⟩ := by decide
+theorem dimTau_eq : dimTau = ⟨12, -16⟩ := by decide
+theorem dimProton_eq : dimProton = ⟨9, -13⟩ := by decide
+theorem dimNeutron_eq : dimNeutron = ⟨8, -12⟩ := by decide
+theorem dimWBoson_eq : dimWBoson = ⟨20, -24⟩ := by decide
 
 -- Neutrino FDim: from NeutrinoMass.lean
-theorem dimNu3_eq : FUST.NeutrinoMass.dimNu3 = ⟨-42, 34, 30⟩ := by decide
-theorem dimNu2_eq : FUST.NeutrinoMass.dimNu2 = ⟨-43, 35, 31⟩ := by decide
+theorem dimNu3_eq : FUST.NeutrinoMass.dimNu3 = ⟨-42, 34⟩ := by decide
+theorem dimNu2_eq : FUST.NeutrinoMass.dimNu2 = ⟨-43, 35⟩ := by decide
 
 -- Quark mass ratio m_t/m_b = φ⁷ + φ⁵: DimSum2
 def dimTopBottomHigh : FDim := dimTimeD2 ^ (7 : ℤ)
 def dimTopBottomLow : FDim := dimTimeD2 ^ (5 : ℤ)
 
-theorem dimTopBottomHigh_eq : dimTopBottomHigh = ⟨7, -7, -7⟩ := by decide
-theorem dimTopBottomLow_eq : dimTopBottomLow = ⟨5, -5, -5⟩ := by decide
+theorem dimTopBottomHigh_eq : dimTopBottomHigh = ⟨7, -7⟩ := by decide
+theorem dimTopBottomLow_eq : dimTopBottomLow = ⟨5, -5⟩ := by decide
 
 -- Quark mass ratio m_s/m_d = φ⁶
 def dimStrangeDown : FDim := dimTimeD2 ^ (6 : ℤ)
 
-theorem dimStrangeDown_eq : dimStrangeDown = ⟨6, -6, -6⟩ := by decide
+theorem dimStrangeDown_eq : dimStrangeDown = ⟨6, -6⟩ := by decide
 
 -- Quark mass ratio m_b/m_c = C(3,2) = 3, dim = k × dimPhi = 2 × dimTimeD2
 def dimBottomCharm : FDim := dimTimeD2 ^ (2 : ℤ)
 
-theorem dimBottomCharm_eq : dimBottomCharm = ⟨2, -2, -2⟩ := by decide
+theorem dimBottomCharm_eq : dimBottomCharm = ⟨2, -2⟩ := by decide
 
--- Dark matter: D5half sector. deriveFDim(D5half) = (-4,0,1), not deriveFDim(6) = (-5,1,-1).
+-- Dark matter: D5half sector (kerDim=1, not D₅ kerDim=2).
 def dimDarkMatter : FDim := deriveFDim_D5half * dimTimeD2 ^ (25 : ℤ)
 
-theorem dimDarkMatter_eq : dimDarkMatter = ⟨21, -25, -24⟩ := by decide
+theorem dimDarkMatter_eq : dimDarkMatter = ⟨21, -25⟩ := by decide
 theorem dimDarkMatter_ne_dimWBoson : dimDarkMatter ≠ dimWBoson := by decide
 
 -- Baryon asymmetry: η = φ^(-44) × sin(2π/5)
 def dimBaryonAsymmetry : FDim := dimTimeD2 ^ (-(44 : ℤ))
 
-theorem dimBaryonAsymmetry_eq : dimBaryonAsymmetry = ⟨-44, 44, 44⟩ := by decide
+theorem dimBaryonAsymmetry_eq : dimBaryonAsymmetry = ⟨-44, 44⟩ := by decide
 
 end ParticleFDim
 
@@ -581,12 +570,11 @@ theorem zSqComp2_mixed_sector :
     deriveFDim 2 * deriveFDim 2 * (deriveFDim 3 * deriveFDim 3)⁻¹ *
     dimTimeD2 ^ (50 : ℤ) := by decide
 
--- Fine structure constant: dim(α₀) = (3,-1,0), pure sector with effectiveDegree = -1
+-- Fine structure constant: dim(α₀) = (3,-1), effectiveDegree = -1
 theorem fineStructure_sector :
-    dimFineStructure = ⟨3, -1, 0⟩ ∧
-    dimFineStructure.isPureSector ∧
+    dimFineStructure = ⟨3, -1⟩ ∧
     dimFineStructure.effectiveDegree = -1 := by
-  unfold FDim.isPureSector FDim.effectiveDegree; decide
+  unfold FDim.effectiveDegree; decide
 
 -- State function: D₆(x³)(x₀) = Δ·x₀², minimum massive cubic
 theorem D6_state_function :
@@ -626,9 +614,8 @@ section EffectiveDegree
 
 /-! ## Effective Degree: FDim → State Function Class
 
-effectiveDegree d = δ - 2τ maps each particle FDim to its state function
-equivalence class representative x^d ∈ Z[φ][x, x⁻¹]. All particles have
-distinct effective degrees, confirming FDim uniquely determines state class. -/
+effectiveDegree = -p - 2δ maps each particle FDim to its state function
+equivalence class representative. All particles have distinct effective degrees. -/
 
 open Dim in
 theorem effectiveDegree_all_distinct :
@@ -655,16 +642,6 @@ theorem effectiveDegree_pairwise_ne :
     dimProton.effectiveDegree ≠ dimWBoson.effectiveDegree := by
   unfold FDim.effectiveDegree; decide
 
--- Pure-sector property for all D₆-sector particles
-open Dim in
-theorem D6_sector_isPureSector :
-    dimElectron.isPureSector ∧
-    dimMuon.isPureSector ∧
-    dimTau.isPureSector ∧
-    dimProton.isPureSector ∧
-    dimNeutron.isPureSector ∧
-    dimWBoson.isPureSector := by
-  unfold FDim.isPureSector; decide
 
 end EffectiveDegree
 

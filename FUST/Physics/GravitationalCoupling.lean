@@ -159,10 +159,10 @@ noncomputable abbrev cmbTemperatureRatio : ℝ := φ ^ (-(cmbTemperatureExponent
 
 /-! ## Cosmological Constant: 582
 
-ρ_Λ/ρ_Pl = φ^(-582). Dimensional separation via Stefan-Boltzmann ρ ∝ T⁴:
+ρ_Λ/ρ_Pl = φ^(-582). Stefan-Boltzmann ρ ∝ T⁴:
   φ^(-582) = (T_CMB/T_Pl)⁴ × φ^26
   582 = 4 × 152 - 26
-where 4 = spacetimeDim (from ρ ∝ T⁴) and 26 = Σ L(k)² (sector trace squares).
+where 26 = Σ L(k)² (sector trace squares).
 -/
 
 /-- Sector trace square sum (ℕ version) -/
@@ -170,13 +170,9 @@ abbrev sectorTraceSq : ℕ := 1 ^ 2 + 3 ^ 2 + 4 ^ 2
 
 theorem sectorTraceSq_eq : sectorTraceSq = 26 := by decide
 
-/-- Cosmological exponent: 582 = spacetimeDim × cmbExponent - sectorTraceSq -/
+/-- Cosmological exponent: 4 × 152 - 26 = 582 -/
 abbrev cosmologicalExponent : ℕ :=
-  spacetimeDim * cmbTemperatureExponent - sectorTraceSq
-
-/-- 582 = 4×152 - 26 (Stefan-Boltzmann + sector correction) -/
-theorem cosmologicalExponent_eq :
-    spacetimeDim * cmbTemperatureExponent - sectorTraceSq = 582 := by decide
+  4 * cmbTemperatureExponent - sectorTraceSq
 
 theorem cosmologicalExponent_value : cosmologicalExponent = 582 := by decide
 
@@ -448,10 +444,10 @@ theorem sector_traces :
     nlinarith [phi_add_psi]
   · nlinarith [phi_cubed, psi_sq, phi_add_psi]
 
-/-- Gravity sector trace = spacetimeDim: φ³+ψ³ = 4 -/
-theorem gravity_trace_eq_spacetimeDim :
-    φ ^ 3 + ψ ^ 3 = spacetimeDim := by
-  simp only [spacetimeDim, spatialDim, timeDim]; push_cast
+/-- Gravity sector trace: φ³+ψ³ = 4 -/
+theorem gravity_trace_eq_four :
+    φ ^ 3 + ψ ^ 3 = 4 := by
+  push_cast
   nlinarith [phi_cubed, psi_sq, phi_add_psi]
 
 /-- Gravity sector determinant = -1: (φψ)³ = (-1)³ = -1 -/
@@ -462,9 +458,7 @@ theorem gravity_sector_det : (φ * ψ) ^ 3 = -1 := by
 theorem gravity_sector_discriminant :
     (4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3 := by decide
 
-theorem gravity_disc_eq_spacetime_times_active :
-    Nat.choose 6 3 = spacetimeDim * (6 - 2 + 1) := by
-  simp only [spacetimeDim, spatialDim, timeDim]; decide
+theorem gravity_disc_eq : Nat.choose 6 3 = 20 := by decide
 
 /-- Matter and gauge sectors have equal discriminant = 5 = activeDLevels -/
 theorem matter_gauge_discriminant :
@@ -483,25 +477,16 @@ theorem sector_discriminants :
 /-- Sector trace squares: 1²+3²+4² = 26 -/
 theorem sector_trace_sq_sum : (1 : ℝ) ^ 2 + 3 ^ 2 + 4 ^ 2 = 26 := by norm_num
 
-/-! ## Sector-Invariant Derivation of Physical Exponents
+/-! ## Sector Spectral Invariants
 
 The D₆ characteristic polynomial factors as
   p(x) = (x²-x-1)(x²-3x+1)(x²-4x-1)
 with sector traces tₖ = L(k): t₁=1 (matter), t₂=3 (gauge), t₃=4 (gravity).
 
-All physical exponents derive from three spectral invariants plus
-the vacuum dimension d = kerDim(D₆) = spatialDim = 3:
+Spectral invariants:
   p₃ = Σ tₖ³ = 92     (sector self-interaction)
   e₃ = Π tₖ  = 12      (cross-sector coupling)
-  σ  = Σ tₖ² = 26      (sector trace square sum)
-  D  = t₃ = L(3) = spacetimeDim = 4
-
-Formulas:
-  107 = p₃ + e₃ + d
-  45  = d × (e₃ + d)
-  152 = p₃ + D × (e₃ + d)
-  582 = D × 152 - σ
--/
+  σ  = Σ tₖ² = 26      (sector trace square sum) -/
 
 /-- 1³+3³+4³ = 92: third power sum of sector traces -/
 theorem sector_trace_cube_sum :
@@ -509,64 +494,6 @@ theorem sector_trace_cube_sum :
 
 /-- 1×3×4 = 12: product of all sector traces -/
 theorem sector_trace_product : (1 : ℝ) * 3 * 4 = 12 := by norm_num
-
-/-- e₃ + d = C(6,2): sector product + vacuum dim = total pairs -/
-theorem sector_product_plus_kerDim_eq_pairs :
-    1 * 3 * 4 + spatialDim = Nat.choose 6 2 := by decide
-
-/-- 107 = p₃ + e₃ + d -/
-theorem leptonExponent_from_sector_invariants :
-    (1 : ℝ) ^ 3 + 3 ^ 3 + 4 ^ 3 + 1 * 3 * 4 +
-    (spatialDim : ℝ) = 107 := by
-  norm_num [spatialDim]
-
-/-- Equivalence: sector-invariant derivation = leptonExponent -/
-theorem leptonExponent_old_eq_sector :
-    (1 : ℝ) ^ 3 + 3 ^ 3 + 4 ^ 3 + 1 * 3 * 4 +
-    (spatialDim : ℝ) = (leptonExponent : ℝ) := by
-  simp only [spatialDim, leptonExponent, triangular, Nat.choose]; norm_num
-
-/-- 45 = d × (e₃ + d) = spatialDim × C(6,2) -/
-theorem cmbDecoupling_from_sector_invariants :
-    (spatialDim : ℝ) * ((1 : ℝ) * 3 * 4 +
-    (spatialDim : ℝ)) = (cmbDecouplingFactor : ℝ) := by
-  simp only [spatialDim, cmbDecouplingFactor, triangular, Nat.choose]; norm_num
-
-/-- 152 = p₃ + D × (e₃ + d) -/
-theorem cmbExponent_from_sector_invariants :
-    (1 : ℝ) ^ 3 + 3 ^ 3 + 4 ^ 3 +
-    (spacetimeDim : ℝ) * ((1 : ℝ) * 3 * 4 +
-    (spatialDim : ℝ)) = (cmbTemperatureExponent : ℝ) := by
-  simp only [spacetimeDim, spatialDim, timeDim, cmbTemperatureExponent,
-    leptonExponent, cmbDecouplingFactor, triangular, Nat.choose]; norm_num
-
-/-- 582 = D × 152 - σ -/
-theorem cosmoExponent_from_sector_invariants :
-    (spacetimeDim : ℝ) * (cmbTemperatureExponent : ℝ) -
-    ((1 : ℝ) ^ 2 + 3 ^ 2 + 4 ^ 2) = (cosmologicalExponent : ℝ) := by
-  simp only [spacetimeDim, spatialDim, timeDim, cmbTemperatureExponent,
-    cosmologicalExponent, leptonExponent, cmbDecouplingFactor,
-    sectorTraceSq, triangular, Nat.choose]; norm_num
-
-/-- All exponents from sector invariants (ℕ summary) -/
-theorem sector_invariant_derivation :
-    -- p₃ = 92
-    (1 ^ 3 + 3 ^ 3 + 4 ^ 3 = 92) ∧
-    -- e₃ = 12
-    (1 * 3 * 4 = 12) ∧
-    -- σ = 26
-    (1 ^ 2 + 3 ^ 2 + 4 ^ 2 = 26) ∧
-    -- e₃ + d = C(6,2)
-    (1 * 3 * 4 + spatialDim = Nat.choose 6 2) ∧
-    -- 107 = p₃ + e₃ + d
-    (1 ^ 3 + 3 ^ 3 + 4 ^ 3 + 1 * 3 * 4 + spatialDim = 107) ∧
-    -- 45 = d(e₃ + d)
-    (spatialDim * (1 * 3 * 4 + spatialDim) = 45) ∧
-    -- 152 = p₃ + D(e₃ + d)
-    (1 ^ 3 + 3 ^ 3 + 4 ^ 3 + spacetimeDim * (1 * 3 * 4 + spatialDim) = 152) ∧
-    -- 582 = D × 152 - σ
-    (spacetimeDim * 152 - (1 ^ 2 + 3 ^ 2 + 4 ^ 2) = 582) := by
-  simp only [spatialDim, spacetimeDim, timeDim]; decide
 
 /-! ## Inverse Square Law from D₆ Algebra
 
@@ -703,15 +630,13 @@ theorem dAlembertian_inv_zero (x : ℝ) (hx : x ≠ 0) :
 
 /-- Inverse square law derivation from D₆ structure -/
 theorem inverse_square_law_derivation :
-    -- (1) Spatial dimension from ker(D₆) = 3
-    spatialDim = 3 ∧
-    -- (2) D₆(t⁻¹²) = 0: inverse-square monomial in extended kernel
+    -- (1) D₆(t⁻²) = 0: inverse-square monomial in extended kernel
     (∀ x, x ≠ 0 → D6 (fun t => t⁻¹ ^ 2) x = 0) ∧
-    -- (3) Force is inverse-square: D₆(t⁻¹) ∝ x⁻²
+    -- (2) Force is inverse-square: D₆(t⁻¹) ∝ x⁻²
     (∀ x, x ≠ 0 → D6 (fun t => t⁻¹) x = 6 / ((φ - ψ) ^ 4 * x ^ 2)) ∧
-    -- (4) 1/r potential is harmonic: □_φ(t⁻¹) = 0
+    -- (3) 1/r potential is harmonic: □_φ(t⁻¹) = 0
     (∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0) := by
-  exact ⟨rfl, D6_inv_sq_zero, D6_inv_one, dAlembertian_inv_zero⟩
+  exact ⟨D6_inv_sq_zero, D6_inv_one, dAlembertian_inv_zero⟩
 
 /-! ### Extended d'Alembertian Kernel
 
@@ -760,7 +685,7 @@ The monomial eigenvalue Λ(n) = C(n)/(φ-ψ)⁵ vanishes for n ∈ {0,1,2}:
   Δ=0 (constants), Δ=1 (mass), Δ=2 (kinetic energy).
 Since D₆ annihilates Δ=1, mass ratios m_e/m_Pl are boundary data, not eigenvalue data.
 Physical exponents thus form a three-layer structure:
-  Layer 1: D₆ eigenvalues → d=3, d+1=4, σ=26, F∝1/r²
+  Layer 1: D₆ eigenvalues → σ=26, F∝1/r²
   Layer 2: D-hierarchy combinatorics → 107, 45 (boundary conditions)
   Layer 3: Physical assembly with dimensional intermediates → 152, 582
 -/
@@ -783,18 +708,16 @@ theorem D6_force_dimension_active (x : ℝ) (hx : x ≠ 0) :
 
 /-- Layer 1: D₆ eigenvalue structure determines physical framework -/
 theorem derivation_layer1_eigenvalues :
-    spatialDim = 3 ∧
-    spacetimeDim = 4 ∧
     sectorTraceSq = 26 ∧
     (∀ x, x ≠ 0 → D6 (fun t => t⁻¹) x = 6 / ((φ - ψ) ^ 4 * x ^ 2)) := by
-  exact ⟨rfl, rfl, rfl, D6_inv_one⟩
+  exact ⟨rfl, D6_inv_one⟩
 
 /-- Layer 3: physical assembly with dimensional intermediates.
     152 = 107 + 45: T_CMB/T_Pl = (m_e/m_Pl) × (T_CMB/m_e), via [M] intermediate.
     582 = 4×152 - 26: ρ_Λ/ρ_Pl = (T_CMB/T_Pl)⁴ × φ^26, via [M⁴] intermediate. -/
 theorem derivation_layer3_assembly :
     cmbTemperatureExponent = leptonExponent + cmbDecouplingFactor ∧
-    cosmologicalExponent = spacetimeDim * cmbTemperatureExponent - sectorTraceSq ∧
+    cosmologicalExponent = 4 * cmbTemperatureExponent - sectorTraceSq ∧
     cmbTemperatureExponent = 152 ∧
     cosmologicalExponent = 582 := by
   refine ⟨rfl, rfl, cmbTemperatureExponent_value, cosmologicalExponent_value⟩
@@ -804,14 +727,13 @@ theorem derivation_layer3_assembly :
 The graviton is predicted (not postulated) by the D₆ operator structure:
 1. Existence: D₆ charPoly = (matter)(gauge)(gravity) has a gravity sector (x²-4x-1)
 2. Massless: □_φ(t⁻¹) = 0 (graviton propagator has no mass term)
-3. Spin-2: max spin for massless particle = spatialDim - 1 = 2
-4. Inverse square: D₆(t⁻¹) ∝ x⁻² (force law from operator algebra)
-5. Coupling: m_e/m_Pl = φ^(-107-5/63) from D-hierarchy combinatorics
+3. Inverse square: D₆(t⁻¹) ∝ x⁻² (force law from operator algebra)
+4. Coupling: m_e/m_Pl = φ^(-107-5/63) from D-hierarchy combinatorics
 
 The gravity sector polynomial x²-4x-1 encodes:
-- Trace = L(3) = 4 = spacetimeDim (gravity couples to spacetime dimension)
+- Trace = L(3) = 4 = φ³+ψ³ (algebraic identity)
 - Determinant = (φψ)³ = -1 (parity-odd, like matter sector)
-- Discriminant = 20 = C(6,3) = spacetimeDim × activeDLevels
+- Discriminant = 20 = C(6,3)
 -/
 
 /-- Graviton masslessness: □_φ(t⁻¹) = 0 means the graviton mode
@@ -820,35 +742,23 @@ theorem graviton_massless :
     ∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0 :=
   dAlembertian_inv_zero
 
-/-- Graviton spin = spatialDim - timeDim = 3 - 1 = 2 -/
-theorem graviton_spin_from_spacetime :
-    spatialDim - timeDim = 2 := by
-  simp only [spatialDim, timeDim]
-
-/-- Graviton spin = spacetimeDim / 2 = 4 / 2 = 2 -/
-theorem graviton_spin_from_spacetimeDim :
-    spacetimeDim / 2 = 2 := by
-  simp only [spacetimeDim, spatialDim, timeDim]
-
 /-- Complete graviton structural prediction -/
 theorem graviton_prediction :
     -- Existence: gravity sector in D₆ charPoly factorization
     (∀ x : ℝ, D6_charPoly x =
       (x ^ 2 - x - 1) * (x ^ 2 - 3 * x + 1) * (x ^ 2 - 4 * x - 1)) ∧
-    -- Gravity sector trace = spacetimeDim
-    (φ ^ 3 + ψ ^ 3 = spacetimeDim) ∧
+    -- Gravity sector trace = 4
+    (φ ^ 3 + ψ ^ 3 = 4) ∧
     -- Gravity sector determinant
     ((φ * ψ) ^ 3 = -1) ∧
     -- Gravity sector discriminant = C(6,3)
     ((4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3) ∧
     -- Massless: □_φ(t⁻¹) = 0
     (∀ x, x ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) x = 0) ∧
-    -- Spin-2 from spacetime structure
-    (spatialDim - timeDim = 2) ∧
     -- Inverse square force law
     (∀ x, x ≠ 0 → D6 (fun t => t⁻¹) x = 6 / ((φ - ψ) ^ 4 * x ^ 2)) := by
-  exact ⟨D6_charPoly_factorization, gravity_trace_eq_spacetimeDim,
+  exact ⟨D6_charPoly_factorization, gravity_trace_eq_four,
          gravity_sector_det, gravity_sector_discriminant,
-         dAlembertian_inv_zero, graviton_spin_from_spacetime, D6_inv_one⟩
+         dAlembertian_inv_zero, D6_inv_one⟩
 
 end FUST.GravitationalCoupling

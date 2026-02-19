@@ -337,67 +337,22 @@ The physical interpretation (photons, time evolution) applies when the universe 
 observationally identified with the Standard Model point in the 12-point parameter space.
 -/
 
-section SpacetimeDimension
+section KernelStructure
 
-/-- Spatial dimension = dim ker(D6) = 3
-    Physical meaning: massless states (photons) live in ker(D6) -/
-def spatialDimension : ℕ := kernelDimensions 2
-
-/-- Spatial dimension is 3 -/
-theorem spatialDimension_eq_3 : spatialDimension = 3 := rfl
-
-/-- Temporal dimension = 1, from irreversibility of time evolution
-    φ > 1 defines unique future direction -/
-def temporalDimension : ℕ := 1
-
-/-- Temporal dimension is 1 -/
-theorem temporalDimension_eq_1 : temporalDimension = 1 := rfl
-
-/-- Spacetime dimension = 3 + 1 = 4 -/
-theorem spacetimeDimension_eq_4 :
-    spatialDimension + temporalDimension = 4 := by
-  simp only [spatialDimension, temporalDimension, kernelDimensions]
-  rfl
-
-/-- The derivation chain for 4D spacetime:
-    1. ker(D6) = span{1, x, x²} has dimension 3
-    2. φ > 1 and |ψ| < 1 give unique time direction
-    3. Therefore spacetime = 3 + 1 = 4 dimensions -/
-theorem spacetime_derivation_complete :
-    -- Spatial: ker(D6) basis is {1, x, x²}
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t^2) x = 0) ∧
-    -- Kernel is exactly 3-dimensional (x³ is not in kernel)
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    -- Temporal: φ > 1 (expansion to future)
-    (φ > 1) ∧
-    -- Total: 3 + 1 = 4
-    (spatialDimension + temporalDimension = 4) := by
-  refine ⟨?_, D6_not_annihilate_cubic, φ_gt_one, spacetimeDimension_eq_4⟩
-  intro x hx
-  exact ⟨D6_const 1 x hx, D6_linear x hx, D6_quadratic x hx⟩
-
-/-- Why spatial dimension is exactly 3 (not more):
-    D6 is the maximal operator (6-element completeness theorem) -/
-theorem spatial_dim_maximal :
-    -- D6 kernel contains constants, linear, quadratic
+/-- D₆ kernel is exactly {1, x, x²} and x³ is detected -/
+theorem D6_kernel_maximal :
     kernelDimensions 2 = 3 ∧
-    -- D6 does not annihilate cubic
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
   ⟨rfl, D6_not_annihilate_cubic⟩
 
-/-- Why temporal dimension is exactly 1 (not more):
-    The φ/ψ asymmetry gives exactly one preferred direction -/
+/-- Time direction from φ/ψ asymmetry: φ > 1, φ·|ψ| = 1 -/
 theorem temporal_dim_unique :
-    -- φ > 1: future direction
-    φ > 1 ∧
-    -- Unique: φ · |ψ| = 1 couples past and future
-    φ * (-ψ) = 1 := by
+    φ > 1 ∧ φ * (-ψ) = 1 := by
   constructor
   · exact φ_gt_one
-  · have h := phi_mul_psi
-    linarith
+  · have h := phi_mul_psi; linarith
 
-end SpacetimeDimension
+end KernelStructure
 
 end FUST
 
@@ -414,12 +369,5 @@ theorem kerDimD6_val : kerDimD6.val = 3 := rfl
 /-- Kernel dimensions strictly increase -/
 theorem kernel_dims_strict : kerDimD2.val < kerDimD5.val ∧ kerDimD5.val < kerDimD6.val := by
   simp only [kerDimD2, kerDimD5, kerDimD6, kernelDimensions]; omega
-
-/-- Spatial dimension = ker(D₆) dimension = 3 -/
-theorem spatial_dim_from_D6 : kerDimD6.val = spatialDimension := rfl
-
-/-- Spacetime = 3 + 1 = 4 -/
-theorem spacetime_dim : spatialDimension + temporalDimension = 4 :=
-  spacetimeDimension_eq_4
 
 end FUST.Dim

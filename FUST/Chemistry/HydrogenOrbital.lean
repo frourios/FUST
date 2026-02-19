@@ -23,8 +23,6 @@ open FUST FUST.Dim FUST.Chemistry FUST.LeastAction FUST.Hamiltonian
 -- Spin degeneracy from ker(D₅)
 theorem spin_from_kerD5 : Nuclear.spinDegeneracy = 2 := rfl
 
--- Spatial dimension from ker(D₆)
-theorem spatial_from_kerD6 : WaveEquation.spatialDim = 3 := rfl
 
 -- Subshell capacity: 2(2l+1) electrons
 theorem subshell_capacity_formula (l : ℕ) :
@@ -87,9 +85,8 @@ theorem bound_lower_than_free :
 theorem hydrogen_orbital_classification :
     FUST.massGapΔ = 12 / 25 ∧
     Nuclear.spinDegeneracy = 2 ∧
-    WaveEquation.spatialDim = 3 ∧
     Nuclear.shellCapacity 1 = 2 ∧
     dimHydrogenAtom ≠ dimProton * dimElectron := by
-  exact ⟨rfl, rfl, rfl, rfl, by decide⟩
+  exact ⟨rfl, rfl, rfl, by decide⟩
 
 end FUST.Chemistry.HydrogenOrbital

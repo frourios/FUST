@@ -28,14 +28,14 @@ $\varphi > 1$
 
 \begin{theorem}[$|\psi| < 1$]
 \label{thm:mat_psi_lt_one}
-\lean{FUST.abs_psi_lt_one}
+\lean{FUST.TimeTheorem.abs_psi_lt_one}
 \leanok
 $|\psi| < 1$
 \end{theorem}
 
 \begin{theorem}[$\varphi \cdot |\psi| = 1$]
 \label{thm:mat_phi_psi_prod}
-\lean{FUST.phi_mul_abs_psi}
+\lean{FUST.TimeTheorem.phi_mul_abs_psi}
 \leanok
 $\varphi \cdot |\psi| = 1$
 \end{theorem}
@@ -47,7 +47,7 @@ Define the time evolution naturally derived from $D_6$ structure:
 
 \begin{definition}[Time Evolution]
 \label{def:mat_time_evolution}
-\lean{FUST.timeEvolution}
+\lean{FUST.LeastAction.timeEvolution}
 \leanok
 $f \mapsto f(\varphi \cdot)$
 \[
@@ -59,7 +59,7 @@ This is consistent with the gauge transformation rule of $D_6$:
 
 \begin{theorem}[$D_6$ Time Evolution]
 \label{thm:mat_D6_time_evolution}
-\lean{FUST.D6_timeEvolution}
+\lean{FUST.LeastAction.D6_timeEvolution}
 \leanok
 \[
 D_6[\mathrm{timeEvolution}(f)](x) = \varphi \cdot D_6[f](\varphi x)
@@ -89,7 +89,7 @@ Photons ($\ker(D_6)$) are invariant under time evolution:
 
 \begin{theorem}[Kernel Invariance under Time Evolution]
 \label{thm:mat_ker_invariant}
-\lean{FUST.ker_D6_invariant_timeEvolution}
+\lean{FUST.LeastAction.ker_D6_invariant}
 \leanok
 \[
 f \in \ker(D_6) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(D_6)
@@ -105,7 +105,7 @@ Quantify the deviation from $\ker(D_6)$ as entropy:
 
 \begin{definition}[Entropy]
 \label{def:mat_entropy}
-\lean{FUST.entropyAt}
+\lean{FUST.LeastAction.entropyAtD6}
 \leanok
 \[
 S(f)(t) := (\mathrm{perpProjection}(f)(t))^2
@@ -126,7 +126,7 @@ Time evolution for monomials $f(t) = t^n$:
 
 \begin{theorem}[Monomial Amplification]
 \label{thm:mat_monomial_amp}
-\lean{FUST.monomial_amplification}
+\lean{FUST.TimeTheorem.monomial_amplification}
 \leanok
 \[
 \mathrm{timeEvolution}(t^n)(t) = \varphi^n \cdot t^n
@@ -135,7 +135,7 @@ Time evolution for monomials $f(t) = t^n$:
 
 \begin{theorem}[$\varphi^n > 1$ for $n \geq 1$]
 \label{thm:mat_phi_pow}
-\lean{FUST.phi_pow_gt_one}
+\lean{FUST.TimeTheorem.phi_pow_gt_one}
 \leanok
 For $n \geq 1$, $\varphi^n > 1$
 \end{theorem}
@@ -145,18 +145,13 @@ Thus, time evolution amplifies $\ker(D_6)^\perp$ components ($n \geq 3$) by a fa
 \section{Summary of Arrow of Time}
 \label{sec:mat_arrow_summary}
 
-\begin{theorem}[Arrow of Time Summary]
-\label{thm:mat_arrow_summary}
-\lean{FUST.arrow_of_time_summary}
-\leanok
 The following are derived from $D_6$ structure:
 \begin{enumerate}
-\item $\varphi > 1$ (definition of future direction)
-\item $|\psi| < 1$ (definition of past direction)
-\item $\ker(D_6)$ is invariant under time evolution (time invariance of photons)
-\item $D_6[\mathrm{timeEvolution}(f)](x) = \varphi \cdot D_6[f](\varphi x)$ (gauge transformation rule)
+\item $\varphi > 1$ (definition of future direction) --- \texttt{FUST.phi\_gt\_one}
+\item $|\psi| < 1$ (definition of past direction) --- \texttt{FUST.TimeTheorem.abs\_psi\_lt\_one}
+\item $\ker(D_6)$ is invariant under time evolution --- \texttt{FUST.LeastAction.ker\_D6\_invariant}
+\item $D_6[\mathrm{timeEvolution}(f)](x) = \varphi \cdot D_6[f](\varphi x)$ --- \texttt{FUST.LeastAction.D6\_timeEvolution}
 \end{enumerate}
-\end{theorem}
 
 \section{Physical Significance}
 \label{sec:mat_entropy_physics}
@@ -182,9 +177,9 @@ Irreversible process & Transition to $\ker(D_6)^\perp$ \\
 
 Entropy $S(f)(t) = (\mathrm{perpProjection}(f)(t))^2$ has the same dimension as the Lagrangian:
 \[
-\dim(S) = \dim((D_6 f)^2) = (-10, 2, -2) \quad (\text{ScaleQuantity})
+\dim(S) = \dim((D_6 f)^2) = (-10, 2) \quad (\text{ScaleQuantity})
 \]
-Time evolution amplifies $D_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time. The $\tau = -2$ component indicates inverse-square-time scaling, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
+Time evolution amplifies $D_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
 
-Lean: \texttt{FUST\_dim.QuantumStructure.entropyAt} with type \texttt{ScaleQ dimLagrangian}.
+Lean: \texttt{FUST.Physics.QuantumStructure.entropyAt} with type \texttt{ScaleQ dimLagrangian}.
 

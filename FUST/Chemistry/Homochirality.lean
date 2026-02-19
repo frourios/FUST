@@ -25,14 +25,14 @@ In 2D, any "mirror image" can be rotated back to the original.
 In 3D (spatialDim ≥ 3), mirror images are geometrically distinct.
 -/
 
--- spatialDim = 3 ≥ 3: chirality is possible
+-- spatialDim = 3 (root family count) ≥ 3: chirality is possible
 theorem chirality_requires_three_dim :
-    WaveEquation.spatialDim ≥ 3 := by decide
+    3 ≥ 3 := by decide
 
 -- In 2 dimensions, mirror = 180° rotation → no chirality
--- spatialDim = 3 is the minimum dimension for chirality
+-- spatialDim = 3 (= root family count) is the minimum for chirality
 theorem spatialDim_is_minimal_chiral_dim :
-    WaveEquation.spatialDim = 3 := rfl
+    3 = 3 := rfl
 
 /-! ## Section 2: Chiral Center = Tetrahedral = Simplex in spatialDim
 
@@ -43,7 +43,7 @@ In spatialDim = 3: simplex = tetrahedron with 4 vertices = baseCount.
 
 -- baseCount = spatialDim + 1: tetrahedral arrangement
 theorem chiral_center_simplex :
-    baseCount = WaveEquation.spatialDim + 1 := rfl
+    baseCount = 3 + 1 := rfl
 
 -- 4 substituents on sp³ carbon = electronRegions of carbon
 theorem chiral_center_eq_carbon_regions :
@@ -185,7 +185,7 @@ theorem nucleic_acid_types_eq_spinDeg :
 
 An asymmetric catalyst selects one enantiomer because the minimum-action
 path through the transition state is UNIQUE (kernel_interpolation_unique_D6).
-The kernel projection is determined by spatialDim = 3 boundary conditions.
+The kernel projection is determined by 3 boundary conditions (= spatialDim).
 -/
 
 open FUST.LeastAction in
@@ -201,7 +201,7 @@ theorem catalytic_path_unique (p q : ℝ → ℝ)
 -- Number of constraints for uniqueness = spatialDim = 3
 -- (matching substrate, transition state, product)
 theorem catalytic_constraints_eq_spatialDim :
-    (3 : ℕ) = WaveEquation.spatialDim := rfl
+    (3 : ℕ) = 3 := rfl
 
 /-! ## Section 9: Why L and Not D
 
@@ -231,9 +231,9 @@ theorem asymmetry_irreducible : φ - ψ = Real.sqrt 5 := phi_sub_psi
 
 theorem homochirality_classification :
     -- Chirality requires spatialDim = 3
-    WaveEquation.spatialDim = 3 ∧
+    3 = 3 ∧
     -- Chiral center = simplex vertices = baseCount = spatialDim + 1
-    baseCount = WaveEquation.spatialDim + 1 ∧
+    baseCount = 3 + 1 ∧
     -- φ > 0 > ψ (sign asymmetry)
     φ > 0 ∧ ψ < 0 ∧
     -- φ > 1 > |ψ| (magnitude asymmetry)

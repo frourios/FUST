@@ -17,7 +17,6 @@ Derives the wave equation from FUST Least Action Theorem via Euler-Lagrange.
 1. D6 is formally symmetric under dx/x measure
 2. FUST d'Alembertian □_φ = D6 ∘ D6 (formally)
 3. ker(D6) ⊂ ker(□_φ) (zero modes)
-4. Spacetime dimension = dim ker(D6) + 1 = 4
 -/
 
 namespace FUST.WaveEquation
@@ -246,68 +245,16 @@ theorem D6_cubic_nonzero (x : ℝ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
     exact mul_ne_zero h12_ne hsqrt5_ne hcoef_zero
   | inr h => exact hdenom_ne h
 
-/-- Spatial dimension = 3: derived from ker(D6) = span{1, x, x²} -/
-theorem spatialDim_eq_three : (3 : ℕ) = 3 := rfl
-
-/-- The basis count of ker(D6) -/
-def spatialDim : ℕ := 3
-
 /-- Time evolution uniqueness: φ > 1 is the unique expansion factor -/
 theorem time_evolution_unique : φ > 1 ∧ |ψ| < 1 :=
-  FUST.TimeTheorem.phi_unique_expansion
+  ⟨φ_gt_one, FUST.TimeTheorem.abs_psi_lt_one⟩
 
-/-- Time dimension = 1: derived from unique expansion factor -/
-theorem timeDim_eq_one : (1 : ℕ) = 1 := rfl
-
-/-- The time parameter count -/
-def timeDim : ℕ := 1
-
-/-- Spacetime dimension from ker(D6) dimension + time evolution -/
-def spacetimeDim : ℕ := spatialDim + timeDim
-
-/-- Spacetime is 4-dimensional: 3 (spatial from ker D6) + 1 (temporal from φ) -/
-theorem spacetime_dim_eq_four : spacetimeDim = 4 := rfl
-
-/-- The derivation chain for spacetime dimension -/
-theorem spacetime_dim_derivation :
-    -- ker(D6) contains 3 basis elements {1, x, x²}
-    ((∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-     (∀ x, x ≠ 0 → D6 id x = 0) ∧
-     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0)) ∧
-    -- x³ is NOT in ker(D6), so dim ker(D6) = 3
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    -- Time evolution has unique expansion factor
-    (φ > 1 ∧ |ψ| < 1) ∧
-    -- Therefore spacetimeDim = 3 + 1 = 4
-    spacetimeDim = 4 :=
-  ⟨ker_D6_contains_basis, D6_cubic_nonzero, time_evolution_unique, rfl⟩
-
-/-! ## Part 5: Energy Density Scaling -/
-
-/-- Wave equation implies energy density scales as m^spacetimeDim -/
-theorem energy_density_from_wave :
-    ∀ k : ℕ, φ ^ (-(spacetimeDim * k : ℤ)) = φ ^ (-(4 * k : ℤ)) := by
-  intro k; rfl
-
-/-! ## Part 6: Summary Theorems -/
+/-! ## Part 5: Summary Theorems -/
 
 /-- FUST Wave Equation Structure -/
 theorem fust_wave_structure :
     (∀ f : ℝ → ℝ, FUSTDAlembertian f = D6 (D6 f)) ∧
-    (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → FUSTDAlembertian f x = 0) ∧
-    spacetimeDim = 4 := by
-  exact ⟨fun _ => rfl, dAlembertian_zero_on_kernel, rfl⟩
-
-/-- Complete derivation chain: no arbitrary constants -/
-theorem derivation_chain :
-    -- Lagrangian from D6 structure
-    (∀ f x, D6Lagrangian f x = (D6 f x)^2) ∧
-    -- Spatial dimension from ker(D6) basis {1, x, x²} with x³ ∉ ker
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
-    -- Time dimension from unique expansion factor
-    (φ > 1 ∧ |ψ| < 1) ∧
-    -- Spacetime dimension = 4
-    spacetimeDim = 4 := by
-  exact ⟨fun _ _ => rfl, D6_cubic_nonzero, time_evolution_unique, rfl⟩
+    (∀ f : ℝ → ℝ, IsInKerD6 f → ∀ x, x ≠ 0 → FUSTDAlembertian f x = 0) := by
+  exact ⟨fun _ => rfl, dAlembertian_zero_on_kernel⟩
 
 end FUST.WaveEquation

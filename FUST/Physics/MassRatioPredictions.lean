@@ -61,7 +61,7 @@ theorem higgsWRatio_components :
     (Nat.choose 5 2 = 10) ∧
     -- Combined: φ - 1/10 ≈ 1.518
     (higgsWRatio = φ - 1/10) := by
-  refine ⟨phi_unique_expansion.1, rfl, ?_⟩
+  refine ⟨φ_gt_one, rfl, ?_⟩
   simp only [higgsWRatio, Nat.choose]; norm_num
 
 /-! ## Part 2: Dark Matter / Electron Mass Ratio
@@ -140,19 +140,15 @@ theorem WZRatio_bounds : 0 < WZRatio ∧ WZRatio < 1 := by
 
 Derivation:
 - CP phase δ = 2π/5 from 5 active D-levels
-- Suppression exponent 44 = T(4) × spacetimeDim + spacetimeDim = 10 × 4 + 4
+- Suppression exponent 44 = T(9) - 1
 - Result: η ≈ 6×10⁻¹⁰
 -/
 
-/-- Baryon asymmetry exponent from D-structure -/
-abbrev baryonExponent : ℕ := triangular 4 * spacetimeDim + spacetimeDim
+/-- Baryon asymmetry exponent: T(9) - 1 = 44 -/
+abbrev baryonExponent : ℕ := triangular 9 - 1
 
 theorem baryonExponent_eq : baryonExponent = 44 := by
-  simp only [baryonExponent, triangular, spacetimeDim, spatialDim, timeDim]
-
-/-- Alternative: baryonExponent = T(9) - 1 -/
-theorem baryonExponent_alt : baryonExponent = triangular 9 - 1 := by
-  simp only [baryonExponent, triangular, spacetimeDim, spatialDim, timeDim]
+  simp only [baryonExponent, triangular]
 
 /-- Active D-levels for CP phase -/
 abbrev activeDLevels : ℕ := 6 - 2 + 1
@@ -174,14 +170,12 @@ theorem baryonAsymmetry_structure :
 
 /-- Baryon asymmetry components from D-structure -/
 theorem baryonAsymmetry_derivation :
-    -- Exponent from T(4) × spacetimeDim + spacetimeDim
-    (baryonExponent = triangular 4 * spacetimeDim + spacetimeDim) ∧
-    -- = 10 × 4 + 4 = 44
+    -- T(9) - 1 = 44
     (baryonExponent = 44) ∧
     -- CP phase from active D-levels
     (activeDLevels = 5) ∧
     -- δ = 2π/5
-    (cpPhase = 2 * Real.pi / 5) := ⟨rfl, baryonExponent_eq, rfl, rfl⟩
+    (cpPhase = 2 * Real.pi / 5) := ⟨baryonExponent_eq, rfl, rfl⟩
 
 /-- Baryon asymmetry is positive (since sin(2π/5) > 0) -/
 theorem baryonAsymmetry_pos : baryonAsymmetry > 0 := by
@@ -303,11 +297,11 @@ theorem all_from_D_structure :
     (2 * Nat.choose 6 2 = 30) ∧
     -- W/Z uses C(3,2), C(5,2)
     (Nat.choose 3 2 = 3 ∧ Nat.choose 5 2 = 10) ∧
-    -- Baryon uses T(4), spacetimeDim
-    (triangular 4 = 10 ∧ spacetimeDim = 4) ∧
+    -- Baryon uses T(9) - 1 = 44
+    (triangular 9 - 1 = 44) ∧
     -- W/electron uses C(5,2), C(6,2), C(2,2)
     (Nat.choose 2 2 = 1 ∧ Nat.choose 5 2 + Nat.choose 6 2 = 25 ∧
      Nat.choose 6 2 + Nat.choose 2 2 = 16) := by
-  refine ⟨rfl, rfl, rfl, ⟨rfl, rfl⟩, ⟨rfl, rfl⟩, ⟨rfl, rfl, rfl⟩⟩
+  refine ⟨rfl, rfl, rfl, ⟨rfl, rfl⟩, rfl, ⟨rfl, rfl, rfl⟩⟩
 
 end FUST.MassRatioPredictions

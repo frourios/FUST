@@ -24,7 +24,7 @@ Aufbau: [Ar] 3d³ 4s².
 abbrev vanadiumZ : ℕ := 23
 
 theorem vanadiumZ_from_magic :
-    Nuclear.nuclearMagic 2 + WaveEquation.spatialDim = vanadiumZ := by decide
+    Nuclear.nuclearMagic 2 + 3 = vanadiumZ := by decide
 
 -- [Ar] 3d³ 4s²
 abbrev vanadium_3d_electrons : ℕ := 3
@@ -81,7 +81,7 @@ theorem V50_mass_number : vanadiumZ + neutrons_V50 = 50 := rfl
 
 theorem vanadium_classification :
     vanadiumZ = 23 ∧
-    Nuclear.nuclearMagic 2 + WaveEquation.spatialDim = vanadiumZ ∧
+    Nuclear.nuclearMagic 2 + 3 = vanadiumZ ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_V51) ∧
     neutrons_V51 = neutrons_Fe54 ∧
     (dimAtom 23 28 0).effectiveDegree > 2 ∧

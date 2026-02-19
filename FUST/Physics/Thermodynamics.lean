@@ -13,21 +13,19 @@ This module derives thermodynamic laws from D6 structure.
 
 1. **Third Law**: Massive states (f ∉ ker(D6)) cannot reach absolute zero
 2. **Light-Sound Separation**: ker(D6) vs ker(D6)⊥ structural separation
-3. **Stefan-Boltzmann**: L ∝ T⁴ from spacetimeDim = 4
-4. **Energy Properties**: Non-negativity, zero condition, orthogonal additivity
+3. **Energy Properties**: Non-negativity, zero condition, orthogonal additivity
 
 ## References
 
 All derivations follow from:
 - TimeTheorem.lean: entropyAt, entropy_zero_iff_ker
-- Cosmology.lean: energyDensityScale, spacetimeDim = 4
 - FrourioLogarithm.lean: frourioEntropy, time_increases_entropy
 -/
 
 namespace FUST.Thermodynamics
 
 open FUST FUST.LeastAction FUST.TimeTheorem FUST.FrourioLogarithm FUST.Cosmology
-open FUST.WaveEquation (spacetimeDim spacetime_dim_eq_four spatialDim timeDim)
+open FUST.WaveEquation
 
 /-! ## Third Law of Thermodynamics
 
@@ -89,33 +87,9 @@ theorem light_sound_separation :
 
 /-! ## Stefan-Boltzmann Law
 
-The Stefan-Boltzmann law L ∝ T⁴ follows from:
-1. spacetimeDim = 4 (from ker(D6) dimension + time)
-2. Energy density scales as φ^{-4k}
-3. Temperature scales as φ^k
-
-Therefore: L ∝ ρ ∝ φ^{-4k} = (φ^{-k})^4 ∝ T^{-4}
-From the radiation perspective: L ∝ T^4
+The Stefan-Boltzmann law L ∝ T⁴ follows from scale hierarchy φ^{-4k}.
+The exponent 4 is derived in the chemistry layer from rootFamilyCount + 1.
 -/
-
-/-- Stefan-Boltzmann exponent equals spacetime dimension -/
-theorem stefan_boltzmann_exponent : spacetimeDim = 4 := spacetime_dim_eq_four
-
-/-- Energy density ratio between levels is φ^{-4} -/
-theorem energy_density_ratio_is_phi_neg_4 (k : ℕ) :
-    energyDensityScale (k + 1) / energyDensityScale k = φ ^ (-(spacetimeDim : ℤ)) :=
-  energyDensityScale_ratio k
-
-/-- The exponent 4 in Stefan-Boltzmann comes from spacetime dimension -/
-theorem stefan_boltzmann_from_spacetime :
-    spacetimeDim = 4 ∧
-    (∀ k : ℕ, energyDensityScale (k + 1) / energyDensityScale k = φ ^ (-4 : ℤ)) := by
-  constructor
-  · exact spacetime_dim_eq_four
-  · intro k
-    have h := energyDensityScale_ratio k
-    simp only [spacetimeDim, spatialDim, timeDim] at h ⊢
-    exact h
 
 /-! ## First Law: Energy Conservation
 
@@ -168,16 +142,13 @@ theorem fust_thermodynamics :
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     -- Light-Sound Separation
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) ∧
-    -- Stefan-Boltzmann exponent
-    (spacetimeDim = 4) :=
+    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
   ⟨first_law_linearity,
    first_law_energy_nonneg,
    second_law_amplification,
    second_law_phi_pow_amplifies,
    third_law_massive_positive_entropy,
    IsInKerD6_implies_D6_zero,
-   sound_positive_perp,
-   stefan_boltzmann_exponent⟩
+   sound_positive_perp⟩
 
 end FUST.Thermodynamics

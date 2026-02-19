@@ -262,12 +262,9 @@ theorem cpPhase_val : cpPhase.val = 2 * Real.pi / 5 := rfl
 Other φ-involving constants (CKM, PMNS, Ω) are forced to dim = 1
 by unitarity or conservation sum constraints. -/
 
-def dimFineStructure : FDim := ⟨3, -1, 0⟩
+def dimFineStructure : FDim := ⟨3, -1⟩
 
-theorem dimFineStructure_eq : dimFineStructure = ⟨3, -1, 0⟩ := rfl
-
-theorem dimFineStructure_pureSector : dimFineStructure.isPureSector := by
-  unfold FDim.isPureSector; decide
+theorem dimFineStructure_eq : dimFineStructure = ⟨3, -1⟩ := rfl
 
 -- α₀² × m_e = dimTimeD2 (EM binding energy dimension)
 theorem fineStructure_binding_consistency :

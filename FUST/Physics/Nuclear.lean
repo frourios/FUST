@@ -29,17 +29,13 @@ theorem spinDegeneracy_justified :
     (∀ x, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0) :=
   operatorKerDim_5_justified
 
--- dim ker(D₆) = 3 = spatialDim: D6 annihilates {1, x, x²} but not x³
-theorem spatialDim_from_kerD6 :
-    WaveEquation.spatialDim = operatorKerDim 6 := rfl
-
-theorem spatialDim_justified :
-    WaveEquation.spatialDim = 3 ∧
+-- ker(D₆) has basis {1, x, x²} and detects x³
+theorem kerD6_justified :
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
-  ⟨rfl, (operatorKerDim_6_justified).2.1,
+  ⟨(operatorKerDim_6_justified).2.1,
    (operatorKerDim_6_justified).2.2.1,
    (operatorKerDim_6_justified).2.2.2.1,
    (operatorKerDim_6_justified).2.2.2.2⟩
@@ -129,8 +125,8 @@ theorem total_elements_118 :
 
 /-! ## Section 5: Quark Charge from D₃ Structure -/
 
--- Charge denominator = C(spatialDim, 2) from D₃ structure
-abbrev chargeDenom : ℕ := Nat.choose WaveEquation.spatialDim 2
+-- Charge denominator = C(3, 2) from D₃ structure
+abbrev chargeDenom : ℕ := Nat.choose 3 2
 
 theorem chargeDenom_eq : chargeDenom = 3 := rfl
 
@@ -156,26 +152,25 @@ theorem up_charge_allowed :
 theorem down_charge_allowed :
   QuarkFlavor.chargeNum .down ∈ ParticleSpectrum.allowedChargeNumerators := by decide
 
--- Proton: 2u + d = chargeDenom, Neutron: u + 2d = 0 (spatialDim = 3 quarks each)
+-- Proton: 2u + d = chargeDenom, Neutron: u + 2d = 0 (3 quarks each)
 theorem proton_charge :
     2 * QuarkFlavor.chargeNum .up + QuarkFlavor.chargeNum .down = chargeDenom := rfl
 theorem neutron_charge :
     QuarkFlavor.chargeNum .up + 2 * QuarkFlavor.chargeNum .down = 0 := rfl
 
 theorem proton_composition_unique (n_up n_down : ℕ)
-    (hcount : n_up + n_down = WaveEquation.spatialDim)
+    (hcount : n_up + n_down = 3)
     (hcharge : n_up * (QuarkFlavor.chargeNum .up) + n_down * (QuarkFlavor.chargeNum .down) =
       chargeDenom) :
     n_up = 2 ∧ n_down = 1 := by
-  have hd : (chargeDenom : ℤ) = 3 := by decide
-  simp only [WaveEquation.spatialDim, QuarkFlavor.chargeNum, hd] at *; omega
+  have : (chargeDenom : ℤ) = 3 := by decide
+  simp only [QuarkFlavor.chargeNum, this] at *; omega
 
 theorem neutron_composition_unique (n_up n_down : ℕ)
-    (hcount : n_up + n_down = WaveEquation.spatialDim)
+    (hcount : n_up + n_down = 3)
     (hcharge : n_up * (QuarkFlavor.chargeNum .up) + n_down * (QuarkFlavor.chargeNum .down) = 0) :
     n_up = 1 ∧ n_down = 2 := by
-  simp only [WaveEquation.spatialDim, QuarkFlavor.chargeNum] at *
-  omega
+  simp only [QuarkFlavor.chargeNum] at *; omega
 
 /-! ## Section 5b: Connection to Mass Derivations
 
@@ -213,7 +208,7 @@ Mass number A = Z + N. FDim provided by dimAtom(Z, N, e) from AtomDim.lean. -/
 
 -- 3D harmonic oscillator degeneracy: C(N + spatialDim - 1, spatialDim - 1)
 def hoDegeneracy (N : ℕ) : ℕ :=
-  Nat.choose (N + WaveEquation.spatialDim - 1) (WaveEquation.spatialDim - 1)
+  Nat.choose (N + 3 - 1) (3 - 1)
 
 theorem hoDeg_formula (N : ℕ) : hoDegeneracy N = Nat.choose (N + 2) 2 := rfl
 
@@ -231,7 +226,7 @@ theorem hoCapacity_values :
 
 -- Cumulative: spinDegeneracy × C(N + spatialDim, spatialDim)
 def hoMagic (N : ℕ) : ℕ :=
-  spinDegeneracy * Nat.choose (N + WaveEquation.spatialDim) WaveEquation.spatialDim
+  spinDegeneracy * Nat.choose (N + 3) 3
 
 theorem hoMagic_values :
   hoMagic 0 = 2 ∧ hoMagic 1 = 8 ∧ hoMagic 2 = 20 ∧
@@ -332,11 +327,11 @@ theorem orbital_type_count : kernelDimensions 2 = 3 := rfl
 
 theorem shell_from_kernel_dimensions :
     kernelDimensions 1 = spinDegeneracy ∧
-    kernelDimensions 2 = WaveEquation.spatialDim ∧
+    kernelDimensions 2 = 3 ∧
     kernelDimensions 2 - 1 = 2 ∧
     shellCapacity 1 = 2 ∧ shellCapacity 2 = 8 ∧
-    shellCapacity 3 = 18 := by
-  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+    shellCapacity 3 = 18 :=
+  ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-! ## Section 9: Neutron Cannot Form Electron Shell
 
@@ -405,9 +400,8 @@ theorem magic_gap_uses_mass_pair_counts :
 /-! ## Section 11: Summary -/
 
 theorem nuclear_structure_from_D_operators :
-  -- Derived from D-operators
+  -- Kernel dimensions match physical constants
   spinDegeneracy = operatorKerDim 5 ∧
-  WaveEquation.spatialDim = operatorKerDim 6 ∧
   -- Subshell capacities: spinDeg × harmonicDim(l) = 2(2l+1)
   subshellCapacity 0 = 2 ∧
   subshellCapacity 1 = 6 ∧
@@ -420,7 +414,7 @@ theorem nuclear_structure_from_D_operators :
   nuclearMagic 0 = 2 ∧ nuclearMagic 1 = 8 ∧ nuclearMagic 2 = 20 ∧
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 ∧
-  -- Quark charge denominator = C(spatialDim, 2)
-  chargeDenom = Nat.choose WaveEquation.spatialDim 2 := by decide
+  -- Quark charge denominator = C(3, 2)
+  chargeDenom = Nat.choose 3 2 := by decide
 
 end FUST.Nuclear

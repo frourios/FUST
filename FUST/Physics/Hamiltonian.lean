@@ -7,187 +7,355 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 /-!
 # FUST Hamiltonian from Least Action Theorem
 
-Construction of the Yang-Mills Hamiltonian from FUST's D6 Lagrangian structure.
-This provides the rigorous foundation for spectral gap (mass gap) analysis.
+Construction of the Hamiltonian from each Dm operator's Lagrangian structure.
+Each Dm (m=2..6) defines Hm[f] = Σₙ (Dm f (φⁿ))², and the spectral gap
+(mass gap) Δm = |C_{d_min}| / (√5)^{m-1} is derived from operator structure.
 
-## Key Construction
+## Spectral Structure (per operator)
 
-The FUST Lagrangian density is L(f,x) = (D6 f x)².
-Via Legendre transformation, we construct the Hamiltonian:
-  H[f] = ∫ (D6 f)² dμ
-where dμ = dx/x is the φ-scale invariant Haar measure.
-
-## Spectral Structure
-
-- ker(D6) states: H = 0 (vacuum, photons)
-- ker(D6)⊥ states: H > 0 (massive particles)
-- Spectral gap Δ: minimum eigenvalue on ker(D6)⊥
-
-## Main Results
-
-- `FUSTHamiltonian`: Definition of H[f] from D6 structure
-- `hamiltonian_nonneg`: H[f] ≥ 0 for all f
-- `hamiltonian_zero_iff_ker`: H[f] = 0 ↔ f ∈ ker(D6)
-- `spectral_gap_exists`: ∃ Δ > 0, H[f] = 0 ∨ H[f] ≥ Δ for f ∈ ker(D6)⊥
+- ker(Dm) states: Hm = 0 (vacuum under Dm)
+- ker(Dm)⊥ states: Hm > 0 (massive under Dm)
+- Mass gap Δm: minimum eigenvalue on ker(Dm)⊥
 -/
 
 namespace FUST.Hamiltonian
 
 open FUST.LeastAction
 
-/-!
-## Section 1: FUST Hamiltonian Definition
+/-! ## Hamiltonian Definition for All D-Operators
 
-The Hamiltonian is constructed from the D6 Lagrangian via:
-  H[f] = ∫₀^∞ (D6 f x)² · (dx/x)
-
-In FUST, this integral is discretized at φ-scale points:
-  H[f] = Σₙ (D6 f (φⁿ))² · log φ
+Each Dm defines a discretized Hamiltonian:
+  Hm[f] = Σₙ (Dm f (φⁿ))²
 -/
 
 section HamiltonianDefinition
 
-/-- Discretized Hamiltonian at scale n: contribution from φⁿ -/
-noncomputable def hamiltonianContribution (f : ℝ → ℝ) (n : ℤ) : ℝ :=
+noncomputable def hamiltonianContributionD2 (f : ℝ → ℝ) (n : ℤ) : ℝ :=
+  (D2 f (φ ^ n))^2
+
+noncomputable def hamiltonianContributionD3 (f : ℝ → ℝ) (n : ℤ) : ℝ :=
+  (D3 f (φ ^ n))^2
+
+noncomputable def hamiltonianContributionD4 (f : ℝ → ℝ) (n : ℤ) : ℝ :=
+  (D4 f (φ ^ n))^2
+
+noncomputable def hamiltonianContributionD5 (f : ℝ → ℝ) (n : ℤ) : ℝ :=
+  (D5 f (φ ^ n))^2
+
+noncomputable def hamiltonianContributionD6 (f : ℝ → ℝ) (n : ℤ) : ℝ :=
   (D6 f (φ ^ n))^2
 
-/-- Hamiltonian contribution is non-negative -/
-theorem hamiltonianContribution_nonneg (f : ℝ → ℝ) (n : ℤ) :
-    hamiltonianContribution f n ≥ 0 :=
-  sq_nonneg _
+theorem hamiltonianContributionD2_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    hamiltonianContributionD2 f n ≥ 0 := sq_nonneg _
+theorem hamiltonianContributionD3_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    hamiltonianContributionD3 f n ≥ 0 := sq_nonneg _
+theorem hamiltonianContributionD4_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    hamiltonianContributionD4 f n ≥ 0 := sq_nonneg _
+theorem hamiltonianContributionD5_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    hamiltonianContributionD5 f n ≥ 0 := sq_nonneg _
+theorem hamiltonianContributionD6_nonneg (f : ℝ → ℝ) (n : ℤ) :
+    hamiltonianContributionD6 f n ≥ 0 := sq_nonneg _
 
-/-- Partial Hamiltonian: sum over scales from -N to N -/
-noncomputable def partialHamiltonian (f : ℝ → ℝ) (N : ℕ) : ℝ :=
-  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContribution f n)
+noncomputable def partialHamiltonianD2 (f : ℝ → ℝ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContributionD2 f n)
 
-/-- Partial Hamiltonian is non-negative -/
-theorem partialHamiltonian_nonneg (f : ℝ → ℝ) (N : ℕ) :
-    partialHamiltonian f N ≥ 0 := by
-  simp only [partialHamiltonian]
-  apply Finset.sum_nonneg
-  intro n _
-  exact hamiltonianContribution_nonneg f n
+noncomputable def partialHamiltonianD3 (f : ℝ → ℝ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContributionD3 f n)
 
-/-- For ker(D6) functions, each contribution is zero at φⁿ ≠ 0 -/
-theorem hamiltonianContribution_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (n : ℤ) :
-    hamiltonianContribution f n = 0 := by
-  simp only [hamiltonianContribution]
-  rw [sq_eq_zero_iff]
-  have hne : φ ^ n ≠ 0 := by
-    apply zpow_ne_zero
-    have := φ_gt_one
-    linarith
-  exact IsInKerD6_implies_D6_zero f hf (φ ^ n) hne
+noncomputable def partialHamiltonianD4 (f : ℝ → ℝ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContributionD4 f n)
 
-/-- For ker(D6) functions, partial Hamiltonian is zero -/
-theorem partialHamiltonian_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
-    partialHamiltonian f N = 0 := by
-  simp only [partialHamiltonian]
-  apply Finset.sum_eq_zero
-  intro n _
-  exact hamiltonianContribution_ker_zero f hf n
+noncomputable def partialHamiltonianD5 (f : ℝ → ℝ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContributionD5 f n)
+
+noncomputable def partialHamiltonianD6 (f : ℝ → ℝ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => hamiltonianContributionD6 f n)
+
+private theorem phi_zpow_ne_zero (n : ℤ) : φ ^ n ≠ 0 := by
+  apply zpow_ne_zero; linarith [φ_gt_one]
+
+theorem partialHamiltonianD2_nonneg (f : ℝ → ℝ) (N : ℕ) :
+    partialHamiltonianD2 f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => hamiltonianContributionD2_nonneg f n
+
+theorem partialHamiltonianD3_nonneg (f : ℝ → ℝ) (N : ℕ) :
+    partialHamiltonianD3 f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => hamiltonianContributionD3_nonneg f n
+
+theorem partialHamiltonianD4_nonneg (f : ℝ → ℝ) (N : ℕ) :
+    partialHamiltonianD4 f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => hamiltonianContributionD4_nonneg f n
+
+theorem partialHamiltonianD5_nonneg (f : ℝ → ℝ) (N : ℕ) :
+    partialHamiltonianD5 f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => hamiltonianContributionD5_nonneg f n
+
+theorem partialHamiltonianD6_nonneg (f : ℝ → ℝ) (N : ℕ) :
+    partialHamiltonianD6 f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => hamiltonianContributionD6_nonneg f n
+
+theorem hamiltonianContributionD2_ker_zero (f : ℝ → ℝ) (hf : IsInKerD2 f) (n : ℤ) :
+    hamiltonianContributionD2 f n = 0 := by
+  simp only [hamiltonianContributionD2, sq_eq_zero_iff]
+  exact IsInKerD2_implies_D2_zero f hf _ (phi_zpow_ne_zero n)
+
+theorem hamiltonianContributionD3_ker_zero (f : ℝ → ℝ) (hf : IsInKerD3 f) (n : ℤ) :
+    hamiltonianContributionD3 f n = 0 := by
+  simp only [hamiltonianContributionD3, sq_eq_zero_iff]
+  exact IsInKerD3_implies_D3_zero f hf _ (phi_zpow_ne_zero n)
+
+theorem hamiltonianContributionD4_ker_zero (f : ℝ → ℝ) (hf : IsInKerD4 f) (n : ℤ) :
+    hamiltonianContributionD4 f n = 0 := by
+  simp only [hamiltonianContributionD4, sq_eq_zero_iff]
+  exact IsInKerD4_implies_D4_zero f hf _ (phi_zpow_ne_zero n)
+
+theorem hamiltonianContributionD5_ker_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) (n : ℤ) :
+    hamiltonianContributionD5 f n = 0 := by
+  simp only [hamiltonianContributionD5, sq_eq_zero_iff]
+  exact IsInKerD5_implies_D5_zero f hf _ (phi_zpow_ne_zero n)
+
+theorem hamiltonianContributionD6_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (n : ℤ) :
+    hamiltonianContributionD6 f n = 0 := by
+  simp only [hamiltonianContributionD6, sq_eq_zero_iff]
+  exact IsInKerD6_implies_D6_zero f hf _ (phi_zpow_ne_zero n)
+
+theorem partialHamiltonianD2_ker_zero (f : ℝ → ℝ) (hf : IsInKerD2 f) (N : ℕ) :
+    partialHamiltonianD2 f N = 0 :=
+  Finset.sum_eq_zero fun n _ => hamiltonianContributionD2_ker_zero f hf n
+
+theorem partialHamiltonianD3_ker_zero (f : ℝ → ℝ) (hf : IsInKerD3 f) (N : ℕ) :
+    partialHamiltonianD3 f N = 0 :=
+  Finset.sum_eq_zero fun n _ => hamiltonianContributionD3_ker_zero f hf n
+
+theorem partialHamiltonianD4_ker_zero (f : ℝ → ℝ) (hf : IsInKerD4 f) (N : ℕ) :
+    partialHamiltonianD4 f N = 0 :=
+  Finset.sum_eq_zero fun n _ => hamiltonianContributionD4_ker_zero f hf n
+
+theorem partialHamiltonianD5_ker_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) (N : ℕ) :
+    partialHamiltonianD5 f N = 0 :=
+  Finset.sum_eq_zero fun n _ => hamiltonianContributionD5_ker_zero f hf n
+
+theorem partialHamiltonianD6_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
+    partialHamiltonianD6 f N = 0 :=
+  Finset.sum_eq_zero fun n _ => hamiltonianContributionD6_ker_zero f hf n
 
 end HamiltonianDefinition
 
-/-!
-## Section 2: Hamiltonian Properties
-
-Key properties relating Hamiltonian to ker(D6) structure:
-- H = 0 ↔ f ∈ ker(D6)
-- H > 0 → f has proper time (massive)
--/
+/-! ## Hamiltonian Properties for All Operators -/
 
 section HamiltonianProperties
 
-/-- A function has positive Hamiltonian contribution at some scale -/
-def HasPositiveHamiltonian (f : ℝ → ℝ) : Prop :=
-  ∃ n : ℤ, hamiltonianContribution f n > 0
+def HasPositiveHamiltonianD2 (f : ℝ → ℝ) : Prop :=
+  ∃ n : ℤ, hamiltonianContributionD2 f n > 0
 
-/-- Positive Hamiltonian implies not in ker(D6) -/
-theorem positive_hamiltonian_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonian f) :
+def HasPositiveHamiltonianD3 (f : ℝ → ℝ) : Prop :=
+  ∃ n : ℤ, hamiltonianContributionD3 f n > 0
+
+def HasPositiveHamiltonianD4 (f : ℝ → ℝ) : Prop :=
+  ∃ n : ℤ, hamiltonianContributionD4 f n > 0
+
+def HasPositiveHamiltonianD5 (f : ℝ → ℝ) : Prop :=
+  ∃ n : ℤ, hamiltonianContributionD5 f n > 0
+
+def HasPositiveHamiltonianD6 (f : ℝ → ℝ) : Prop :=
+  ∃ n : ℤ, hamiltonianContributionD6 f n > 0
+
+theorem positive_hamiltonianD2_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD2 f) :
+    ¬ IsInKerD2 f := by
+  intro hker; obtain ⟨n, hn⟩ := hpos; linarith [hamiltonianContributionD2_ker_zero f hker n]
+
+theorem positive_hamiltonianD3_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD3 f) :
+    ¬ IsInKerD3 f := by
+  intro hker; obtain ⟨n, hn⟩ := hpos; linarith [hamiltonianContributionD3_ker_zero f hker n]
+
+theorem positive_hamiltonianD4_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD4 f) :
+    ¬ IsInKerD4 f := by
+  intro hker; obtain ⟨n, hn⟩ := hpos; linarith [hamiltonianContributionD4_ker_zero f hker n]
+
+theorem positive_hamiltonianD5_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD5 f) :
+    ¬ IsInKerD5 f := by
+  intro hker; obtain ⟨n, hn⟩ := hpos; linarith [hamiltonianContributionD5_ker_zero f hker n]
+
+theorem positive_hamiltonianD6_not_ker (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD6 f) :
     ¬ IsInKerD6 f := by
-  intro hker
-  obtain ⟨n, hn⟩ := hpos
-  have hzero := hamiltonianContribution_ker_zero f hker n
-  linarith
+  intro hker; obtain ⟨n, hn⟩ := hpos; linarith [hamiltonianContributionD6_ker_zero f hker n]
 
-/-- Hamiltonian characterization: zero iff in ker(D6) (at discrete scales) -/
-theorem hamiltonian_zero_iff_ker_discrete (f : ℝ → ℝ) :
-    (∀ n : ℤ, hamiltonianContribution f n = 0) ↔
+theorem hamiltonianD6_zero_iff_ker_discrete (f : ℝ → ℝ) :
+    (∀ n : ℤ, hamiltonianContributionD6 f n = 0) ↔
     (∀ n : ℤ, D6 f (φ ^ n) = 0) := by
   constructor
   · intro h n
     have := h n
-    simp only [hamiltonianContribution, sq_eq_zero_iff] at this
+    simp only [hamiltonianContributionD6, sq_eq_zero_iff] at this
     exact this
   · intro h n
-    simp only [hamiltonianContribution, h n, sq_eq_zero_iff]
+    simp only [hamiltonianContributionD6, h n, sq_eq_zero_iff]
 
-/-- Connection to TimeExistsD6: positive Hamiltonian implies time exists -/
-theorem positive_hamiltonian_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonian f) :
-    TimeExistsD6 f :=
-  positive_hamiltonian_not_ker f hpos
+theorem positive_hamiltonianD2_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD2 f) :
+    TimeExistsD2 f :=
+  positive_hamiltonianD2_not_ker f hpos
 
-/-- Connection to TimeExistsD6 -/
-theorem positive_hamiltonian_massive (f : ℝ → ℝ) (hpos : HasPositiveHamiltonian f) :
+theorem positive_hamiltonianD3_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD3 f) :
+    TimeExistsD3 f :=
+  positive_hamiltonianD3_not_ker f hpos
+
+theorem positive_hamiltonianD4_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD4 f) :
+    TimeExistsD4 f :=
+  positive_hamiltonianD4_not_ker f hpos
+
+theorem positive_hamiltonianD5_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD5 f) :
+    TimeExistsD5 f :=
+  positive_hamiltonianD5_not_ker f hpos
+
+theorem positive_hamiltonianD6_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD6 f) :
     TimeExistsD6 f :=
-  positive_hamiltonian_time_exists f hpos
+  positive_hamiltonianD6_not_ker f hpos
 
 end HamiltonianProperties
 
-/-!
-## Section 3: Spectral Gap Structure
+/-! ## Spectral Gap Structure for All Operators
 
-The spectral gap is derived from D₆ gauge-invariant output:
-1. ker(D6) = span{1, x, x²} has dim = 3
-2. Minimum degree outside ker(D6) is 3
-3. Spectral gap Δ = C₃/(√5)⁵ = 12/25 = 1/t_FUST
-
-Physical interpretation:
-- Δ is the minimum energy for massive (confined) states
-- Below Δ: only vacuum and photon-like states
+Each Dm has its own minimum massive degree and spectral gap:
+  D2: ker = {1}, d_min = 1, Δ₂ = 1
+  D3: ker = {1}, d_min = 1, Δ₃ = 1/5
+  D4: ker = {x²}, d_min = 0, Δ₄ = 1/5
+  D5: ker = {1,x}, d_min = 2, Δ₅ = 6/25
+  D6: ker = {1,x,x²}, d_min = 3, Δ₆ = 12/25
 -/
 
 section SpectralGap
 
-/-- Minimum massive degree is 3 (first polynomial outside ker(D6)) -/
-theorem minimum_massive_degree_is_3 :
+theorem minimum_massive_degree_D2 :
+    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D2 id x ≠ 0) :=
+  ⟨fun x hx => D2_const 1 x hx, D2_linear_ne_zero⟩
+
+theorem minimum_massive_degree_D3 :
+    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D3 id x ≠ 0) :=
+  ⟨fun x hx => D3_const 1 x hx, D3_linear_ne_zero⟩
+
+theorem minimum_massive_degree_D4 :
+    (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) ∧
+    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) :=
+  ⟨D4_quadratic, D4_const_ne_zero⟩
+
+theorem minimum_massive_degree_D5 :
+    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
+    (∀ x, x ≠ 0 → D5 id x = 0) ∧
+    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
+  ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+
+theorem minimum_massive_degree_D6 :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
   ⟨D6_quadratic, D6_not_annihilate_cubic⟩
 
-/-- Cubic polynomial has positive Hamiltonian -/
-theorem cubic_has_positive_hamiltonian :
-    HasPositiveHamiltonian (fun t => t^3) := by
+theorem linear_has_positive_hamiltonianD2 :
+    HasPositiveHamiltonianD2 id := by
   use 0
-  simp only [hamiltonianContribution, zpow_zero]
-  have hne : (1 : ℝ) ≠ 0 := one_ne_zero
-  have h := D6_not_annihilate_cubic 1 hne
-  exact sq_pos_of_ne_zero h
+  simp only [hamiltonianContributionD2, zpow_zero]
+  exact sq_pos_of_ne_zero (D2_linear_ne_zero 1 one_ne_zero)
+
+theorem linear_has_positive_hamiltonianD3 :
+    HasPositiveHamiltonianD3 id := by
+  use 0
+  simp only [hamiltonianContributionD3, zpow_zero]
+  exact sq_pos_of_ne_zero (D3_linear_ne_zero 1 one_ne_zero)
+
+theorem const_has_positive_hamiltonianD4 :
+    HasPositiveHamiltonianD4 (fun _ => 1) := by
+  use 0
+  simp only [hamiltonianContributionD4, zpow_zero]
+  exact sq_pos_of_ne_zero (D4_const_ne_zero 1 one_ne_zero)
+
+theorem quadratic_has_positive_hamiltonianD5 :
+    HasPositiveHamiltonianD5 (fun t => t^2) := by
+  use 0
+  simp only [hamiltonianContributionD5, zpow_zero]
+  exact sq_pos_of_ne_zero (D5_not_annihilate_quadratic 1 one_ne_zero)
+
+theorem cubic_has_positive_hamiltonianD6 :
+    HasPositiveHamiltonianD6 (fun t => t^3) := by
+  use 0
+  simp only [hamiltonianContributionD6, zpow_zero]
+  exact sq_pos_of_ne_zero (D6_not_annihilate_cubic 1 one_ne_zero)
+
+theorem all_operators_have_positive_hamiltonian :
+    HasPositiveHamiltonianD2 id ∧
+    HasPositiveHamiltonianD3 id ∧
+    HasPositiveHamiltonianD4 (fun _ => 1) ∧
+    HasPositiveHamiltonianD5 (fun t => t^2) ∧
+    HasPositiveHamiltonianD6 (fun t => t^3) :=
+  ⟨linear_has_positive_hamiltonianD2,
+   linear_has_positive_hamiltonianD3,
+   const_has_positive_hamiltonianD4,
+   quadratic_has_positive_hamiltonianD5,
+   cubic_has_positive_hamiltonianD6⟩
 
 end SpectralGap
 
-/-!
-## Section 4: Yang-Mills Hamiltonian Interpretation
+/-! ## Mass Gap Values for All Operators
 
-For SU(3) Yang-Mills (QCD), the Hamiltonian has the interpretation:
-- H = 0: vacuum state |0⟩
+  Δ₂ = 1, Δ₃ = 1/5, Δ₄ = 1/5, Δ₅ = 6/25, Δ₆ = 12/25
+-/
+
+section MassGapValues
+
+noncomputable def massGapD2 : ℝ := 1
+noncomputable def massGapD3 : ℝ := 1 / 5
+noncomputable def massGapD4 : ℝ := 1 / 5
+noncomputable def massGapD5 : ℝ := 6 / 25
+
+theorem massGapD2_pos : 0 < massGapD2 := by unfold massGapD2; norm_num
+theorem massGapD3_pos : 0 < massGapD3 := by unfold massGapD3; norm_num
+theorem massGapD4_pos : 0 < massGapD4 := by unfold massGapD4; norm_num
+theorem massGapD5_pos : 0 < massGapD5 := by unfold massGapD5; norm_num
+
+theorem massGapD5_eq_D5MassScale :
+    massGapD5 = FUST.SpectralCoefficients.D5MassScale := by
+  unfold massGapD5
+  rw [FUST.SpectralCoefficients.D5MassScale_eq]
+
+/-- Mass gap hierarchy: Δ₆ > Δ₅ > Δ₃ = Δ₄ -/
+theorem massGap_hierarchy :
+    FUST.massGapΔ > massGapD5 ∧
+    massGapD5 > massGapD3 ∧
+    massGapD3 = massGapD4 ∧
+    massGapD2 > FUST.massGapΔ := by
+  unfold FUST.massGapΔ massGapD5 massGapD3 massGapD4 massGapD2
+  norm_num
+
+/-- Δm = 1 / t_min^Dm -/
+theorem massGap_inverse_minTime :
+    massGapD2 = 1 / FUST.TimeTheorem.structuralMinTimeD2 ∧
+    massGapD3 = 1 / FUST.TimeTheorem.structuralMinTimeD3 ∧
+    massGapD4 = 1 / FUST.TimeTheorem.structuralMinTimeD4 ∧
+    massGapD5 = 1 / FUST.TimeTheorem.structuralMinTimeD5 ∧
+    FUST.massGapΔ = 1 / FUST.TimeTheorem.structuralMinTimeD6 := by
+  unfold massGapD2 massGapD3 massGapD4 massGapD5
+  rw [FUST.TimeTheorem.structuralMinTimeD2_eq, FUST.TimeTheorem.structuralMinTimeD3_eq,
+      FUST.TimeTheorem.structuralMinTimeD4_eq, FUST.TimeTheorem.structuralMinTimeD5_eq]
+  refine ⟨by norm_num, by norm_num, by norm_num, by norm_num,
+          FUST.massGapΔ_eq_inv_structuralMinTimeD6⟩
+
+end MassGapValues
+
+/-! ## Yang-Mills Hamiltonian Interpretation (D6-specific)
+
+For SU(3) Yang-Mills (QCD), the D₆ Hamiltonian has:
+- H = 0: vacuum state
 - H ∈ (0, Δ²): forbidden (spectral gap)
-- H ≥ Δ²: glueball states (confined gluons)
-
-The mass gap Δ = 12/25 (from D₆ gauge-invariant output) gives minimum glueball mass.
+- H ≥ Δ²: glueball states
 -/
 
 section YangMillsInterpretation
 
-/-- Energy spectrum from Hamiltonian: E = 0 or E ≥ Δ² -/
 def EnergyInSpectrum (E : ℝ) : Prop :=
   E = 0 ∨ FUST.massGapΔ ^ 2 ≤ E
 
-/-- Vacuum energy is in spectrum -/
 theorem vacuum_in_spectrum : EnergyInSpectrum 0 := Or.inl rfl
 
-/-- Gap region is excluded -/
 theorem gap_excluded (E : ℝ) (hpos : 0 < E) (hlt : E < FUST.massGapΔ ^ 2) :
     ¬ EnergyInSpectrum E := by
   intro h
@@ -195,17 +363,14 @@ theorem gap_excluded (E : ℝ) (hpos : 0 < E) (hlt : E < FUST.massGapΔ ^ 2) :
   | inl hz => linarith
   | inr hge => linarith
 
-/-- Energy above gap is in spectrum -/
 theorem above_gap_in_spectrum (E : ℝ) (hge : FUST.massGapΔ ^ 2 ≤ E) :
     EnergyInSpectrum E := Or.inr hge
 
-/-- Spectral gap squared = 144/625 -/
 theorem spectral_gap_squared : FUST.massGapΔ ^ 2 = 144 / 625 :=
   FUST.massGapΔ_sq
 
-/-- Clay requirement: gap is derived from D₆ gauge-invariant output -/
 theorem clay_hamiltonian_gap_derived :
-    (∀ f n, hamiltonianContribution f n = (D6 f (φ ^ n))^2) ∧
+    (∀ f n, hamiltonianContributionD6 f n = (D6 f (φ ^ n))^2) ∧
     (kernelDimensions 2 = 3) ∧
     (kernelDimensions 1 = 2) ∧
     (0 < FUST.massGapΔ) ∧
@@ -214,84 +379,85 @@ theorem clay_hamiltonian_gap_derived :
 
 end YangMillsInterpretation
 
-/-!
-## Section 5: Complete Mass Gap Theorem
-
-Synthesis of all components for Clay Millennium Prize requirements.
--/
+/-! ## Complete Mass Gap Theorem -/
 
 section CompleteMassGap
 
-/-- Complete FUST Hamiltonian mass gap theorem -/
-theorem fust_hamiltonian_mass_gap :
-    (∀ f N, partialHamiltonian f N ≥ 0) ∧
-    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonian f N = 0) ∧
-    HasPositiveHamiltonian (fun t => t^3) ∧
-    (0 < FUST.massGapΔ) ∧
-    (FUST.massGapΔ = 12 / 25) ∧
-    (FUST.massGapΔ ^ 2 = 144 / 625) :=
-  ⟨partialHamiltonian_nonneg,
-   partialHamiltonian_ker_zero,
-   cubic_has_positive_hamiltonian,
-   FUST.massGapΔ_pos,
-   rfl,
-   FUST.massGapΔ_sq⟩
+theorem hamiltonian_mass_gap_all :
+    (∀ f N, partialHamiltonianD2 f N ≥ 0) ∧
+    (∀ f N, partialHamiltonianD3 f N ≥ 0) ∧
+    (∀ f N, partialHamiltonianD4 f N ≥ 0) ∧
+    (∀ f N, partialHamiltonianD5 f N ≥ 0) ∧
+    (∀ f N, partialHamiltonianD6 f N ≥ 0) ∧
+    (∀ f, IsInKerD2 f → ∀ N, partialHamiltonianD2 f N = 0) ∧
+    (∀ f, IsInKerD3 f → ∀ N, partialHamiltonianD3 f N = 0) ∧
+    (∀ f, IsInKerD4 f → ∀ N, partialHamiltonianD4 f N = 0) ∧
+    (∀ f, IsInKerD5 f → ∀ N, partialHamiltonianD5 f N = 0) ∧
+    (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) ∧
+    HasPositiveHamiltonianD2 id ∧
+    HasPositiveHamiltonianD3 id ∧
+    HasPositiveHamiltonianD4 (fun _ => 1) ∧
+    HasPositiveHamiltonianD5 (fun t => t^2) ∧
+    HasPositiveHamiltonianD6 (fun t => t^3) :=
+  ⟨partialHamiltonianD2_nonneg,
+   partialHamiltonianD3_nonneg,
+   partialHamiltonianD4_nonneg,
+   partialHamiltonianD5_nonneg,
+   partialHamiltonianD6_nonneg,
+   partialHamiltonianD2_ker_zero,
+   partialHamiltonianD3_ker_zero,
+   partialHamiltonianD4_ker_zero,
+   partialHamiltonianD5_ker_zero,
+   partialHamiltonianD6_ker_zero,
+   linear_has_positive_hamiltonianD2,
+   linear_has_positive_hamiltonianD3,
+   const_has_positive_hamiltonianD4,
+   quadratic_has_positive_hamiltonianD5,
+   cubic_has_positive_hamiltonianD6⟩
 
 end CompleteMassGap
 
-/-!
-## Section 6: D₆ Resonance Stability
+/-! ## D₆ Resonance Stability
 
-For H = D6†D6, the eigenvalues μ_n = (D6Coeff n)² / (√5)^{10} satisfy μ_n > 0
-for n ≥ 3. A resonance at energy E² = μ_n > 0 with μ_n ∈ ℝ forces E ∈ ℝ.
-This means all D₆ resonances are stable (infinite lifetime), proved purely
-from operator structure without assuming RH.
+For H = D6†D6, eigenvalues μ_n = (D6Coeff n)² > 0 for n ≥ 3.
+Resonances at E² = μ_n > 0 with μ_n ∈ ℝ force E ∈ ℝ.
+All D₆ resonances are stable (infinite lifetime).
 -/
 
 section ResonanceStability
 
 open FUST.SpectralCoefficients Complex
 
-/-- If E² = c for a positive real c, then E is real (Im E = 0).
-Proof: E = a+bi gives E² = (a²-b²) + 2abi.
-E² = c real ⟹ 2ab = 0. If a = 0 then -b² = c > 0, contradiction. So b = 0. -/
 theorem sq_eq_pos_real_implies_real (c : ℝ) (hc : 0 < c) (E : ℂ) (h : E ^ 2 = (c : ℂ)) :
     E.im = 0 := by
   have him : (E ^ 2).im = (c : ℂ).im := congrArg Complex.im h
   simp only [sq, Complex.mul_im, Complex.ofReal_im] at him
-  -- him : E.re * E.im + E.im * E.re = 0, i.e. 2 * E.re * E.im = 0
   have h2 : 2 * E.re * E.im = 0 := by linarith
   rcases mul_eq_zero.mp h2 with h3 | h3
   · rcases mul_eq_zero.mp h3 with h4 | h4
     · linarith
-    · -- E.re = 0. Then E² = -(E.im)² = c > 0. Contradiction.
-      exfalso
+    · exfalso
       have hre : (E ^ 2).re = (c : ℂ).re := congrArg Complex.re h
       simp only [sq, Complex.mul_re, Complex.ofReal_re] at hre
       rw [h4] at hre
       simp at hre
-      -- hre : -(E.im * E.im) = c, but c > 0 and E.im² ≥ 0
       linarith [sq_nonneg E.im]
   · exact h3
 
-/-- D₆ eigenvalue squared is positive for n ≥ 3 -/
 theorem D6_eigenvalue_sq_pos (n : ℕ) (hn : 3 ≤ n) :
     0 < (D6Coeff n) ^ 2 :=
   sq_pos_of_ne_zero (D6Coeff_ne_zero_of_ge_three n hn)
 
-/-- D₆ resonance has real energy: if E² = (D6Coeff n)², then E ∈ ℝ -/
 theorem D6_resonance_real_energy (n : ℕ) (hn : 3 ≤ n) (E : ℂ)
     (h : E ^ 2 = ((D6Coeff n) ^ 2 : ℝ)) :
     E.im = 0 :=
   sq_eq_pos_real_implies_real _ (D6_eigenvalue_sq_pos n hn) E h
 
-/-- Stable amplitude: ‖exp(-iEt)‖ = 1 for real E (no decay) -/
 theorem resonance_amplitude_stable (E t : ℝ) :
     ‖Complex.exp (-(I * E * t))‖ = 1 := by
   have h : -(I * (E : ℂ) * (t : ℂ)) = (-(E * t) : ℝ) * I := by push_cast; ring
   rw [h, norm_exp_ofReal_mul_I]
 
-/-- Unstable amplitude: ‖exp(-iEt)‖ ≠ 1 when Im(E) ≠ 0 and t ≠ 0 -/
 theorem resonance_amplitude_unstable (E : ℂ) (t : ℝ) (ht : t ≠ 0) (him : E.im ≠ 0) :
     ‖Complex.exp (-(I * E * (t : ℂ)))‖ ≠ 1 := by
   rw [Complex.norm_exp]
@@ -305,21 +471,10 @@ theorem resonance_amplitude_unstable (E : ℂ) (t : ℝ) (ht : t ≠ 0) (him : E
   · exact him h1
   · exact ht h1
 
-/-- **D₆ Resonance Stability Theorem**: All D₆ resonances above the spectral gap
-are stable (infinite lifetime). This is a consequence of H = D6†D6 being
-self-adjoint with positive spectrum, NOT a consequence of RH.
-
-Concretely: for each n ≥ 3, the D₆ eigenvalue (D6Coeff n)² > 0 is real positive.
-Any resonance at energy E² = (D6Coeff n)² must have E ∈ ℝ (proved algebraically).
-Real E gives ‖exp(-iEt)‖ = 1, meaning the resonance never decays. -/
 theorem D6_resonance_stability :
-    -- Self-adjointness: H ≥ 0
     (∀ f x, (D6 f x) ^ 2 ≥ 0) ∧
-    -- Spectral gap: eigenvalues positive for n ≥ 3
     (∀ n, 3 ≤ n → 0 < (D6Coeff n) ^ 2) ∧
-    -- Real energy: E² = positive real ⟹ E real
     (∀ n, 3 ≤ n → ∀ E : ℂ, E ^ 2 = ((D6Coeff n) ^ 2 : ℝ) → E.im = 0) ∧
-    -- Stable amplitude: ‖exp(-iEt)‖ = 1 for real E
     (∀ E t : ℝ, ‖Complex.exp (-(I * E * t))‖ = 1) :=
   ⟨fun _ _ => sq_nonneg _,
    D6_eigenvalue_sq_pos,
@@ -332,19 +487,17 @@ end FUST.Hamiltonian
 
 namespace FUST.Dim
 
-/-- Hamiltonian contribution with derived Lagrangian dimension -/
 noncomputable def hamiltonianContribution_dim (f : ℝ → ℝ) (n : ℤ) :
     ScaleQ dimLagrangian :=
-  ⟨FUST.Hamiltonian.hamiltonianContribution f n⟩
+  ⟨FUST.Hamiltonian.hamiltonianContributionD6 f n⟩
 
 theorem hamiltonianContribution_dim_nonneg (f : ℝ → ℝ) (n : ℤ) :
     (hamiltonianContribution_dim f n).val ≥ 0 :=
-  FUST.Hamiltonian.hamiltonianContribution_nonneg f n
+  FUST.Hamiltonian.hamiltonianContributionD6_nonneg f n
 
-/-- ker(D₆) functions have zero Hamiltonian contribution -/
 theorem hamiltonianContribution_ker_zero (f : ℝ → ℝ)
     (hf : FUST.LeastAction.IsInKerD6 f) (n : ℤ) :
     (hamiltonianContribution_dim f n).val = 0 :=
-  FUST.Hamiltonian.hamiltonianContribution_ker_zero f hf n
+  FUST.Hamiltonian.hamiltonianContributionD6_ker_zero f hf n
 
 end FUST.Dim

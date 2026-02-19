@@ -73,12 +73,6 @@ theorem thymine_effDeg :
 theorem uracil_effDeg :
     (dimAtom uracilZ uracilN uracilZ).effectiveDegree = 1855 := by decide
 
--- All nucleobases are pure sector
-theorem adenine_isPureSector : (dimAtom adenineZ adenineN adenineZ).isPureSector := by
-  unfold FDim.isPureSector; decide
-theorem guanine_isPureSector : (dimAtom guanineZ guanineN guanineZ).isPureSector := by
-  unfold FDim.isPureSector; decide
-
 /-! ## Section 4: Watson-Crick Hydrogen Bonds
 
 A-T: 2 hydrogen bonds = spinDegeneracy = dim ker(D₅)
@@ -86,7 +80,7 @@ G-C: 3 hydrogen bonds = spatialDim = dim ker(D₆)
 -/
 
 abbrev AT_hbonds : ℕ := Nuclear.spinDegeneracy
-abbrev GC_hbonds : ℕ := WaveEquation.spatialDim
+abbrev GC_hbonds : ℕ := 3
 
 theorem AT_hbonds_eq : AT_hbonds = 2 := rfl
 theorem GC_hbonds_eq : GC_hbonds = 3 := rfl
@@ -171,7 +165,7 @@ theorem nucleobase_classification :
     adenineZ + thymineZ = 136 ∧
     -- H-bond counts from D-operator kernels
     AT_hbonds = Nuclear.spinDegeneracy ∧
-    GC_hbonds = WaveEquation.spatialDim ∧
+    GC_hbonds = 3 ∧
     -- Base count from spin
     baseCount = 4 ∧
     -- C and U share Z

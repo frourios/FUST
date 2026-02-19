@@ -83,15 +83,15 @@ theorem massGapΔ_pos : 0 < massGapΔ := by
   simp only [massGapΔ]; norm_num
 
 /-- Δ = 1/t_FUST -/
-theorem massGapΔ_eq_inv_structuralMinTime :
-    massGapΔ = 1 / structuralMinTime := by
-  simp only [massGapΔ, structuralMinTime_eq]
+theorem massGapΔ_eq_inv_structuralMinTimeD6 :
+    massGapΔ = 1 / structuralMinTimeD6 := by
+  simp only [massGapΔ, structuralMinTimeD6_eq]
   norm_num
 
 /-- Δ · t_FUST = 1 -/
-theorem massGapΔ_mul_structuralMinTime :
-    massGapΔ * structuralMinTime = 1 := by
-  simp only [massGapΔ, structuralMinTime_eq]
+theorem massGapΔ_mul_structuralMinTimeD6 :
+    massGapΔ * structuralMinTimeD6 = 1 := by
+  simp only [massGapΔ, structuralMinTimeD6_eq]
   norm_num
 
 /-- Δ² = 144/625 -/
@@ -133,8 +133,8 @@ theorem massGap_from_D6_gauge_invariant :
     (kernelDimensions 2 = 3) ∧
     (0 < massGapΔ) ∧
     (massGapΔ = 12 / 25) ∧
-    (massGapΔ = 1 / structuralMinTime) :=
-  ⟨rfl, massGapΔ_pos, rfl, massGapΔ_eq_inv_structuralMinTime⟩
+    (massGapΔ = 1 / structuralMinTimeD6) :=
+  ⟨rfl, massGapΔ_pos, rfl, massGapΔ_eq_inv_structuralMinTimeD6⟩
 
 end ClayRequirement
 
@@ -485,11 +485,11 @@ theorem massGapΔ_pos : 0 < massGapΔ.val := by
 /-- Mass gap derivation chain -/
 theorem massGapΔ_derivation :
     massGapΔ.val = 12 / 25 ∧
-    massGapΔ.val = 1 / FUST.TimeTheorem.structuralMinTime := by
+    massGapΔ.val = 1 / FUST.TimeTheorem.structuralMinTimeD6 := by
   constructor
   · rfl
   · simp only [massGapΔ]
-    exact FUST.massGapΔ_eq_inv_structuralMinTime
+    exact FUST.massGapΔ_eq_inv_structuralMinTimeD6
 
 /-- Mass = deviation from ker(D₆) -/
 theorem mass_is_ker_deviation_D6 (f : ℝ → ℝ) :
