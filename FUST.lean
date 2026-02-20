@@ -72,28 +72,7 @@ import FUST.Physics.VacuumStability
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
 
-import FUST.Problems.RH.Basic
-import FUST.Problems.RH.CompleteDifferential
-import FUST.Problems.RH.ContinuousDiscreteEquivalence
-import FUST.Problems.RH.EulerSpectralBridge
-import FUST.Problems.RH.GoldenPrimeSumNonneg
-import FUST.Problems.RH.GoldenZeroFree
-import FUST.Problems.RH.HilbertPolya
-import FUST.Problems.RH.HurwitzTransfer
-import FUST.Problems.RH.LFunctionSeparation
-import FUST.Problems.RH.SpectralHadamardProduct
-import FUST.Problems.RH.SpectralProduct
-import FUST.Problems.RH.SpectralUnification
-import FUST.Problems.RH.SpectralZeta
-
-import FUST.Problems.ABC
-import FUST.Problems.BSD
-import FUST.Problems.Collatz
-import FUST.Problems.Goldbach
-import FUST.Problems.Hodge
-import FUST.Problems.Langlands
 import FUST.Problems.NavierStokes
-import FUST.Problems.PvsNP
 import FUST.Problems.YangMills
 
 import FUST.Basic
