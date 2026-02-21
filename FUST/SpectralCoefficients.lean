@@ -642,20 +642,6 @@ theorem euler_factor_chi_zero (x : ℂ) :
     (1 - x)⁻¹ * (1 - (0 : ℂ) * x)⁻¹ = (1 - x)⁻¹ := by
   simp
 
-/-- **Local Dedekind zeta factorization for ℚ(√5)**.
-
-At each prime p, the local Euler factor of ζ_{ℚ(√5)} is:
-  (1 - x)⁻¹ · (1 - χ₅(p)·x)⁻¹
-
-This equals the appropriate product depending on splitting type. -/
-def LocalDedekindFactorization : Prop :=
-  ∀ (p : ℕ), p.Prime →
-    ∀ (x : ℂ),
-      (1 - x)⁻¹ * (1 - (chi5Fun p : ℂ) * x)⁻¹ =
-        if chi5Fun p = 1 then ((1 - x) ^ 2)⁻¹
-        else if chi5Fun p = -1 then (1 - x ^ 2)⁻¹
-        else (1 - x)⁻¹
-
 private theorem local_euler_factor_case (p : ℕ) (x : ℂ) :
     (1 - x)⁻¹ * (1 - (chi5Fun p : ℂ) * x)⁻¹ =
       if chi5Fun p = 1 then ((1 - x) ^ 2)⁻¹
@@ -682,10 +668,6 @@ private theorem local_euler_factor_case (p : ℕ) (x : ℂ) :
     rw [hc, neg_one_mul, sub_neg_eq_add]
     rw [show x ^ 2 = x * x from sq x,
         show (1 : ℂ) - x * x = (1 - x) * (1 + x) from by ring, mul_inv]
-
-theorem local_dedekind_factorization : LocalDedekindFactorization := by
-  intro p _hp x
-  exact local_euler_factor_case p x
 
 /-- Connection: Fibonacci rank of apparition determines splitting type.
 

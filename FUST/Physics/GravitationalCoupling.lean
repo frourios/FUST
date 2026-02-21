@@ -447,7 +447,6 @@ theorem sector_traces :
 /-- Gravity sector trace: φ³+ψ³ = 4 -/
 theorem gravity_trace_eq_four :
     φ ^ 3 + ψ ^ 3 = 4 := by
-  push_cast
   nlinarith [phi_cubed, psi_sq, phi_add_psi]
 
 /-- Gravity sector determinant = -1: (φψ)³ = (-1)³ = -1 -/

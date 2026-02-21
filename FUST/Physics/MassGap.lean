@@ -14,17 +14,6 @@ output for the minimum massive mode (d = 3).
 2. ker(D₆) = span{1, x, x²}, so minimum massive degree is d = 3
 3. Δ = C₃/(√5)⁵ = 12√5/(√5)⁵ = 12/25 > 0
 4. Δ = 1/t_FUST (structural relation)
-
-## Connection to Time Theorem
-
-The physical meaning of "mass" comes from TimeTheorem:
-- TimeExistsD6 f ↔ f ∉ ker(D6)
-- Massive particles have proper time (D6 f ≠ 0)
-- The minimum degree for ker(D6)⊥ is 3, giving the mass gap
-
-Δ is the mass gap for charged fermions coupled directly to D₆ output.
-Neutrinos acquire mass via D₅ mixing perturbation from ker(D₆) and
-can have mass below Δ.
 -/
 
 namespace FUST
@@ -146,11 +135,6 @@ section MassGapPhysicalMeaning
 
 open FUST.TimeTheorem
 
-/-- Mass is defined as deviation from ker(D6) in TimeTheorem. -/
-theorem mass_is_ker_deviation :
-    ∀ f : ℝ → ℝ, TimeExistsD6 f ↔ ¬ IsInKerD6 f :=
-  fun _ => Iff.rfl
-
 /-- The minimum non-trivial degree outside ker(D6) is 3. -/
 theorem minimum_massive_degree :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
@@ -159,7 +143,7 @@ theorem minimum_massive_degree :
 
 /-- Complete mass gap theorem with physical interpretation -/
 theorem massGap_complete :
-    (∀ f, TimeExistsD6 f → ∃ t, perpProjectionD6 f t ≠ 0) ∧
+    (∀ f, ¬ IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) ∧
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     massGapΔ = 12 / 25 :=
@@ -490,10 +474,5 @@ theorem massGapΔ_derivation :
   · rfl
   · simp only [massGapΔ]
     exact FUST.massGapΔ_eq_inv_structuralMinTimeD6
-
-/-- Mass = deviation from ker(D₆) -/
-theorem mass_is_ker_deviation_D6 (f : ℝ → ℝ) :
-    FUST.LeastAction.TimeExistsD6 f ↔ ¬FUST.LeastAction.IsInKerD6 f :=
-  Iff.rfl
 
 end FUST.Dim

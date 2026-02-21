@@ -192,23 +192,23 @@ theorem hamiltonianD6_zero_iff_ker_discrete (f : ℝ → ℝ) :
     simp only [hamiltonianContributionD6, h n, sq_eq_zero_iff]
 
 theorem positive_hamiltonianD2_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD2 f) :
-    TimeExistsD2 f :=
+    ¬ IsInKerD2 f :=
   positive_hamiltonianD2_not_ker f hpos
 
 theorem positive_hamiltonianD3_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD3 f) :
-    TimeExistsD3 f :=
+    ¬ IsInKerD3 f :=
   positive_hamiltonianD3_not_ker f hpos
 
 theorem positive_hamiltonianD4_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD4 f) :
-    TimeExistsD4 f :=
+    ¬ IsInKerD4 f :=
   positive_hamiltonianD4_not_ker f hpos
 
 theorem positive_hamiltonianD5_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD5 f) :
-    TimeExistsD5 f :=
+    ¬ IsInKerD5 f :=
   positive_hamiltonianD5_not_ker f hpos
 
 theorem positive_hamiltonianD6_time_exists (f : ℝ → ℝ) (hpos : HasPositiveHamiltonianD6 f) :
-    TimeExistsD6 f :=
+    ¬ IsInKerD6 f :=
   positive_hamiltonianD6_not_ker f hpos
 
 end HamiltonianProperties

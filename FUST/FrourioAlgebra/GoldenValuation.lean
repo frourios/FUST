@@ -74,7 +74,11 @@ def trace (x : GoldenInt) : ℤ := 2 * x.a + x.b
 def conj (x : GoldenInt) : GoldenInt := ⟨x.a + x.b, -x.b⟩
 
 /-- An element is a unit iff its norm is ±1 -/
-def isUnit (x : GoldenInt) : Prop := norm x = 1 ∨ norm x = -1
+def isUnit (x : GoldenInt) : Bool := norm x == 1 || norm x == -1
+
+theorem isUnit_iff (x : GoldenInt) : isUnit x ↔ norm x = 1 ∨ norm x = -1 := by
+  unfold isUnit
+  simp [Bool.or_eq_true, beq_iff_eq]
 
 /-- Norm is multiplicative: N(xy) = N(x)N(y) -/
 theorem norm_mul (x y : GoldenInt) : norm (mul x y) = norm x * norm y := by
@@ -173,36 +177,31 @@ theorem unit_mul_eq_zero (u x : GoldenInt) (hu : isUnit u) (h : mul u x = zero) 
   · -- u = 0 contradicts isUnit u
     exfalso
     rw [hu_zero] at hu
-    unfold isUnit zero norm at hu
-    simp at hu
+    simp [isUnit, zero, norm] at hu
   · exact hx
 
 /-- φ is a unit (norm = -1) -/
 theorem phi_isUnit : isUnit phi := by
-  unfold isUnit phi norm
-  simp
+  decide
 
 /-- -1 is a unit -/
 theorem neg_one_isUnit : isUnit (neg one) := by
-  unfold isUnit neg one norm
-  simp
+  decide
 
 /-- φ⁻¹ = φ - 1 since φ² = φ + 1 implies φ · (φ - 1) = φ² - φ = 1 -/
 def phiInv : GoldenInt := ⟨-1, 1⟩
 
 /-- φ⁻¹ is a unit (norm = -1) -/
 theorem phiInv_isUnit : isUnit phiInv := by
-  unfold isUnit phiInv norm
-  simp
+  decide
 
 /-- 1 is a unit -/
 theorem one_isUnit : isUnit one := by
-  unfold isUnit one norm
-  simp
+  decide
 
 /-- Product of two units is a unit -/
 theorem isUnit_mul (x y : GoldenInt) (hx : isUnit x) (hy : isUnit y) : isUnit (mul x y) := by
-  unfold isUnit at *
+  simp only [isUnit_iff] at *
   rw [norm_mul]
   rcases hx with hx | hx <;> rcases hy with hy | hy <;> simp [hx, hy]
 
@@ -241,7 +240,8 @@ theorem phiPow_isUnit (n : ℤ) : isUnit (phiPow n) := by
 
 /-- Negation of a unit is a unit -/
 theorem neg_isUnit (x : GoldenInt) (hx : isUnit x) : isUnit (neg x) := by
-  unfold isUnit norm neg at *
+  simp only [isUnit_iff] at *
+  unfold norm neg at *
   simp only
   rcases hx with hx | hx <;> [left; right] <;> linarith
 
@@ -349,7 +349,7 @@ theorem size_mul_phiInv_lt (x : GoldenInt) (hx : isUnit x) (ha : x.a ≠ 0) (hab
       · exact ha_pos
       · nlinarith
   -- Use the norm constraint: a² + ab - b² = ±1
-  unfold isUnit norm at hx
+  simp only [isUnit_iff] at hx; unfold norm at hx
   rcases h1 with ⟨ha_pos, hb_pos⟩ | ⟨ha_neg, hb_neg⟩
   · -- Case: a > 0, b > 0
     -- mul phiInv x = ⟨-a + b, a⟩
@@ -431,7 +431,7 @@ theorem size_mul_phi_lt (x : GoldenInt) (hx : isUnit x) (ha : x.a ≠ 0) (hab : 
     · left; constructor
       · exact ha_pos
       · nlinarith
-  unfold isUnit norm at hx
+  simp only [isUnit_iff] at hx; unfold norm at hx
   rcases h1 with ⟨ha_pos, hb_neg⟩ | ⟨ha_neg, hb_pos⟩
   · -- Case: a > 0, b < 0
     by_cases hab2 : x.a + x.b ≥ 0
@@ -492,7 +492,7 @@ theorem isUnit_mem_Units (x : GoldenInt) (hx : isUnit x) : x ∈ Units := by
     unfold Units
     by_cases hb : x.b = 0
     · -- If b = 0, then a² = ±1, so a = ±1
-      unfold isUnit norm at hx
+      simp only [isUnit_iff] at hx; unfold norm at hx
       simp only [hb, mul_zero, sub_zero, sq] at hx
       have ha : x.a = 1 ∨ x.a = -1 := by
         rcases hx with hx | hx
@@ -507,7 +507,7 @@ theorem isUnit_mem_Units (x : GoldenInt) (hx : isUnit x) : x ∈ Units := by
       · use 0; right; simp only [phiPow, phiPowNat, ext_iff, one, neg]; constructor <;> linarith
     · by_cases ha : x.a = 0
       · -- If a = 0, then -b² = ±1, so b = ±1
-        unfold isUnit norm at hx
+        simp only [isUnit_iff] at hx; unfold norm at hx
         simp only [ha, sq, zero_mul, zero_add, zero_sub] at hx
         have hb' : x.b = 1 ∨ x.b = -1 := by
           have h1 : x.b * x.b ≥ 0 := mul_self_nonneg x.b

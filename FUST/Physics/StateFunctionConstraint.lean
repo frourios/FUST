@@ -211,11 +211,6 @@ theorem initial_vacuum (g : ℝ → ℝ) (hg : IsBoundedGoldenState 0 g) :
   rw [hgeq]
   exact deg_le_2_in_kerD6 coeffs deg hdeg
 
-/-- At level 0, no state has a D₆-detectable structure -/
-theorem initial_no_time (g : ℝ → ℝ) (hg : IsBoundedGoldenState 0 g) :
-    ¬TimeExistsD6 g :=
-  fun h => h (initial_vacuum g hg)
-
 /-- Monotonicity: level k state is also a level (k+1) state -/
 theorem bounded_state_monotone (k : ℕ) (g : ℝ → ℝ)
     (hg : IsBoundedGoldenState k g) :

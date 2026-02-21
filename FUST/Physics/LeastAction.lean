@@ -406,15 +406,9 @@ end KernelProjection
 
 /-! ## Part 4: Time Existence -/
 
-def TimeExistsD2 (f : ℝ → ℝ) : Prop := ¬ IsInKerD2 f
-def TimeExistsD3 (f : ℝ → ℝ) : Prop := ¬ IsInKerD3 f
-def TimeExistsD4 (f : ℝ → ℝ) : Prop := ¬ IsInKerD4 f
-def TimeExistsD5 (f : ℝ → ℝ) : Prop := ¬ IsInKerD5 f
-def TimeExistsD6 (f : ℝ → ℝ) : Prop := ¬ IsInKerD6 f
-
 /-- D6 f ≠ 0 at some gauge implies time exists -/
 theorem D6_nonzero_implies_time (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) (hD6 : D6 f x ≠ 0) :
-    TimeExistsD6 f := by
+    ¬ IsInKerD6 f := by
   intro hker
   exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
 
@@ -524,7 +518,7 @@ theorem kerD5_implies_perp_zero (f : ℝ → ℝ) (hf : IsInKerD5 f) :
 /-! ## Part 7: TimeExistsD6 Properties -/
 
 theorem timeExists_iff_nonzero_perpD6 (f : ℝ → ℝ) :
-    TimeExistsD6 f ↔ ∃ t, perpProjectionD6 f t ≠ 0 := by
+    ¬ IsInKerD6 f ↔ ∃ t, perpProjectionD6 f t ≠ 0 := by
   constructor
   · intro hf
     by_contra h
@@ -533,7 +527,7 @@ theorem timeExists_iff_nonzero_perpD6 (f : ℝ → ℝ) :
   · intro ⟨t, ht⟩ hker
     exact ht (kerD6_implies_perp_zero f hker t)
 
-theorem timeExists_has_proper_timeD6 (f : ℝ → ℝ) (hf : TimeExistsD6 f) :
+theorem timeExists_has_proper_timeD6 (f : ℝ → ℝ) (hf : ¬ IsInKerD6 f) :
     ∃ t, perpProjectionD6 f t ≠ 0 :=
   (timeExists_iff_nonzero_perpD6 f).mp hf
 
@@ -647,7 +641,7 @@ theorem ker_D4_not_subset_ker_D5 :
   linarith
 
 /-- D4 detects constants: constant functions are massive under D4 -/
-theorem D4_constant_is_massive (c : ℝ) (hc : c ≠ 0) : TimeExistsD4 (fun _ => c) := by
+theorem D4_constant_is_massive (c : ℝ) (hc : c ≠ 0) : ¬ IsInKerD4 (fun _ => c) := by
   intro ⟨d, hd⟩
   have h0 := hd 0; simp only [mul_zero, pow_succ, pow_zero] at h0
   exact hc h0
@@ -761,7 +755,7 @@ theorem D6_timeEvolution (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
   D6_gauge_scaling f φ x (by have := φ_gt_one; linarith) hx
 
 theorem timeEvolution_preserves_D6 (f : ℝ → ℝ) :
-    TimeExistsD6 f ↔ TimeExistsD6 (timeEvolution f) := by
+    ¬ IsInKerD6 f ↔ ¬ IsInKerD6 (timeEvolution f) := by
   have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
   constructor
   · intro hf hker
@@ -779,7 +773,7 @@ theorem timeEvolution_preserves_D6 (f : ℝ → ℝ) :
   · intro hf hker; exact hf (ker_D6_invariant f hker)
 
 theorem timeEvolution_preserves_D2 (f : ℝ → ℝ) :
-    TimeExistsD2 f ↔ TimeExistsD2 (timeEvolution f) := by
+    ¬ IsInKerD2 f ↔ ¬ IsInKerD2 (timeEvolution f) := by
   have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
   constructor
   · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
@@ -789,7 +783,7 @@ theorem timeEvolution_preserves_D2 (f : ℝ → ℝ) :
   · intro hf hker; exact hf (ker_D2_invariant f hker)
 
 theorem timeEvolution_preserves_D3 (f : ℝ → ℝ) :
-    TimeExistsD3 f ↔ TimeExistsD3 (timeEvolution f) := by
+    ¬ IsInKerD3 f ↔ ¬ IsInKerD3 (timeEvolution f) := by
   have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
   constructor
   · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
@@ -799,7 +793,7 @@ theorem timeEvolution_preserves_D3 (f : ℝ → ℝ) :
   · intro hf hker; exact hf (ker_D3_invariant f hker)
 
 theorem timeEvolution_preserves_D4 (f : ℝ → ℝ) :
-    TimeExistsD4 f ↔ TimeExistsD4 (timeEvolution f) := by
+    ¬ IsInKerD4 f ↔ ¬ IsInKerD4 (timeEvolution f) := by
   have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
   constructor
   · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
@@ -809,7 +803,7 @@ theorem timeEvolution_preserves_D4 (f : ℝ → ℝ) :
   · intro hf hker; exact hf (ker_D4_invariant f hker)
 
 theorem timeEvolution_preserves_D5 (f : ℝ → ℝ) :
-    TimeExistsD5 f ↔ TimeExistsD5 (timeEvolution f) := by
+    ¬ IsInKerD5 f ↔ ¬ IsInKerD5 (timeEvolution f) := by
   have hφ : φ ≠ 0 := by have := φ_gt_one; linarith
   constructor
   · intro hf hker; apply hf; obtain ⟨a₀, a₁, hc⟩ := hker
@@ -985,10 +979,10 @@ theorem D5_minimum_massive_degree :
   ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
 
 theorem mass_gap_existence_universal :
-    (∃ f, TimeExistsD2 f) ∧
-    (∃ f, TimeExistsD3 f) ∧
-    (∃ f, TimeExistsD4 f) ∧
-    (∃ f, TimeExistsD5 f) := by
+    (∃ f, ¬ IsInKerD2 f) ∧
+    (∃ f, ¬ IsInKerD3 f) ∧
+    (∃ f, ¬ IsInKerD4 f) ∧
+    (∃ f, ¬ IsInKerD5 f) := by
   refine ⟨⟨id, fun ⟨c, h⟩ => ?_⟩, ⟨id, fun ⟨c, h⟩ => ?_⟩,
          ⟨fun _ => 1, fun ⟨c, h⟩ => ?_⟩, ⟨fun t => t ^ 2, fun ⟨a₀, a₁, h⟩ => ?_⟩⟩
   · have h0 := h 0; have h1 := h 1; simp [id] at h0 h1; linarith

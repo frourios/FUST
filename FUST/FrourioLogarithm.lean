@@ -160,59 +160,11 @@ theorem physical_completeness : ∀ n ≥ 7, projectToD6 n = projectToD6 6 := by
   rw [h1, h2]
 
 /-!
-## Primes in FUST
-
-Primes are defined NOT by divisibility, but by structural irreducibility:
-1. Irreducible under Fibonacci convolution
-2. No hierarchical decomposition via D₆
-3. No resonance under φ/ψ duality
--/
-
-/-- Fibonacci convolution irreducibility predicate -/
-def FibConvIrreducible (n : ℕ) : Prop :=
-  n ≥ 2 ∧ ∀ a b : ℕ, a ≥ 1 → b ≥ 1 →
-    (FStructureConst a) * (FStructureConst b) = FStructureConst n → a = 1 ∨ b = 1
-
-/-- D₆ hierarchical irreducibility: cannot be decomposed in D₆ kernel -/
-def D6Irreducible (n : ℕ) : Prop :=
-  n ≥ 2 ∧ ¬∃ (c₀ c₁ c₂ : ℤ), c₀ ≠ 0 ∧ c₁ ≠ 0 ∧ c₂ ≠ 0 ∧
-    (n : ℝ) = c₀ + c₁ * φ + c₂ * φ^2
-
-/-- φ/ψ resonance: a number resonates if it's fixed under φ ↔ ψ exchange -/
-def PhiPsiResonant (n : ℕ) : Prop :=
-  (φ ^ n - ψ ^ n) / Real.sqrt 5 = (ψ ^ n - φ ^ n) / Real.sqrt 5
-
-/-- FUST prime: irreducible under all three criteria -/
-def FUSTPrime (n : ℕ) : Prop :=
-  FibConvIrreducible n ∧ D6Irreducible n ∧ ¬PhiPsiResonant n
-
-/-- φ/ψ resonance is impossible for n ≥ 1 (since φ^n ≠ ψ^n) -/
-theorem no_phi_psi_resonance (n : ℕ) (hn : n ≥ 1) : ¬PhiPsiResonant n := by
-  unfold PhiPsiResonant
-  intro h
-  have hsqrt : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num : (5 : ℝ) > 0)
-  have heq : φ ^ n - ψ ^ n = ψ ^ n - φ ^ n := by
-    have h' := h
-    field_simp at h'
-    exact h'
-  have hne : φ ^ n - ψ ^ n ≠ 0 := by
-    have hgt := phi_pow_gt_psi_pow n hn
-    linarith
-  have : φ ^ n - ψ ^ n = 0 := by linarith
-  exact hne this
-
-/-- Standard primes are FUST primes (partial - showing non-resonance) -/
-theorem nat_prime_not_resonant (p : ℕ) (hp : Nat.Prime p) : ¬PhiPsiResonant p := by
-  have hp_ge : p ≥ 2 := hp.two_le
-  exact no_phi_psi_resonance p (by omega)
-
-/-!
 ## Key Theorems Summary
 
 1. Frourio logarithm linearizes the φ-scale generator
 2. D₆ completeness bounds observable physics
 3. Integers emerge as orbit labels, not primitives
-4. Primes are structurally irreducible, not divisibility-defined
 -/
 
 /-- Summary: The frourio logarithm coordinate system properties -/
