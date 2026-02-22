@@ -36,6 +36,14 @@ import FUST.Chemistry.Translation
 import FUST.Chemistry.WaterAnomalies
 import FUST.Chemistry.WaterMolecules
 
+import FUST.Dynamics.EulerOperator
+import FUST.Dynamics.Gravity
+import FUST.Dynamics.Lorentz
+import FUST.Dynamics.Poincare
+import FUST.Dynamics.ScalingLimit
+import FUST.Dynamics.YangMills
+import FUST.Dynamics.Zeta6
+
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 
@@ -76,7 +84,9 @@ import FUST.Problems.NavierStokes
 import FUST.Problems.YangMills
 
 import FUST.Basic
+import FUST.ComplexDifferenceOperators
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
+import FUST.FibonacciArithmetic
 import FUST.FrourioLogarithm
 import FUST.SpectralCoefficients

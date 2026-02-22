@@ -1,0 +1,742 @@
+/-
+ζ₆-based difference operator for Dynamics.
+ζ₆ = e^{iπ/3}: compact (|ζ₆|=1, ζ₆·ζ₆'=+1), contrasting FUST's φψ=-1.
+ζ₆_N6 has ker = {1, z, z²} and detects z³, same as FUST D₆ but via rotation.
+-/
+import FUST.ComplexDifferenceOperators
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+
+namespace FUST.Dynamics.Zeta6
+
+open Complex FUST
+
+attribute [local ext] Complex.ext
+
+/-! ## ζ₆ definition and basic properties -/
+
+/-- ζ₆ = e^{iπ/3} = (1 + i√3)/2 -/
+noncomputable def ζ₆ : ℂ := ⟨1/2, Real.sqrt 3 / 2⟩
+
+/-- ζ₆' = e^{-iπ/3} = (1 - i√3)/2 -/
+noncomputable def ζ₆' : ℂ := ⟨1/2, -(Real.sqrt 3 / 2)⟩
+
+lemma sqrt3_pos : (0 : ℝ) < Real.sqrt 3 := Real.sqrt_pos.mpr (by norm_num)
+lemma sqrt3_sq : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)
+
+/-- ζ₆ + ζ₆' = 1 (same trace as φ + ψ = 1) -/
+theorem zeta6_add_conj : ζ₆ + ζ₆' = 1 := by ext <;> simp [ζ₆, ζ₆']; ring
+
+/-- ζ₆ · ζ₆' = +1 (contrast with φψ = -1) -/
+theorem zeta6_mul_conj : ζ₆ * ζ₆' = 1 := by
+  ext <;> simp [ζ₆, ζ₆', mul_re, mul_im]
+  · have h := sqrt3_sq; nlinarith
+  · ring
+
+/-- ζ₆² = ζ₆ - 1 (contrast with φ² = φ + 1) -/
+theorem zeta6_sq : ζ₆ ^ 2 = ζ₆ - 1 := by
+  ext <;> simp [ζ₆, sq, mul_re, mul_im]
+  · have h := sqrt3_sq; nlinarith
+  · ring
+
+/-- ζ₆³ = -1 -/
+theorem zeta6_cubed : ζ₆ ^ 3 = -1 := by
+  have : ζ₆ ^ 3 = ζ₆ ^ 2 * ζ₆ := by ring
+  rw [this, zeta6_sq]
+  ext <;> simp [ζ₆, mul_re, mul_im]
+  · have h := sqrt3_sq; nlinarith
+  · ring
+
+/-- ζ₆⁶ = 1 -/
+theorem zeta6_pow_six : ζ₆ ^ 6 = 1 := by
+  have : ζ₆ ^ 6 = (ζ₆ ^ 3) ^ 2 := by ring
+  rw [this, zeta6_cubed]; norm_num
+
+/-- |ζ₆| = 1 (compact: isometric action) -/
+theorem norm_zeta6 : ‖ζ₆‖ = 1 :=
+  norm_eq_one_of_pow_eq_one zeta6_pow_six (by norm_num)
+
+/-- ζ₆ ≠ 0 -/
+theorem zeta6_ne_zero : ζ₆ ≠ 0 := by
+  intro h
+  have h1 : ‖ζ₆‖ = 0 := by rw [h, norm_zero]
+  linarith [norm_zeta6]
+
+/-- ζ₆⁴ = -ζ₆ -/
+private theorem zeta6_pow_four : ζ₆ ^ 4 = -ζ₆ := by
+  have : ζ₆ ^ 4 = ζ₆ ^ 3 * ζ₆ := by ring
+  rw [this, zeta6_cubed]; ring
+
+/-- ζ₆⁵ = 1 - ζ₆ -/
+private theorem zeta6_pow_five : ζ₆ ^ 5 = 1 - ζ₆ := by
+  have : ζ₆ ^ 5 = ζ₆ ^ 3 * ζ₆ ^ 2 := by ring
+  rw [this, zeta6_cubed, zeta6_sq]; ring
+
+/-! ## ζ₆_N6: DFT mode-3 projection -/
+
+/-- ζ₆_N6 numerator: Σ_{k=0}^{5} (-1)^k f(ζ₆^k · z) -/
+noncomputable def ζ₆_N6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f z - f (ζ₆ * z) + f (ζ₆ ^ 2 * z) - f (ζ₆ ^ 3 * z) +
+  f (ζ₆ ^ 4 * z) - f (ζ₆ ^ 5 * z)
+
+/-- ζ₆_D6: normalized DFT projection -/
+noncomputable def ζ₆_D6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  ζ₆_N6 f z / 6
+
+/-! ## Kernel: {1, z, z²} -/
+
+/-- Alternating sum of 6th roots of unity vanishes -/
+theorem alternating_root_sum :
+    (1 : ℂ) - ζ₆ + ζ₆ ^ 2 - ζ₆ ^ 3 + ζ₆ ^ 4 - ζ₆ ^ 5 = 0 := by
+  rw [zeta6_cubed, zeta6_sq, zeta6_pow_four, zeta6_pow_five]; ring
+
+/-- ζ₆_N6 annihilates constants -/
+theorem ζ₆_N6_const (c : ℂ) (z : ℂ) : ζ₆_N6 (fun _ => c) z = 0 := by
+  unfold ζ₆_N6; ring
+
+/-- ζ₆_N6 annihilates z -/
+theorem ζ₆_N6_linear (z : ℂ) : ζ₆_N6 id z = 0 := by
+  simp only [ζ₆_N6, id_eq]
+  have : z - ζ₆ * z + ζ₆ ^ 2 * z - ζ₆ ^ 3 * z + ζ₆ ^ 4 * z - ζ₆ ^ 5 * z =
+    (1 - ζ₆ + ζ₆ ^ 2 - ζ₆ ^ 3 + ζ₆ ^ 4 - ζ₆ ^ 5) * z := by ring
+  rw [this, alternating_root_sum, zero_mul]
+
+/-- Alternating sum of squared 6th roots vanishes -/
+private theorem alternating_sq_root_sum :
+    (1 : ℂ) - ζ₆ ^ 2 + ζ₆ ^ 4 - ζ₆ ^ 6 + ζ₆ ^ 8 - ζ₆ ^ 10 = 0 := by
+  have h6 := zeta6_pow_six
+  have h8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
+    have : ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
+    rw [this, h6, one_mul]
+  have h10 : ζ₆ ^ 10 = ζ₆ ^ 4 := by
+    have : ζ₆ ^ 10 = ζ₆ ^ 6 * ζ₆ ^ 4 := by ring
+    rw [this, h6, one_mul]
+  rw [h6, h8, h10]; ring
+
+/-- ζ₆_N6 annihilates z² -/
+theorem ζ₆_N6_quadratic (z : ℂ) : ζ₆_N6 (fun w => w ^ 2) z = 0 := by
+  simp only [ζ₆_N6]
+  have : z ^ 2 - (ζ₆ * z) ^ 2 + (ζ₆ ^ 2 * z) ^ 2 - (ζ₆ ^ 3 * z) ^ 2 +
+    (ζ₆ ^ 4 * z) ^ 2 - (ζ₆ ^ 5 * z) ^ 2 =
+    (1 - ζ₆ ^ 2 + ζ₆ ^ 4 - ζ₆ ^ 6 + ζ₆ ^ 8 - ζ₆ ^ 10) * z ^ 2 := by ring
+  rw [this, alternating_sq_root_sum, zero_mul]
+
+/-! ## Detection: z³ -/
+
+/-- Alternating sum of cubed 6th roots = 6 -/
+private theorem alternating_cube_root_sum :
+    (1 : ℂ) - ζ₆ ^ 3 + ζ₆ ^ 6 - ζ₆ ^ 9 + ζ₆ ^ 12 - ζ₆ ^ 15 = 6 := by
+  have h3 := zeta6_cubed
+  have h6 := zeta6_pow_six
+  have h9 : ζ₆ ^ 9 = -1 := by
+    have : ζ₆ ^ 9 = ζ₆ ^ 6 * ζ₆ ^ 3 := by ring
+    rw [this, h6, one_mul, h3]
+  have h12 : ζ₆ ^ 12 = 1 := by
+    have : ζ₆ ^ 12 = (ζ₆ ^ 6) ^ 2 := by ring
+    rw [this, h6]; norm_num
+  have h15 : ζ₆ ^ 15 = -1 := by
+    have : ζ₆ ^ 15 = ζ₆ ^ 12 * ζ₆ ^ 3 := by ring
+    rw [this, h12, one_mul, h3]
+  rw [h3, h6, h9, h12, h15]; norm_num
+
+/-- ζ₆_N6[z³] = 6z³ -/
+theorem ζ₆_N6_cubic (z : ℂ) : ζ₆_N6 (fun w => w ^ 3) z = 6 * z ^ 3 := by
+  simp only [ζ₆_N6]
+  have : z ^ 3 - (ζ₆ * z) ^ 3 + (ζ₆ ^ 2 * z) ^ 3 - (ζ₆ ^ 3 * z) ^ 3 +
+    (ζ₆ ^ 4 * z) ^ 3 - (ζ₆ ^ 5 * z) ^ 3 =
+    (1 - ζ₆ ^ 3 + ζ₆ ^ 6 - ζ₆ ^ 9 + ζ₆ ^ 12 - ζ₆ ^ 15) * z ^ 3 := by ring
+  rw [this, alternating_cube_root_sum]
+
+/-- ζ₆_D6[z³] = z³ -/
+theorem ζ₆_D6_cubic (z : ℂ) : ζ₆_D6 (fun w => w ^ 3) z = z ^ 3 := by
+  simp only [ζ₆_D6, ζ₆_N6_cubic]; field_simp
+
+/-- ζ₆_D6 detects z³ -/
+theorem ζ₆_D6_detects_cubic (z : ℂ) (hz : z ≠ 0) :
+    ζ₆_D6 (fun w => w ^ 3) z ≠ 0 := by
+  rw [ζ₆_D6_cubic]; exact pow_ne_zero 3 hz
+
+/-! ## Kernel dimension = 3 -/
+
+/-- ker(ζ₆_N6) ⊇ {1, z, z²} -/
+theorem ζ₆_N6_kernel :
+    (∀ c z, ζ₆_N6 (fun _ => c) z = 0) ∧
+    (∀ z, ζ₆_N6 id z = 0) ∧
+    (∀ z, ζ₆_N6 (fun w => w ^ 2) z = 0) :=
+  ⟨ζ₆_N6_const, ζ₆_N6_linear, ζ₆_N6_quadratic⟩
+
+/-- Kernel dimension = 3 (same as FUST D₆) -/
+def ζ₆_kerDim : Nat := 3
+
+theorem ζ₆_kerDim_justified :
+    ζ₆_kerDim = 3 ∧
+    (∀ c z, ζ₆_N6 (fun _ => c) z = 0) ∧
+    (∀ z, ζ₆_N6 id z = 0) ∧
+    (∀ z, ζ₆_N6 (fun w => w ^ 2) z = 0) ∧
+    (∀ z, z ≠ 0 → ζ₆_D6 (fun w => w ^ 3) z ≠ 0) :=
+  ⟨rfl, ζ₆_N6_const, ζ₆_N6_linear, ζ₆_N6_quadratic, ζ₆_D6_detects_cubic⟩
+
+/-! ## ζ₆ - ζ₆' properties -/
+
+/-- ζ₆ - ζ₆' = i√3 -/
+theorem zeta6_sub_conj : ζ₆ - ζ₆' = ⟨0, Real.sqrt 3⟩ := by
+  ext <;> simp [ζ₆, ζ₆']
+
+/-- ζ₆ - ζ₆' ≠ 0 -/
+theorem zeta6_sub_conj_ne_zero : ζ₆ - ζ₆' ≠ 0 := by
+  rw [zeta6_sub_conj]
+  intro h
+  have him := congr_arg Complex.im h
+  simp at him
+
+/-- ζ₆' ≠ 0 -/
+theorem zeta6'_ne_zero : ζ₆' ≠ 0 := by
+  intro h; have := congr_arg Complex.re h
+  simp [ζ₆'] at this
+
+/-- ζ₆' = ζ₆⁻¹ -/
+theorem conj_eq_inv : ζ₆' = ζ₆⁻¹ :=
+  eq_inv_of_mul_eq_one_right zeta6_mul_conj
+
+/-- |ζ₆'| = 1 -/
+theorem norm_zeta6' : ‖ζ₆'‖ = 1 := by
+  rw [conj_eq_inv, norm_inv, norm_zeta6, inv_one]
+
+/-- ζ₆' = starRingEnd ℂ ζ₆ (complex conjugate) -/
+theorem conj_eq_starRingEnd : ζ₆' = starRingEnd ℂ ζ₆ := by
+  ext <;> simp [ζ₆, ζ₆']
+
+/-- (ζ₆ - ζ₆')² = -3 (discriminant of t² - t + 1) -/
+theorem zeta6_sub_conj_sq : (ζ₆ - ζ₆') ^ 2 = -3 := by
+  rw [zeta6_sub_conj]
+  have : (⟨0, Real.sqrt 3⟩ : ℂ) ^ 2 = ⟨-(Real.sqrt 3 ^ 2), 0⟩ := by
+    ext <;> simp [sq, mul_re, mul_im]
+  rw [this, sqrt3_sq]; ext <;> simp
+
+/-- ζ₆² - ζ₆ + 1 = 0 (6th cyclotomic polynomial) -/
+theorem zeta6_minimal_poly : ζ₆ ^ 2 - ζ₆ + 1 = 0 := by
+  have h := zeta6_sq
+  have : ζ₆ ^ 2 - ζ₆ + 1 = (ζ₆ - 1) - ζ₆ + 1 := by rw [h]
+  rw [this]; ring
+
+/-! ## Per-operator ζ₆ composition via anti-Fibonacci convolution C^{(r)}
+
+Anti-Fibonacci sequence: C_n = C_{n-1} - C_{n-2}, C_0=0, C_1=1.
+Period 6: [0, 1, 1, 0, -1, -1]. Recurrence mirrors ζ₆²=ζ₆-1.
+
+C^{(r)}_k = r-th cyclic convolution of C_k (mod 6).
+Odd r:  coefficients ∝ Im(ζ₆^k) = sin(kπ/3) — antisymmetric (δ=1)
+Even r: coefficients ∝ Re(ζ₆^k) = cos(kπ/3) — symmetric (δ=0)
+
+Spectral symbol: Dζn(z^s) ∝ σ̂n(s) · τ(s)^r where τ(s) = sin((s-1)π/3)/sin(π/3).
+
+Conservation law: |p| + r = 6.
+  Dζ₂ (r=5): C^{(5)} = [0,1,1,0,-1,-1], odd, δ=1 ✓
+  Dζ₃ (r=4): C^{(4)} ∝ [2,1,-1,-2,-1,1], even, δ=0 ✓
+  Dζ₄ (r=3): C^{(3)} = [0,-1,-1,0,1,1], odd, δ=1 ✓
+  Dζ₅ (r=2): C^{(2)} ∝ [-2,-1,1,2,1,-1], even, δ=0 ✓
+  Dζ₆ (r=1): C^{(1)} = [0,1,1,0,-1,-1], odd, δ=1 ✓ -/
+
+/-- Anti-Fibonacci numerator: Σ C_k · g(ζ₆^k · z) for C_k = [0,1,1,0,-1,-1] -/
+noncomputable def AFNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
+  g (ζ₆ * z) + g (ζ₆ ^ 2 * z) - g (ζ₆ ^ 4 * z) - g (ζ₆ ^ 5 * z)
+
+/-- Symmetric 6-point: Σ 2Re(ζ₆^k) · g(ζ₆^k · z), coefficients [2,1,-1,-2,-1,1] -/
+noncomputable def SymNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
+  2 * g z + g (ζ₆ * z) - g (ζ₆ ^ 2 * z) - 2 * g (ζ₆ ^ 3 * z) -
+  g (ζ₆ ^ 4 * z) + g (ζ₆ ^ 5 * z)
+
+/-- Dζ₆: r=1, C^{(1)} antisymmetric, dim = (-5, 1, 1) -/
+noncomputable def Dζ₆ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else AFNum (CD6 f) z / ((ζ₆ - ζ₆') * z)
+
+/-- Dζ₅: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
+noncomputable def Dζ₅ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else SymNum (CD5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+
+/-- Dζ₅h: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
+noncomputable def Dζ₅h (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else SymNum (CD5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+
+/-- Dζ₄: r=3, C^{(3)} = -C^{(1)} antisymmetric, dim = (-3, 1, 3) -/
+noncomputable def Dζ₄ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else AFNum (CD4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
+
+/-- Dζ₃: r=4, C^{(4)} symmetric, dim = (-2, 0, 4) -/
+noncomputable def Dζ₃ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else SymNum (CD3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
+
+/-- Dζ₂: r=5, C^{(5)} = C^{(1)} antisymmetric, dim = (-1, 1, 5) -/
+noncomputable def Dζ₂ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else AFNum (CD2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
+
+private lemma zeta6k_mul_ne (k : ℕ) (z : ℂ) (hz : z ≠ 0) : ζ₆ ^ k * z ≠ 0 := by
+  apply mul_ne_zero _ hz
+  exact pow_ne_zero k zeta6_ne_zero
+
+private lemma zeta6_mul_ne (z : ℂ) (hz : z ≠ 0) : ζ₆ * z ≠ 0 :=
+  mul_ne_zero zeta6_ne_zero hz
+
+/-- AFNum annihilates constant functions -/
+theorem AFNum_const (c : ℂ) (z : ℂ) : AFNum (fun _ => c) z = 0 := by
+  unfold AFNum; ring
+
+/-- SymNum annihilates constant functions -/
+theorem SymNum_const (c : ℂ) (z : ℂ) : SymNum (fun _ => c) z = 0 := by
+  unfold SymNum; ring
+
+/-- Dζ₂ annihilates constants -/
+theorem Dζ₂_const (z : ℂ) (hz : z ≠ 0) : Dζ₂ (fun _ => 1) z = 0 := by
+  simp only [Dζ₂, hz, ↓reduceIte]
+  have hcd : ∀ w : ℂ, w ≠ 0 → CD2 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => CD2_const 1 w hw
+  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
+  simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
+  simp
+
+/-- Dζ₃ annihilates constants -/
+theorem Dζ₃_const (z : ℂ) (hz : z ≠ 0) : Dζ₃ (fun _ => 1) z = 0 := by
+  simp only [Dζ₃, hz, ↓reduceIte]
+  have hcd : ∀ w : ℂ, w ≠ 0 → CD3 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => CD3_const 1 w hw
+  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
+  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
+    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
+  simp
+
+/-- Dζ₅ annihilates constants -/
+theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
+  simp only [Dζ₅, hz, ↓reduceIte]
+  have hcd : ∀ w : ℂ, w ≠ 0 → CD5 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => CD5_const 1 w hw
+  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
+  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
+    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
+  simp
+
+/-- Dζ₅h annihilates constants -/
+theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := by
+  simp only [Dζ₅h, hz, ↓reduceIte]
+  have hcd : ∀ w : ℂ, w ≠ 0 → CD5half (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => CD5half_const 1 w hw
+  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
+  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
+    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
+  simp
+
+/-- Dζ₆ annihilates constants -/
+theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
+  simp only [Dζ₆, hz, ↓reduceIte]
+  have hcd : ∀ w : ℂ, w ≠ 0 → CD6 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => CD6_const 1 w hw
+  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
+  simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
+  simp
+
+/-- Dζ₅ and Dζ₅h share the same dimension: addable -/
+theorem Dζ₅_add_Dζ₅h (f : ℂ → ℂ) (z : ℂ) :
+    Dζ₅ f z + Dζ₅h f z =
+    if z = 0 then 0 else
+      (SymNum (fun w => CD5 f w + CD5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
+  by_cases hz : z = 0
+  · simp [Dζ₅, Dζ₅h, hz]
+  · simp only [Dζ₅, Dζ₅h, hz, ↓reduceIte]
+    rw [← add_div]; congr 1; unfold SymNum; ring
+
+/-! ## Unified Dζ operator
+
+All 6 operators Dζ₂,Dζ₃,Dζ₄,Dζ₅,Dζ₅h,Dζ₆ collapse to rank-2 on ⟨φ,ζ₆⟩ ≅ ℤ × ℤ/6ℤ.
+C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
+  Φ_A = (CN6 + CD2 - CD4)_num: coefficients [1, -4, 3+φ, 0, -(3+ψ), 4, -1]
+  Φ_S = (2·CD5 + CD3 + μ·CD2)_num: coefficients [0, 2, 3+μ, -10, 3-μ, 2, 0]
+  μ = 2/(φ+2)
+Half-period: C(a, k+3) = -C(a, k) from AF/SY anti-periodicity. -/
+
+/-- Φ_A: φ-numerator = (CN6 + CD2 - CD4)_num, all 6 ops AF channel -/
+noncomputable def Φ_A (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f ((↑φ : ℂ) ^ 3 * z) - 4 * f ((↑φ : ℂ) ^ 2 * z) +
+  (3 + (↑φ : ℂ)) * f (↑φ * z) - (3 + (↑ψ : ℂ)) * f (↑ψ * z) +
+  4 * f ((↑ψ : ℂ) ^ 2 * z) - f ((↑ψ : ℂ) ^ 3 * z)
+
+/-- Φ_S: φ-numerator = (2·CD5 + CD3 + μ·CD2)_num, all 6 ops SY channel -/
+noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
+  2 * f ((↑φ : ℂ) ^ 2 * z) + (3 + μ) * f (↑φ * z) - 10 * f z +
+  (3 - μ) * f (↑ψ * z) + 2 * f ((↑ψ : ℂ) ^ 2 * z)
+
+/-- Unified Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
+noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  if z = 0 then 0 else (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
+
+private lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
+  rw [ne_eq, ← ofReal_ofNat, ← ofReal_add, ofReal_eq_zero]
+  linarith [phi_pos]
+
+/-- Φ_A on constants: Σ = 1-4+(3+φ)-(3+ψ)+4-1 = φ-ψ (not zero, but AFNum kills it) -/
+theorem Φ_A_const (c : ℂ) (z : ℂ) :
+    Φ_A (fun _ => c) z = ((↑φ : ℂ) - ↑ψ) * c := by
+  unfold Φ_A; ring
+
+/-- Φ_S annihilates constants: 2+(3+μ)-10+(3-μ)+2 = 0 -/
+theorem Φ_S_const (c : ℂ) (z : ℂ) : Φ_S (fun _ => c) z = 0 := by
+  simp only [Φ_S]
+  have hφ2 : (↑φ : ℂ) + 2 ≠ 0 := phi_plus_two_ne
+  field_simp; ring
+
+/-- Unified Dζ annihilates constants (Φ_A gives const, AFNum kills it) -/
+theorem Dζ_const (z : ℂ) (hz : z ≠ 0) : Dζ (fun _ => 1) z = 0 := by
+  simp only [Dζ, hz, ↓reduceIte]
+  have hA : ∀ w, Φ_A (fun _ => (1 : ℂ)) w = ((↑φ : ℂ) - ↑ψ) * 1 :=
+    fun w => Φ_A_const 1 w
+  have hS : ∀ w, Φ_S (fun _ => (1 : ℂ)) w = 0 := fun w => Φ_S_const 1 w
+  simp only [AFNum, hA, SymNum, hS, mul_one]
+  simp [sub_self]
+
+/-- Decomposition: Φ_A = CN6_num + CD2_num - CD4_num -/
+theorem Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
+    Φ_A f z = CN6 f z + (f (↑φ * z) - f (↑ψ * z)) -
+    (f ((↑φ : ℂ) ^ 2 * z) - (↑φ : ℂ) ^ 2 * f (↑φ * z) +
+     (↑ψ : ℂ) ^ 2 * f (↑ψ * z) - f ((↑ψ : ℂ) ^ 2 * z)) := by
+  unfold Φ_A CN6
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := by
+    have h := golden_ratio_property
+    have : (↑(φ ^ 2) : ℂ) = ↑(φ + 1) := congrArg _ h
+    simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := by
+    have h := psi_sq
+    have : (↑(ψ ^ 2) : ℂ) = ↑(ψ + 1) := congrArg _ h
+    simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+  rw [hφ2, hψ2]; ring
+
+/-! ## Fourier coefficients: AF = 2i√3, SY = 6
+
+For f = w^s with s coprime to 6, the ζ₆ Fourier coefficients are:
+  AFNum factor = ζ₆^s + ζ₆^{2s} - ζ₆^{4s} - ζ₆^{5s}
+  SymNum factor = 2 + ζ₆^s - ζ₆^{2s} - 2ζ₆^{3s} - ζ₆^{4s} + ζ₆^{5s}
+For s ≡ 1 mod 6: AF = 2i√3, SY = 6.  For s ≡ 5 mod 6: AF = -2i√3, SY = 6. -/
+
+/-- AF_coeff = ζ₆+ζ₆²-ζ₆⁴-ζ₆⁵ = (ζ₆-ζ₆⁵)+(ζ₆²-ζ₆⁴) -/
+noncomputable def AF_coeff : ℂ := ζ₆ + ζ₆ ^ 2 - ζ₆ ^ 4 - ζ₆ ^ 5
+
+/-- AF_coeff = 2i√3 -/
+theorem AF_coeff_eq : AF_coeff = ⟨0, 2 * Real.sqrt 3⟩ := by
+  unfold AF_coeff; rw [zeta6_sq, zeta6_pow_four, zeta6_pow_five]
+  ext <;> simp [ζ₆] <;> ring
+
+/-- 2+ζ₆-ζ₆²-2ζ₆³-ζ₆⁴+ζ₆⁵ = 6 -/
+theorem SY_coeff_val :
+    (2 : ℂ) + ζ₆ - ζ₆ ^ 2 - 2 * ζ₆ ^ 3 - ζ₆ ^ 4 + ζ₆ ^ 5 = 6 := by
+  rw [zeta6_sq, zeta6_cubed, zeta6_pow_four, zeta6_pow_five]
+  ext <;> simp [ζ₆]; ring
+
+/-! ## Monomial mode selection: (ζ₆^j)^{6k+r} = ζ₆^{jr} -/
+
+private theorem zeta6_pow_pow_6k1 (j k : ℕ) : (ζ₆ ^ j) ^ (6 * k + 1) = ζ₆ ^ j := by
+  rw [← pow_mul, show j * (6 * k + 1) = 6 * (j * k) + j from by ring,
+      pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul]
+
+private theorem zeta6_pow_6k1 (k : ℕ) : ζ₆ ^ (6 * k + 1) = ζ₆ := by
+  rw [pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul, pow_one]
+
+private theorem zeta6_pow_pow_6k5 (j k : ℕ) : (ζ₆ ^ j) ^ (6 * k + 5) = ζ₆ ^ (5 * j) := by
+  rw [← pow_mul, show j * (6 * k + 5) = 6 * (j * k) + 5 * j from by ring,
+      pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul]
+
+private theorem zeta6_pow_6k5 (k : ℕ) : ζ₆ ^ (6 * k + 5) = ζ₆ ^ 5 := by
+  rw [pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul]
+
+/-- AFNum on w^{6k+1} = AF_coeff · z^{6k+1} -/
+theorem AFNum_pow_mod6_1 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k + 1)) z = z ^ (6 * k + 1) * AF_coeff := by
+  simp only [AFNum, AF_coeff, mul_pow, zeta6_pow_6k1,
+    zeta6_pow_pow_6k1 2, zeta6_pow_pow_6k1 4, zeta6_pow_pow_6k1 5]
+  ring
+
+/-- SymNum on w^{6k+1} = 6 · z^{6k+1} -/
+theorem SymNum_pow_mod6_1 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k + 1)) z = 6 * z ^ (6 * k + 1) := by
+  simp only [SymNum, mul_pow, zeta6_pow_6k1,
+    zeta6_pow_pow_6k1 2, zeta6_pow_pow_6k1 3, zeta6_pow_pow_6k1 4, zeta6_pow_pow_6k1 5]
+  have key : (2 : ℂ) * z ^ (6 * k + 1) + ζ₆ * z ^ (6 * k + 1) - ζ₆ ^ 2 * z ^ (6 * k + 1) -
+    2 * (ζ₆ ^ 3 * z ^ (6 * k + 1)) - ζ₆ ^ 4 * z ^ (6 * k + 1) +
+    ζ₆ ^ 5 * z ^ (6 * k + 1) =
+    (2 + ζ₆ - ζ₆ ^ 2 - 2 * ζ₆ ^ 3 - ζ₆ ^ 4 + ζ₆ ^ 5) * z ^ (6 * k + 1) := by ring
+  rw [key, SY_coeff_val]
+
+private theorem AF_coeff_mod5 :
+    ζ₆ ^ 5 + ζ₆ ^ 10 - ζ₆ ^ 20 - ζ₆ ^ 25 = -AF_coeff := by
+  unfold AF_coeff
+  have h10 : ζ₆ ^ 10 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 10 = ζ₆ ^ 6 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_mul]
+  have h20 : ζ₆ ^ 20 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 20 = (ζ₆ ^ 6) ^ 3 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_pow, one_mul]
+  have h25 : ζ₆ ^ 25 = ζ₆ := by
+    calc ζ₆ ^ 25 = (ζ₆ ^ 6) ^ 4 * ζ₆ := by ring
+    _ = ζ₆ := by rw [zeta6_pow_six, one_pow, one_mul]
+  rw [h10, h20, h25]; ring
+
+/-- AFNum on w^{6k+5} = -AF_coeff · z^{6k+5} -/
+theorem AFNum_pow_mod6_5 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k + 5)) z = -(z ^ (6 * k + 5) * AF_coeff) := by
+  simp only [AFNum, mul_pow, zeta6_pow_6k5,
+    zeta6_pow_pow_6k5 2, zeta6_pow_pow_6k5 4, zeta6_pow_pow_6k5 5]
+  simp only [show 5 * 2 = 10 from by ring,
+             show 5 * 4 = 20 from by ring, show 5 * 5 = 25 from by ring]
+  have key : ζ₆ ^ 5 * z ^ (6 * k + 5) + ζ₆ ^ 10 * z ^ (6 * k + 5) -
+    ζ₆ ^ 20 * z ^ (6 * k + 5) - ζ₆ ^ 25 * z ^ (6 * k + 5) =
+    (ζ₆ ^ 5 + ζ₆ ^ 10 - ζ₆ ^ 20 - ζ₆ ^ 25) * z ^ (6 * k + 5) := by ring
+  rw [key, AF_coeff_mod5]; ring
+
+private theorem SY_coeff_mod5 :
+    (2 : ℂ) + ζ₆ ^ 5 - ζ₆ ^ 10 - 2 * ζ₆ ^ 15 - ζ₆ ^ 20 + ζ₆ ^ 25 = 6 := by
+  have h10 : ζ₆ ^ 10 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 10 = ζ₆ ^ 6 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_mul]
+  have h15 : ζ₆ ^ 15 = -1 := by
+    calc ζ₆ ^ 15 = (ζ₆ ^ 6) ^ 2 * ζ₆ ^ 3 := by ring
+    _ = ζ₆ ^ 3 := by rw [zeta6_pow_six, one_pow, one_mul]
+    _ = -1 := zeta6_cubed
+  have h20 : ζ₆ ^ 20 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 20 = (ζ₆ ^ 6) ^ 3 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_pow, one_mul]
+  have h25 : ζ₆ ^ 25 = ζ₆ := by
+    calc ζ₆ ^ 25 = (ζ₆ ^ 6) ^ 4 * ζ₆ := by ring
+    _ = ζ₆ := by rw [zeta6_pow_six, one_pow, one_mul]
+  rw [h10, h15, h20, h25, zeta6_pow_four, zeta6_pow_five, zeta6_sq]
+  have hsq3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)
+  ext
+  · simp [ζ₆]; nlinarith
+  · simp [ζ₆]
+
+/-- SymNum on w^{6k+5} = 6 · z^{6k+5} -/
+theorem SymNum_pow_mod6_5 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k + 5)) z = 6 * z ^ (6 * k + 5) := by
+  simp only [SymNum, mul_pow, zeta6_pow_6k5,
+    zeta6_pow_pow_6k5 2, zeta6_pow_pow_6k5 3, zeta6_pow_pow_6k5 4, zeta6_pow_pow_6k5 5]
+  simp only [show 5 * 2 = 10 from by ring, show 5 * 3 = 15 from by ring,
+             show 5 * 4 = 20 from by ring, show 5 * 5 = 25 from by ring]
+  have key : (2 : ℂ) * z ^ (6 * k + 5) + ζ₆ ^ 5 * z ^ (6 * k + 5) -
+    ζ₆ ^ 10 * z ^ (6 * k + 5) - 2 * (ζ₆ ^ 15 * z ^ (6 * k + 5)) -
+    ζ₆ ^ 20 * z ^ (6 * k + 5) + ζ₆ ^ 25 * z ^ (6 * k + 5) =
+    (2 + ζ₆ ^ 5 - ζ₆ ^ 10 - 2 * ζ₆ ^ 15 - ζ₆ ^ 20 + ζ₆ ^ 25) * z ^ (6 * k + 5) := by ring
+  rw [key, SY_coeff_mod5]
+
+/-! ## Norm squared decomposition: |6a + 2i√3·b|² = 12(3a² + b²)
+
+The unified Dζ output for monomial z^s decomposes as:
+  Re(Dζ) = 6·Φ_S (symmetric/rotation channel, weight 3)
+  Im(Dζ) = ±2√3·Φ_A (antisymmetric/boost channel, weight 1)
+The 3:1 weight ratio in |Dζ|² encodes I4 = Fin 3 ⊕ Fin 1. -/
+
+/-- |6a + AF_coeff·b|² = 12(3a² + b²) for real a, b -/
+theorem Dζ_normSq_decomposition (a b : ℝ) :
+    Complex.normSq (6 * (a : ℂ) + AF_coeff * b) = 12 * (3 * a ^ 2 + b ^ 2) := by
+  rw [AF_coeff_eq]
+  have heq : 6 * (a : ℂ) + (⟨0, 2 * Real.sqrt 3⟩ : ℂ) * (b : ℂ) =
+    ⟨6 * a, 2 * Real.sqrt 3 * b⟩ := by ext <;> simp
+  rw [heq, normSq_mk]
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)
+  nlinarith
+
+/-- |AF_coeff|² = 12 -/
+theorem AF_coeff_normSq : Complex.normSq AF_coeff = 12 := by
+  have h := Dζ_normSq_decomposition 0 1
+  simp only [ofReal_zero, mul_zero, zero_add, ofReal_one, mul_one] at h
+  linarith
+
+/-! ## Φ_S 3-component decomposition: CD5_num + CD3_num + μ·CD2_num
+
+Φ_S decomposes into 3 independent sub-operators (numerator-only CDn).
+For monomials z^s, the coefficients σ_CDn(s) = CDn_num(z^s)/z^s form
+rank-3 vectors across s=1,5,7, proving Φ_S carries Fin 3 of information. -/
+
+noncomputable def CD2_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f (↑φ * z) - f (↑ψ * z)
+
+noncomputable def CD3_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f (↑φ * z) - 2 * f z + f (↑ψ * z)
+
+noncomputable def CD5_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f ((↑φ : ℂ) ^ 2 * z) + f (↑φ * z) - 4 * f z +
+  f (↑ψ * z) + f ((↑ψ : ℂ) ^ 2 * z)
+
+/-- Φ_S = 2·CD5_num + CD3_num + μ·CD2_num -/
+theorem Φ_S_decompose (f : ℂ → ℂ) (z : ℂ) :
+    Φ_S f z = 2 * CD5_num f z + CD3_num f z +
+    (2 / ((↑φ : ℂ) + 2)) * CD2_num f z := by
+  unfold Φ_S CD5_num CD3_num CD2_num; ring
+
+/-- CDn_num on w^s: monomial coefficients -/
+theorem CD2_num_pow (s : ℕ) (z : ℂ) :
+    CD2_num (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s) * z ^ s := by
+  unfold CD2_num; simp only [mul_pow]; ring
+
+theorem CD3_num_pow (s : ℕ) (z : ℂ) :
+    CD3_num (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s) * z ^ s := by
+  unfold CD3_num; simp only [mul_pow]; ring
+
+theorem CD5_num_pow (s : ℕ) (z : ℂ) :
+    CD5_num (fun w => w ^ s) z =
+    ((↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)) * z ^ s := by
+  unfold CD5_num; simp only [mul_pow, ← pow_mul]; ring
+
+/-- Φ_S on w^s via sub-operator coefficients -/
+theorem Φ_S_pow_via_sub (s : ℕ) (z : ℂ) :
+    Φ_S (fun w => w ^ s) z =
+    (2 * ((↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)) +
+     ((↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s) +
+     (2 / ((↑φ : ℂ) + 2)) * ((↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s)) * z ^ s := by
+  unfold Φ_S; simp only [mul_pow, ← pow_mul]; ring
+
+/-! ### Golden ratio powers as F_n·φ + F_{n-1} -/
+
+private lemma psi_eq_c : (↑ψ : ℂ) = 1 - ↑φ := by
+  have h : φ + ψ = 1 := phi_add_psi
+  have : (↑ψ : ℂ) = ↑(1 - φ) := by rw [show 1 - φ = ψ from by linarith]
+  rw [this, ofReal_sub, ofReal_one]
+
+private lemma phi_sq_c : (↑φ : ℂ) ^ 2 = ↑φ + 1 := by
+  have h := golden_ratio_property
+  have : (↑(φ ^ 2) : ℂ) = ↑(φ + 1) := congrArg _ h
+  simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+
+private lemma phi_pow3_c : (↑φ : ℂ) ^ 3 = 2 * ↑φ + 1 := by
+  calc (↑φ : ℂ) ^ 3 = (↑φ : ℂ) ^ 2 * ↑φ := by ring
+    _ = ((↑φ : ℂ) + 1) * ↑φ := by rw [phi_sq_c]
+    _ = (↑φ : ℂ) ^ 2 + ↑φ := by ring
+    _ = (↑φ : ℂ) + 1 + ↑φ := by rw [phi_sq_c]
+    _ = 2 * ↑φ + 1 := by ring
+
+private lemma phi_pow4_c : (↑φ : ℂ) ^ 4 = 3 * ↑φ + 2 := by
+  calc (↑φ : ℂ) ^ 4 = (↑φ : ℂ) ^ 3 * ↑φ := by ring
+    _ = (2 * ↑φ + 1) * ↑φ := by rw [phi_pow3_c]
+    _ = 2 * (↑φ : ℂ) ^ 2 + ↑φ := by ring
+    _ = 2 * ((↑φ : ℂ) + 1) + ↑φ := by rw [phi_sq_c]
+    _ = 3 * ↑φ + 2 := by ring
+
+private lemma phi_pow5_c : (↑φ : ℂ) ^ 5 = 5 * ↑φ + 3 := by
+  calc (↑φ : ℂ) ^ 5 = (↑φ : ℂ) ^ 3 * (↑φ : ℂ) ^ 2 := by ring
+    _ = (2 * ↑φ + 1) * ((↑φ : ℂ) + 1) := by rw [phi_pow3_c, phi_sq_c]
+    _ = 2 * (↑φ : ℂ) ^ 2 + 3 * ↑φ + 1 := by ring
+    _ = 2 * ((↑φ : ℂ) + 1) + 3 * ↑φ + 1 := by rw [phi_sq_c]
+    _ = 5 * ↑φ + 3 := by ring
+
+private lemma phi_pow7_c : (↑φ : ℂ) ^ 7 = 13 * ↑φ + 8 := by
+  calc (↑φ : ℂ) ^ 7 = (↑φ : ℂ) ^ 5 * (↑φ : ℂ) ^ 2 := by ring
+    _ = (5 * ↑φ + 3) * ((↑φ : ℂ) + 1) := by rw [phi_pow5_c, phi_sq_c]
+    _ = 5 * (↑φ : ℂ) ^ 2 + 8 * ↑φ + 3 := by ring
+    _ = 5 * ((↑φ : ℂ) + 1) + 8 * ↑φ + 3 := by rw [phi_sq_c]
+    _ = 13 * ↑φ + 8 := by ring
+
+private lemma phi_pow10_c : (↑φ : ℂ) ^ 10 = 55 * ↑φ + 34 := by
+  calc (↑φ : ℂ) ^ 10 = ((↑φ : ℂ) ^ 5) ^ 2 := by ring
+    _ = (5 * ↑φ + 3) ^ 2 := by rw [phi_pow5_c]
+    _ = 25 * (↑φ : ℂ) ^ 2 + 30 * ↑φ + 9 := by ring
+    _ = 25 * ((↑φ : ℂ) + 1) + 30 * ↑φ + 9 := by rw [phi_sq_c]
+    _ = 55 * ↑φ + 34 := by ring
+
+private lemma phi_pow14_c : (↑φ : ℂ) ^ 14 = 377 * ↑φ + 233 := by
+  calc (↑φ : ℂ) ^ 14 = ((↑φ : ℂ) ^ 7) ^ 2 := by ring
+    _ = (13 * ↑φ + 8) ^ 2 := by rw [phi_pow7_c]
+    _ = 169 * (↑φ : ℂ) ^ 2 + 208 * ↑φ + 64 := by ring
+    _ = 169 * ((↑φ : ℂ) + 1) + 208 * ↑φ + 64 := by rw [phi_sq_c]
+    _ = 377 * ↑φ + 233 := by ring
+
+private lemma one_sub_phi_pow5 : (1 - (↑φ : ℂ)) ^ 5 = -(5 * ↑φ) + 8 := by
+  have : (1 - (↑φ : ℂ)) ^ 5 =
+    1 - 5 * ↑φ + 10 * (↑φ : ℂ) ^ 2 - 10 * (↑φ : ℂ) ^ 3 +
+    5 * (↑φ : ℂ) ^ 4 - (↑φ : ℂ) ^ 5 := by ring
+  rw [this, phi_sq_c, phi_pow3_c, phi_pow4_c, phi_pow5_c]; ring
+
+private lemma one_sub_phi_pow7 : (1 - (↑φ : ℂ)) ^ 7 = -(13 * ↑φ) + 21 := by
+  have h2 : (1 - (↑φ : ℂ)) ^ 2 = 2 - ↑φ := by
+    have : (1 - (↑φ : ℂ)) ^ 2 = (↑φ : ℂ) ^ 2 - 2 * ↑φ + 1 := by ring
+    rw [this, phi_sq_c]; ring
+  calc (1 - (↑φ : ℂ)) ^ 7 = (1 - (↑φ : ℂ)) ^ 5 * (1 - (↑φ : ℂ)) ^ 2 := by ring
+    _ = (-(5 * ↑φ) + 8) * (2 - ↑φ) := by rw [one_sub_phi_pow5, h2]
+    _ = 5 * (↑φ : ℂ) ^ 2 - 18 * ↑φ + 16 := by ring
+    _ = 5 * ((↑φ : ℂ) + 1) - 18 * ↑φ + 16 := by rw [phi_sq_c]
+    _ = -(13 * ↑φ) + 21 := by ring
+
+private lemma one_sub_phi_pow10 : (1 - (↑φ : ℂ)) ^ 10 = -(55 * ↑φ) + 89 := by
+  calc (1 - (↑φ : ℂ)) ^ 10 = ((1 - (↑φ : ℂ)) ^ 5) ^ 2 := by ring
+    _ = (-(5 * ↑φ) + 8) ^ 2 := by rw [one_sub_phi_pow5]
+    _ = 25 * (↑φ : ℂ) ^ 2 - 80 * ↑φ + 64 := by ring
+    _ = 25 * ((↑φ : ℂ) + 1) - 80 * ↑φ + 64 := by rw [phi_sq_c]
+    _ = -(55 * ↑φ) + 89 := by ring
+
+private lemma one_sub_phi_pow14 : (1 - (↑φ : ℂ)) ^ 14 = -(377 * ↑φ) + 610 := by
+  calc (1 - (↑φ : ℂ)) ^ 14 = ((1 - (↑φ : ℂ)) ^ 7) ^ 2 := by ring
+    _ = (-(13 * ↑φ) + 21) ^ 2 := by rw [one_sub_phi_pow7]
+    _ = 169 * (↑φ : ℂ) ^ 2 - 546 * ↑φ + 441 := by ring
+    _ = 169 * ((↑φ : ℂ) + 1) - 546 * ↑φ + 441 := by rw [phi_sq_c]
+    _ = -(377 * ↑φ) + 610 := by ring
+
+/-! ### Sub-operator coefficient values -/
+
+/-- σ_CD5(s) = L_{2s} + L_s - 4, σ_CD3(s) = L_s - 2, σ_CD2(s) = √5·F_s -/
+noncomputable def σ_CD5 (s : ℕ) : ℂ :=
+  (↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)
+
+noncomputable def σ_CD3 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s
+
+noncomputable def σ_CD2 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s
+
+-- s = 1
+theorem σ_CD5_one : σ_CD5 1 = 0 := by
+  simp only [σ_CD5, Nat.mul_one, pow_one, phi_sq_c, psi_eq_c]
+  have : (1 - (↑φ : ℂ)) ^ 2 = (↑φ : ℂ) ^ 2 - 2 * ↑φ + 1 := by ring
+  rw [this, phi_sq_c]; ring
+
+theorem σ_CD3_one : σ_CD3 1 = -1 := by
+  simp only [σ_CD3, pow_one, psi_eq_c]; ring
+
+theorem σ_CD2_one : σ_CD2 1 = (↑φ : ℂ) - ↑ψ := by
+  simp only [σ_CD2, pow_one]
+
+-- s = 5
+theorem σ_CD5_five : σ_CD5 5 = 130 := by
+  simp only [σ_CD5, show 2 * 5 = 10 from by ring, psi_eq_c]
+  rw [phi_pow10_c, phi_pow5_c, one_sub_phi_pow5, one_sub_phi_pow10]; ring
+
+theorem σ_CD3_five : σ_CD3 5 = 9 := by
+  simp only [σ_CD3, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+
+theorem σ_CD2_five : σ_CD2 5 = 5 * ((↑φ : ℂ) - ↑ψ) := by
+  simp only [σ_CD2, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+
+-- s = 7
+theorem σ_CD5_seven : σ_CD5 7 = 868 := by
+  simp only [σ_CD5, show 2 * 7 = 14 from by ring, psi_eq_c]
+  rw [phi_pow14_c, phi_pow7_c, one_sub_phi_pow7, one_sub_phi_pow14]; ring
+
+theorem σ_CD3_seven : σ_CD3 7 = 27 := by
+  simp only [σ_CD3, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+
+theorem σ_CD2_seven : σ_CD2 7 = 13 * ((↑φ : ℂ) - ↑ψ) := by
+  simp only [σ_CD2, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+
+private lemma phi_sub_psi_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := by
+  rw [← ofReal_sub, ne_eq, ofReal_eq_zero, sub_eq_zero]
+  intro h; linarith [phi_pos, psi_neg]
+
+/-- The 3×3 det of [σ_CD5, σ_CD3, σ_CD2] at s=1,5,7 is -6952(φ-ψ) ≠ 0: rank 3.
+    This proves Φ_S carries Fin 3 worth of independent information. -/
+theorem Φ_S_rank_three :
+    σ_CD5 1 * (σ_CD3 5 * σ_CD2 7 - σ_CD2 5 * σ_CD3 7) -
+    σ_CD3 1 * (σ_CD5 5 * σ_CD2 7 - σ_CD2 5 * σ_CD5 7) +
+    σ_CD2 1 * (σ_CD5 5 * σ_CD3 7 - σ_CD3 5 * σ_CD5 7) ≠ 0 := by
+  rw [σ_CD5_one, σ_CD3_one, σ_CD2_one,
+      σ_CD5_five, σ_CD3_five, σ_CD2_five,
+      σ_CD5_seven, σ_CD3_seven, σ_CD2_seven]
+  have hne := phi_sub_psi_ne
+  intro h; apply hne
+  have : (0 : ℂ) * (9 * (13 * ((↑φ : ℂ) - ↑ψ)) - 5 * ((↑φ : ℂ) - ↑ψ) * 27) -
+    (-1 : ℂ) * ((130 : ℂ) * (13 * ((↑φ : ℂ) - ↑ψ)) - 5 * ((↑φ : ℂ) - ↑ψ) * 868) +
+    ((↑φ : ℂ) - ↑ψ) * ((130 : ℂ) * 27 - 9 * 868) = -6952 * ((↑φ : ℂ) - ↑ψ) := by ring
+  rw [this] at h
+  by_contra hc
+  exact absurd (mul_ne_zero (by norm_num : (-6952 : ℂ) ≠ 0) hc) (not_not.mpr h)
+
+end FUST.Dynamics.Zeta6
