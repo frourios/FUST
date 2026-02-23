@@ -84,7 +84,6 @@ import FUST.Problems.NavierStokes
 import FUST.Problems.YangMills
 
 import FUST.Basic
-import FUST.ComplexDifferenceOperators
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
 import FUST.FibonacciArithmetic

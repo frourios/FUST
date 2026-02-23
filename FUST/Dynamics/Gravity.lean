@@ -125,9 +125,9 @@ theorem temporal_nonzero : Φ_A_coeff 1 ≠ 0 := by
 /-- 4-component extraction: 3 spatial (from Φ_S) + 1 temporal (from Φ_A) -/
 noncomputable def Dζ_components (s : ℕ) : I4 → ℂ :=
   fun idx => match idx with
-  | Sum.inl 0 => σ_CD5 s
-  | Sum.inl 1 => σ_CD3 s
-  | Sum.inl 2 => σ_CD2 s
+  | Sum.inl 0 => σ_N5 s
+  | Sum.inl 1 => σ_N3 s
+  | Sum.inl 2 => σ_N2 s
   | Sum.inr 0 => Φ_A_coeff s
 
 /-- Spatial (Fin 3) + temporal (Fin 1) = I4 -/

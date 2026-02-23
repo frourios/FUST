@@ -191,9 +191,9 @@ The kernel projection is determined by 3 boundary conditions (= spatialDim).
 open FUST.LeastAction in
 -- The minimum-action path is unique in ker(D6)
 -- Two paths matching at 3 points must be identical everywhere
-theorem catalytic_path_unique (p q : ℝ → ℝ)
+theorem catalytic_path_unique (p q : ℂ → ℂ)
     (hp : IsInKerD6 p) (hq : IsInKerD6 q)
-    (t₀ t₁ t₂ : ℝ) (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
+    (t₀ t₁ t₂ : ℂ) (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
     (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) (h2 : p t₂ = q t₂) :
     ∀ t, p t = q t :=
   kernel_interpolation_unique_D6 p q hp hq t₀ t₁ t₂ h01 h02 h12 h0 h1 h2

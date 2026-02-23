@@ -8,9 +8,9 @@ open FUST.LeastAction
 
 /-- Higher Order Reduction: ker(D7) = ker(D6) -/
 theorem higher_order_reduction :
-    ∀ a : ℝ, (∀ k x, x ≠ 0 → FUST.D7_constrained a (fun _ => k) x = 0) ∧
-             (∀ x, x ≠ 0 → FUST.D7_constrained a id x = 0) ∧
-             (∀ x, x ≠ 0 → FUST.D7_constrained a (fun t => t^2) x = 0) :=
+    ∀ a : ℂ, (∀ k z, z ≠ 0 → FUST.D7_constrained a (fun _ => k) z = 0) ∧
+             (∀ z, z ≠ 0 → FUST.D7_constrained a id z = 0) ∧
+             (∀ z, z ≠ 0 → FUST.D7_constrained a (fun t => t^2) z = 0) :=
   FUST.D7_kernel_equals_D6_kernel
 
 /-! ## Arrow of Time from φ/ψ Asymmetry
@@ -60,8 +60,8 @@ theorem phi_mul_abs_psi : φ * |ψ| = 1 := by
 /-! ## Time Evolution -/
 
 /-- For tⁿ, time evolution amplifies by φⁿ -/
-theorem monomial_amplification (n : ℕ) (t : ℝ) :
-    timeEvolution (fun s => s^n) t = φ^n * t^n := by
+theorem monomial_amplification (n : ℕ) (t : ℂ) :
+    timeEvolution (fun s => s^n) t = (↑φ : ℂ)^n * t^n := by
   simp only [timeEvolution]; ring
 
 /-- φⁿ > 1 for n ≥ 1 -/
@@ -69,7 +69,7 @@ theorem phi_pow_gt_one (n : ℕ) (hn : n ≥ 1) : φ^n > 1 := by
   exact one_lt_pow₀ φ_gt_one (Nat.one_le_iff_ne_zero.mp hn)
 
 /-- Adding kernel component doesn't change D6 -/
-theorem kernel_component_D6_invariant (f g : ℝ → ℝ) (hg : IsInKerD6 g) :
+theorem kernel_component_D6_invariant (f g : ℂ → ℂ) (hg : IsInKerD6 g) :
     ∀ x, x ≠ 0 → D6 (fun t => f t + g t) x = D6 f x := by
   intro x hx
   obtain ⟨a₀, a₁, a₂, hg_eq⟩ := hg
@@ -77,23 +77,31 @@ theorem kernel_component_D6_invariant (f g : ℝ → ℝ) (hg : IsInKerD6 g) :
     have hg' : g = fun t => a₀ + a₁ * t + a₂ * t^2 := funext hg_eq
     rw [hg']
     exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
-  simp only [D6, N6, D6Denom, hx, ↓reduceIte] at hpoly ⊢
-  have hpoly_num : g (φ ^ 3 * x) - 3 * g (φ ^ 2 * x) + g (φ * x) - g (ψ * x) +
-      3 * g (ψ ^ 2 * x) - g (ψ ^ 3 * x) = 0 := by
+  simp only [D6, N6, hx, ↓reduceIte] at hpoly ⊢
+  have hpoly_num : g ((↑φ : ℂ) ^ 3 * x) - 3 * g ((↑φ : ℂ) ^ 2 * x) +
+      g ((↑φ : ℂ) * x) - g ((↑ψ : ℂ) * x) +
+      3 * g ((↑ψ : ℂ) ^ 2 * x) - g ((↑ψ : ℂ) ^ 3 * x) = 0 := by
     rw [div_eq_zero_iff] at hpoly
     cases hpoly with
     | inl h => exact h
     | inr h => exact absurd h (D6Denom_mul_ne_zero x hx)
-  calc ((f (φ^3*x) + g (φ^3*x)) - 3*(f (φ^2*x) + g (φ^2*x)) + (f (φ*x) + g (φ*x)) -
-      (f (ψ*x) + g (ψ*x)) + 3*(f (ψ^2*x) + g (ψ^2*x)) - (f (ψ^3*x) + g (ψ^3*x))) /
-      (D6Denom * x)
-    = ((f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) +
-       (g (φ^3*x) - 3*g (φ^2*x) + g (φ*x) - g (ψ*x) + 3*g (ψ^2*x) - g (ψ^3*x))) /
-      (D6Denom * x) := by ring_nf
-    _ = ((f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) + 0) /
-      (D6Denom * x) := by rw [hpoly_num]
-    _ = (f (φ^3*x) - 3*f (φ^2*x) + f (φ*x) - f (ψ*x) + 3*f (ψ^2*x) - f (ψ^3*x)) /
-      (D6Denom * x) := by ring_nf
+  calc ((f ((↑φ : ℂ)^3*x) + g ((↑φ : ℂ)^3*x)) -
+      3*(f ((↑φ : ℂ)^2*x) + g ((↑φ : ℂ)^2*x)) +
+      (f ((↑φ : ℂ)*x) + g ((↑φ : ℂ)*x)) -
+      (f ((↑ψ : ℂ)*x) + g ((↑ψ : ℂ)*x)) +
+      3*(f ((↑ψ : ℂ)^2*x) + g ((↑ψ : ℂ)^2*x)) -
+      (f ((↑ψ : ℂ)^3*x) + g ((↑ψ : ℂ)^3*x))) / (D6Denom * x)
+    = ((f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) +
+       (g ((↑φ : ℂ)^3*x) - 3*g ((↑φ : ℂ)^2*x) + g ((↑φ : ℂ)*x) -
+       g ((↑ψ : ℂ)*x) + 3*g ((↑ψ : ℂ)^2*x) -
+       g ((↑ψ : ℂ)^3*x))) / (D6Denom * x) := by ring_nf
+    _ = ((f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) +
+       0) / (D6Denom * x) := by rw [hpoly_num]
+    _ = (f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) /
+       (D6Denom * x) := by ring_nf
 
 /-! ## Structural Minimum Time for All Operators
 

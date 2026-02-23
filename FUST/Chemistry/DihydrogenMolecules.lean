@@ -134,77 +134,56 @@ The minimum-degree species is H₂⁺ with deg=3.
 theorem H2_cation_is_minimal_dihydrogen :
     (dimAtom 2 0 1).effectiveDegree = 35 := by decide
 
+
 -- D6(H₂⁺) ≠ 0: the simplest dihydrogen species is already outside ker(D6)
-theorem H2_cation_not_in_kerD6 (x : ℝ) (hx : x ≠ 0) :
-    D6 H2_cation x ≠ 0 := by
-  have heq : H2_cation = fun t => t ^ 2 + ψ * t ^ 3 := by
-    ext t; rw [H2_cation_expand]
-  rw [heq]
-  simp only [D6, N6, hx, ↓reduceIte]
-  have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
-  have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
-  have hφ3 : φ ^ 3 = 2 * φ + 1 := phi_cubed
-  have hψ3 : ψ ^ 3 = 2 * ψ + 1 := by
-    calc ψ ^ 3 = ψ ^ 2 * ψ := by ring
-      _ = (ψ + 1) * ψ := by rw [hψ2]
-      _ = ψ ^ 2 + ψ := by ring
-      _ = 2 * ψ + 1 := by rw [hψ2]; ring
-  have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
-  have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
-  have hφ6 : φ ^ 6 = 8 * φ + 5 := by
-    calc φ ^ 6 = (φ ^ 4) * (φ ^ 2) := by ring
-      _ = (3 * φ + 2) * (φ + 1) := by rw [hφ4, hφ2]
-      _ = 3 * φ ^ 2 + 5 * φ + 2 := by ring
-      _ = 8 * φ + 5 := by rw [hφ2]; ring
-  have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by
-    calc ψ ^ 6 = (ψ ^ 4) * (ψ ^ 2) := by ring
-      _ = (3 * ψ + 2) * (ψ + 1) := by rw [hψ4, hψ2]
-      _ = 3 * ψ ^ 2 + 5 * ψ + 2 := by ring
-      _ = 8 * ψ + 5 := by rw [hψ2]; ring
-  have hφ9 : φ ^ 9 = 34 * φ + 21 := by
-    calc φ ^ 9 = (φ ^ 6) * (φ ^ 3) := by ring
-      _ = (8 * φ + 5) * (2 * φ + 1) := by rw [hφ6, hφ3]
-      _ = 16 * φ ^ 2 + 18 * φ + 5 := by ring
-      _ = 34 * φ + 21 := by rw [hφ2]; ring
-  have hψ9 : ψ ^ 9 = 34 * ψ + 21 := by
-    calc ψ ^ 9 = (ψ ^ 6) * (ψ ^ 3) := by ring
-      _ = (8 * ψ + 5) * (2 * ψ + 1) := by rw [hψ6, hψ3]
-      _ = 16 * ψ ^ 2 + 18 * ψ + 5 := by ring
-      _ = 34 * ψ + 21 := by rw [hψ2]; ring
-  have hsum : φ + ψ = 1 := phi_add_psi
-  -- f(t) = t² + ψt³. N6(f) = N6(t²) + ψ·N6(t³)
-  -- N6(t²) = 0 (in ker), N6(t³) = D6Coeff(3)·x³ where D6Coeff(3) = 12(φ-ψ) ≠ 0
-  have hcoef3 : φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9 =
-      12 * (φ - ψ) := by
-    rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]; linarith
-  have hc_sq : φ ^ 6 - 3 * φ ^ 4 + φ ^ 2 - ψ ^ 2 + 3 * ψ ^ 4 - ψ ^ 6 = 0 := by
-    rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]; linarith
-  have hnum : (φ ^ 3 * x) ^ 2 + ψ * (φ ^ 3 * x) ^ 3 -
-      3 * ((φ ^ 2 * x) ^ 2 + ψ * (φ ^ 2 * x) ^ 3) +
-      ((φ * x) ^ 2 + ψ * (φ * x) ^ 3) -
-      ((ψ * x) ^ 2 + ψ * (ψ * x) ^ 3) +
-      3 * ((ψ ^ 2 * x) ^ 2 + ψ * (ψ ^ 2 * x) ^ 3) -
-      ((ψ ^ 3 * x) ^ 2 + ψ * (ψ ^ 3 * x) ^ 3) =
-      12 * ψ * (φ - ψ) * x ^ 3 := by
-    have := calc (φ ^ 3 * x) ^ 2 + ψ * (φ ^ 3 * x) ^ 3 -
-        3 * ((φ ^ 2 * x) ^ 2 + ψ * (φ ^ 2 * x) ^ 3) +
-        ((φ * x) ^ 2 + ψ * (φ * x) ^ 3) -
-        ((ψ * x) ^ 2 + ψ * (ψ * x) ^ 3) +
-        3 * ((ψ ^ 2 * x) ^ 2 + ψ * (ψ ^ 2 * x) ^ 3) -
-        ((ψ ^ 3 * x) ^ 2 + ψ * (ψ ^ 3 * x) ^ 3)
-        = (φ ^ 6 - 3 * φ ^ 4 + φ ^ 2 - ψ ^ 2 + 3 * ψ ^ 4 - ψ ^ 6) * x ^ 2 +
-          ψ * (φ ^ 9 - 3 * φ ^ 6 + φ ^ 3 - ψ ^ 3 + 3 * ψ ^ 6 - ψ ^ 9) * x ^ 3 := by ring
-      _ = 0 * x ^ 2 + ψ * (12 * (φ - ψ)) * x ^ 3 := by rw [hc_sq, hcoef3]
-      _ = 12 * ψ * (φ - ψ) * x ^ 3 := by ring
-    linarith
+theorem H2_cation_not_in_kerD6 (z : ℂ) (hz : z ≠ 0) :
+    D6 (fun t => t ^ 2 + (↑ψ : ℂ) * t ^ 3) z ≠ 0 := by
+  simp only [D6, N6, hz, ↓reduceIte]
+  have hφ2 := golden_ratio_property_complex
+  have hψ2 := psi_sq_complex
+  have hφ3 := phi_cubed_complex
+  have hψ3 := psi_cubed_complex
+  have hφ4 := phi_pow4_complex
+  have hψ4 := psi_pow4_complex
+  have hφ6 := phi_pow6_complex
+  have hψ6 := psi_pow6_complex
+  have hφ9 := phi_pow9_complex
+  have hψ9 := psi_pow9_complex
+  have hcoef3 : (↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
+      (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9 =
+      12 * ((↑φ : ℂ) - ↑ψ) := by
+    rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]; ring
+  have hc_sq : (↑φ : ℂ) ^ 6 - 3 * (↑φ : ℂ) ^ 4 + (↑φ : ℂ) ^ 2 -
+      (↑ψ : ℂ) ^ 2 + 3 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6 = 0 := by
+    rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]; ring
+  have hnum : ((↑φ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 3 * z) ^ 3 -
+      3 * (((↑φ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 2 * z) ^ 3) +
+      (((↑φ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) * z) ^ 3) -
+      (((↑ψ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) * z) ^ 3) +
+      3 * (((↑ψ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 2 * z) ^ 3) -
+      (((↑ψ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 3 * z) ^ 3) =
+      12 * (↑ψ : ℂ) * ((↑φ : ℂ) - ↑ψ) * z ^ 3 := by
+    have := calc ((↑φ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 3 * z) ^ 3 -
+        3 * (((↑φ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 2 * z) ^ 3) +
+        (((↑φ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) * z) ^ 3) -
+        (((↑ψ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) * z) ^ 3) +
+        3 * (((↑ψ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 2 * z) ^ 3) -
+        (((↑ψ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 3 * z) ^ 3)
+        = ((↑φ : ℂ) ^ 6 - 3 * (↑φ : ℂ) ^ 4 + (↑φ : ℂ) ^ 2 -
+            (↑ψ : ℂ) ^ 2 + 3 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6) * z ^ 2 +
+          (↑ψ : ℂ) * ((↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
+            (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9) * z ^ 3 := by ring
+      _ = 0 * z ^ 2 + (↑ψ : ℂ) * (12 * ((↑φ : ℂ) - ↑ψ)) * z ^ 3 := by
+            rw [hc_sq, hcoef3]
+      _ = 12 * (↑ψ : ℂ) * ((↑φ : ℂ) - ↑ψ) * z ^ 3 := by ring
+    exact this
   rw [hnum]
-  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-  have hψ_ne : ψ ≠ 0 := by
-    intro h; have : φ * ψ = -1 := phi_mul_psi; rw [h, mul_zero] at this; linarith
+  have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
+  have hψ_ne : (↑ψ : ℂ) ≠ 0 := by exact_mod_cast psi_ne_zero
   apply div_ne_zero
-  · exact mul_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hψ_ne) hφψ_ne) (pow_ne_zero 3 hx)
-  · exact mul_ne_zero (pow_ne_zero 5 hφψ_ne) hx
+  · exact mul_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hψ_ne) hφψ_ne) (pow_ne_zero 3 hz)
+  · unfold D6Denom
+    exact mul_ne_zero (pow_ne_zero 5 hφψ_ne) hz
 
 /-! ## Section 8: Isotopologue Degeneracy
 

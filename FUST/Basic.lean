@@ -452,6 +452,90 @@ theorem frourioConst_approx : 3.7 < frourioConst ∧ frourioConst < 4 := by
 
 end FrourioExponential
 
+section ComplexGolden
+
+open Complex
+
+lemma phi_ne_zero : φ ≠ 0 := ne_of_gt phi_pos
+
+lemma psi_ne_zero : ψ ≠ 0 := ne_of_lt psi_neg
+
+lemma phi_sub_psi_ne : φ - ψ ≠ 0 := by
+  rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
+
+lemma phi_sub_psi_complex_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := by
+  rw [← ofReal_sub, ne_eq, ofReal_eq_zero]; exact phi_sub_psi_ne
+
+lemma golden_ratio_property_complex : (↑φ : ℂ) ^ 2 = ↑φ + 1 := by
+  have h := golden_ratio_property
+  have : (↑(φ ^ 2) : ℂ) = ↑(φ + 1) := congrArg _ h
+  simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+
+lemma psi_sq_complex : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := by
+  have h := psi_sq
+  have : (↑(ψ ^ 2) : ℂ) = ↑(ψ + 1) := congrArg _ h
+  simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+
+lemma phi_cubed_complex : (↑φ : ℂ) ^ 3 = 2 * ↑φ + 1 := by
+  have h := phi_cubed
+  have : (↑(φ ^ 3) : ℂ) = ↑(2 * φ + 1) := congrArg _ h
+  simp only [ofReal_pow, ofReal_add, ofReal_mul, ofReal_one, ofReal_ofNat] at this; exact this
+
+lemma psi_cubed_complex : (↑ψ : ℂ) ^ 3 = 2 * ↑ψ + 1 := by
+  have h : ψ ^ 3 = 2 * ψ + 1 := by nlinarith [psi_sq]
+  have : (↑(ψ ^ 3) : ℂ) = ↑(2 * ψ + 1) := congrArg _ h
+  simp only [ofReal_pow, ofReal_add, ofReal_mul, ofReal_one, ofReal_ofNat] at this; exact this
+
+lemma phi_mul_psi_complex : (↑φ : ℂ) * ↑ψ = -1 := by
+  rw [← ofReal_mul]
+  simp [phi_mul_psi]
+
+lemma phi_add_psi_complex : (↑φ : ℂ) + ↑ψ = 1 := by
+  rw [← ofReal_add, ← ofReal_one]
+  exact congrArg _ phi_add_psi
+
+private lemma liftR {a b : ℝ} (h : a = b) : (↑a : ℂ) = ↑b := congrArg ofReal h
+
+lemma psi_cubed_alt : ψ ^ 3 = 2 * ψ + 1 := by nlinarith [psi_sq]
+
+private lemma phi_pow4_r : φ ^ 4 = 3 * φ + 2 := by nlinarith [golden_ratio_property]
+private lemma psi_pow4_r : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [psi_sq]
+private lemma phi_pow6_r : φ ^ 6 = 8 * φ + 5 := by nlinarith [golden_ratio_property, phi_pow4_r]
+private lemma psi_pow6_r : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [psi_sq, psi_pow4_r]
+private lemma phi_pow8_r : φ ^ 8 = 21 * φ + 13 := by nlinarith [golden_ratio_property, phi_pow4_r]
+private lemma psi_pow8_r : ψ ^ 8 = 21 * ψ + 13 := by nlinarith [psi_sq, psi_pow4_r]
+private lemma phi_pow9_r : φ ^ 9 = 34 * φ + 21 := by
+  nlinarith [golden_ratio_property, phi_cubed, phi_pow6_r]
+private lemma psi_pow9_r : ψ ^ 9 = 34 * ψ + 21 := by
+  nlinarith [psi_sq, psi_cubed_alt, psi_pow6_r]
+private lemma phi_pow12_r : φ ^ 12 = 144 * φ + 89 := by
+  nlinarith [golden_ratio_property, phi_pow4_r, phi_pow6_r, phi_pow8_r]
+private lemma psi_pow12_r : ψ ^ 12 = 144 * ψ + 89 := by
+  nlinarith [psi_sq, psi_pow4_r, psi_pow6_r, psi_pow8_r]
+
+lemma phi_pow4_complex : (↑φ : ℂ) ^ 4 = 3 * ↑φ + 2 := by
+  have := liftR phi_pow4_r; push_cast at this; exact this
+lemma psi_pow4_complex : (↑ψ : ℂ) ^ 4 = 3 * ↑ψ + 2 := by
+  have := liftR psi_pow4_r; push_cast at this; exact this
+lemma phi_pow6_complex : (↑φ : ℂ) ^ 6 = 8 * ↑φ + 5 := by
+  have := liftR phi_pow6_r; push_cast at this; exact this
+lemma psi_pow6_complex : (↑ψ : ℂ) ^ 6 = 8 * ↑ψ + 5 := by
+  have := liftR psi_pow6_r; push_cast at this; exact this
+lemma phi_pow8_complex : (↑φ : ℂ) ^ 8 = 21 * ↑φ + 13 := by
+  have := liftR phi_pow8_r; push_cast at this; exact this
+lemma psi_pow8_complex : (↑ψ : ℂ) ^ 8 = 21 * ↑ψ + 13 := by
+  have := liftR psi_pow8_r; push_cast at this; exact this
+lemma phi_pow9_complex : (↑φ : ℂ) ^ 9 = 34 * ↑φ + 21 := by
+  have := liftR phi_pow9_r; push_cast at this; exact this
+lemma psi_pow9_complex : (↑ψ : ℂ) ^ 9 = 34 * ↑ψ + 21 := by
+  have := liftR psi_pow9_r; push_cast at this; exact this
+lemma phi_pow12_complex : (↑φ : ℂ) ^ 12 = 144 * ↑φ + 89 := by
+  have := liftR phi_pow12_r; push_cast at this; exact this
+lemma psi_pow12_complex : (↑ψ : ℂ) ^ 12 = 144 * ↑ψ + 89 := by
+  have := liftR psi_pow12_r; push_cast at this; exact this
+
+end ComplexGolden
+
 /-! ## Golden Ratio Uniqueness — Why φ and not √2 or √3?
 
 For a real quadratic unit α with Galois conjugate β, define D₅ and D₆ operators

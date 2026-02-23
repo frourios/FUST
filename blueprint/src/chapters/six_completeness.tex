@@ -5,7 +5,7 @@
 \section{D6 Completeness}
 \label{sec:fust_completeness}
 
-The $D_n$ operators are defined for \textbf{arbitrary functions} $f : \mathbb{R} \to \mathbb{R}$.
+The $D_n$ operators are defined for \textbf{arbitrary functions} $f : \mathbb{C} \to \mathbb{C}$.
 The completeness theorem states that $\ker(D_7) = \ker(D_6)$ holds universally.
 
 \subsection{Kernel Equality (Lean4 Proven)}
@@ -15,7 +15,7 @@ The completeness theorem states that $\ker(D_7) = \ker(D_6)$ holds universally.
 \lean{FUST.D7_kernel_equals_D6_kernel}
 \leanok
 \[
-\ker(D_n)|_{\mathbb{R}[x]} = \ker(D_6)|_{\mathbb{R}[x]} = \mathrm{span}\{1, x, x^2\} \quad \text{for } n \ge 7
+\ker(D_n)|_{\mathbb{C}[x]} = \ker(D_6)|_{\mathbb{C}[x]} = \mathrm{span}\{1, x, x^2\} \quad \text{for } n \ge 7
 \]
 \end{theorem}
 
@@ -255,5 +255,5 @@ The isolated zero at $n = -2$ (separated by the nonzero gap $C_{-1}^{\mathbb{Z}}
 distinguishes the Laurent extension from the polynomial kernel.
 \end{theorem}
 
-\textbf{Remark}: The polynomial kernel $\ker(D_6) \cap \mathbb{R}[x] = \operatorname{span}\{1, x, x^2\}$ (dimension 3) is the physically relevant kernel used for spatial dimension derivation.
+\textbf{Remark}: The polynomial kernel $\ker(D_6) \cap \mathbb{C}[x] = \operatorname{span}\{1, x, x^2\}$ (dimension 3) is the physically relevant kernel used for spatial dimension derivation.
 The Laurent kernel (dimension 4) arises naturally in the Mellin transform setting on $L^2(\mathbb{R}_+, dx/x)$.

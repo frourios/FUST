@@ -21,7 +21,7 @@ Both operations preserve $\mathbb{Z}[\varphi]$-coefficients.
 \label{def:eval-golden-poly}
 \lean{FUST.StateFunctionConstraint.evalGoldenPoly}
 \leanok
-For coefficients $c_0, \dots, c_d \in \mathbb{Z}[\varphi]$ and $x \in \mathbb{R}$:
+For coefficients $c_0, \dots, c_d \in \mathbb{Z}[\varphi]$ and $x \in \mathbb{C}$:
 \[
 \mathrm{eval}(c, d, x) = \sum_{k=0}^{d} c_k \cdot x^k
 \]
@@ -64,7 +64,7 @@ Scaling by $\varphi$: each coefficient $c_k$ becomes $\varphi^k \cdot c_k$.
 \lean{FUST.StateFunctionConstraint.IsGoldenPolynomialState}
 \leanok
 \uses{def:eval-golden-poly}
-A function $g : \mathbb{R} \to \mathbb{R}$ is a \emph{golden polynomial state}
+A function $g : \mathbb{C} \to \mathbb{C}$ is a \emph{golden polynomial state}
 if there exist $d \in \mathbb{N}$ and $c_0, \dots, c_d \in \mathbb{Z}[\varphi]$
 such that $g(x) = \sum_{k=0}^{d} c_k x^k$.
 \end{definition}

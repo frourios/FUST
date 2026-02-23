@@ -45,35 +45,27 @@ D₃ → D₅ is the unique transition where kernel dimension increases from 1 t
 -/
 
 /-- D₃ has gauge invariance: kernel contains constants -/
-theorem D3_gauge : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+theorem D3_gauge : ∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0 :=
+  fun z hz => D3_const 1 z hz
 
 /-- D₅ has extended kernel: contains both constants and linear -/
 theorem D5_extended_kernel :
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear⟩
+    (∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0) ∧
+    (∀ z : ℂ, z ≠ 0 → D5 id z = 0) :=
+  ⟨fun z hz => D5_const 1 z hz, D5_linear⟩
 
 /-- D₃ kernel is strictly smaller than D₅ kernel: D₃ does NOT annihilate linear -/
 theorem D3_not_annihilate_linear :
-    ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
+    ∃ z : ℂ, z ≠ 0 ∧ D3 id z ≠ 0 := by
   use 1, one_ne_zero
-  simp only [D3, one_ne_zero, ↓reduceIte, id_eq, mul_one]
-  have hnum : φ - 2 + ψ = -1 := by
-    have h : φ + ψ = 1 := phi_add_psi
-    linarith
-  have hdenom : (φ - ψ)^2 = 5 := by
-    have h : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [h, Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)]
-  rw [hnum, hdenom]
-  norm_num
+  exact D3_linear_ne_zero 1 one_ne_zero
 
 /-- D₃ → D₅ is the kernel dimension transition point -/
 theorem kernel_dim_transition :
     -- D₃ has kernel dim 1 (annihilates only constants)
-    ((∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧ (∃ x, x ≠ 0 ∧ D3 id x ≠ 0)) ∧
+    ((∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0) ∧ (∃ z : ℂ, z ≠ 0 ∧ D3 id z ≠ 0)) ∧
     -- D₅ has kernel dim ≥ 2 (annihilates constants AND linear)
-    ((∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧ (∀ x, x ≠ 0 → D5 id x = 0)) :=
+    ((∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0) ∧ (∀ z : ℂ, z ≠ 0 → D5 id z = 0)) :=
   ⟨⟨D3_gauge, D3_not_annihilate_linear⟩, D5_extended_kernel⟩
 
 /-! ## Weinberg Angle Formula
@@ -111,12 +103,12 @@ No phenomenological fitting is involved.
 /-- Main theorem: Weinberg angle from kernel structure -/
 theorem weinberg_from_kernel_structure :
     -- D₃ has gauge invariance (kernel contains constants)
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) →
+    (∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0) →
     -- D₃ does NOT annihilate linear (kernel is minimal)
-    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) →
+    (∃ z : ℂ, z ≠ 0 ∧ D3 id z ≠ 0) →
     -- D₅ has extended kernel (contains constants AND linear)
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) →
-    (∀ x, x ≠ 0 → D5 id x = 0) →
+    (∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0) →
+    (∀ z : ℂ, z ≠ 0 → D5 id z = 0) →
     -- Mixing angle = C(3,2) / (C(3,2) + C(5,2)) = 3/13
     (3 : ℚ) / 13 = 3 / 13 := by
   intros _ _ _ _
@@ -125,9 +117,9 @@ theorem weinberg_from_kernel_structure :
 /-- Complete derivation chain: kernel transition determines pair counts -/
 theorem weinberg_derivation_chain :
     -- D₃ has kernel dim 1
-    ((∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧ (∃ x, x ≠ 0 ∧ D3 id x ≠ 0)) ∧
+    ((∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0) ∧ (∃ z : ℂ, z ≠ 0 ∧ D3 id z ≠ 0)) ∧
     -- D₅ has kernel dim ≥ 2 (first extended)
-    ((∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧ (∀ x, x ≠ 0 → D5 id x = 0)) ∧
+    ((∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0) ∧ (∀ z : ℂ, z ≠ 0 → D5 id z = 0)) ∧
     -- Pair counts from evaluation points
     (Nat.choose 3 2 = 3 ∧ Nat.choose 5 2 = 10) ∧
     -- Mixing ratio = 3/13
@@ -143,24 +135,24 @@ The selection D₃/D₅ is justified by coefficient uniqueness:
 
 /-- D₅ coefficient uniqueness requires both constant and linear kernel conditions -/
 theorem D5_coefficient_uniqueness_needs_two_conditions :
-    ∀ a b : ℝ,
-    (∀ x, x ≠ 0 → D5_general a b (fun _ => 1) x = 0) →
-    (∀ x, x ≠ 0 → D5_general a b id x = 0) →
+    ∀ a b : ℂ,
+    (∀ z : ℂ, z ≠ 0 → D5_general a b (fun _ => 1) z = 0) →
+    (∀ z : ℂ, z ≠ 0 → D5_general a b id z = 0) →
     a = -1 ∧ b = -4 :=
   D5_coefficients_unique
 
 /-- Summary: Weinberg angle derived from kernel dimension transition -/
 theorem weinberg_summary :
     -- D₃ gauge invariant (kernel dim 1)
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
+    (∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0) ∧
     -- D₅ has extended kernel (kernel dim ≥ 2)
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) ∧
+    (∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0 ∧ D5 id z = 0) ∧
     -- D₃ → D₅ is kernel dimension transition
-    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) ∧
+    (∃ z : ℂ, z ≠ 0 ∧ D3 id z ≠ 0) ∧
     -- sin²θ_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13
     (Nat.choose 3 2 : ℚ) / (Nat.choose 3 2 + Nat.choose 5 2) = 3 / 13 := by
   refine ⟨D3_gauge, ?_, D3_not_annihilate_linear, by norm_num [Nat.choose]⟩
-  intro x hx
-  exact ⟨D5_const 1 x hx, D5_linear x hx⟩
+  intro z hz
+  exact ⟨D5_const 1 z hz, D5_linear z hz⟩
 
 end FUST.WeinbergAngle

@@ -201,24 +201,24 @@ theorem insulin_levinthal :
 
 open FUST.LeastAction FUST.Hamiltonian
 
-theorem folding_action_nonneg (f : ℝ → ℝ) (x : ℝ) :
+theorem folding_action_nonneg (f : ℂ → ℂ) (x : ℂ) :
     D6Lagrangian f x ≥ 0 :=
   D6_lagrangian_nonneg f x
 
-theorem folding_action_zero_iff_ker (f : ℝ → ℝ) (x : ℝ) :
+theorem folding_action_zero_iff_ker (f : ℂ → ℂ) (x : ℂ) :
     D6Lagrangian f x = 0 ↔ D6 f x = 0 :=
   D6_lagrangian_zero_iff f x
 
-theorem native_state_zero_action (f : ℝ → ℝ)
+theorem native_state_zero_action (f : ℂ → ℂ)
     (hf : IsInKerD6 f) (N : ℕ) :
     partialHamiltonianD6 f N = 0 :=
   partialHamiltonianD6_ker_zero f hf N
 
 /-! ## Section 10: Uniqueness from Interpolation -/
 
-theorem native_state_unique (p q : ℝ → ℝ)
+theorem native_state_unique (p q : ℂ → ℂ)
     (hp : IsInKerD6 p) (hq : IsInKerD6 q)
-    (t₀ t₁ t₂ : ℝ)
+    (t₀ t₁ t₂ : ℂ)
     (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
     (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) (h2 : p t₂ = q t₂) :
     ∀ t, p t = q t :=
@@ -230,12 +230,12 @@ theorem interpolation_points_eq_spatialDim :
 
 /-! ## Section 11: Kernel Entropy -/
 
-theorem native_state_zero_entropy (f : ℝ → ℝ)
+theorem native_state_zero_entropy (f : ℂ → ℂ)
     (hf : IsInKerD6 f) :
     ∀ t, perpProjectionD6 f t = 0 :=
   kerD6_implies_perp_zero f hf
 
-theorem denatured_state_positive_entropy (f : ℝ → ℝ)
+theorem denatured_state_positive_entropy (f : ℂ → ℂ)
     (hf : ¬IsInKerD6 f) :
     ∃ t, entropyAtD6 f t > 0 :=
   third_law_D6 f hf

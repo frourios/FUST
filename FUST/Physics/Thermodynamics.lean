@@ -41,7 +41,7 @@ This means massive states (f ∉ ker(D6)) always have positive entropy somewhere
 -/
 
 /-- Third law: massive states cannot reach absolute zero -/
-theorem third_law_massive_positive_entropy (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+theorem third_law_massive_positive_entropy (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, entropyAtD6 f t > 0 := by
   by_contra h
   push_neg at h
@@ -50,11 +50,11 @@ theorem third_law_massive_positive_entropy (f : ℝ → ℝ) (hf : ¬IsInKerD6 f
   exact hf h_ker
 
 /-- Contrapositive: if entropy is zero everywhere, then f ∈ ker(D6) -/
-theorem absolute_zero_implies_lightlike (f : ℝ → ℝ) (h : ∀ t, entropyAtD6 f t = 0) :
+theorem absolute_zero_implies_lightlike (f : ℂ → ℂ) (h : ∀ t, entropyAtD6 f t = 0) :
     IsInKerD6 f := (entropy_zero_iff_kerD6 f).mp h
 
 /-- Lightlike states can have zero entropy everywhere -/
-theorem lightlike_can_reach_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+theorem lightlike_can_reach_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     ∀ t, entropyAtD6 f t = 0 := (entropy_zero_iff_kerD6 f).mpr hf
 
 /-! ## Light and Sound Structural Separation
@@ -68,12 +68,12 @@ The separation is structural:
 -/
 
 /-- Light states have zero action -/
-theorem light_zero_action (f : ℝ → ℝ) (hf : IsInKerD6 f) (x₀ : ℝ) (hx₀ : 0 < x₀) (N : ℕ) :
+theorem light_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x₀ : ℝ) (hx₀ : 0 < x₀) (N : ℕ) :
     FUST.Probability.discreteAction f x₀ N = 0 :=
   FUST.Probability.action_zero_for_ker f hf x₀ hx₀ N
 
 /-- Sound (massive) states have nonzero perpProjectionD6 -/
-theorem sound_positive_perp (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+theorem sound_positive_perp (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, perpProjectionD6 f t ≠ 0 :=
   timeExists_has_proper_timeD6 f hf
 
@@ -97,12 +97,12 @@ Energy conservation follows from D6 linearity and L² norm structure.
 -/
 
 /-- D6 is linear in scalar multiplication -/
-theorem first_law_linearity (a : ℝ) (f : ℝ → ℝ) (x : ℝ) :
+theorem first_law_linearity (a : ℂ) (f : ℂ → ℂ) (x : ℂ) :
     D6 (fun t => a * f t) x = a * D6 f x :=
   FUST.Probability.D6_linear_scalar a f x
 
 /-- Action is non-negative (energy ≥ 0) -/
-theorem first_law_energy_nonneg (f : ℝ → ℝ) (x₀ : ℝ) (N : ℕ) :
+theorem first_law_energy_nonneg (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) :
     FUST.Probability.discreteAction f x₀ N ≥ 0 :=
   FUST.Probability.discreteAction_nonneg f x₀ N
 
@@ -115,8 +115,8 @@ Entropy increases under time evolution because φ > 1 amplifies perpProjectionD6
 theorem second_law_amplification : φ > 1 := φ_gt_one
 
 /-- Time evolution amplifies monomials by φⁿ -/
-theorem second_law_monomial_amplification (n : ℕ) (t : ℝ) :
-    timeEvolution (fun s => s^n) t = φ^n * t^n :=
+theorem second_law_monomial_amplification (n : ℕ) (t : ℂ) :
+    timeEvolution (fun s => s^n) t = (↑φ : ℂ)^n * t^n :=
   monomial_amplification n t
 
 /-- φⁿ > 1 for n ≥ 1, showing amplification -/
@@ -133,16 +133,16 @@ theorem second_law_entropy_increase {x : ℝ} (hx : 0 < x) :
 /-- FUST Thermodynamics: Complete derivation from D6 structure -/
 theorem fust_thermodynamics :
     -- First Law: Energy conservation (linearity + non-negativity)
-    (∀ a f x, D6 (fun t => a * f t) x = a * D6 f x) ∧
-    (∀ f x₀ N, FUST.Probability.discreteAction f x₀ N ≥ 0) ∧
+    (∀ (a : ℂ) (f : ℂ → ℂ) (x : ℂ), D6 (fun t => a * f t) x = a * D6 f x) ∧
+    (∀ (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ), FUST.Probability.discreteAction f x₀ N ≥ 0) ∧
     -- Second Law: Entropy increase (φ > 1 amplification)
     (φ > 1) ∧
     (∀ n, n ≥ 1 → φ^n > 1) ∧
     -- Third Law: Absolute zero unreachable for massive states
-    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
+    (∀ (f : ℂ → ℂ), ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     -- Light-Sound Separation
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
+    (∀ (f : ℂ → ℂ), IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
+    (∀ (f : ℂ → ℂ), ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
   ⟨first_law_linearity,
    first_law_energy_nonneg,
    second_law_amplification,

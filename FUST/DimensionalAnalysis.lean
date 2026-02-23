@@ -262,43 +262,43 @@ end DerivedDimPerOperator
 section DimensionedOperators
 
 /-- D₂ output with derived dimension (-1, 1) -/
-noncomputable def D2_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ (deriveFDim 2) := ⟨D2 f x⟩
+noncomputable def D2_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 2) := ⟨(D2 f z).re⟩
 
-theorem D2_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D2_dim (fun _ => c) x).val = 0 := D2_const c x hx
+theorem D2_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
+    (D2_dim (fun _ => c) z).val = 0 := by simp [D2_dim, D2_const c z hz]
 
 /-- D₃ output with derived dimension (-2, 0) -/
-noncomputable def D3_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ (deriveFDim 3) := ⟨D3 f x⟩
+noncomputable def D3_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 3) := ⟨(D3 f z).re⟩
 
-theorem D3_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D3_dim (fun _ => c) x).val = 0 := D3_const c x hx
+theorem D3_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
+    (D3_dim (fun _ => c) z).val = 0 := by simp [D3_dim, D3_const c z hz]
 
 /-- D₄ output with derived dimension (-3, 1) -/
-noncomputable def D4_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ (deriveFDim 4) := ⟨D4 f x⟩
+noncomputable def D4_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 4) := ⟨(D4 f z).re⟩
 
-theorem D4_dim_quadratic (x : ℝ) (hx : x ≠ 0) :
-    (D4_dim (fun t => t^2) x).val = 0 := D4_quadratic x hx
+theorem D4_dim_quadratic (z : ℂ) (hz : z ≠ 0) :
+    (D4_dim (fun t => t^2) z).val = 0 := by simp [D4_dim, D4_quadratic z hz]
 
 /-- D₅ output with derived dimension (-4, 0) -/
-noncomputable def D5_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ (deriveFDim 5) := ⟨D5 f x⟩
+noncomputable def D5_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 5) := ⟨(D5 f z).re⟩
 
-theorem D5_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D5_dim (fun _ => c) x).val = 0 := D5_const c x hx
+theorem D5_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
+    (D5_dim (fun _ => c) z).val = 0 := by simp [D5_dim, D5_const c z hz]
 
-theorem D5_dim_linear (x : ℝ) (hx : x ≠ 0) :
-    (D5_dim id x).val = 0 := D5_linear x hx
+theorem D5_dim_linear (z : ℂ) (hz : z ≠ 0) :
+    (D5_dim id z).val = 0 := by simp [D5_dim, D5_linear z hz]
 
 /-- D₆ output with derived dimension (-5, 1) -/
-noncomputable def D6_dim (f : ℝ → ℝ) (x : ℝ) : ScaleQ (deriveFDim 6) := ⟨D6 f x⟩
+noncomputable def D6_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 6) := ⟨(D6 f z).re⟩
 
-theorem D6_dim_const (c : ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim (fun _ => c) x).val = 0 := D6_const c x hx
+theorem D6_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
+    (D6_dim (fun _ => c) z).val = 0 := by simp [D6_dim, D6_const c z hz]
 
-theorem D6_dim_linear (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim id x).val = 0 := D6_linear x hx
+theorem D6_dim_linear (z : ℂ) (hz : z ≠ 0) :
+    (D6_dim id z).val = 0 := by simp [D6_dim, D6_linear z hz]
 
-theorem D6_dim_quadratic (x : ℝ) (hx : x ≠ 0) :
-    (D6_dim (fun t => t^2) x).val = 0 := D6_quadratic x hx
+theorem D6_dim_quadratic (z : ℂ) (hz : z ≠ 0) :
+    (D6_dim (fun t => t^2) z).val = 0 := by simp [D6_dim, D6_quadratic z hz]
 
 end DimensionedOperators
 

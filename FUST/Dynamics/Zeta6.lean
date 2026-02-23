@@ -3,7 +3,7 @@
 ζ₆ = e^{iπ/3}: compact (|ζ₆|=1, ζ₆·ζ₆'=+1), contrasting FUST's φψ=-1.
 ζ₆_N6 has ker = {1, z, z²} and detects z³, same as FUST D₆ but via rotation.
 -/
-import FUST.ComplexDifferenceOperators
+import FUST.DifferenceOperators
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
 namespace FUST.Dynamics.Zeta6
@@ -247,27 +247,27 @@ noncomputable def SymNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
 
 /-- Dζ₆: r=1, C^{(1)} antisymmetric, dim = (-5, 1, 1) -/
 noncomputable def Dζ₆ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (CD6 f) z / ((ζ₆ - ζ₆') * z)
+  if z = 0 then 0 else AFNum (D6 f) z / ((ζ₆ - ζ₆') * z)
 
 /-- Dζ₅: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
 noncomputable def Dζ₅ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (CD5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+  if z = 0 then 0 else SymNum (D5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
 
 /-- Dζ₅h: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
 noncomputable def Dζ₅h (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (CD5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+  if z = 0 then 0 else SymNum (D5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
 
 /-- Dζ₄: r=3, C^{(3)} = -C^{(1)} antisymmetric, dim = (-3, 1, 3) -/
 noncomputable def Dζ₄ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (CD4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
+  if z = 0 then 0 else AFNum (D4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
 
 /-- Dζ₃: r=4, C^{(4)} symmetric, dim = (-2, 0, 4) -/
 noncomputable def Dζ₃ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (CD3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
+  if z = 0 then 0 else SymNum (D3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
 
 /-- Dζ₂: r=5, C^{(5)} = C^{(1)} antisymmetric, dim = (-1, 1, 5) -/
 noncomputable def Dζ₂ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (CD2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
+  if z = 0 then 0 else AFNum (D2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
 
 private lemma zeta6k_mul_ne (k : ℕ) (z : ℂ) (hz : z ≠ 0) : ζ₆ ^ k * z ≠ 0 := by
   apply mul_ne_zero _ hz
@@ -287,8 +287,8 @@ theorem SymNum_const (c : ℂ) (z : ℂ) : SymNum (fun _ => c) z = 0 := by
 /-- Dζ₂ annihilates constants -/
 theorem Dζ₂_const (z : ℂ) (hz : z ≠ 0) : Dζ₂ (fun _ => 1) z = 0 := by
   simp only [Dζ₂, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → CD2 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => CD2_const 1 w hw
+  have hcd : ∀ w : ℂ, w ≠ 0 → D2 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => D2_const 1 w hw
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
   simp
@@ -296,8 +296,8 @@ theorem Dζ₂_const (z : ℂ) (hz : z ≠ 0) : Dζ₂ (fun _ => 1) z = 0 := by
 /-- Dζ₃ annihilates constants -/
 theorem Dζ₃_const (z : ℂ) (hz : z ≠ 0) : Dζ₃ (fun _ => 1) z = 0 := by
   simp only [Dζ₃, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → CD3 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => CD3_const 1 w hw
+  have hcd : ∀ w : ℂ, w ≠ 0 → D3 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => D3_const 1 w hw
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
     hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
@@ -306,8 +306,8 @@ theorem Dζ₃_const (z : ℂ) (hz : z ≠ 0) : Dζ₃ (fun _ => 1) z = 0 := by
 /-- Dζ₅ annihilates constants -/
 theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
   simp only [Dζ₅, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → CD5 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => CD5_const 1 w hw
+  have hcd : ∀ w : ℂ, w ≠ 0 → D5 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => D5_const 1 w hw
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
     hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
@@ -316,8 +316,8 @@ theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
 /-- Dζ₅h annihilates constants -/
 theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := by
   simp only [Dζ₅h, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → CD5half (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => CD5half_const 1 w hw
+  have hcd : ∀ w : ℂ, w ≠ 0 → D5half (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => D5half_const 1 w hw
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
     hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
@@ -326,8 +326,8 @@ theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := b
 /-- Dζ₆ annihilates constants -/
 theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
   simp only [Dζ₆, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → CD6 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => CD6_const 1 w hw
+  have hcd : ∀ w : ℂ, w ≠ 0 → D6 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w hw => D6_const 1 w hw
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
   simp
@@ -336,7 +336,7 @@ theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
 theorem Dζ₅_add_Dζ₅h (f : ℂ → ℂ) (z : ℂ) :
     Dζ₅ f z + Dζ₅h f z =
     if z = 0 then 0 else
-      (SymNum (fun w => CD5 f w + CD5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
+      (SymNum (fun w => D5 f w + D5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
   by_cases hz : z = 0
   · simp [Dζ₅, Dζ₅h, hz]
   · simp only [Dζ₅, Dζ₅h, hz, ↓reduceIte]
@@ -346,18 +346,18 @@ theorem Dζ₅_add_Dζ₅h (f : ℂ → ℂ) (z : ℂ) :
 
 All 6 operators Dζ₂,Dζ₃,Dζ₄,Dζ₅,Dζ₅h,Dζ₆ collapse to rank-2 on ⟨φ,ζ₆⟩ ≅ ℤ × ℤ/6ℤ.
 C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
-  Φ_A = (CN6 + CD2 - CD4)_num: coefficients [1, -4, 3+φ, 0, -(3+ψ), 4, -1]
-  Φ_S = (2·CD5 + CD3 + μ·CD2)_num: coefficients [0, 2, 3+μ, -10, 3-μ, 2, 0]
+  Φ_A = (N6 + D2 - D4)_num: coefficients [1, -4, 3+φ, 0, -(3+ψ), 4, -1]
+  Φ_S = (2·D5 + D3 + μ·D2)_num: coefficients [0, 2, 3+μ, -10, 3-μ, 2, 0]
   μ = 2/(φ+2)
 Half-period: C(a, k+3) = -C(a, k) from AF/SY anti-periodicity. -/
 
-/-- Φ_A: φ-numerator = (CN6 + CD2 - CD4)_num, all 6 ops AF channel -/
+/-- Φ_A: φ-numerator = (N6 + D2 - D4)_num, all 6 ops AF channel -/
 noncomputable def Φ_A (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ) ^ 3 * z) - 4 * f ((↑φ : ℂ) ^ 2 * z) +
   (3 + (↑φ : ℂ)) * f (↑φ * z) - (3 + (↑ψ : ℂ)) * f (↑ψ * z) +
   4 * f ((↑ψ : ℂ) ^ 2 * z) - f ((↑ψ : ℂ) ^ 3 * z)
 
-/-- Φ_S: φ-numerator = (2·CD5 + CD3 + μ·CD2)_num, all 6 ops SY channel -/
+/-- Φ_S: φ-numerator = (2·D5 + D3 + μ·D2)_num, all 6 ops SY channel -/
 noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
   2 * f ((↑φ : ℂ) ^ 2 * z) + (3 + μ) * f (↑φ * z) - 10 * f z +
@@ -391,12 +391,12 @@ theorem Dζ_const (z : ℂ) (hz : z ≠ 0) : Dζ (fun _ => 1) z = 0 := by
   simp only [AFNum, hA, SymNum, hS, mul_one]
   simp [sub_self]
 
-/-- Decomposition: Φ_A = CN6_num + CD2_num - CD4_num -/
+/-- Decomposition: Φ_A = N6_num + D2_num - D4_num -/
 theorem Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
-    Φ_A f z = CN6 f z + (f (↑φ * z) - f (↑ψ * z)) -
+    Φ_A f z = N6 f z + (f (↑φ * z) - f (↑ψ * z)) -
     (f ((↑φ : ℂ) ^ 2 * z) - (↑φ : ℂ) ^ 2 * f (↑φ * z) +
      (↑ψ : ℂ) ^ 2 * f (↑ψ * z) - f ((↑ψ : ℂ) ^ 2 * z)) := by
-  unfold Φ_A CN6
+  unfold Φ_A N6
   have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := by
     have h := golden_ratio_property
     have : (↑(φ ^ 2) : ℂ) = ↑(φ + 1) := congrArg _ h
@@ -545,41 +545,31 @@ theorem AF_coeff_normSq : Complex.normSq AF_coeff = 12 := by
   simp only [ofReal_zero, mul_zero, zero_add, ofReal_one, mul_one] at h
   linarith
 
-/-! ## Φ_S 3-component decomposition: CD5_num + CD3_num + μ·CD2_num
+/-! ## Φ_S 3-component decomposition: N5 + N3 + μ·N2
 
-Φ_S decomposes into 3 independent sub-operators (numerator-only CDn).
-For monomials z^s, the coefficients σ_CDn(s) = CDn_num(z^s)/z^s form
+Φ_S decomposes into 3 independent sub-operators (Dn numerators N2/N3/N5).
+For monomials z^s, the coefficients σ_Nn(s) = Nn(z^s)/z^s form
 rank-3 vectors across s=1,5,7, proving Φ_S carries Fin 3 of information. -/
 
-noncomputable def CD2_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  f (↑φ * z) - f (↑ψ * z)
-
-noncomputable def CD3_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  f (↑φ * z) - 2 * f z + f (↑ψ * z)
-
-noncomputable def CD5_num (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  f ((↑φ : ℂ) ^ 2 * z) + f (↑φ * z) - 4 * f z +
-  f (↑ψ * z) + f ((↑ψ : ℂ) ^ 2 * z)
-
-/-- Φ_S = 2·CD5_num + CD3_num + μ·CD2_num -/
+/-- Φ_S = 2·N5 + N3 + μ·N2 -/
 theorem Φ_S_decompose (f : ℂ → ℂ) (z : ℂ) :
-    Φ_S f z = 2 * CD5_num f z + CD3_num f z +
-    (2 / ((↑φ : ℂ) + 2)) * CD2_num f z := by
-  unfold Φ_S CD5_num CD3_num CD2_num; ring
+    Φ_S f z = 2 * FUST.N5 f z + FUST.N3 f z +
+    (2 / ((↑φ : ℂ) + 2)) * FUST.N2 f z := by
+  unfold Φ_S FUST.N5 FUST.N3 FUST.N2; ring
 
-/-- CDn_num on w^s: monomial coefficients -/
-theorem CD2_num_pow (s : ℕ) (z : ℂ) :
-    CD2_num (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s) * z ^ s := by
-  unfold CD2_num; simp only [mul_pow]; ring
+/-- Nn on w^s: monomial coefficients -/
+theorem N2_pow (s : ℕ) (z : ℂ) :
+    FUST.N2 (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s) * z ^ s := by
+  unfold FUST.N2; simp only [mul_pow]; ring
 
-theorem CD3_num_pow (s : ℕ) (z : ℂ) :
-    CD3_num (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s) * z ^ s := by
-  unfold CD3_num; simp only [mul_pow]; ring
+theorem N3_pow (s : ℕ) (z : ℂ) :
+    FUST.N3 (fun w => w ^ s) z = ((↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s) * z ^ s := by
+  unfold FUST.N3; simp only [mul_pow]; ring
 
-theorem CD5_num_pow (s : ℕ) (z : ℂ) :
-    CD5_num (fun w => w ^ s) z =
+theorem N5_pow (s : ℕ) (z : ℂ) :
+    FUST.N5 (fun w => w ^ s) z =
     ((↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)) * z ^ s := by
-  unfold CD5_num; simp only [mul_pow, ← pow_mul]; ring
+  unfold FUST.N5; simp only [mul_pow, ← pow_mul]; ring
 
 /-- Φ_S on w^s via sub-operator coefficients -/
 theorem Φ_S_pow_via_sub (s : ℕ) (z : ℂ) :
@@ -675,61 +665,61 @@ private lemma one_sub_phi_pow14 : (1 - (↑φ : ℂ)) ^ 14 = -(377 * ↑φ) + 61
 
 /-! ### Sub-operator coefficient values -/
 
-/-- σ_CD5(s) = L_{2s} + L_s - 4, σ_CD3(s) = L_s - 2, σ_CD2(s) = √5·F_s -/
-noncomputable def σ_CD5 (s : ℕ) : ℂ :=
+/-- σ_N5(s) = L_{2s} + L_s - 4, σ_N3(s) = L_s - 2, σ_N2(s) = √5·F_s -/
+noncomputable def σ_N5 (s : ℕ) : ℂ :=
   (↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)
 
-noncomputable def σ_CD3 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s
+noncomputable def σ_N3 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s
 
-noncomputable def σ_CD2 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s
+noncomputable def σ_N2 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s
 
 -- s = 1
-theorem σ_CD5_one : σ_CD5 1 = 0 := by
-  simp only [σ_CD5, Nat.mul_one, pow_one, phi_sq_c, psi_eq_c]
+theorem σ_N5_one : σ_N5 1 = 0 := by
+  simp only [σ_N5, Nat.mul_one, pow_one, phi_sq_c, psi_eq_c]
   have : (1 - (↑φ : ℂ)) ^ 2 = (↑φ : ℂ) ^ 2 - 2 * ↑φ + 1 := by ring
   rw [this, phi_sq_c]; ring
 
-theorem σ_CD3_one : σ_CD3 1 = -1 := by
-  simp only [σ_CD3, pow_one, psi_eq_c]; ring
+theorem σ_N3_one : σ_N3 1 = -1 := by
+  simp only [σ_N3, pow_one, psi_eq_c]; ring
 
-theorem σ_CD2_one : σ_CD2 1 = (↑φ : ℂ) - ↑ψ := by
-  simp only [σ_CD2, pow_one]
+theorem σ_N2_one : σ_N2 1 = (↑φ : ℂ) - ↑ψ := by
+  simp only [σ_N2, pow_one]
 
 -- s = 5
-theorem σ_CD5_five : σ_CD5 5 = 130 := by
-  simp only [σ_CD5, show 2 * 5 = 10 from by ring, psi_eq_c]
+theorem σ_N5_five : σ_N5 5 = 130 := by
+  simp only [σ_N5, show 2 * 5 = 10 from by ring, psi_eq_c]
   rw [phi_pow10_c, phi_pow5_c, one_sub_phi_pow5, one_sub_phi_pow10]; ring
 
-theorem σ_CD3_five : σ_CD3 5 = 9 := by
-  simp only [σ_CD3, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+theorem σ_N3_five : σ_N3 5 = 9 := by
+  simp only [σ_N3, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
 
-theorem σ_CD2_five : σ_CD2 5 = 5 * ((↑φ : ℂ) - ↑ψ) := by
-  simp only [σ_CD2, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+theorem σ_N2_five : σ_N2 5 = 5 * ((↑φ : ℂ) - ↑ψ) := by
+  simp only [σ_N2, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
 
 -- s = 7
-theorem σ_CD5_seven : σ_CD5 7 = 868 := by
-  simp only [σ_CD5, show 2 * 7 = 14 from by ring, psi_eq_c]
+theorem σ_N5_seven : σ_N5 7 = 868 := by
+  simp only [σ_N5, show 2 * 7 = 14 from by ring, psi_eq_c]
   rw [phi_pow14_c, phi_pow7_c, one_sub_phi_pow7, one_sub_phi_pow14]; ring
 
-theorem σ_CD3_seven : σ_CD3 7 = 27 := by
-  simp only [σ_CD3, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+theorem σ_N3_seven : σ_N3 7 = 27 := by
+  simp only [σ_N3, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
 
-theorem σ_CD2_seven : σ_CD2 7 = 13 * ((↑φ : ℂ) - ↑ψ) := by
-  simp only [σ_CD2, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+theorem σ_N2_seven : σ_N2 7 = 13 * ((↑φ : ℂ) - ↑ψ) := by
+  simp only [σ_N2, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
 
 private lemma phi_sub_psi_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := by
   rw [← ofReal_sub, ne_eq, ofReal_eq_zero, sub_eq_zero]
   intro h; linarith [phi_pos, psi_neg]
 
-/-- The 3×3 det of [σ_CD5, σ_CD3, σ_CD2] at s=1,5,7 is -6952(φ-ψ) ≠ 0: rank 3.
+/-- The 3×3 det of [σ_N5, σ_N3, σ_N2] at s=1,5,7 is -6952(φ-ψ) ≠ 0: rank 3.
     This proves Φ_S carries Fin 3 worth of independent information. -/
 theorem Φ_S_rank_three :
-    σ_CD5 1 * (σ_CD3 5 * σ_CD2 7 - σ_CD2 5 * σ_CD3 7) -
-    σ_CD3 1 * (σ_CD5 5 * σ_CD2 7 - σ_CD2 5 * σ_CD5 7) +
-    σ_CD2 1 * (σ_CD5 5 * σ_CD3 7 - σ_CD3 5 * σ_CD5 7) ≠ 0 := by
-  rw [σ_CD5_one, σ_CD3_one, σ_CD2_one,
-      σ_CD5_five, σ_CD3_five, σ_CD2_five,
-      σ_CD5_seven, σ_CD3_seven, σ_CD2_seven]
+    σ_N5 1 * (σ_N3 5 * σ_N2 7 - σ_N2 5 * σ_N3 7) -
+    σ_N3 1 * (σ_N5 5 * σ_N2 7 - σ_N2 5 * σ_N5 7) +
+    σ_N2 1 * (σ_N5 5 * σ_N3 7 - σ_N3 5 * σ_N5 7) ≠ 0 := by
+  rw [σ_N5_one, σ_N3_one, σ_N2_one,
+      σ_N5_five, σ_N3_five, σ_N2_five,
+      σ_N5_seven, σ_N3_seven, σ_N2_seven]
   have hne := phi_sub_psi_ne
   intro h; apply hne
   have : (0 : ℂ) * (9 * (13 * ((↑φ : ℂ) - ↑ψ)) - 5 * ((↑φ : ℂ) - ↑ψ) * 27) -

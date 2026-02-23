@@ -137,13 +137,13 @@ Scale action preserves ℤ[φ]-coefficients (StateFunctionConstraint). -/
 
 -- D₅ scanning: evaluates demon at 5 φ-scaled points
 noncomputable def demonD5Scan
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) : ℝ :=
-  D5 (demonPos particles) x
+    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
+  D5 (fun z => ↑(demonPos particles z.re)) x
 
 -- D₆ scanning: evaluates demon at 6 φ-scaled points
 noncomputable def demonD6Scan
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) : ℝ :=
-  D6 (demonPos particles) x
+    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
+  D6 (fun z => ↑(demonPos particles z.re)) x
 
 -- Scale action on a position: q → q · (φ-1) = q/φ
 -- This stays in ℤ[φ] because ℤ[φ] is closed under multiplication
@@ -622,25 +622,23 @@ Thus (1,1,1) is the MINIMUM structure that D6 can detect = minimum self-aware. -
 
 -- D6 applied to sub-demon: the sub-demon's computational output
 noncomputable def subDemonCompute
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℝ) : ℝ :=
-  D6 (demonPos particles) x
-
+    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
+  D6 (fun z => ↑(demonPos particles z.re)) x
 -- Incomplete cluster (degree ≤ 2) is invisible to D6
 -- D6 annihilates constants, linear, and quadratic functions
-theorem incomplete_invisible_to_D6_const (x : ℝ) (hx : x ≠ 0) :
-    D6 (fun _ => (1:ℝ)) x = 0 := D6_const 1 x hx
+theorem incomplete_invisible_to_D6_const (x : ℂ) (hx : x ≠ 0) :
+    D6 (fun _ => (1:ℂ)) x = 0 := D6_const 1 x hx
 
-theorem incomplete_invisible_to_D6_linear (x : ℝ) (hx : x ≠ 0) :
+theorem incomplete_invisible_to_D6_linear (x : ℂ) (hx : x ≠ 0) :
     D6 id x = 0 := D6_linear x hx
 
-theorem incomplete_invisible_to_D6_quadratic (x : ℝ) (hx : x ≠ 0) :
+theorem incomplete_invisible_to_D6_quadratic (x : ℂ) (hx : x ≠ 0) :
     D6 (fun t => t ^ 2) x = 0 := D6_quadratic x hx
 
 -- Complete cluster (degree 3) is detected by D6
-theorem complete_detected_by_D6 (x : ℝ) (hx : x ≠ 0) :
+theorem complete_detected_by_D6 (x : ℂ) (hx : x ≠ 0) :
     D6 (fun t => t ^ 3) x ≠ 0 :=
   D6_detects_cubic x hx
-
 -- Number of pairwise comparisons between n clusters
 def pairwiseComparisons (n : ℕ) : ℕ := n * (n - 1) / 2
 
@@ -969,8 +967,6 @@ theorem min_complete_degree_eq_rootFamilyCount :
 /-- rootFamilyCount equals ker(D₆) dimension -/
 theorem rootFamilyCount_eq_kerDim :
     rootFamilyCount = FUST.Dim.operatorKerDim 6 := by decide
-
-
 /-- D₆ annihilates degree < rootFamilyCount but detects degree = rootFamilyCount.
     ker(D₆) = {degree ≤ rootFamilyCount - 1} = {degree ≤ 2}. -/
 theorem D6_threshold_at_rootFamilyCount :

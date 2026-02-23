@@ -113,36 +113,12 @@ theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
   fun x hx => D3_const 1 x hx
 
 /-- D₃ does not annihilate linear -/
-theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 := by
-  use 1, one_ne_zero
-  simp only [D3, one_ne_zero, ↓reduceIte, id_eq, mul_one]
-  have hnum : φ - 2 + ψ = -1 := by
-    have h : φ + ψ = 1 := phi_add_psi
-    linarith
-  have hdenom : (φ - ψ)^2 = 5 := by
-    have h : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [h, Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)]
-  rw [hnum, hdenom]
-  norm_num
+theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 :=
+  ⟨1, one_ne_zero, D3_linear_ne_zero 1 one_ne_zero⟩
 
 /-- D₄ does not annihilate linear -/
-theorem D4_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0 := by
-  use 1, one_ne_zero
-  simp only [D4, one_ne_zero, ↓reduceIte, id_eq, mul_one]
-  have hdenom : (φ - ψ)^3 = 5 * Real.sqrt 5 := by
-    have h : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    rw [h]
-    have hsq : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-    calc Real.sqrt 5 ^ 3 = Real.sqrt 5 ^ 2 * Real.sqrt 5 := by ring
-      _ = 5 * Real.sqrt 5 := by rw [hsq]
-  have h5sqrt5_pos : 5 * Real.sqrt 5 > 0 := by positivity
-  have hne : (φ - ψ)^3 ≠ 0 := by rw [hdenom]; exact ne_of_gt h5sqrt5_pos
-  apply div_ne_zero _ hne
-  have hphi_sq : φ^2 = φ + 1 := golden_ratio_property
-  have hpsi_sq : ψ^2 = ψ + 1 := psi_sq
-  have hsum : φ + ψ = 1 := phi_add_psi
-  have hpsi_neg : ψ < 0 := psi_neg
-  nlinarith [phi_pos]
+theorem D4_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D4 id x ≠ 0 :=
+  ⟨1, one_ne_zero, D4_linear_ne_zero 1 one_ne_zero⟩
 
 /-- D₅ annihilates both 1 and x but not x² -/
 theorem D5_kernel_and_boundary :
@@ -727,31 +703,28 @@ theorem detection_d2 :
   refine ⟨⟨1, one_ne_zero, ?_⟩, ⟨1, one_ne_zero, ?_⟩, D4_quadratic,
           ⟨1, one_ne_zero, D5_not_annihilate_quadratic 1 one_ne_zero⟩, D6_quadratic⟩
   · -- D₂[x²] ≠ 0 at x=1
-    simp only [D2, one_ne_zero, ↓reduceIte]
-    have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    have hnum : (φ * 1) ^ 2 - (ψ * 1) ^ 2 = (φ - ψ) * (φ + ψ) := by ring
-    rw [hnum]
-    have hsum : φ + ψ = 1 := phi_add_psi
-    rw [hsum, mul_one]
+    simp only [D2, Complex.ofReal_one, one_ne_zero, ↓reduceIte, ne_eq]
+    have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
+    have hsum := phi_add_psi_complex
+    have hnum : ((↑φ : ℂ) * 1) ^ 2 - ((↑ψ : ℂ) * 1) ^ 2 =
+        ((↑φ : ℂ) - ↑ψ) * ((↑φ : ℂ) + ↑ψ) := by ring
+    rw [hnum, hsum]
+    simp only [mul_one]
     exact div_ne_zero hφψ_ne hφψ_ne
   · -- D₃[x²] ≠ 0 at x=1
-    simp only [D3, one_ne_zero, ↓reduceIte]
-    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    have hsum : φ + ψ = 1 := phi_add_psi
-    have hnum : (φ * 1) ^ 2 - 2 * 1 ^ 2 + (ψ * 1) ^ 2 = φ ^ 2 + ψ ^ 2 - 2 := by ring
+    simp only [D3, Complex.ofReal_one, one_ne_zero, ↓reduceIte, ne_eq]
+    have hφ2 := golden_ratio_property_complex
+    have hψ2 := psi_sq_complex
+    have hsum := phi_add_psi_complex
+    have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
+    have hnum : ((↑φ : ℂ) * 1) ^ 2 - 2 * (1 : ℂ) ^ 2 + ((↑ψ : ℂ) * 1) ^ 2 =
+        (↑φ : ℂ) ^ 2 + (↑ψ : ℂ) ^ 2 - 2 := by ring
     rw [hnum]
-    have hcoef : φ ^ 2 + ψ ^ 2 - 2 = 1 := by
-      calc φ ^ 2 + ψ ^ 2 - 2 = (φ + 1) + (ψ + 1) - 2 := by rw [hφ2, hψ2]
-        _ = φ + ψ := by ring
-        _ = 1 := hsum
+    have hcoef : (↑φ : ℂ) ^ 2 + (↑ψ : ℂ) ^ 2 - 2 = 1 := by
+      rw [hφ2, hψ2]; linear_combination hsum
     rw [hcoef]
-    have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    have hφψ_ne : φ - ψ ≠ 0 := by rw [hφψ]; exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    exact div_ne_zero one_ne_zero (mul_ne_zero (pow_ne_zero 2 hφψ_ne) one_ne_zero)
+    simp only [mul_one]
+    exact div_ne_zero one_ne_zero (pow_ne_zero 2 hφψ_ne)
 
 /-! ### Kernel Filtration
 

@@ -5,7 +5,7 @@
 \section{Motivation}
 \label{sec:dim_motivation}
 
-In FUST, quantities such as $t_{\mathrm{FUST}} = 25/12$ and $\Delta = 12/25$ are all defined as $\mathbb{R}$ in the Lean implementation.
+In FUST, quantities such as $t_{\mathrm{FUST}} = 25/12$ and $\Delta = 12/25$ are defined as $\mathbb{R}$-valued (real part of $\mathbb{C}$) in the Lean implementation.
 This allows type-checked operations like $t_{\mathrm{FUST}} + \Delta$ that are physically meaningless.
 A time and a mass gap may share the same numerical value yet represent fundamentally different physical quantities.
 
@@ -46,7 +46,7 @@ Odd-$m$ operators ($D_3, D_5$) have symmetric patterns yielding Lucas integers, 
 \label{def:dim_scaleq}
 \lean{FUST.Dim.ScaleQ}
 \leanok
-$\mathrm{ScaleQ}(p, \delta)$: a real-valued quantity carrying dimension $(p, \delta)$.
+$\mathrm{ScaleQ}(p, \delta)$: a quantity carrying dimension $(p, \delta)$, with $\mathbb{R}$-valued evaluation.
 Addition is restricted to quantities of identical dimension.
 \end{definition}
 

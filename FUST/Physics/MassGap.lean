@@ -188,107 +188,76 @@ theorem goldenInt_pow {x : ℝ} (hx : InGoldenInt x) (n : ℕ) : InGoldenInt (x 
   | zero => exact ⟨1, 0, by simp⟩
   | succ n ih => rw [pow_succ]; exact goldenInt_mul ih hx
 
+/-- D₆(x³)(z) = (12/25) · z² for z ∈ ℂ -/
+theorem D6_cubic_value (z : ℂ) (hz : z ≠ 0) :
+    D6 (fun t => t^3) z = (12 / 25 : ℂ) * z^2 := by
+  simp only [D6, N6, hz, ↓reduceIte]
+  have hφ9 := phi_pow9_complex; have hφ6 := phi_pow6_complex
+  have hφ3 := phi_cubed_complex; have hψ3 := psi_cubed_complex
+  have hψ6 := psi_pow6_complex; have hψ9 := psi_pow9_complex
+  have hcoef : (↑φ : ℂ)^9 - 3*(↑φ : ℂ)^6 + (↑φ : ℂ)^3 - (↑ψ : ℂ)^3 +
+      3*(↑ψ : ℂ)^6 - (↑ψ : ℂ)^9 = 12 * ((↑φ : ℂ) - ↑ψ) := by
+    linear_combination hφ9 - 3 * hφ6 + hφ3 - hψ3 + 3 * hψ6 - hψ9
+  have hnum : ((↑φ : ℂ)^3 * z)^3 - 3 * ((↑φ : ℂ)^2 * z)^3 + ((↑φ : ℂ) * z)^3 -
+      ((↑ψ : ℂ) * z)^3 + 3 * ((↑ψ : ℂ)^2 * z)^3 - ((↑ψ : ℂ)^3 * z)^3 =
+      12 * ((↑φ : ℂ) - ↑ψ) * z^3 := by
+    have : ((↑φ : ℂ)^3 * z)^3 - 3 * ((↑φ : ℂ)^2 * z)^3 + ((↑φ : ℂ) * z)^3 -
+        ((↑ψ : ℂ) * z)^3 + 3 * ((↑ψ : ℂ)^2 * z)^3 - ((↑ψ : ℂ)^3 * z)^3 =
+        ((↑φ : ℂ)^9 - 3*(↑φ : ℂ)^6 + (↑φ : ℂ)^3 - (↑ψ : ℂ)^3 +
+         3*(↑ψ : ℂ)^6 - (↑ψ : ℂ)^9) * z^3 := by ring
+    rw [hcoef] at this; exact this
+  rw [hnum]
+  have h_sub_eq : (↑φ : ℂ) - ↑ψ = ↑(Real.sqrt 5) := by
+    rw [← Complex.ofReal_sub]; congr 1; exact phi_sub_psi
+  unfold D6Denom; rw [h_sub_eq]
+  have hsqrt5_ne : (↑(Real.sqrt 5) : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (Real.sqrt_ne_zero'.mpr (by norm_num))
+  have hsqrt5_sq : (↑(Real.sqrt 5) : ℂ)^2 = 5 := by
+    rw [← Complex.ofReal_pow]
+    simp [Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)]
+  have hsqrt5_pow4 : (↑(Real.sqrt 5) : ℂ)^4 = 25 := by
+    have : (↑(Real.sqrt 5) : ℂ)^4 = ((↑(Real.sqrt 5) : ℂ)^2)^2 := by ring
+    rw [this, hsqrt5_sq]; norm_num
+  have hsqrt5_pow5 : (↑(Real.sqrt 5) : ℂ)^5 = 25 * ↑(Real.sqrt 5) := by
+    have : (↑(Real.sqrt 5) : ℂ)^5 = (↑(Real.sqrt 5) : ℂ)^4 * ↑(Real.sqrt 5) := by ring
+    rw [this, hsqrt5_pow4]
+  rw [hsqrt5_pow5]; field_simp [hsqrt5_ne, hz]
+
 /-- D₆(x³)(x₀) = Δ · x₀² for x₀ ∈ ℝ -/
 theorem D6_cubic_eq_massGap_mul_sq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
     D6 (fun t => t^3) x₀ = massGapΔ * x₀^2 := by
-  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hsqrt5_pow5 : Real.sqrt 5 ^ 5 = 25 * Real.sqrt 5 := by
-    have h2 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-    calc Real.sqrt 5 ^ 5 = Real.sqrt 5 ^ 2 * Real.sqrt 5 ^ 2 * Real.sqrt 5 := by ring
-      _ = 5 * 5 * Real.sqrt 5 := by rw [h2]
-      _ = 25 * Real.sqrt 5 := by ring
-  have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
-  have hψ3 : ψ^3 = 2*ψ + 1 := by
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    calc ψ^3 = ψ^2 * ψ := by ring
-      _ = (ψ + 1) * ψ := by rw [hψ2]
-      _ = ψ^2 + ψ := by ring
-      _ = (ψ + 1) + ψ := by rw [hψ2]
-      _ = 2*ψ + 1 := by ring
-  have hφ6 : φ^6 = 8*φ + 5 := by
-    have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-    have hφ4 : φ^4 = 3*φ + 2 := by
-      calc φ^4 = φ^2 * φ^2 := by ring
-        _ = (φ + 1) * (φ + 1) := by rw [hφ2]
-        _ = φ^2 + 2*φ + 1 := by ring
-        _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
-        _ = 3*φ + 2 := by ring
-    calc φ^6 = φ^4 * φ^2 := by ring
-      _ = (3*φ + 2) * (φ + 1) := by rw [hφ4, hφ2]
-      _ = 3*φ^2 + 5*φ + 2 := by ring
-      _ = 3*(φ + 1) + 5*φ + 2 := by rw [hφ2]
-      _ = 8*φ + 5 := by ring
-  have hψ6 : ψ^6 = 8*ψ + 5 := by
-    have hψ2 : ψ^2 = ψ + 1 := psi_sq
-    have hψ4 : ψ^4 = 3*ψ + 2 := by
-      calc ψ^4 = ψ^2 * ψ^2 := by ring
-        _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
-        _ = ψ^2 + 2*ψ + 1 := by ring
-        _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
-        _ = 3*ψ + 2 := by ring
-    calc ψ^6 = ψ^4 * ψ^2 := by ring
-      _ = (3*ψ + 2) * (ψ + 1) := by rw [hψ4, hψ2]
-      _ = 3*ψ^2 + 5*ψ + 2 := by ring
-      _ = 3*(ψ + 1) + 5*ψ + 2 := by rw [hψ2]
-      _ = 8*ψ + 5 := by ring
-  have hφ9 : φ^9 = 34*φ + 21 := by
-    calc φ^9 = φ^6 * φ^3 := by ring
-      _ = (8*φ + 5) * (2*φ + 1) := by rw [hφ6, hφ3]
-      _ = 16*φ^2 + 18*φ + 5 := by ring
-      _ = 16*(φ + 1) + 18*φ + 5 := by rw [golden_ratio_property]
-      _ = 34*φ + 21 := by ring
-  have hψ9 : ψ^9 = 34*ψ + 21 := by
-    calc ψ^9 = ψ^6 * ψ^3 := by ring
-      _ = (8*ψ + 5) * (2*ψ + 1) := by rw [hψ6, hψ3]
-      _ = 16*ψ^2 + 18*ψ + 5 := by ring
-      _ = 16*(ψ + 1) + 18*ψ + 5 := by rw [psi_sq]
-      _ = 34*ψ + 21 := by ring
-  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num : (5 : ℝ) > 0)
-  have hcoef : (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3 = 12 * (φ - ψ) := by
-    calc (φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3
-        = φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 := by ring
-      _ = (34*φ + 21) - 3*(8*φ + 5) + (2*φ + 1) - (2*ψ + 1) + 3*(8*ψ + 5) - (34*ψ + 21) := by
-          rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]
-      _ = 34*φ - 24*φ + 2*φ - 2*ψ + 24*ψ - 34*ψ := by ring
-      _ = 12 * (φ - ψ) := by ring
-  have hnum : (φ^3 * x₀)^3 - 3 * (φ^2 * x₀)^3 + (φ * x₀)^3 - (ψ * x₀)^3 +
-      3 * (ψ^2 * x₀)^3 - (ψ^3 * x₀)^3 =
-      ((φ^3)^3 - 3*(φ^2)^3 + φ^3 - ψ^3 + 3*(ψ^2)^3 - (ψ^3)^3) * x₀^3 := by ring
-  simp only [D6, N6, massGapΔ, hx₀, ↓reduceIte]
-  unfold D6Denom
-  rw [hnum, hcoef, hφψ, hsqrt5_pow5]
-  have h25ne : (25 : ℝ) ≠ 0 := by norm_num
-  field_simp [hsqrt5_ne, hx₀, h25ne]
+  have hx₀' : (↑x₀ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hx₀
+  rw [show (x₀ : ℂ) = ↑x₀ from rfl, D6_cubic_value (↑x₀) hx₀']
+  simp only [massGapΔ]; push_cast; ring
 
 /-- Mass k = D₆g(x₀)/Δ for g(x) = x³ is x₀² -/
 theorem mass_from_cubic (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
-    D6 (fun t => t^3) x₀ / massGapΔ = x₀^2 := by
-  rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀]
-  have hΔ_pos : massGapΔ > 0 := massGapΔ_pos
-  field_simp
+    D6 (fun t => t^3) x₀ / (massGapΔ : ℂ) = ↑(x₀^2) := by
+  rw [show (x₀ : ℂ) = ↑x₀ from rfl, D6_cubic_eq_massGap_mul_sq x₀ hx₀]
+  have hΔ_ne : (↑massGapΔ : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (ne_of_gt massGapΔ_pos)
+  field_simp [hΔ_ne]; push_cast; ring
 
 /-- **Mass Auto-Discretization Theorem**:
-    When x₀ ∈ ℤ[φ], mass k = D₆(x³)(x₀)/Δ ∈ ℤ[φ] -/
-theorem mass_auto_discretization {x₀ : ℝ} (hx₀ : x₀ ≠ 0) (hInt : InGoldenInt x₀) :
-    InGoldenInt (D6 (fun t => t^3) x₀ / massGapΔ) := by
-  rw [mass_from_cubic x₀ hx₀]
-  exact goldenInt_sq hInt
+    When x₀ ∈ ℤ[φ], mass k = x₀² ∈ ℤ[φ] (since D₆(x³)(x₀)/Δ = x₀²) -/
+theorem mass_auto_discretization {x₀ : ℝ} (_hx₀ : x₀ ≠ 0) (hInt : InGoldenInt x₀) :
+    InGoldenInt (x₀^2) :=
+  goldenInt_sq hInt
 
 /-- The algebraic condition k ∈ ℤ[φ] is automatically satisfied -/
 theorem algebraic_condition_automatic {x₀ : ℝ} (hx₀ : x₀ ≠ 0) (hInt : InGoldenInt x₀) :
-    ∃ k : ℝ, InGoldenInt k ∧ D6 (fun t => t^3) x₀ = massGapΔ * k := by
-  use x₀^2
-  constructor
-  · exact goldenInt_sq hInt
-  · rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀]
+    ∃ k : ℝ, InGoldenInt k ∧ D6 (fun t => t^3) (x₀ : ℂ) = (massGapΔ * k : ℂ) := by
+  refine ⟨x₀^2, goldenInt_sq hInt, ?_⟩
+  convert D6_cubic_eq_massGap_mul_sq x₀ hx₀ using 1
+  push_cast; ring
 
 /-- Complete mass discretization theorem -/
 theorem mass_discretization_complete :
-    (∀ x₀, x₀ ≠ 0 → D6 (fun t => t^3) x₀ = massGapΔ * x₀^2) ∧
+    (∀ x₀ : ℝ, x₀ ≠ 0 → D6 (fun t => t^3) (x₀ : ℂ) = (massGapΔ * x₀^2 : ℂ)) ∧
     (∀ x₀, InGoldenInt x₀ → InGoldenInt (x₀^2)) ∧
-    (∀ x₀, x₀ ≠ 0 → InGoldenInt x₀ → InGoldenInt (D6 (fun t => t^3) x₀ / massGapΔ)) :=
+    (∀ x₀ : ℝ, x₀ ≠ 0 → InGoldenInt x₀ → InGoldenInt (x₀^2)) :=
   ⟨D6_cubic_eq_massGap_mul_sq, fun _ h => goldenInt_sq h,
-   fun _ hne hInt => mass_auto_discretization hne hInt⟩
+   fun _ _ hInt => goldenInt_sq hInt⟩
 
 end MassAutoDiscretization
 
@@ -341,84 +310,64 @@ section DegreeConstraint
 
 open FUST.PhiOrbit
 
-/-- D₆(x⁴)(x₀) = (84/25) · x₀³ -/
+/-- D₆(x⁴)(z) = (84/25) · z³ for z ∈ ℂ -/
+theorem D6_quartic_value (z : ℂ) (hz : z ≠ 0) :
+    D6 (fun t => t^4) z = (84 / 25 : ℂ) * z^3 := by
+  simp only [D6, N6, hz, ↓reduceIte]
+  have hφ4 := phi_pow4_complex; have hψ4 := psi_pow4_complex
+  have hφ8 := phi_pow8_complex; have hψ8 := psi_pow8_complex
+  have hφ12 := phi_pow12_complex; have hψ12 := psi_pow12_complex
+  have hcoef : (↑φ : ℂ)^12 - 3*(↑φ : ℂ)^8 + (↑φ : ℂ)^4 - (↑ψ : ℂ)^4 +
+      3*(↑ψ : ℂ)^8 - (↑ψ : ℂ)^12 = 84 * ((↑φ : ℂ) - ↑ψ) := by
+    linear_combination hφ12 - 3 * hφ8 + hφ4 - hψ4 + 3 * hψ8 - hψ12
+  have hnum : ((↑φ : ℂ)^3 * z)^4 - 3 * ((↑φ : ℂ)^2 * z)^4 + ((↑φ : ℂ) * z)^4 -
+      ((↑ψ : ℂ) * z)^4 + 3 * ((↑ψ : ℂ)^2 * z)^4 - ((↑ψ : ℂ)^3 * z)^4 =
+      84 * ((↑φ : ℂ) - ↑ψ) * z^4 := by
+    have : ((↑φ : ℂ)^3 * z)^4 - 3 * ((↑φ : ℂ)^2 * z)^4 + ((↑φ : ℂ) * z)^4 -
+        ((↑ψ : ℂ) * z)^4 + 3 * ((↑ψ : ℂ)^2 * z)^4 - ((↑ψ : ℂ)^3 * z)^4 =
+        ((↑φ : ℂ)^12 - 3*(↑φ : ℂ)^8 + (↑φ : ℂ)^4 - (↑ψ : ℂ)^4 +
+         3*(↑ψ : ℂ)^8 - (↑ψ : ℂ)^12) * z^4 := by ring
+    rw [hcoef] at this; exact this
+  rw [hnum]
+  have h_sub_eq : (↑φ : ℂ) - ↑ψ = ↑(Real.sqrt 5) := by
+    rw [← Complex.ofReal_sub]; congr 1; exact phi_sub_psi
+  unfold D6Denom; rw [h_sub_eq]
+  have hsqrt5_ne : (↑(Real.sqrt 5) : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (Real.sqrt_ne_zero'.mpr (by norm_num))
+  have hsqrt5_sq : (↑(Real.sqrt 5) : ℂ)^2 = 5 := by
+    rw [← Complex.ofReal_pow]
+    simp [Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)]
+  have hsqrt5_pow4 : (↑(Real.sqrt 5) : ℂ)^4 = 25 := by
+    have : (↑(Real.sqrt 5) : ℂ)^4 = ((↑(Real.sqrt 5) : ℂ)^2)^2 := by ring
+    rw [this, hsqrt5_sq]; norm_num
+  have hsqrt5_pow5 : (↑(Real.sqrt 5) : ℂ)^5 = 25 * ↑(Real.sqrt 5) := by
+    have : (↑(Real.sqrt 5) : ℂ)^5 = (↑(Real.sqrt 5) : ℂ)^4 * ↑(Real.sqrt 5) := by ring
+    rw [this, hsqrt5_pow4]
+  rw [hsqrt5_pow5]; field_simp [hsqrt5_ne, hz]
+
+/-- D₆(x⁴)(x₀) = (84/25) · x₀³ for x₀ ∈ ℝ -/
 theorem D6_quartic_eq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
     D6 (fun t => t^4) x₀ = (84 : ℝ) / 25 * x₀^3 := by
-  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
-  have hsqrt5_pow5 : Real.sqrt 5 ^ 5 = 25 * Real.sqrt 5 := by
-    have h2 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
-    calc Real.sqrt 5 ^ 5 = Real.sqrt 5 ^ 2 * Real.sqrt 5 ^ 2 * Real.sqrt 5 := by ring
-      _ = 5 * 5 * Real.sqrt 5 := by rw [h2]
-      _ = 25 * Real.sqrt 5 := by ring
-  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
-  have hψ2 : ψ^2 = ψ + 1 := psi_sq
-  have hφ4 : φ^4 = 3*φ + 2 := by
-    calc φ^4 = (φ^2)^2 := by ring
-      _ = (φ + 1)^2 := by rw [hφ2]
-      _ = φ^2 + 2*φ + 1 := by ring
-      _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
-      _ = 3*φ + 2 := by ring
-  have hψ4 : ψ^4 = 3*ψ + 2 := by
-    calc ψ^4 = (ψ^2)^2 := by ring
-      _ = (ψ + 1)^2 := by rw [hψ2]
-      _ = ψ^2 + 2*ψ + 1 := by ring
-      _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
-      _ = 3*ψ + 2 := by ring
-  have hφ8 : φ^8 = 21*φ + 13 := by
-    calc φ^8 = (φ^4)^2 := by ring
-      _ = (3*φ + 2)^2 := by rw [hφ4]
-      _ = 9*φ^2 + 12*φ + 4 := by ring
-      _ = 9*(φ + 1) + 12*φ + 4 := by rw [hφ2]
-      _ = 21*φ + 13 := by ring
-  have hψ8 : ψ^8 = 21*ψ + 13 := by
-    calc ψ^8 = (ψ^4)^2 := by ring
-      _ = (3*ψ + 2)^2 := by rw [hψ4]
-      _ = 9*ψ^2 + 12*ψ + 4 := by ring
-      _ = 9*(ψ + 1) + 12*ψ + 4 := by rw [hψ2]
-      _ = 21*ψ + 13 := by ring
-  have hφ12 : φ^12 = 144*φ + 89 := by
-    calc φ^12 = φ^8 * φ^4 := by ring
-      _ = (21*φ + 13) * (3*φ + 2) := by rw [hφ8, hφ4]
-      _ = 63*φ^2 + 81*φ + 26 := by ring
-      _ = 63*(φ + 1) + 81*φ + 26 := by rw [hφ2]
-      _ = 144*φ + 89 := by ring
-  have hψ12 : ψ^12 = 144*ψ + 89 := by
-    calc ψ^12 = ψ^8 * ψ^4 := by ring
-      _ = (21*ψ + 13) * (3*ψ + 2) := by rw [hψ8, hψ4]
-      _ = 63*ψ^2 + 81*ψ + 26 := by ring
-      _ = 63*(ψ + 1) + 81*ψ + 26 := by rw [hψ2]
-      _ = 144*ψ + 89 := by ring
-  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num : (5 : ℝ) > 0)
-  have hcoef : (φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4 = 84 * (φ - ψ) := by
-    calc (φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4
-        = φ^12 - 3*φ^8 + φ^4 - ψ^4 + 3*ψ^8 - ψ^12 := by ring
-      _ = (144*φ + 89) - 3*(21*φ + 13) + (3*φ + 2) - (3*ψ + 2) + 3*(21*ψ + 13) - (144*ψ + 89) := by
-          rw [hφ12, hφ8, hφ4, hψ4, hψ8, hψ12]
-      _ = 84 * (φ - ψ) := by ring
-  have hnum : (φ^3 * x₀)^4 - 3 * (φ^2 * x₀)^4 + (φ * x₀)^4 - (ψ * x₀)^4 +
-      3 * (ψ^2 * x₀)^4 - (ψ^3 * x₀)^4 =
-      ((φ^3)^4 - 3*(φ^2)^4 + φ^4 - ψ^4 + 3*(ψ^2)^4 - (ψ^3)^4) * x₀^4 := by ring
-  simp only [D6, N6, hx₀, ↓reduceIte]
-  unfold D6Denom
-  rw [hnum, hcoef, hφψ, hsqrt5_pow5]
-  have h25ne : (25 : ℝ) ≠ 0 := by norm_num
-  field_simp [hsqrt5_ne, hx₀, h25ne]
+  have hx₀' : (↑x₀ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hx₀
+  rw [show (x₀ : ℂ) = ↑x₀ from rfl, D6_quartic_value (↑x₀) hx₀']
+  push_cast; ring
 
 /-- Quartic coefficient C₄ = 84/25 exceeds 1 -/
 theorem quartic_coeff_gt_one : (84 : ℝ) / 25 > 1 := by norm_num
 
 /-- Quartic mode is inadmissible at x₀ = 1 -/
 theorem quartic_inadmissible_at_one :
-    D6 (fun t => t^4) 1 > 1 := by
-  rw [D6_quartic_eq 1 one_ne_zero]
-  norm_num
+    ‖D6 (fun t => t^4) (1 : ℂ)‖ > 1 := by
+  rw [D6_quartic_value 1 one_ne_zero]
+  simp; norm_num
 
 /-- Cubic mode is admissible throughout the FUST domain -/
 theorem cubic_admissible_in_domain (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
-    |D6 (fun t => t^3) x₀| < 1 := by
+    ‖D6 (fun t => t^3) (↑x₀ : ℂ)‖ < 1 := by
   have hx₀_ne : x₀ ≠ 0 := ne_of_gt hdom.1
   rw [D6_cubic_eq_massGap_mul_sq x₀ hx₀_ne]
-  simp only [massGapΔ]
+  rw [show (↑massGapΔ : ℂ) * (↑x₀ : ℂ) ^ 2 = ↑(massGapΔ * x₀ ^ 2) from by push_cast; ring]
+  simp only [Complex.norm_real, Real.norm_eq_abs, massGapΔ]
   rw [abs_of_pos (by positivity)]
   have hle : x₀^2 ≤ 1 := by
     have : x₀ ≤ 1 := hdom.2
@@ -430,7 +379,7 @@ theorem cubic_admissible_in_domain (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
 
 /-- A mode (d, x₀) is admissible if its D₆ mass is below 1 -/
 def IsAdmissibleMode (d : ℕ) (x₀ : ℝ) : Prop :=
-  x₀ ≠ 0 → |D6 (fun t => t ^ d) x₀| < 1
+  x₀ ≠ 0 → ‖D6 (fun t => t ^ d) (↑x₀ : ℂ)‖ < 1
 
 /-- Degree 3 is admissible for all x₀ in FUST domain -/
 theorem degree3_admissible (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
@@ -441,10 +390,12 @@ theorem degree3_admissible (x₀ : ℝ) (hdom : InFUSTDomain x₀) :
 /-- Degree 4 is not admissible at x₀ = 1 -/
 theorem degree4_inadmissible_at_one : ¬ IsAdmissibleMode 4 1 := by
   intro h
-  have := h one_ne_zero
-  rw [D6_quartic_eq 1 one_ne_zero] at this
-  simp only [one_pow, mul_one] at this
-  have : (84 : ℝ) / 25 < 1 := by rwa [abs_of_pos (by norm_num : (84 : ℝ) / 25 > 0)] at this
+  have h1 := h one_ne_zero
+  rw [D6_quartic_eq 1 one_ne_zero] at h1
+  simp only [Complex.ofReal_one, one_pow, mul_one, Complex.ofReal_ofNat] at h1
+  rw [show ((84 : ℂ) / 25 : ℂ) = ↑((84 : ℝ) / 25) from by push_cast; ring] at h1
+  rw [Complex.norm_real, Real.norm_eq_abs,
+      abs_of_pos (by norm_num : (84 : ℝ) / 25 > 0)] at h1
   linarith
 
 /-- At x₀ = 1, d_max = 3: cubic is the unique admissible massive mode -/

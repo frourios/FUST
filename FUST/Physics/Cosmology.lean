@@ -38,8 +38,8 @@ open FUST.TimeTheorem FUST.LeastAction FUST.WaveEquation
 theorem fust_time_asymmetry : φ > 1 ∧ |ψ| < 1 := ⟨φ_gt_one, abs_psi_lt_one⟩
 
 /-- Scale transformation in FUST: time evolution is f ↦ f(φ·) -/
-theorem fust_scale_evolution (f : ℝ → ℝ) :
-    timeEvolution f = fun t => f (φ * t) := rfl
+theorem fust_scale_evolution (f : ℂ → ℂ) :
+    timeEvolution f = fun t => f ((↑φ : ℂ) * t) := rfl
 
 /-- FUST time direction: φ is unique expansion factor -/
 theorem fust_expansion_unique : φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
@@ -55,8 +55,8 @@ The scale lattice {φⁿ : n ∈ ℤ} is derived from FUST time evolution:
 
 /-- Scale lattice is derived from time evolution: φⁿ = n-fold time scaling -/
 theorem scaleLattice_from_timeEvolution :
-    ∀ n : ℕ, (fun (f : ℝ → ℝ) (t : ℝ) => f (φ^n * t)) =
-             (fun f t => f (φ^n * t)) := fun _ => rfl
+    ∀ n : ℕ, (fun (f : ℂ → ℂ) (t : ℂ) => f ((↑φ : ℂ)^n * t)) =
+             (fun f t => f ((↑φ : ℂ)^n * t)) := fun _ => rfl
 
 /-- Scale lattice point at level n: notation for φ^n (n-fold time evolution) -/
 noncomputable abbrev scaleLattice (n : ℤ) : ℝ := φ ^ n
@@ -112,11 +112,12 @@ theorem adjacent_level_ratio (n : ℤ) :
 /-! ## Part 4: Time Evolution and Entropy (from TimeTheorem) -/
 
 /-- Entropy increases under time evolution -/
-theorem entropy_time_connection (f : ℝ → ℝ) (t : ℝ) :
-    entropyAtD6 (timeEvolution f) t = (perpProjectionD6 (timeEvolution f) t)^2 := rfl
+theorem entropy_time_connection (f : ℂ → ℂ) (t : ℂ) :
+    entropyAtD6 (timeEvolution f) t =
+      Complex.normSq (perpProjectionD6 (timeEvolution f) t) := rfl
 
 /-- ker(D6) is preserved under time evolution -/
-theorem kernel_preserved_time (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+theorem kernel_preserved_time (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     IsInKerD6 (timeEvolution f) :=
   ker_D6_invariant f hf
 

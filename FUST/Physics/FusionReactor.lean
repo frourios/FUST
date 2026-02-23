@@ -76,18 +76,18 @@ Confinement = ker(D6) state. Turbulence = exit from ker(D6).
 -/
 
 -- Confinement = zero Lagrangian action
-theorem confinement_zero_action (f : ℝ → ℝ) (hf : IsInKerD6 f) (x : ℝ) (hx : x ≠ 0) :
+theorem confinement_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
     D6Lagrangian f x = 0 := by
   rw [D6_lagrangian_zero_iff]
   exact IsInKerD6_implies_D6_zero f hf x hx
 
 -- Turbulence = positive entropy
-theorem turbulence_positive_entropy (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+theorem turbulence_positive_entropy (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, entropyAtD6 f t > 0 :=
   third_law_massive_positive_entropy f hf
 
 -- Turbulent burst = nonzero perpProjectionD6
-theorem burst_detection (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+theorem burst_detection (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, perpProjectionD6 f t ≠ 0 :=
   (timeExists_iff_nonzero_perpD6 f).mp hf
 
@@ -151,23 +151,26 @@ theorem alpha_effDeg : (dimAtom 2 2 0).effectiveDegree = 63 := by decide
 -- He-4 atom effectiveDegree
 theorem alpha_atom_effDeg : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
 
+-- Complex lift of He4Ion: z^2 * (1 + z)^2
+noncomputable def He4IonC : ℂ → ℂ := fun z => z ^ 2 * (1 + z) ^ 2
+
 -- He-4 ion is NOT in ker(D6)
-theorem He4Ion_not_in_kerD6 : ¬IsInKerD6 He4Ion := by
+theorem He4Ion_not_in_kerD6 : ¬IsInKerD6 He4IonC := by
   intro ⟨a₀, a₁, a₂, h⟩
-  have h0 := h 0
-  have h1 := h 1
-  have h2 := h 2
-  have h3 := h 3
-  simp [He4Ion, atomStateFn] at h0 h1 h2 h3
-  linarith
+  have h0 := h 0; simp only [He4IonC] at h0; norm_num at h0
+  have h1 := h 1; simp only [He4IonC] at h1; norm_num at h1
+  have h2 := h 2; simp only [He4IonC] at h2; norm_num at h2
+  have h3 := h 3; simp only [He4IonC] at h3; norm_num at h3
+  subst h0; norm_num at h1 h2 h3
+  exact absurd (by linear_combination h3 - 3 * h2 + 3 * h1 : (48 : ℂ) = 0) (by norm_num)
 
 -- Alpha has positive entropy (heating mechanism)
 theorem alpha_positive_entropy :
-    ∃ t, entropyAtD6 He4Ion t > 0 :=
-  third_law_massive_positive_entropy He4Ion He4Ion_not_in_kerD6
+    ∃ t, entropyAtD6 He4IonC t > 0 :=
+  third_law_massive_positive_entropy He4IonC He4Ion_not_in_kerD6
 
 theorem alpha_heating_summary :
-    ¬IsInKerD6 He4Ion ∧
+    ¬IsInKerD6 He4IonC ∧
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     φ > 1 :=
   ⟨He4Ion_not_in_kerD6, third_law_massive_positive_entropy, φ_gt_one⟩
@@ -188,9 +191,9 @@ theorem flux_quantum_structure :
     cooperPairSize = Nuclear.spinDegeneracy := rfl
 
 -- Uniqueness: ker(D5) functions determined by 2 points → single-valued wavefunction
-theorem flux_quantization_from_uniqueness (p q : ℝ → ℝ)
+theorem flux_quantization_from_uniqueness (p q : ℂ → ℂ)
     (hp : IsInKerD5 p) (hq : IsInKerD5 q)
-    (t₀ t₁ : ℝ) (h01 : t₀ ≠ t₁)
+    (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁)
     (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) :
     ∀ t, p t = q t :=
   cooperPair_uniqueness p q hp hq t₀ t₁ h01 h0 h1
@@ -236,8 +239,8 @@ theorem fusion_reactor_classification :
     dimDeuteronIon ≠ dimTritonIon ∧
     -- Turbulence = nonlinear coupling outside ker(D6)
     nonlinearCoeff 1 2 ≠ 0 ∧
-    -- Alpha heating: He4Ion ∉ ker(D6) → positive entropy
-    ¬IsInKerD6 He4Ion ∧
+    -- Alpha heating: He4IonC ∉ ker(D6) → positive entropy
+    ¬IsInKerD6 He4IonC ∧
     -- Flux quantization: Cooper pair size = spinDeg
     cooperPairSize = Nuclear.spinDegeneracy ∧
     -- ker(D5) ⊂ ker(D6): pair embedding

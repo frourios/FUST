@@ -30,15 +30,15 @@ open FUST FUST.SpectralCoefficients FUST.FrourioLogarithm Real Complex Filter
 
 section D6Preservation
 
-structure KernelDecomposition (f : ℝ → ℝ) where
-  a : ℝ
-  b : ℝ
-  c : ℝ
-  d : ℝ
-  complement : ℝ → ℝ
+structure KernelDecomposition (f : ℂ → ℂ) where
+  a : ℂ
+  b : ℂ
+  c : ℂ
+  d : ℂ
+  complement : ℂ → ℂ
   decomp : ∀ x, x ≠ 0 → f x = a * x⁻¹ ^ 2 + b + c * x + d * x ^ 2 + complement x
 
-theorem kernel_part_annihilated (a b c d : ℝ) (x : ℝ) (hx : x ≠ 0) :
+theorem kernel_part_annihilated (a b c d : ℂ) (x : ℂ) (hx : x ≠ 0) :
     D6 (fun t => a * t⁻¹ ^ 2 + b + c * t + d * t ^ 2) x = 0 := by
   have h1 := D6_const b x hx
   have h2 := D6_linear x hx
@@ -54,10 +54,10 @@ theorem kernel_part_annihilated (a b c d : ℝ) (x : ℝ) (hx : x ≠ 0) :
   simp [id] at n2
   linear_combination a * n4 + c * n2 + d * n3
 
-def KernelRecoverable (f : ℝ → ℝ) (x₀ : ℝ) : Prop :=
-  ∃! p : ℝ × ℝ × ℝ × ℝ, ∀ n ∈ ({0, 1, 2, 3} : Set ℤ),
-    PhiBloch.phiLatticeSample f x₀ n =
-      p.1 * (φ ^ n * x₀)⁻¹ ^ 2 + p.2.1 + p.2.2.1 * (φ ^ n * x₀) + p.2.2.2 * (φ ^ n * x₀) ^ 2
+def KernelRecoverable (f : ℂ → ℂ) (x₀ : ℂ) : Prop :=
+  ∃! p : ℂ × ℂ × ℂ × ℂ, ∀ n ∈ ({0, 1, 2, 3} : Set ℤ),
+    PhiBloch.phiLatticeSample f x₀ n = p.1 * ((↑φ : ℂ) ^ n * x₀)⁻¹ ^ 2
+    + p.2.1 + p.2.2.1 * ((↑φ : ℂ) ^ n * x₀) + p.2.2.2 * ((↑φ : ℂ) ^ n * x₀) ^ 2
 
 end D6Preservation
 
@@ -121,8 +121,8 @@ noncomputable def sincRecon (a : ℤ → ℂ) (z : ℂ) : ℂ :=
   ∑' n : ℤ, a n * sincC (z - ↑n)
 
 -- φ-lattice sinc reconstruction
-noncomputable def phiSincRecon (f : ℝ → ℝ) (x₀ : ℝ) (z : ℂ) : ℂ :=
-  sincRecon (fun n => ↑(PhiBloch.phiLatticeSample f x₀ n)) z
+noncomputable def phiSincRecon (f : ℂ → ℂ) (x₀ : ℂ) (z : ℂ) : ℂ :=
+  sincRecon (fun n => PhiBloch.phiLatticeSample f x₀ n) z
 
 -- Interpolation: sincRecon evaluated at integer m = a_m
 theorem sincRecon_eval_int (a : ℤ → ℂ) (m : ℤ) :

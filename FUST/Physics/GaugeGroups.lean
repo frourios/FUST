@@ -11,29 +11,31 @@ Gauge groups are constrained by the kernel hierarchy:
   ker(D2) ⊂ ker(D5) ⊂ ker(D6)
   dim: 1 → 2 → 3
 
-Direct derivation from kernels (as vector spaces):
-- ker(D5), dim 2 → SU(2) (weak isospin)
-- ker(D6), dim 3 → SU(3) (color)
+The φ-dilation operator U_φ[f](z) = f(φz) acts on each kernel basis element
+x^n with eigenvalue φ^n. This eigenvalue spectrum is rigorously derived from
+the golden ratio algebra:
+- ker(D5) = span{1, x}: eigenvalues {1, φ}
+- ker(D6) = span{1, x, x²}: eigenvalues {1, φ, φ²}
 
-U(1) from polynomial variable scaling (preserves direct product structure):
-- x → e^{iθ}x induces grading on ker(D6) → U(1)_Y (hypercharge)
-- This is NOT coordinate transformation; x is the polynomial variable in ℂ[x]
+D5 breaks the 3-dim symmetry of ker(D6) into a 2-dim subspace ker(D5) and
+its complement. The D5[x²] numerator coefficient 6 and D6[x³] numerator
+factor 12(φ-ψ) are uniquely determined by golden ratio algebra.
 
-Note: ker(D2) ⊂ ker(D5) means U(1) cannot be independently derived from ker(D2)
-without breaking the direct product structure SU(3) × SU(2) × U(1).
-
-Multiple gauge choices exist for each kernel dimension. Standard Model is selected by
-observer existence conditions (confinement, stable atom formation).
+Multiple gauge choices exist for each kernel dimension. Standard Model is
+selected by observer existence conditions (confinement, stable atom formation).
 
 ## Main Results
 
 - `kernel_hierarchy`: ker(D2) ⊂ ker(D5) ⊂ ker(D6) with dim = 1, 2, 3
-- `hypercharge_U1_from_scaling`: U(1)_Y from polynomial variable scaling x → e^{iθ}x
-- `su2_Lie_algebra_structure`: su(2) as ONE possible structure on ker(D5)
-- `gauge_parameter_space`: All 12 configurations are mathematically valid
+- `kerD5_eigenvalues`: φ-dilation eigenvalues {1, φ} on ker(D5)
+- `kerD6_eigenvalues`: φ-dilation eigenvalues {1, φ, φ²} on ker(D6)
+- `D5_quadratic_numerator_coeff`: D5[x²] numerator = 6, derived from φ algebra
+- `D6_cubic_numerator_coeff`: D6[x³] numerator = 12(φ-ψ), derived from φ algebra
 -/
 
 namespace FUST
+
+open Complex
 
 /-!
 ## Section 7.1: Kernel Dimension Structure
@@ -78,12 +80,7 @@ theorem kernel_dimension_strict_increase :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact fun x hx => D2_const 1 x hx
   · use 1, one_ne_zero
-    simp only [D2, one_ne_zero, ↓reduceIte, id_eq, mul_one]
-    have hdiff : φ - ψ = Real.sqrt 5 := phi_sub_psi
-    have hdiff_ne : φ - ψ ≠ 0 := by
-      rw [hdiff]
-      exact Real.sqrt_ne_zero'.mpr (by norm_num)
-    exact div_ne_zero hdiff_ne hdiff_ne
+    exact D2_linear_ne_zero 1 one_ne_zero
   · exact fun x hx => D5_const 1 x hx
   · exact D5_linear
   · exact D5_not_annihilate_quadratic
@@ -92,19 +89,7 @@ theorem kernel_dimension_strict_increase :
   · exact D6_quadratic
   · exact D6_not_annihilate_cubic
 
-/-!
-### Theorem 7.1.1: Kernel dimension constrains gauge group choices
-
-The kernel dimensions constrain but do not uniquely determine gauge groups:
-- dim = 1 → trivial (constants only)
-- dim = 2 → G₅ ∈ {SU(2), U(1)×U(1), SO(2)} (all valid mathematically)
-- dim = 3 → G₆ ∈ {SU(3), U(1)³, SU(2)×U(1), SO(3)} (all valid mathematically)
-
-Standard Model (SU(3)×SU(2)×U(1)) is ONE choice, selected by observational boundary conditions.
--/
-
-/-- Kernel dimensions: derived from polynomial annihilation structure
-    - ker(D_n): polynomials of degree 0..n, so dim = n + 1 -/
+/-- Kernel dimensions: derived from polynomial annihilation structure -/
 def kernelDimensions (n : Fin 3) : ℕ := n.val + 1
 
 /-- kernelDimensions values are justified by kernel_dimension_strict_increase -/
@@ -127,54 +112,15 @@ theorem SU3_lie_algebra_dim : 3 * 3 - 1 = 8 := by norm_num
 end KernelDimension
 
 /-!
-## Section 7.2: U(1) Derivation from Polynomial Variable Scaling
+## Section 7.2: Polynomial Grading and Scaling Structure
 
-U(1) is derived from the scaling transformation x → e^{iθ}x on the polynomial variable.
-Note: x is NOT a spacetime coordinate; it is the indeterminate in the polynomial ring ℂ[x].
-
-This scaling induces a grading on ker(D6) = span{1, x, x²}:
-- 1 has degree 0, eigenvalue 1
-- x has degree 1, eigenvalue e^{iθ}
-- x² has degree 2, eigenvalue e^{2iθ}
-
-Why this preserves direct product structure:
-- SU(2) acts on ker(D5) as linear transformations (mixes basis elements)
-- SU(3) acts on ker(D6) as linear transformations (mixes basis elements)
-- U(1) acts diagonally with respect to the grading (preserves degree)
-- Diagonal action commutes with basis mixing → direct product SU(3) × SU(2) × U(1)
-
-Why ker(D2) cannot give independent U(1):
-- ker(D2) ⊂ ker(D5) means any U(1) on ker(D2) is part of GL(ker(D5))
-- This would break the direct product structure
+The polynomial degree grading on ker(D6) = span{1, x, x²} induces a diagonal
+scaling action. For any s ∈ ℂ, the scaling x → sx maps x^n to s^n · x^n.
+This diagonal structure commutes with other diagonal matrices, enabling
+the direct product decomposition of gauge groups.
 -/
 
-section U1Derivation
-
-/-- Hypercharge U(1) from scaling: polynomial degrees give charges (0, 1, 2) -/
-theorem hypercharge_U1_from_scaling :
-    (0 : Fin 3).val = 0 ∧ (1 : Fin 3).val = 1 ∧ (2 : Fin 3).val = 2 :=
-  ⟨rfl, rfl, rfl⟩
-
-/-- The unique compact connected 1-dim Lie group is U(1) -/
-theorem dim1_compact_connected_is_U1 : ∀ n : ℕ, n = 1 → n = 1 := fun _ h => h
-
-/-!
-### Direct Product Structure: SU(3) × SU(2) × U(1)
-
-The direct product structure arises because:
-1. U(1) acts DIAGONALLY on the graded components {1, x, x²} with eigenvalues {1, e^{iθ}, e^{2iθ}}
-2. SU(2), SU(3) act as LINEAR TRANSFORMATIONS on the vector space
-3. Diagonal matrices commute with scalar multiples on each component
-
-The key mathematical fact: for a diagonal matrix D = diag(d₀, d₁, d₂) and any matrix M,
-(DM)ᵢⱼ = dᵢ Mᵢⱼ and (MD)ᵢⱼ = Mᵢⱼ dⱼ. These are equal when M is also diagonal.
-
-For SU(3) × SU(2) × U(1):
-- U(1) scaling is diagonal: diag(1, e^{iθ}, e^{2iθ})
-- SU(3) generators include off-diagonal elements, but they transform HOMOGENEOUSLY
-  under scaling (each Gell-Mann matrix λₐ transforms as λₐ → e^{i(nᵢ-nⱼ)θ} λₐ)
-- This graded structure ensures the Lie brackets close consistently
--/
+section ScalingStructure
 
 /-- Scaling action: diagonal matrix with entries (1, s, s²) -/
 noncomputable def scalingMatrix (s : ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
@@ -198,132 +144,141 @@ theorem diagonal_scaling_commutes_diagonal (s : ℂ) (d : Fin 3 → ℂ) :
   funext i
   ring
 
-/-- Direct product structure: dimensions of gauge algebra factors -/
-theorem direct_product_dimensions :
-    -- U(1): 1-dimensional Lie algebra
-    (1 : ℕ) = 1 ∧
-    -- SU(2): 3-dimensional Lie algebra (2² - 1)
-    2 * 2 - 1 = 3 ∧
-    -- SU(3): 8-dimensional Lie algebra (3² - 1)
-    3 * 3 - 1 = 8 ∧
-    -- Total: 1 + 3 + 8 = 12
-    1 + 3 + 8 = 12 := by
-  norm_num
-
-/-- Direct product structure theorem -/
-theorem direct_product_structure :
-    -- 1. U(1) acts diagonally on graded components with degrees (0, 1, 2)
-    ((0 : Fin 3).val = 0 ∧ (1 : Fin 3).val = 1 ∧ (2 : Fin 3).val = 2) ∧
-    -- 2. SU(2), SU(3) have Lie algebra dimensions 3 and 8
-    (2 * 2 - 1 = 3 ∧ 3 * 3 - 1 = 8) ∧
-    -- 3. Total dimension of gauge algebra
-    (1 + 3 + 8 = 12) := by
-  refine ⟨⟨rfl, rfl, rfl⟩, ?_, ?_⟩ <;> norm_num
-
-end U1Derivation
+end ScalingStructure
 
 /-!
-## Section 7.3: SU(2) Derivation from ker(D5)
+## Section 7.3: φ-Dilation Eigenvalues on ker(D5)
 
-ker(D5) = span{1, x} forms a 2-dimensional vector space.
-The spin quantum number j is uniquely determined by: dim = 2j + 1
-For dim = 2: j = 1/2 (spin-1/2 representation)
+The φ-dilation operator U_φ[f](z) = f(φz) acts on the monomial basis of
+ker(D5) = span{1, x} with eigenvalues {φ⁰, φ¹} = {1, φ}.
+These eigenvalues are derived from the algebraic identity f(φz) = φ^n f(z)
+for f(z) = z^n, with NO arbitrary integers.
 -/
 
-section SU2Derivation
+section PhiDilationOnKerD5
 
-/-- σ_z eigenvalue: 1 - 2n for basis element n ∈ Fin 2
-    n=0 (constant 1) → eigenvalue 1, n=1 (linear x) → eigenvalue -1 -/
-private def sigma_z_eigenvalue (n : Fin 2) : ℤ := 1 - 2 * n.val
+/-- φ-dilation eigenvalue on monomial x^n: U_φ[x^n](z) = φ^n · z^n -/
+theorem phiDilate_monomial_eigenvalue (n : ℕ) (z : ℂ) :
+    ((↑φ : ℂ) * z) ^ n = (↑φ : ℂ) ^ n * z ^ n := mul_pow _ _ _
 
-/-- σ_z eigenvalues are ±1 (spin-1/2) -/
-theorem sigma_z_spin_half :
-    sigma_z_eigenvalue 0 = 1 ∧ sigma_z_eigenvalue 1 = -1 := ⟨rfl, rfl⟩
+/-- ker(D5) basis eigenvalues: {φ⁰, φ¹} = {1, φ} -/
+theorem kerD5_eigenvalues :
+    (↑φ : ℂ) ^ (0 : ℕ) = 1 ∧ (↑φ : ℂ) ^ (1 : ℕ) = ↑φ := by
+  simp
 
-/-- Dimension formula: dim ker(D5) = 2 = 2j + 1 implies j = 1/2 -/
-theorem spin_from_dim : (2 : ℕ) = 2 * 1 / 2 + 1 := by norm_num
+/-- Eigenvalue ratio in ker(D5): φ¹/φ⁰ = φ -/
+theorem kerD5_eigenvalue_ratio :
+    (↑φ : ℂ) ^ 1 / (↑φ : ℂ) ^ 0 = ↑φ := by simp
 
-/-- [σ_z, σ₊] = 2σ₊: eigenvalue difference is 2 -/
-theorem su2_sz_splus_commutator :
-    sigma_z_eigenvalue 0 - sigma_z_eigenvalue 1 = 2 := by decide
+/-- The two eigenvalues are distinct (φ ≠ 1) -/
+theorem kerD5_eigenvalues_distinct :
+    (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (1 : ℕ) := by
+  simp only [pow_zero, pow_one]
+  exact_mod_cast (ne_of_gt φ_gt_one).symm
 
-/-- Sum of eigenvalues is 0 (traceless) -/
-theorem sigma_z_traceless :
-    sigma_z_eigenvalue 0 + sigma_z_eigenvalue 1 = 0 := by decide
-
-end SU2Derivation
+end PhiDilationOnKerD5
 
 /-!
-## Section 7.4: SU(3) Derivation from ker(D6)
+## Section 7.4: φ-Dilation Eigenvalues on ker(D6)
 
-ker(D6) = span{1, x, x²} forms a 3-dimensional vector space.
-The unitary group on this space is U(3), but the trace component is excluded by D6.
+ker(D6) = span{1, x, x²} has φ-dilation eigenvalues {1, φ, φ²} = {1, φ, φ+1}.
+D5 breaks ker(D6) into ker(D5) ⊕ complement: the D5[x²] numerator coefficient
+is exactly 6, and D6[x³] numerator has factor 12(φ-ψ). Both are derived from
+golden ratio algebra without arbitrary constants.
 -/
 
-section SU3Derivation
+section PhiDilationOnKerD6
 
-/-- D6 annihilates constants (trace component in u(3) → su(3)) -/
+/-- ker(D6) basis eigenvalues: {φ⁰, φ¹, φ²} = {1, φ, φ+1} -/
+theorem kerD6_eigenvalues :
+    (↑φ : ℂ) ^ (0 : ℕ) = 1 ∧
+    (↑φ : ℂ) ^ (1 : ℕ) = ↑φ ∧
+    (↑φ : ℂ) ^ (2 : ℕ) = ↑φ + 1 := by
+  refine ⟨by simp, by simp, ?_⟩
+  exact golden_ratio_property_complex
+
+/-- The three eigenvalues are pairwise distinct -/
+theorem kerD6_eigenvalues_distinct :
+    (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (1 : ℕ) ∧
+    (↑φ : ℂ) ^ (1 : ℕ) ≠ (↑φ : ℂ) ^ (2 : ℕ) ∧
+    (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (2 : ℕ) := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp only [pow_zero, pow_one]
+    exact_mod_cast (ne_of_gt φ_gt_one).symm
+  · simp only [pow_one]
+    rw [golden_ratio_property_complex]
+    have : (↑φ : ℂ) + 1 = ↑(φ + 1) := by push_cast; ring
+    rw [this]; exact_mod_cast ne_of_lt (by linarith [phi_pos] : φ < φ + 1)
+  · simp only [pow_zero]
+    rw [golden_ratio_property_complex]
+    have : (↑φ : ℂ) + 1 = ↑(φ + 1) := by push_cast; ring
+    rw [this]; exact_mod_cast ne_of_lt (by linarith [phi_pos] : 1 < φ + 1)
+
+/-- D6 annihilates constants (trace component) -/
 theorem D6_excludes_trace :
     ∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0 :=
   fun x hx => D6_const 1 x hx
 
 /-- The trace-free condition forces SU(3) over U(3) -/
 theorem trace_free_forces_SU3 :
-    -- D6[1] = 0 means scalar (trace) part is invisible to D6
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    -- D6 distinguishes the three directions
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
   ⟨fun x hx => D6_const 1 x hx, D6_not_annihilate_cubic⟩
 
 /-- D5 acting on ker(D6) breaks SU(3) symmetry -/
-theorem D5_breaks_SU3_symmetry (x : ℝ) (hx : x ≠ 0) :
+theorem D5_breaks_SU3_symmetry (x : ℂ) (hx : x ≠ 0) :
     D5 (fun _ => 1) x = 0 ∧ D5 id x = 0 ∧ D5 (fun t => t^2) x ≠ 0 :=
   ⟨D5_const 1 x hx, D5_linear x hx, D5_not_annihilate_quadratic x hx⟩
 
-/-- D5 coefficient for x²: the numerator coefficient is 6 -/
-theorem D5_quadratic_coefficient :
-    ∃ c : ℝ, c = 6 ∧ c ≠ 0 := ⟨6, rfl, by norm_num⟩
+/-- D5[x²] numerator coefficient = 6, derived from φ⁴+ψ⁴+φ²+ψ²-4 -/
+theorem D5_quadratic_numerator_coeff :
+    ((↑φ : ℂ)^2)^2 + (↑φ : ℂ)^2 - 4 + (↑ψ : ℂ)^2 + ((↑ψ : ℂ)^2)^2 = 6 := by
+  linear_combination phi_pow4_complex + psi_pow4_complex +
+    golden_ratio_property_complex + psi_sq_complex + 4 * phi_add_psi_complex
+
+/-- D6[x³] numerator factor = 12(φ-ψ), derived from φ⁹-3φ⁶+φ³-ψ³+3ψ⁶-ψ⁹ -/
+theorem D6_cubic_numerator_coeff :
+    (↑φ : ℂ)^9 - 3*(↑φ : ℂ)^6 + (↑φ : ℂ)^3 - (↑ψ : ℂ)^3
+    + 3*(↑ψ : ℂ)^6 - (↑ψ : ℂ)^9 = 12 * ((↑φ : ℂ) - ↑ψ) := by
+  linear_combination phi_pow9_complex - 3 * phi_pow6_complex + phi_cubed_complex -
+    psi_cubed_complex + 3 * psi_pow6_complex - psi_pow9_complex
 
 /-- SU(3) dimension: 8 = 3² - 1 -/
 theorem SU3_dimension : (8 : ℕ) = 3^2 - 1 := by norm_num
 
-/-- Weyl group of SU(3) is S₃ (permutation of 3 elements) -/
-theorem SU3_Weyl_group_order : Nat.factorial 3 = 6 := rfl
-
-end SU3Derivation
+end PhiDilationOnKerD6
 
 /-!
 ## Main Theorem: Gauge Group Parameter Space
 
 The kernel structure defines a parameter space of gauge configurations:
-1. U(1): polynomial degrees (0, 1, 2) from variable scaling x → e^{iθ}x
+1. Polynomial grading degrees (0, 1, 2) from variable scaling
 2. G₅: dim = 2 allows SU(2), U(1)², SO(2) - all mathematically valid
 3. G₆: dim = 3 allows SU(3), U(1)³, SU(2)×U(1), SO(3) - all mathematically valid
 
 Standard Model is the observationally selected point in this 12-point parameter space.
 -/
 
-/-- Theorem 7.1: Kernel structure constrains gauge groups (does not uniquely determine) -/
+/-- Kernel structure constrains gauge groups: φ-eigenvalues + kernel dimensions -/
 theorem gauge_groups_from_kernel_structure :
-    -- U(1) charges = polynomial degrees (0, 1, 2)
-    ((0 : Fin 3).val = 0 ∧ (1 : Fin 3).val = 1 ∧ (2 : Fin 3).val = 2) ∧
-    -- SU(2) eigenvalues: σ_z(n) = 1 - 2n for n ∈ Fin 2
-    (sigma_z_eigenvalue 0 = 1 ∧ sigma_z_eigenvalue 1 = -1) ∧
-    -- SU(3) from trace-free unitary structure on 3-dim kernel
+    -- φ-dilation eigenvalues on ker(D5): {1, φ}
+    ((↑φ : ℂ) ^ (0 : ℕ) = 1 ∧ (↑φ : ℂ) ^ (1 : ℕ) = ↑φ) ∧
+    -- ker(D6) dimension and trace-free condition
     (kernelDimensions 2 = 3 ∧
      (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
      (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0)) :=
-  ⟨⟨rfl, rfl, rfl⟩, ⟨rfl, rfl⟩, rfl, fun x hx => D6_const 1 x hx, D6_not_annihilate_cubic⟩
+  ⟨kerD5_eigenvalues, rfl, fun x hx => D6_const 1 x hx, D6_not_annihilate_cubic⟩
 
 /-- Kernel structure provides constraints, observation selects specific gauge groups -/
 theorem gauge_parameter_space_constraints :
     -- Dimension sequence (1, 2, 3) is derived from kernel analysis
     (kernelDimensions 0 = 1 ∧ kernelDimensions 1 = 2 ∧ kernelDimensions 2 = 3) ∧
-    -- SU(2) spin eigenvalues: σ_z(n) = 1 - 2n (one possible structure on dim=2 space)
-    (∀ n : Fin 2, sigma_z_eigenvalue n = 1 - 2 * n.val) ∧
+    -- φ-dilation eigenvalues on ker(D6): {1, φ, φ+1}
+    ((↑φ : ℂ) ^ (0 : ℕ) = 1 ∧ (↑φ : ℂ) ^ (1 : ℕ) = ↑φ ∧
+     (↑φ : ℂ) ^ (2 : ℕ) = ↑φ + 1) ∧
     -- Lie algebra dimensions for SU(n): n² - 1
     (2 * 2 - 1 = 3 ∧ 3 * 3 - 1 = 8) :=
-  ⟨⟨rfl, rfl, rfl⟩, fun _ => rfl, by norm_num, by norm_num⟩
+  ⟨⟨rfl, rfl, rfl⟩, kerD6_eigenvalues, by norm_num, by norm_num⟩
 
 /-!
 ## Section 7.5: Spacetime Dimension Derivation
@@ -331,10 +286,6 @@ theorem gauge_parameter_space_constraints :
 4D spacetime (3+1) is derived from FUST kernel structure:
 - Spatial dimension = dim ker(D6) = 3
 - Temporal dimension = 1 (from φ/ψ asymmetry: φ > 1, |ψ| < 1)
-
-Note: The kernel dimensions (3 for space, 1 for time) are gauge-independent.
-The physical interpretation (photons, time evolution) applies when the universe is
-observationally identified with the Standard Model point in the 12-point parameter space.
 -/
 
 section KernelStructure

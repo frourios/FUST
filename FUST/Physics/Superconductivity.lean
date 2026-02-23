@@ -48,9 +48,9 @@ theorem flux_quantum_denominator :
     cooperPairSize = 2 := rfl
 
 -- ker(D5) is affine: paired states are "linear" (bosonic)
-theorem cooperPair_uniqueness (p q : ℝ → ℝ)
+theorem cooperPair_uniqueness (p q : ℂ → ℂ)
     (hp : IsInKerD5 p) (hq : IsInKerD5 q)
-    (t₀ t₁ : ℝ) (h01 : t₀ ≠ t₁)
+    (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁)
     (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) :
     ∀ t, p t = q t :=
   kernel_interpolation_unique_D5 p q hp hq t₀ t₁ h01 h0 h1
@@ -63,7 +63,7 @@ This embedding is the mathematical origin of macroscopic coherence.
 -/
 
 -- ker(D5) ⊂ ker(D6): every affine function is quadratic (with a₂ = 0)
-theorem spin_pair_embeds_in_spatial (f : ℝ → ℝ) (hf : IsInKerD5 f) :
+theorem spin_pair_embeds_in_spatial (f : ℂ → ℂ) (hf : IsInKerD5 f) :
     IsInKerD6 f := by
   obtain ⟨a₀, a₁, hf_eq⟩ := hf
   exact ⟨a₀, a₁, 0, fun t => by rw [hf_eq]; ring⟩
@@ -76,10 +76,10 @@ theorem condensate_dimension :
 theorem quadratic_not_in_kerD5 :
     ¬IsInKerD5 (fun t => t ^ 2) := by
   intro ⟨a₀, a₁, h⟩
-  have h0 := h 0; simp at h0
-  have h1 := h 1; simp at h1
-  have h2 := h 2; simp at h2
-  linarith
+  have h0 := h 0; norm_num at h0
+  have h1 := h 1; norm_num at h1
+  have h2 := h 2; norm_num at h2
+  subst h0; norm_num at h1 h2; subst h1; norm_num at h2
 
 /-! ## Section 3: Superconducting Gap from Spectral Structure
 
@@ -88,13 +88,13 @@ ker(D6)⊥ states: gapped by Δ (quasiparticles).
 -/
 
 -- Supercurrent carriers are in ker(D6): zero action
-theorem supercurrent_zero_action (f : ℝ → ℝ) (hf : IsInKerD6 f) (x : ℝ) (hx : x ≠ 0) :
+theorem supercurrent_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
     D6Lagrangian f x = 0 := by
   rw [D6_lagrangian_zero_iff]
   exact IsInKerD6_implies_D6_zero f hf x hx
 
 -- Quasiparticles are NOT in ker(D6): positive action (gapped)
-theorem quasiparticle_positive_entropy (f : ℝ → ℝ) (hf : ¬IsInKerD6 f) :
+theorem quasiparticle_positive_entropy (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, entropyAtD6 f t > 0 :=
   third_law_D6 f hf
 

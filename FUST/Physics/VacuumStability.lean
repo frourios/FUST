@@ -11,7 +11,7 @@ No vacuum decay can occur.
 
 ## Key Results
 
-1. The effective potential V(f,x) = (D₆f(x))² is always non-negative
+1. The effective potential V(f,z) = ‖D₆f(z)‖² is always non-negative
 2. The Higgs self-coupling analog λ_FUST = 144/25000 > 0 (exact, does not run)
 3. ker(D₆) is the unique global minimum of the Hamiltonian (H = 0)
 4. No lower-energy state exists (H ≥ 0 for all states)
@@ -26,7 +26,7 @@ at all energy scales. The top quark Yukawa coupling drives λ negative at ~10¹�
 making the electroweak vacuum metastable.
 
 In FUST, no such instability exists because:
-- The Lagrangian L = (D₆f)² is manifestly non-negative (no Mexican hat potential)
+- The Lagrangian L = ‖D₆f‖² is manifestly non-negative (no Mexican hat potential)
 - The self-coupling is an exact algebraic constant, not a running parameter
 - The degree constraint (d_max = 3) prevents runaway modes
 - D₆ completeness (D₇+ reduces to D₆) ensures no trans-Planckian instability
@@ -38,26 +38,26 @@ open FUST FUST.LeastAction FUST.Hamiltonian FUST.SpectralCoefficients
 
 /-! ## Section 1: Effective Potential
 
-The FUST effective potential V(f,x) = (D₆f(x))² is the local Lagrangian density.
+The FUST effective potential V(f,z) = ‖D₆f(z)‖² is the local Lagrangian density.
 Unlike the SM Higgs potential V(h) = μ²|h|² + λ|h|⁴, it is manifestly non-negative.
 -/
 
 section EffectivePotential
 
-/-- FUST effective potential: V(f,x) = (D₆f(x))² -/
-noncomputable def effectivePotential (f : ℝ → ℝ) (x : ℝ) : ℝ := (D6 f x) ^ 2
+/-- FUST effective potential: V(f,z) = ‖D₆f(z)‖² -/
+noncomputable def effectivePotential (f : ℂ → ℂ) (z : ℂ) : ℝ := Complex.normSq (D6 f z)
 
-theorem effectivePotential_nonneg (f : ℝ → ℝ) (x : ℝ) :
-    effectivePotential f x ≥ 0 := sq_nonneg _
+theorem effectivePotential_nonneg (f : ℂ → ℂ) (z : ℂ) :
+    effectivePotential f z ≥ 0 := Complex.normSq_nonneg _
 
-theorem effectivePotential_ker_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (x : ℝ) (hx : x ≠ 0) :
-    effectivePotential f x = 0 := by
-  simp only [effectivePotential, sq_eq_zero_iff]
-  exact IsInKerD6_implies_D6_zero f hf x hx
+theorem effectivePotential_ker_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) (z : ℂ) (hz : z ≠ 0) :
+    effectivePotential f z = 0 := by
+  simp only [effectivePotential, Complex.normSq_eq_zero]
+  exact IsInKerD6_implies_D6_zero f hf z hz
 
-theorem effectivePotential_massive_pos (f : ℝ → ℝ) (x : ℝ)
-    (hD6 : D6 f x ≠ 0) : effectivePotential f x > 0 :=
-  sq_pos_of_ne_zero hD6
+theorem effectivePotential_massive_pos (f : ℂ → ℂ) (z : ℂ)
+    (hD6 : D6 f z ≠ 0) : effectivePotential f z > 0 :=
+  Complex.normSq_pos.mpr hD6
 
 end EffectivePotential
 
@@ -116,7 +116,7 @@ theorem vacuum_is_global_minimum :
     (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) :=
   ⟨partialHamiltonianD6_nonneg, partialHamiltonianD6_ker_zero⟩
 
-theorem vacuum_energy_is_zero (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
+theorem vacuum_energy_is_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) (N : ℕ) :
     partialHamiltonianD6 f N = 0 :=
   partialHamiltonianD6_ker_zero f hf N
 
@@ -128,18 +128,18 @@ end GlobalMinimum
 
 /-! ## Section 5: No Lower Vacuum Exists
 
-Since H = Σ(D₆f(φⁿ))² ≥ 0 for all f, there is no state with negative energy.
+Since H = Σ‖D₆f(φⁿ)‖² ≥ 0 for all f, there is no state with negative energy.
 The vacuum (H = 0) is therefore the absolute minimum.
 -/
 
 section NoLowerVacuum
 
-theorem no_negative_energy (f : ℝ → ℝ) (n : ℤ) :
+theorem no_negative_energy (f : ℂ → ℂ) (n : ℤ) :
     hamiltonianContributionD6 f n ≥ 0 :=
   hamiltonianContributionD6_nonneg f n
 
 theorem no_lower_vacuum_exists :
-    ¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonianD6 f N < 0 := by
+    ¬∃ (f : ℂ → ℂ) (N : ℕ), partialHamiltonianD6 f N < 0 := by
   intro ⟨f, N, h⟩
   linarith [partialHamiltonianD6_nonneg f N]
 
@@ -164,8 +164,8 @@ theorem gap_region_empty (E : ℝ) (hpos : 0 < E) (hlt : E < massGapΔ ^ 2) :
 /-- The cubic mode (minimum massive mode) has positive Hamiltonian at scale 0 -/
 theorem cubic_mode_positive :
     hamiltonianContributionD6 (fun t => t ^ 3) 0 > 0 := by
-  simp only [hamiltonianContributionD6, zpow_zero]
-  exact sq_pos_of_ne_zero (D6_not_annihilate_cubic 1 one_ne_zero)
+  simp only [hamiltonianContributionD6, zpow_zero, Complex.ofReal_one]
+  exact Complex.normSq_pos.mpr (D6_not_annihilate_cubic 1 one_ne_zero)
 
 /-- D₆ output is nonzero for any polynomial degree ≥ 3 -/
 theorem monomial_above_gap (d : ℕ) (hd : d ≥ 3) :
@@ -182,11 +182,11 @@ Once in the vacuum, always in the vacuum.
 
 section TimeInvariance
 
-theorem vacuum_time_invariant (f : ℝ → ℝ) (hf : IsInKerD6 f) :
+theorem vacuum_time_invariant (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     IsInKerD6 (timeEvolution f) :=
   ker_D6_invariant f hf
 
-theorem vacuum_stable_under_evolution (f : ℝ → ℝ) (hf : IsInKerD6 f) (N : ℕ) :
+theorem vacuum_stable_under_evolution (f : ℂ → ℂ) (hf : IsInKerD6 f) (N : ℕ) :
     partialHamiltonianD6 (timeEvolution f) N = 0 :=
   partialHamiltonianD6_ker_zero _ (ker_D6_invariant f hf) N
 
@@ -201,16 +201,16 @@ ker(D₆) satisfies both conditions.
 section TrueVacuum
 
 /-- A function is a true vacuum if it has zero Hamiltonian and no lower state exists -/
-def IsTrueVacuum (f : ℝ → ℝ) : Prop :=
+def IsTrueVacuum (f : ℂ → ℂ) : Prop :=
   (∀ N, partialHamiltonianD6 f N = 0) ∧
   (∀ g N, partialHamiltonianD6 g N ≥ 0) ∧
   IsInKerD6 f
 
-theorem vacuum_is_true (f : ℝ → ℝ) (hf : IsInKerD6 f) : IsTrueVacuum f :=
+theorem vacuum_is_true (f : ℂ → ℂ) (hf : IsInKerD6 f) : IsTrueVacuum f :=
   ⟨partialHamiltonianD6_ker_zero f hf, partialHamiltonianD6_nonneg, hf⟩
 
 /-- A false vacuum would have a lower-energy state. This is impossible in FUST. -/
-def IsFalseVacuum (f : ℝ → ℝ) : Prop :=
+def IsFalseVacuum (f : ℂ → ℂ) : Prop :=
   (∀ N, partialHamiltonianD6 f N = 0) ∧
   (∃ g N, partialHamiltonianD6 g N < 0)
 
@@ -229,10 +229,10 @@ Since the vacuum has H = 0 and all states have H ≥ 0, no decay target exists.
 section NoDecay
 
 /-- A state can decay if there exists a lower-energy state -/
-def CanDecay (f : ℝ → ℝ) : Prop :=
-  ∃ g : ℝ → ℝ, ∃ N : ℕ, partialHamiltonianD6 g N < partialHamiltonianD6 f N
+def CanDecay (f : ℂ → ℂ) : Prop :=
+  ∃ g : ℂ → ℂ, ∃ N : ℕ, partialHamiltonianD6 g N < partialHamiltonianD6 f N
 
-theorem vacuum_cannot_decay (f : ℝ → ℝ) (hf : IsInKerD6 f) : ¬CanDecay f := by
+theorem vacuum_cannot_decay (f : ℂ → ℂ) (hf : IsInKerD6 f) : ¬CanDecay f := by
   intro ⟨g, N, h⟩
   rw [partialHamiltonianD6_ker_zero f hf N] at h
   linarith [partialHamiltonianD6_nonneg g N]
@@ -293,7 +293,7 @@ end TopQuark
 
 /-! ## Section 12: Degree Constraint Ensures Stability
 
-The admissibility condition |D₆(x^d)(x₀)| < 1 is satisfied for d = 3 (cubic)
+The admissibility condition ‖D₆(x^d)(x₀)‖ < 1 is satisfied for d = 3 (cubic)
 but violated for d ≥ 4 (quartic and higher). This bounds the maximum degree
 of physical modes, preventing runaway instabilities.
 -/
@@ -301,9 +301,7 @@ of physical modes, preventing runaway instabilities.
 section DegreeConstraint
 
 theorem admissibility_stability :
-    -- Cubic mode (d=3) is admissible throughout the FUST domain
-    (∀ x₀, InFUSTDomain x₀ → |D6 (fun t => t ^ 3) x₀| < 1) ∧
-    -- Quartic mode (d=4) is inadmissible at x₀ = 1
+    (∀ x₀, InFUSTDomain x₀ → ‖D6 (fun t => t ^ 3) (↑x₀ : ℂ)‖ < 1) ∧
     (¬ IsAdmissibleMode 4 1) :=
   ⟨cubic_admissible_in_domain, degree4_inadmissible_at_one⟩
 
@@ -322,23 +320,14 @@ section Complete
 
 /-- **Main Theorem**: Complete FUST vacuum stability -/
 theorem fust_vacuum_stability :
-    -- 1. Hamiltonian is non-negative (no negative-energy states)
     (∀ f N, partialHamiltonianD6 f N ≥ 0) ∧
-    -- 2. ker(D₆) has exactly zero energy (vacuum state)
     (∀ f, IsInKerD6 f → ∀ N, partialHamiltonianD6 f N = 0) ∧
-    -- 3. Spectral gap exists and is positive
     (0 < massGapΔ ^ 2) ∧
-    -- 4. Gap region contains no physical states
     (∀ E, 0 < E → E < massGapΔ ^ 2 → ¬ EnergyInSpectrum E) ∧
-    -- 5. Higgs self-coupling analog is positive (does not run)
     (0 < lambda_FUST) ∧
-    -- 6. Vacuum is invariant under time evolution
     (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
-    -- 7. No state has negative energy
-    (¬∃ (f : ℝ → ℝ) (N : ℕ), partialHamiltonianD6 f N < 0) ∧
-    -- 8. Degree constraint bounds physical modes (d_max = 3)
+    (¬∃ (f : ℂ → ℂ) (N : ℕ), partialHamiltonianD6 f N < 0) ∧
     (IsAdmissibleMode 3 1 ∧ ¬ IsAdmissibleMode 4 1) ∧
-    -- 9. ker(D₆) has dimension 3 (three spatial dimensions)
     (kernelDimensions 2 = 3) :=
   ⟨partialHamiltonianD6_nonneg,
    partialHamiltonianD6_ker_zero,

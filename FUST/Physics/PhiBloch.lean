@@ -10,74 +10,76 @@ In log-coordinates, this becomes translation invariance by log(φ).
 import FUST.Basic
 import FUST.DifferenceOperators
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Complex.Basic
 
 namespace FUST.PhiBloch
 
-open FUST
+open FUST Complex
 
 /-! ## φ-Dilation Operator -/
 
-/-- φ-dilation operator: U_φ[f](x) = f(φx) -/
-noncomputable def phiDilate (f : ℝ → ℝ) : ℝ → ℝ := fun x => f (φ * x)
+/-- φ-dilation operator: U_φ[f](z) = f(φz) -/
+noncomputable def phiDilate (f : ℂ → ℂ) : ℂ → ℂ := fun z => f ((↑φ : ℂ) * z)
 
 /-- φ-dilation is an algebra homomorphism on function composition -/
-theorem phiDilate_comp (f g : ℝ → ℝ) :
+theorem phiDilate_comp (f g : ℂ → ℂ) :
     phiDilate (f ∘ g) = f ∘ phiDilate g := by
-  ext x; simp [phiDilate, Function.comp]
+  ext z; simp [phiDilate, Function.comp]
 
 /-- φ-dilation iterated k times -/
-theorem phiDilate_iter (f : ℝ → ℝ) (k : ℕ) (x : ℝ) :
-    (phiDilate^[k] f) x = f (φ ^ k * x) := by
-  induction k generalizing x with
+theorem phiDilate_iter (f : ℂ → ℂ) (k : ℕ) (z : ℂ) :
+    (phiDilate^[k] f) z = f ((↑φ : ℂ) ^ k * z) := by
+  induction k generalizing z with
   | zero => simp
   | succ n ih =>
     simp only [Function.iterate_succ', Function.comp, phiDilate]
-    rw [ih (φ * x)]
+    rw [ih ((↑φ : ℂ) * z)]
     ring_nf
 
 /-! ## N6 Commutation with φ-Dilation -/
 
 /-- N6 commutes exactly with φ-dilation: N6 ∘ U_φ = U_φ ∘ N6 -/
-theorem N6_phiDilate_comm (f : ℝ → ℝ) (x : ℝ) :
-    N6 (phiDilate f) x = phiDilate (N6 f) x := by
+theorem N6_phiDilate_comm (f : ℂ → ℂ) (z : ℂ) :
+    N6 (phiDilate f) z = phiDilate (N6 f) z := by
   simp only [N6, phiDilate]
   ring_nf
 
 /-! ## D6 Quasi-Commutation with φ-Dilation -/
 
-/-- D6 quasi-commutation: D6(f ∘ φ)(x) = φ · D6(f)(φx) -/
-theorem D6_phiDilate_quasi_comm (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
-    D6 (phiDilate f) x = φ * D6 f (φ * x) := by
-  have hφ : φ ≠ 0 := ne_of_gt phi_pos
-  have hφx : φ * x ≠ 0 := mul_ne_zero hφ hx
-  rw [D6_eq_N6_div _ _ hx, D6_eq_N6_div f (φ * x) hφx]
+/-- D6 quasi-commutation: D6(f ∘ φ)(z) = φ · D6(f)(φz) -/
+theorem D6_phiDilate_quasi_comm (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
+    D6 (phiDilate f) z = (↑φ : ℂ) * D6 f ((↑φ : ℂ) * z) := by
+  have hφ : (↑φ : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt phi_pos)
+  have hφz : (↑φ : ℂ) * z ≠ 0 := mul_ne_zero hφ hz
+  rw [D6_eq_N6_div _ _ hz, D6_eq_N6_div f ((↑φ : ℂ) * z) hφz]
   rw [N6_phiDilate_comm]
   simp only [phiDilate]
   field_simp
 
 /-! ## Hamiltonian Quasi-Commutation -/
 
-/-- Hamiltonian quasi-commutation: H(f∘φ)(x) = φ² · H(f)(φx) -/
-theorem hamiltonian_phiDilate_quasi_comm (f : ℝ → ℝ) (x : ℝ) (hx : x ≠ 0) :
-    (D6 (phiDilate f) x)^2 = φ^2 * (D6 f (φ * x))^2 := by
-  rw [D6_phiDilate_quasi_comm f x hx]
+/-- Hamiltonian quasi-commutation: H(f∘φ)(z) = φ² · H(f)(φz) -/
+theorem hamiltonian_phiDilate_quasi_comm (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
+    (D6 (phiDilate f) z)^2 = (↑φ : ℂ)^2 * (D6 f ((↑φ : ℂ) * z))^2 := by
+  rw [D6_phiDilate_quasi_comm f z hz]
   ring
 
 /-! ## φ-Bloch Eigenfunction Characterization -/
 
 /-- A function is a φ-Bloch eigenfunction if U_φ[f] = c · f -/
-def IsPhiBlochEigenfunction (f : ℝ → ℝ) (c : ℝ) : Prop :=
-  ∀ x, phiDilate f x = c * f x
+def IsPhiBlochEigenfunction (f : ℂ → ℂ) (c : ℂ) : Prop :=
+  ∀ z, phiDilate f z = c * f z
 
 /-- N6 preserves Bloch eigenfunctions: if U_φ f = c·f, then U_φ(N6 f) = c·(N6 f) -/
-theorem N6_preserves_Bloch (f : ℝ → ℝ) (c : ℝ)
+theorem N6_preserves_Bloch (f : ℂ → ℂ) (c : ℂ)
     (hf : IsPhiBlochEigenfunction f c) :
     IsPhiBlochEigenfunction (N6 f) c := by
-  intro x
+  intro z
   rw [← N6_phiDilate_comm]
-  have h : ∀ y, f (φ * y) = c * f y := fun y => hf y
+  have h : ∀ w, f ((↑φ : ℂ) * w) = c * f w := fun w => hf w
   simp only [N6, phiDilate]
-  rw [h (φ^3 * x), h (φ^2 * x), h (φ * x), h (ψ * x), h (ψ^2 * x), h (ψ^3 * x)]
+  rw [h ((↑φ : ℂ)^3 * z), h ((↑φ : ℂ)^2 * z), h ((↑φ : ℂ) * z),
+      h ((↑ψ : ℂ) * z), h ((↑ψ : ℂ)^2 * z), h ((↑ψ : ℂ)^3 * z)]
   ring
 
 /-! ## Unified Spectral Order Classification
@@ -88,42 +90,42 @@ providing a unified framework for crystals, quasicrystals, and amorphous materia
 -/
 
 /-- Crystalline order: f decomposes into finitely many φ-Bloch eigenmodes -/
-def HasCrystallineOrder (f : ℝ → ℝ) : Prop :=
-  ∃ (N : ℕ) (cs : Fin N → ℝ) (fs : Fin N → (ℝ → ℝ)) (eigenvals : Fin N → ℝ),
+def HasCrystallineOrder (f : ℂ → ℂ) : Prop :=
+  ∃ (N : ℕ) (cs : Fin N → ℂ) (fs : Fin N → (ℂ → ℂ)) (eigenvals : Fin N → ℂ),
     (∀ i, IsPhiBlochEigenfunction (fs i) (eigenvals i)) ∧
-    (∀ x, f x = ∑ i : Fin N, cs i * fs i x)
+    (∀ z, f z = ∑ i : Fin N, cs i * fs i z)
 
 /-- N6 commutation is unconditional: holds for crystal, quasicrystal, AND amorphous -/
 theorem N6_commutation_unconditional :
-    ∀ (f : ℝ → ℝ) (x : ℝ), N6 (phiDilate f) x = phiDilate (N6 f) x :=
+    ∀ (f : ℂ → ℂ) (z : ℂ), N6 (phiDilate f) z = phiDilate (N6 f) z :=
   N6_phiDilate_comm
 
 /-- D6 quasi-commutation is unconditional -/
 theorem D6_quasi_commutation_unconditional :
-    ∀ (f : ℝ → ℝ) (x : ℝ), x ≠ 0 →
-      D6 (phiDilate f) x = φ * D6 f (φ * x) :=
+    ∀ (f : ℂ → ℂ) (z : ℂ), z ≠ 0 →
+      D6 (phiDilate f) z = (↑φ : ℂ) * D6 f ((↑φ : ℂ) * z) :=
   D6_phiDilate_quasi_comm
 
 /-- Crystalline order implies N6 f inherits the Bloch structure -/
-theorem crystalline_N6_preserves (f : ℝ → ℝ)
+theorem crystalline_N6_preserves (f : ℂ → ℂ)
     (hf : HasCrystallineOrder f) : HasCrystallineOrder (N6 f) := by
   obtain ⟨N, cs, fs, eigenvals, hbloch, hdecomp⟩ := hf
   refine ⟨N, cs, fun i => N6 (fs i), eigenvals,
-    fun i => N6_preserves_Bloch (fs i) (eigenvals i) (hbloch i), fun x => ?_⟩
-  have hN6f : N6 f x = N6 (fun y => ∑ i : Fin N, cs i * fs i y) x := by
-    congr 1; ext y; exact hdecomp y
+    fun i => N6_preserves_Bloch (fs i) (eigenvals i) (hbloch i), fun z => ?_⟩
+  have hN6f : N6 f z = N6 (fun w => ∑ i : Fin N, cs i * fs i w) z := by
+    congr 1; ext w; exact hdecomp w
   rw [hN6f, N6_finset_sum]
 
 /-! ## φ-Lattice and φ-Dilation Connection -/
 
 section LatticeBlochConnection
 
-noncomputable def phiLatticeSample (f : ℝ → ℝ) (x₀ : ℝ) (n : ℤ) : ℝ :=
-  f (φ ^ n * x₀)
+noncomputable def phiLatticeSample (f : ℂ → ℂ) (z₀ : ℂ) (n : ℤ) : ℂ :=
+  f ((↑φ : ℂ) ^ n * z₀)
 
 /-- φ-lattice sampling is iterated φ-dilation -/
-theorem phiLatticeSample_eq_phiDilate (f : ℝ → ℝ) (x₀ : ℝ) (n : ℕ) :
-    phiLatticeSample f x₀ n = (phiDilate^[n] f) x₀ := by
+theorem phiLatticeSample_eq_phiDilate (f : ℂ → ℂ) (z₀ : ℂ) (n : ℕ) :
+    phiLatticeSample f z₀ n = (phiDilate^[n] f) z₀ := by
   simp [phiLatticeSample, phiDilate_iter]
 
 end LatticeBlochConnection

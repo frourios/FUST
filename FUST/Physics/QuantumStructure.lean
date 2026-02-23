@@ -8,23 +8,23 @@ namespace FUST.Dim
 /-! ## Probability: observation as ScaleQ(dimLagrangian^(1/2)) -/
 
 /-- Observation |D₆ f(φ^k x₀)| with D₆ output dimension -/
-noncomputable def observation (f : ℝ → ℝ) (x₀ : ℝ) (k : ℤ) : ScaleQ (deriveFDim 6) :=
+noncomputable def observation (f : ℂ → ℂ) (x₀ : ℝ) (k : ℤ) : ScaleQ (deriveFDim 6) :=
   ⟨FUST.Probability.observationAt f x₀ k⟩
 
-theorem observation_nonneg (f : ℝ → ℝ) (x₀ : ℝ) (k : ℤ) :
+theorem observation_nonneg (f : ℂ → ℂ) (x₀ : ℝ) (k : ℤ) :
     (observation f x₀ k).val ≥ 0 :=
   FUST.Probability.observationAt_nonneg f x₀ k
 
 /-- Discrete action as ScaleQ(dimLagrangian) -/
-noncomputable def discreteAction (f : ℝ → ℝ) (x₀ : ℝ) (N : ℕ) :
+noncomputable def discreteAction (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) :
     ScaleQ dimLagrangian :=
   ⟨FUST.Probability.discreteAction f x₀ N⟩
 
-theorem discreteAction_nonneg (f : ℝ → ℝ) (x₀ : ℝ) (N : ℕ) :
+theorem discreteAction_nonneg (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) :
     (discreteAction f x₀ N).val ≥ 0 :=
   FUST.Probability.discreteAction_nonneg f x₀ N
 
-theorem action_zero_for_ker (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f)
+theorem action_zero_for_ker (f : ℂ → ℂ) (hf : FUST.LeastAction.IsInKerD6 f)
     (x₀ : ℝ) (hx₀ : 0 < x₀) (N : ℕ) :
     (discreteAction f x₀ N).val = 0 :=
   FUST.Probability.action_zero_for_ker f hf x₀ hx₀ N
@@ -32,18 +32,18 @@ theorem action_zero_for_ker (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f
 /-! ## Thermodynamics: entropy as ScaleQ(dimLagrangian) -/
 
 /-- Entropy at time t for function f -/
-noncomputable def entropyAt (f : ℝ → ℝ) (t : ℝ) : ScaleQ dimLagrangian :=
+noncomputable def entropyAt (f : ℂ → ℂ) (t : ℂ) : ScaleQ dimLagrangian :=
   ⟨FUST.LeastAction.entropyAtD6 f t⟩
 
-theorem third_law (f : ℝ → ℝ) (hf : ¬FUST.LeastAction.IsInKerD6 f) :
+theorem third_law (f : ℂ → ℂ) (hf : ¬FUST.LeastAction.IsInKerD6 f) :
     ∃ t, (entropyAt f t).val > 0 :=
   FUST.Thermodynamics.third_law_massive_positive_entropy f hf
 
-theorem absolute_zero_implies_lightlike (f : ℝ → ℝ)
+theorem absolute_zero_implies_lightlike (f : ℂ → ℂ)
     (h : ∀ t, (entropyAt f t).val = 0) : FUST.LeastAction.IsInKerD6 f :=
   FUST.Thermodynamics.absolute_zero_implies_lightlike f h
 
-theorem lightlike_zero_entropy (f : ℝ → ℝ) (hf : FUST.LeastAction.IsInKerD6 f) :
+theorem lightlike_zero_entropy (f : ℂ → ℂ) (hf : FUST.LeastAction.IsInKerD6 f) :
     ∀ t, (entropyAt f t).val = 0 :=
   FUST.Thermodynamics.lightlike_can_reach_zero f hf
 
