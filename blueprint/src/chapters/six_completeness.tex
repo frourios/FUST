@@ -1,54 +1,45 @@
-% Chapter 5: Six-Element Completeness Theorem
-\chapter{Six-Element Completeness Theorem}
+% Chapter 5: Six-Element Completeness and Dζ Unification
+\chapter{Six-Element Completeness and \texorpdfstring{$D_\zeta$}{Dζ} Unification}
 \label{chap:six_completeness}
 
-\section{D6 Completeness}
+\section{\texorpdfstring{$D_6$}{D6} Completeness}
 \label{sec:fust_completeness}
-
-The $D_n$ operators are defined for \textbf{arbitrary functions} $f : \mathbb{C} \to \mathbb{C}$.
-The completeness theorem states that $\ker(D_7) = \ker(D_6)$ holds universally.
-
-\subsection{Kernel Equality (Lean4 Proven)}
 
 \begin{theorem}[Kernel Equality]
 \label{thm:kernel_equality}
 \lean{FUST.D7_kernel_equals_D6_kernel}
 \leanok
 \[
-\ker(D_n)|_{\mathbb{C}[x]} = \ker(D_6)|_{\mathbb{C}[x]} = \mathrm{span}\{1, x, x^2\} \quad \text{for } n \ge 7
+\ker(D_n)|_{\mathbb{C}[z]} = \ker(D_6)|_{\mathbb{C}[z]} = \mathrm{span}\{1, z, z^2\} \quad \text{for } n \ge 7
 \]
 \end{theorem}
 
 \begin{enumerate}
-\item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (3-dimensional)
-\item $D_6[x^3] \ne 0$: $D_6$ detects cubic and higher degree polynomials
+\item $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (3-dimensional)
+\item $D_6[z^3] \ne 0$: $D_6$ detects cubic and higher degree polynomials
 \item $\ker(D_7) = \ker(D_6)$: no new independent structure for $n \ge 7$
 \end{enumerate}
 
 \section{Elimination Conditions}
 \label{sec:elimination}
 
-Let $K_n$ denote the set of $k$ such that $D_n[x^k] = 0$:
-
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-Operator & Coefficient sum & Eliminated monomials $K_n$ & $\dim \ker(D_n)$ \\
+Operator & Coeff.\ sum & Eliminated monomials & $\dim \ker$ \\
 \hline
-$D_2$ & $0$ & $\{0\}$ (constant) & 1 \\
-$D_3$ & $0$ & $\{0\}$ (constant) & 1 \\
-$D_4$ & $-\sqrt{5}$ & $\{2\}$ ($x^2$ only) & 1 \\
-$D_5$ & $0$ & $\{0, 1\}$ (constant and $x$) & 2 \\
-$D_6$ & $0$ & $\{0, 1, 2\}$ (constant, $x$, $x^2$) & 3 \\
+$D_2$ & $0$ & $\{z^0\}$ (constant) & 1 \\
+$D_3$ & $0$ & $\{z^0\}$ (constant) & 1 \\
+$D_4$ & $-\sqrt{5}$ & $\{z^2\}$ ($z^2$ only) & 1 \\
+$D_5$ & $0$ & $\{z^0, z^1\}$ (constant and $z$) & 2 \\
+$D_6$ & $0$ & $\{z^0, z^1, z^2\}$ (constant, $z$, $z^2$) & 3 \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{Gauge invariance}: When coefficient sum $\sigma(D) = 0$, we have $D[1] = 0$. $D_2, D_3, D_5, D_6$ are gauge invariant; $D_4$ breaks gauge invariance.
+\textbf{$D_\zeta$ perspective}: Each operator corresponds to a specific projection of $D_\zeta$ through the $\mathbb{Z}/6\mathbb{Z}$ Fourier decomposition. $D_2, D_4, D_6$ lie in the antisymmetric (AF) channel; $D_3, D_5$ lie in the symmetric (SY) channel. The kernel hierarchy $1 \to 2 \to 3$ is a structural consequence of the hyperbolic-elliptic composition.
 
-\textbf{Important}: $D_5, D_6$ have kernel dimensions greater than 1, which forms the basis for deriving gauge groups (Chapter~\ref{chap:gauge_groups}).
-
-\section{Reduction of Integer Orders}
+\section{Integer Order Reduction}
 \label{sec:integer_reduction}
 
 \begin{proposition}[Integer orders $n\ge7$ have no new structure]
@@ -58,72 +49,34 @@ $D_6$ & $0$ & $\{0, 1, 2\}$ (constant, $x$, $x^2$) & 3 \\
 For any integer $n\ge7$, $\ker(D_n) = \ker(D_6)$.
 \end{proposition}
 
-\textbf{Important note}: This proposition asserts ``\textbf{identity of kernels},'' not ``linear combinations of function values.''
+This means $D_6$ is the \textbf{completeness boundary}: the hyperbolic lattice cannot produce kernel dimensions greater than 3. In $D_\zeta$, this is reflected by the fact that $\zeta_6^6 = 1$ closes the elliptic cycle.
 
-\subsection{Avoiding Misunderstanding}
-
-$\varphi^k = F_k \varphi + F_{k-1}$ is a \textbf{relation between points (arguments)}, and for a general function $f$, $f(\varphi^k x) = F_k f(\varphi x) + F_{k-1} f(x)$ \textbf{does not hold} (unless $f$ is linear).
-
-However, what this proposition asserts is:
-\begin{itemize}
-\item When $D_n$ coefficients are determined so that $\ker(D_n) \supseteq \ker(D_6)$
-\item The result is $\ker(D_n) = \ker(D_6)$, and no new kernel elements appear
-\end{itemize}
-
-\section{Collapse of Half-Order Hierarchies}
+\section{Half-Order Collapse}
 \label{sec:half_collapse}
 
 \begin{proposition}[Half-orders for $n\ge6$ collapse]
 \label{prop:half_collapse}
-For $n \ge 6$, half-order structures are absorbed into integer orders: $D_{n+0.5} \sim D_n$
+For $n \ge 6$, half-order structures are absorbed into integer orders: $D_{n+0.5} \sim D_n$.
 \end{proposition}
 
-\begin{proof}
-By Binet's formula, antisymmetric components $f(\varphi^k x) - f(\psi^k x)$ are isomorphic to the structure of $D_2$ (including scaling). Since $D_6$ saturates elimination conditions, additional $D_2$ components are redundant.
-\end{proof}
-
-\section{Independence and Uniqueness of D5.5 (Lean4 Formal Proof)}
+\section{Independence and Uniqueness of \texorpdfstring{$D_{5\frac{1}{2}}$}{D5half}}
 \label{sec:d55_uniqueness}
 
-\begin{proposition}[Algebraic Independence of $D_{5.5}$]
+\begin{proposition}[Algebraic Independence of $D_{5\frac{1}{2}}$]
 \label{prop:d55_independence}
 \lean{FUST.D5half_independence}
 \leanok
-$D_{5.5}$ is algebraically non-equivalent to $D_5$ and $D_6$:
+$D_{5\frac{1}{2}}$ is algebraically non-equivalent to $D_5$ and $D_6$:
 \[
-D_5[x] = D_6[x] = 0, \quad \text{but} \quad D_{5.5}[x] \neq 0
+D_5[z] = D_6[z] = 0, \quad \text{but} \quad D_{5\frac{1}{2}}[z] \neq 0
 \]
 \end{proposition}
 
-\textbf{Important structural interpretation}:
-
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-Operator & Polynomials in $\ker$ & Symmetry \\
-\hline
-$D_5$ & $\{1, x\}$ & Symmetric \\
-$D_6$ & $\{1, x, x^2\}$ & Symmetric \\
-$D_{5.5}$ & $\{1\}$ only & \textbf{Contains antisymmetric term} \\
-\hline
-\end{tabular}
-\end{center}
-
-$D_{5.5}$ does not ``break'' the symmetric structure of $D_5$ but \textbf{adds an orthogonal antisymmetric direction}. This shrinks the kernel of $D_5$ ($\{1,x\} \to \{1\}$), but $D_5$ itself is preserved.
-
-\begin{proposition}[Uniqueness of $D_{5.5}$]
-\label{prop:d55_unique}
-The only algebraically non-equivalent half-order difference operator is $D_{5.5}$.
-\end{proposition}
-
-\begin{proof}
-\begin{itemize}
-\item $n < 5$: Half-order terms are absorbed into $D_{n+1}$
-\item $n = 5$: There is a gap between $D_5$ and $D_6$, and the antisymmetric direction is independent
-\item $n \ge 6$: Collapses by the above proposition
-\end{itemize}
-Therefore $D_{5.5}$ is the unique exception.
-\end{proof}
+In the $D_\zeta$ framework, $D_{5\frac{1}{2}}$ bridges the AF and SY channels: it is $D_5$ (SY channel) plus $\mu \cdot \Delta_2$ (AF channel component). This direct sum structure
+\[
+D_{5\frac{1}{2}} \in \mathrm{ScaleQ}(-4,0) \oplus \mathrm{ScaleQ}(-1,1)
+\]
+is the unique half-order that crosses the channel boundary.
 
 \section{Six-Element Completeness Theorem}
 \label{sec:main_theorem}
@@ -134,27 +87,19 @@ Therefore $D_{5.5}$ is the unique exception.
 \leanok
 In the Frourio difference hierarchy, the algebraically non-equivalent difference operators are limited to the \textbf{6 types}:
 \[
-\boxed{\{D_2, D_3, D_4, D_5, D_{5.5}, D_6\}}
+\boxed{\{D_2, D_3, D_4, D_5, D_{5\frac{1}{2}}, D_6\}}
 \]
 \end{theorem}
 
-\begin{proof}[Proof outline]
-\begin{enumerate}
-\item \textbf{Integer orders $n \le 6$}: $D_2, D_3, D_4, D_5, D_6$ have different elimination patterns $K_n$ and are non-equivalent
-\item \textbf{Integer orders $n \ge 7$}: Reduced to $D_6$ or lower by Fibonacci closure
-\item \textbf{Half-integer orders $n \ge 6$}: Collapse to $D_n$ by Binet's formula
-\item \textbf{Half-integer order $n = 5$}: Only $D_{5.5}$ is exceptional
-\end{enumerate}
-\end{proof}
+These 6 operators are the component projections of the unified $D_\zeta$:
+\begin{itemize}
+\item AF channel: $D_2$ ($r=5$), $D_4$ ($r=3$), $D_6$ ($r=1$)
+\item SY channel: $D_3$ ($r=4$), $D_5$ ($r=2$)
+\item Channel bridge: $D_{5\frac{1}{2}}$ (AF $\oplus$ SY)
+\end{itemize}
 
-\section{D6 Spectral Coefficients}
+\section{\texorpdfstring{$D_6$}{D6} Spectral Coefficients}
 \label{sec:spectral_coefficients}
-
-When $D_6$ acts on the monomial $x^n$, the result factors as
-\[
-D_6[x^n](x) = \frac{C_n}{(\varphi - \psi)^5} \cdot x^{n-1}
-\]
-where the \emph{spectral coefficient} $C_n$ is defined as follows.
 
 \begin{definition}[D6 Spectral Coefficient]
 \label{def:D6Coeff}
@@ -170,20 +115,14 @@ C_n := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n
 \label{thm:D6Coeff_fibonacci}
 \lean{FUST.SpectralCoefficients.D6Coeff_fibonacci}
 \leanok
-\[
-C_n = \sqrt{5} \cdot \bigl(F_{3n} - 3F_{2n} + F_n\bigr)
-\]
-where $F_k$ denotes the $k$-th Fibonacci number.
+$C_n = \sqrt{5} \cdot (F_{3n} - 3F_{2n} + F_n)$
 \end{theorem}
 
 \begin{theorem}[Polynomial Kernel Characterization]
 \label{thm:D6Coeff_eq_zero_iff}
 \lean{FUST.SpectralCoefficients.D6Coeff_eq_zero_iff}
 \leanok
-\[
-C_n = 0 \iff n \le 2
-\]
-In particular, $C_0 = C_1 = C_2 = 0$ and $C_3 = 12\sqrt{5} \ne 0$.
+$C_n = 0 \iff n \le 2$. In particular, $C_0 = C_1 = C_2 = 0$ and $C_3 = 12\sqrt{5} \ne 0$.
 \end{theorem}
 
 \begin{theorem}[Factorization]
@@ -199,61 +138,29 @@ C_n = (\varphi^n - \psi^n)\bigl(\varphi^{2n} + \psi^{2n} + (-1)^n + 1 - 3(\varph
 \label{thm:D6Coeff_asymptotic}
 \lean{FUST.SpectralCoefficients.D6Coeff_asymptotic}
 \leanok
-For $n \ge 3$, there exists $C > 0$ such that
-\[
-|C_n - \varphi^{3n}| \le C \cdot \varphi^{2n}
-\]
+For $n \ge 3$, there exists $C > 0$ such that $|C_n - \varphi^{3n}| \le C \cdot \varphi^{2n}$.
 \end{theorem}
 
 \subsection{Extended Kernel on \texorpdfstring{$\mathbb{Z}$}{Z}}
-\label{subsec:extended_kernel}
-
-Extending $C_n$ from $\mathbb{N}$ to $\mathbb{Z}$ using zpow yields the Laurent spectral coefficient.
 
 \begin{definition}[Laurent D6 Coefficient]
 \label{def:D6CoeffZ}
 \lean{FUST.SpectralCoefficients.D6CoeffZ}
 \leanok
-\[
-C_n^{\mathbb{Z}} := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}
-\quad (n \in \mathbb{Z})
-\]
+$C_n^{\mathbb{Z}} := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}$ for $n \in \mathbb{Z}$.
 \end{definition}
-
-\begin{theorem}[Antisymmetry for Even Arguments]
-\label{thm:D6CoeffZ_neg_even}
-\lean{FUST.SpectralCoefficients.D6CoeffZ_neg_even}
-\leanok
-For even $n \in \mathbb{Z}$:
-\[
-C_{-n}^{\mathbb{Z}} = -C_n^{\mathbb{Z}}
-\]
-\end{theorem}
 
 \begin{theorem}[Extended Kernel Dimension]
 \label{thm:D6_extended_kernel_dim}
 \lean{FUST.SpectralCoefficients.D6_extended_kernel_dim}
 \leanok
-The Laurent kernel of $D_6$ is 4-dimensional:
-\[
-\{n \in \mathbb{Z} \mid C_n^{\mathbb{Z}} = 0\} \supseteq \{-2, 0, 1, 2\}
-\]
+The Laurent kernel is 4-dimensional: $\{n \in \mathbb{Z} \mid C_n^{\mathbb{Z}} = 0\} \supseteq \{-2, 0, 1, 2\}$.
 \end{theorem}
 
 \begin{theorem}[Kernel Gap Structure]
 \label{thm:D6_kernel_gap_structure}
 \lean{FUST.SpectralCoefficients.D6_kernel_gap_structure}
 \leanok
-The extended kernel has a gap at $n = -1$:
-\[
-C_{-3}^{\mathbb{Z}} \ne 0, \quad C_{-2}^{\mathbb{Z}} = 0, \quad C_{-1}^{\mathbb{Z}} \ne 0, \quad
-C_0^{\mathbb{Z}} = C_1^{\mathbb{Z}} = C_2^{\mathbb{Z}} = 0, \quad C_3^{\mathbb{Z}} \ne 0
-\]
-The polynomial kernel $\{0, 1, 2\}$ extends to the Laurent kernel $\{-2, 0, 1, 2\}$,
-with $n = -2$ connected via the antisymmetry $C_{-2}^{\mathbb{Z}} = -C_2^{\mathbb{Z}} = 0$.
-The isolated zero at $n = -2$ (separated by the nonzero gap $C_{-1}^{\mathbb{Z}} \ne 0$)
-distinguishes the Laurent extension from the polynomial kernel.
+$C_{-3}^{\mathbb{Z}} \ne 0$, $C_{-2}^{\mathbb{Z}} = 0$, $C_{-1}^{\mathbb{Z}} \ne 0$, $C_0 = C_1 = C_2 = 0$, $C_3 \ne 0$.
+The polynomial kernel $\{0, 1, 2\}$ extends to the Laurent kernel $\{-2, 0, 1, 2\}$.
 \end{theorem}
-
-\textbf{Remark}: The polynomial kernel $\ker(D_6) \cap \mathbb{C}[x] = \operatorname{span}\{1, x, x^2\}$ (dimension 3) is the physically relevant kernel used for spatial dimension derivation.
-The Laurent kernel (dimension 4) arises naturally in the Mellin transform setting on $L^2(\mathbb{R}_+, dx/x)$.

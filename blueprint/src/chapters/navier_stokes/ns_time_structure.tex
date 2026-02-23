@@ -1,8 +1,8 @@
-% FUST Navier-Stokes - Time Structure and Kernel Invariance
-\chapter{Time Structure and Kernel Invariance}
+% FUST Navier-Stokes - Time Structure from Dζ
+\chapter{Time Structure from \texorpdfstring{$D_\zeta$}{Dζ} and Kernel Invariance}
 \label{chap:ns_time_structure}
 
-\section{Arrow of Time}
+\section{Arrow of Time from \texorpdfstring{$\varphi$}{φ}-Asymmetry}
 \label{sec:ns_arrow_time}
 
 \begin{theorem}[Golden Ratio Asymmetry]
@@ -14,12 +14,12 @@
 \]
 \end{theorem}
 
-$\varphi > 1$ causes scale expansion toward the future direction, while $|\psi| < 1$ causes contributions from the past direction to decay exponentially.
+In $D_\zeta$'s hyperbolic component: $\varphi > 1$ causes scale expansion (future direction), while $|\psi| < 1$ causes exponential decay (past direction). This asymmetry is the origin of the arrow of time in $D_\zeta$'s 4D spacetime.
 
-\section{Time Invariance of Kernel}
+\section{Kernel Invariance under Time Evolution}
 \label{sec:ns_kernel_invariant}
 
-\begin{theorem}[Kernel Invariance under Time Evolution]
+\begin{theorem}[Kernel Invariance]
 \label{thm:ns_kernel_invariant}
 \lean{FUST.ker_D6_invariant_timeEvolution}
 \leanok
@@ -28,5 +28,4 @@ f \in \ker(D_6) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(D_6)
 \]
 \end{theorem}
 
-Smooth states are preserved as smooth under time evolution.
-
+The 3 spatial degrees of freedom (ker$(D_6) = \mathrm{span}\{1, z, z^2\}$) are preserved under time evolution. This is the $D_\zeta$-structural reason why spatial geometry is stable.

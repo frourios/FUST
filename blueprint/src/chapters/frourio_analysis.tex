@@ -2,49 +2,86 @@
 \chapter{Foundations of Frourio Analysis}
 \label{chap:frourio_analysis}
 
-\section{The Golden Ratio}
-\label{sec:golden_ratio}
+\section{The Three Geometric Types}
+\label{sec:three_geometries}
 
-\begin{definition}[Golden Ratio]
-\label{def:golden_ratio}
+FUST is built on the quadratic family $x^2 = x + c$, which produces three geometric types depending on $c \in \{+1, 0, -1\}$.
+
+\begin{definition}[Hyperbolic pair: $c = +1$]
+\label{def:hyperbolic}
 \lean{FUST.phi, FUST.psi}
 \leanok
+The equation $x^2 = x + 1$ has roots:
 \[
-\varphi = \frac{1+\sqrt{5}}{2}, \quad \psi = \frac{1-\sqrt{5}}{2}
+\varphi = \frac{1+\sqrt{5}}{2} \approx 1.618, \quad \psi = \frac{1-\sqrt{5}}{2} \approx -0.618
 \]
+with product $\varphi\psi = -1$ and sum $\varphi + \psi = 1$.
 \end{definition}
 
-\section{Frourio Exponential Function}
-\label{sec:frourio_exp}
-
-\begin{definition}[Fibonacci Factorial]
-\label{def:fib_factorial}
-Define the Fibonacci factorial as $n!_{\mathsf{F}} := \prod_{k=1}^{n} F_k$.
+\begin{definition}[Elliptic pair: $c = -1$]
+\label{def:elliptic}
+\lean{FUST.Zeta6.zeta6}
+\leanok
+The equation $x^2 = x - 1$ has roots:
+\[
+\zeta_6 = \frac{1+i\sqrt{3}}{2} = e^{i\pi/3}, \quad \bar{\zeta}_6 = \frac{1-i\sqrt{3}}{2} = e^{-i\pi/3}
+\]
+with product $\zeta_6 \bar{\zeta}_6 = +1$ and sum $\zeta_6 + \bar{\zeta}_6 = 1$.
+These are primitive 6th roots of unity: $\zeta_6^6 = 1$, $\zeta_6^3 = -1$.
 \end{definition}
 
-\begin{definition}[Frourio Exponential]
-\label{def:frourio_exp}
-\[
-\exp_{\mathsf{F}}(x) = \sum_{n=0}^{\infty} \frac{x^n}{n!_{\mathsf{F}}}
-\]
+\begin{definition}[Parabolic pair: $c = 0$]
+\label{def:parabolic}
+The equation $x^2 = x$ has roots $1$ and $0$, with product $1 \cdot 0 = 0$ and sum $1 + 0 = 1$.
 \end{definition}
 
-\section{Frourio Constant}
-\label{sec:frourio_constant}
+\textbf{Structural comparison}:
 
-\begin{definition}[Frourio Constant]
-\label{def:frourio_constant}
-\[
-\mathfrak{f} := \exp_{\mathsf{F}}(1) = \sum_{n=0}^{\infty} \frac{1}{n!_{\mathsf{F}}} \approx 3.7045
-\]
-\end{definition}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$c$ & Roots & Product & $|\text{roots}|$ & Geometry & Role in $D_\zeta$ \\
+\hline
+$+1$ & $\varphi, \psi$ & $-1$ & $\varphi > 1, |\psi| < 1$ & Hyperbolic & $\varphi$-dilation lattice \\
+$-1$ & $\zeta_6, \bar{\zeta}_6$ & $+1$ & $|\zeta_6| = 1$ & Elliptic & $\mathbb{Z}/6\mathbb{Z}$ DFT \\
+$0$ & $1, 0$ & $0$ & $1, 0$ & Parabolic & $z$-normalization \\
+\hline
+\end{tabular}
+\end{center}
 
-\textbf{Alternative representation} (Binet type):
-\[
-\mathfrak{f} = \frac{\exp_{\mathsf{F}}(\varphi) - \exp_{\mathsf{F}}(\psi)}{\sqrt{5}} = \frac{D_2[\exp_{\mathsf{F}}](1)}{\sqrt{5}}
-\]
+All three types share the trace $\sigma_1 = 1$ (sum of roots), but differ in determinant $\sigma_2 = -c$. The unified operator $D_\zeta$ composes all three into a single algebraic object.
 
-This is a constant that gives a natural scale to the golden ratio.
+\section{Algebraic Properties}
+\label{sec:algebraic_properties}
+
+\begin{theorem}[Golden Ratio Properties]
+\label{thm:golden_properties}
+\lean{FUST.phi_sq, FUST.phi_mul_psi}
+\leanok
+\begin{align}
+\varphi^2 &= \varphi + 1, \quad \varphi \cdot \psi = -1, \quad \varphi - \psi = \sqrt{5}
+\end{align}
+\end{theorem}
+
+\begin{theorem}[$\zeta_6$ Properties]
+\label{thm:zeta6_properties}
+\lean{FUST.Zeta6.zeta6_sq, FUST.Zeta6.zeta6_mul_conj}
+\leanok
+\begin{align}
+\zeta_6^2 &= \zeta_6 - 1, \quad \zeta_6 \cdot \bar{\zeta}_6 = 1, \quad \zeta_6 - \bar{\zeta}_6 = i\sqrt{3}
+\end{align}
+\end{theorem}
+
+\textbf{Key structural parallel}: Both $\varphi - \psi = \sqrt{5}$ and $\zeta_6 - \bar{\zeta}_6 = i\sqrt{3}$ are algebraic irrationals that serve as normalization denominators in the difference operators. Both $\sqrt{5}$ and $i\sqrt{3}$ arise from the discriminant $\sqrt{1 + 4c}$ of $x^2 - x - c = 0$.
+
+\begin{theorem}[$\zeta_6$ is outside the $\varphi$-eigenspectrum]
+\label{thm:zeta6_ne_phi}
+\lean{FUST.zeta6_ne_phi_pow}
+\leanok
+For all $n \in \mathbb{N}$, $\zeta_6 \neq \varphi^n$, because $\varphi^n \in \mathbb{R}$ while $\mathrm{Im}(\zeta_6) = \sqrt{3}/2 \neq 0$.
+\end{theorem}
+
+This separation between the hyperbolic and elliptic sectors is essential: it ensures that $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces, preventing gauge group reduction.
 
 \section{Fibonacci Decomposition}
 \label{sec:fib_decomposition}
@@ -86,3 +123,35 @@ For any integer $k$,
 From $\varphi^k = F_k\varphi + F_{k-1}$ and $\psi^k = F_k\psi + F_{k-1}$, we have
 $\varphi^k - \psi^k = F_k(\varphi - \psi) = F_k \sqrt{5}$.
 \end{proof}
+
+\section{Frourio Exponential Function}
+\label{sec:frourio_exp}
+
+\begin{definition}[Fibonacci Factorial]
+\label{def:fib_factorial}
+Define the Fibonacci factorial as $n!_{\mathsf{F}} := \prod_{k=1}^{n} F_k$.
+\end{definition}
+
+\begin{definition}[Frourio Exponential]
+\label{def:frourio_exp}
+\[
+\exp_{\mathsf{F}}(x) = \sum_{n=0}^{\infty} \frac{x^n}{n!_{\mathsf{F}}}
+\]
+\end{definition}
+
+\section{Frourio Constant}
+\label{sec:frourio_constant}
+
+\begin{definition}[Frourio Constant]
+\label{def:frourio_constant}
+\[
+\mathfrak{f} := \exp_{\mathsf{F}}(1) = \sum_{n=0}^{\infty} \frac{1}{n!_{\mathsf{F}}} \approx 3.7045
+\]
+\end{definition}
+
+\textbf{Alternative representation} (Binet type):
+\[
+\mathfrak{f} = \frac{\exp_{\mathsf{F}}(\varphi) - \exp_{\mathsf{F}}(\psi)}{\sqrt{5}} = \frac{D_2[\exp_{\mathsf{F}}](1)}{\sqrt{5}}
+\]
+
+This is a constant that gives a natural scale to the golden ratio.

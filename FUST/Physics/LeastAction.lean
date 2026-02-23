@@ -1,19 +1,21 @@
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
 import FUST.FrourioLogarithm
+import FUST.Zeta6
 import Mathlib.Tactic
 
 /-!
-# FUST Least Action Theorem
+# Least Action from Dζ Unified Operator
 
-In FUST, "least action" is not a principle (external assumption) but a theorem
-derived from Dm structure. Each operator Dm (m=2..6) has its own kernel,
-projection, Lagrangian, and time existence condition.
+Dζ determines 4D spacetime (I4 = Fin 3 ⊕ Fin 1) via |Dζ|² = 12(3a² + b²).
+D6 is the Dζ AF-channel projection at r=1.
+The action |D6 f|² = 0 iff f ∈ ker(D6) = span{1,z,z²}: least action is a theorem.
+Time evolution f(t) ↦ f(φt) is the Poincaré boost, with φ > 1 giving the arrow of time.
 -/
 
 namespace FUST.LeastAction
 
-/-! ## Part 1: D6 Kernel Structure -/
+/-! ## D6 Kernel Structure -/
 
 /-- D6 kernel is 3-dimensional: span{1, x, x²} -/
 theorem D6_kernel_dim_3 :
@@ -22,23 +24,7 @@ theorem D6_kernel_dim_3 :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
   ⟨D6_const 1, D6_linear, D6_quadratic⟩
 
-/-! ## Part 2: Kernel Membership -/
-
-/-- f ∈ ker(D2) iff f is constant -/
-def IsInKerD2 (f : ℂ → ℂ) : Prop :=
-  ∃ c : ℂ, ∀ t, f t = c
-
-/-- f ∈ ker(D3) iff f is constant -/
-def IsInKerD3 (f : ℂ → ℂ) : Prop :=
-  ∃ c : ℂ, ∀ t, f t = c
-
-/-- f ∈ ker(D4) iff f = c·x² -/
-def IsInKerD4 (f : ℂ → ℂ) : Prop :=
-  ∃ c : ℂ, ∀ t, f t = c * t ^ 2
-
-/-- f ∈ ker(D5) iff f is affine -/
-def IsInKerD5 (f : ℂ → ℂ) : Prop :=
-  ∃ a₀ a₁ : ℂ, ∀ t, f t = a₀ + a₁ * t
+/-! ## Kernel Membership -/
 
 /-- f ∈ ker(D6) iff f equals some degree-2 polynomial -/
 def IsInKerD6 (f : ℂ → ℂ) : Prop :=
@@ -109,54 +95,7 @@ theorem IsInKerD6_implies_D6_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
   rw [hf']
   exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
 
-theorem IsInKerD2_implies_D2_zero (f : ℂ → ℂ) (hf : IsInKerD2 f) :
-    ∀ x, x ≠ 0 → D2 f x = 0 := by
-  intro x hx
-  obtain ⟨c, hf⟩ := hf
-  rw [show f = (fun _ => c) from funext hf]
-  exact D2_const c x hx
-
-theorem IsInKerD3_implies_D3_zero (f : ℂ → ℂ) (hf : IsInKerD3 f) :
-    ∀ x, x ≠ 0 → D3 f x = 0 := by
-  intro x hx
-  obtain ⟨c, hf⟩ := hf
-  rw [show f = (fun _ => c) from funext hf]
-  exact D3_const c x hx
-
-theorem IsInKerD4_implies_D4_zero (f : ℂ → ℂ) (hf : IsInKerD4 f) :
-    ∀ x, x ≠ 0 → D4 f x = 0 := by
-  intro x hx
-  obtain ⟨c, hf⟩ := hf
-  rw [show f = (fun t => c * t ^ 2) from funext hf]
-  simp only [D4, hx, ↓reduceIte]
-  have : c * ((↑φ) ^ 2 * x) ^ 2 - (↑φ) ^ 2 * (c * ((↑φ) * x) ^ 2) +
-      (↑ψ) ^ 2 * (c * ((↑ψ) * x) ^ 2) - c * ((↑ψ) ^ 2 * x) ^ 2 = 0 := by ring
-  simp [this]
-
-/-- D5 applied to affine function is zero -/
-theorem D5_polynomial_deg1 (a₀ a₁ : ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D5 (fun t => a₀ + a₁ * t) x = 0 := by
-  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x hx
-  have hlin : D5 (fun t => a₁ * t) x = 0 := by
-    have h := D5_linear x hx
-    calc D5 (fun t => a₁ * t) x = a₁ * D5 id x := by
-          simp only [D5, hx, ↓reduceIte, id]; ring
-      _ = a₁ * 0 := by rw [h]
-      _ = 0 := by ring
-  calc D5 (fun t => a₀ + a₁ * t) x
-    = D5 (fun _ => a₀) x + D5 (fun t => a₁ * t) x := by
-        simp only [D5, hx, ↓reduceIte]; ring
-    _ = 0 + 0 := by rw [hconst, hlin]
-    _ = 0 := by ring
-
-theorem IsInKerD5_implies_D5_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) :
-    ∀ x, x ≠ 0 → D5 f x = 0 := by
-  intro x hx
-  obtain ⟨a₀, a₁, hf⟩ := hf
-  rw [show f = (fun t => a₀ + a₁ * t) from funext hf]
-  exact D5_polynomial_deg1 a₀ a₁ x hx
-
-/-! ## Part 3: Kernel Projection -/
+/-! ## Kernel Projection -/
 
 section KernelProjection
 
@@ -166,19 +105,6 @@ noncomputable def kernelProjectionD6 (f : ℂ → ℂ) : ℂ → ℂ :=
   let a₁ := (f 1 - f (-1)) / 2
   let a₂ := (f 1 + f (-1) - 2 * f 0) / 2
   fun t => a₀ + a₁ * t + a₂ * t^2
-
-noncomputable def kernelProjectionD2 (f : ℂ → ℂ) : ℂ → ℂ := fun _ => f 0
-noncomputable def kernelProjectionD3 (f : ℂ → ℂ) : ℂ → ℂ := fun _ => f 0
-
-/-- D4 kernel projection onto span{x²} using evaluation at x=1 -/
-noncomputable def kernelProjectionD4 (f : ℂ → ℂ) : ℂ → ℂ :=
-  fun t => f 1 * t ^ 2
-
-/-- D5 kernel projection onto span{1, x} using interpolation at {1, -1} -/
-noncomputable def kernelProjectionD5 (f : ℂ → ℂ) : ℂ → ℂ :=
-  let a₀ := (f 1 + f (-1)) / 2
-  let a₁ := (f 1 - f (-1)) / 2
-  fun t => a₀ + a₁ * t
 
 /-- D6 uniqueness theorem for degree-2 interpolation -/
 theorem kernel_interpolation_unique_D6 (p q : ℂ → ℂ) (hp : IsInKerD6 p) (hq : IsInKerD6 q)
@@ -276,33 +202,24 @@ theorem kernelProjectionD6_is_in_ker (f : ℂ → ℂ) : IsInKerD6 (kernelProjec
   intro t
   simp only [kernelProjectionD6]
 
-theorem kernelProjectionD2_is_in_ker (f : ℂ → ℂ) : IsInKerD2 (kernelProjectionD2 f) :=
-  ⟨f 0, fun _ => rfl⟩
+theorem kernelProjectionD6_interpolates (f : ℂ → ℂ) :
+    kernelProjectionD6 f 0 = f 0 ∧
+    kernelProjectionD6 f 1 = f 1 ∧
+    kernelProjectionD6 f (-1) = f (-1) := by
+  simp only [kernelProjectionD6]
+  constructor
+  · ring
+  constructor
+  · ring
+  · ring
 
-theorem kernelProjectionD3_is_in_ker (f : ℂ → ℂ) : IsInKerD3 (kernelProjectionD3 f) :=
-  ⟨f 0, fun _ => rfl⟩
+end KernelProjection
 
-theorem kernelProjectionD4_is_in_ker (f : ℂ → ℂ) : IsInKerD4 (kernelProjectionD4 f) :=
-  ⟨f 1, fun _ => rfl⟩
-
-theorem kernelProjectionD5_is_in_ker (f : ℂ → ℂ) : IsInKerD5 (kernelProjectionD5 f) :=
-  ⟨(f 1 + f (-1)) / 2, (f 1 - f (-1)) / 2, fun _ => rfl⟩
+/-! ## Perpendicular Projection -/
 
 /-- D6 perpendicular projection: deviation from ker(D6) -/
 noncomputable def perpProjectionD6 (f : ℂ → ℂ) : ℂ → ℂ :=
   fun t => f t - kernelProjectionD6 f t
-
-noncomputable def perpProjectionD2 (f : ℂ → ℂ) : ℂ → ℂ :=
-  fun t => f t - kernelProjectionD2 f t
-
-noncomputable def perpProjectionD3 (f : ℂ → ℂ) : ℂ → ℂ :=
-  fun t => f t - kernelProjectionD3 f t
-
-noncomputable def perpProjectionD4 (f : ℂ → ℂ) : ℂ → ℂ :=
-  fun t => f t - kernelProjectionD4 f t
-
-noncomputable def perpProjectionD5 (f : ℂ → ℂ) : ℂ → ℂ :=
-  fun t => f t - kernelProjectionD5 f t
 
 theorem perpProjectionD6_D6_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
     D6 (perpProjectionD6 f) x = D6 f x := by
@@ -318,38 +235,6 @@ theorem perpProjectionD6_D6_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
     simp only [N6, perpProjectionD6]; ring
   rw [this, hnum_zero, sub_zero]
 
-theorem perpProjectionD2_D2_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D2 (perpProjectionD2 f) x = D2 f x := by
-  simp only [perpProjectionD2, kernelProjectionD2, D2, hx, ↓reduceIte]
-  ring
-
-theorem perpProjectionD3_D3_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D3 (perpProjectionD3 f) x = D3 f x := by
-  simp only [perpProjectionD3, kernelProjectionD3, D3, hx, ↓reduceIte]
-  ring
-
-theorem perpProjectionD4_D4_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D4 (perpProjectionD4 f) x = D4 f x := by
-  simp only [perpProjectionD4, kernelProjectionD4, D4, hx, ↓reduceIte]
-  have hden : ((↑φ : ℂ) - ↑ψ) ^ 3 * x ≠ 0 := by
-    apply mul_ne_zero
-    · apply pow_ne_zero; exact phi_sub_psi_complex_ne
-    · exact hx
-  rw [div_eq_div_iff hden hden]
-  ring
-
-theorem perpProjectionD5_D5_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D5 (perpProjectionD5 f) x = D5 f x := by
-  have hker := IsInKerD5_implies_D5_zero _ (kernelProjectionD5_is_in_ker f) x hx
-  have : D5 (perpProjectionD5 f) x =
-      D5 f x + D5 (fun t => -(kernelProjectionD5 f t)) x := by
-    simp only [perpProjectionD5, kernelProjectionD5, D5, hx, ↓reduceIte]; ring
-  rw [this]
-  have hneg : D5 (fun t => -(kernelProjectionD5 f t)) x =
-      -(D5 (kernelProjectionD5 f) x) := by
-    simp only [D5, hx, ↓reduceIte, kernelProjectionD5]; ring
-  rw [hneg, hker, neg_zero, add_zero]
-
 /-- If f ∈ ker(D6), then perpProjectionD6 is zero everywhere -/
 theorem kerD6_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     ∀ t, perpProjectionD6 f t = 0 := by
@@ -357,124 +242,6 @@ theorem kerD6_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
   intro t
   simp only [perpProjectionD6, kernelProjectionD6, hf_eq]
   ring
-
-theorem kernelProjectionD6_interpolates (f : ℂ → ℂ) :
-    kernelProjectionD6 f 0 = f 0 ∧
-    kernelProjectionD6 f 1 = f 1 ∧
-    kernelProjectionD6 f (-1) = f (-1) := by
-  simp only [kernelProjectionD6]
-  constructor
-  · ring
-  constructor
-  · ring
-  · ring
-
-/-- Uniqueness: two constants agreeing at one point are equal -/
-theorem kernel_interpolation_unique_D2 (p q : ℂ → ℂ) (hp : IsInKerD2 p) (hq : IsInKerD2 q)
-    (t₀ : ℂ) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
-  obtain ⟨c, hp⟩ := hp
-  obtain ⟨d, hq⟩ := hq
-  have : c = d := by rw [hp t₀, hq t₀] at h; exact h
-  intro t; rw [hp, hq, this]
-
-theorem kernel_interpolation_unique_D3 (p q : ℂ → ℂ) (hp : IsInKerD3 p) (hq : IsInKerD3 q)
-    (t₀ : ℂ) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
-  obtain ⟨c, hp⟩ := hp
-  obtain ⟨d, hq⟩ := hq
-  have : c = d := by rw [hp t₀, hq t₀] at h; exact h
-  intro t; rw [hp, hq, this]
-
-/-- Uniqueness: two c·t² agreeing at any nonzero point are equal -/
-theorem kernel_interpolation_unique_D4 (p q : ℂ → ℂ) (hp : IsInKerD4 p) (hq : IsInKerD4 q)
-    (t₀ : ℂ) (ht₀ : t₀ ≠ 0) (h : p t₀ = q t₀) : ∀ t, p t = q t := by
-  obtain ⟨c, hp_eq⟩ := hp
-  obtain ⟨d, hq_eq⟩ := hq
-  have : c * t₀ ^ 2 = d * t₀ ^ 2 := by rw [← hp_eq, ← hq_eq]; exact h
-  have hcd : c = d := by
-    have ht2 : t₀ ^ 2 ≠ 0 := pow_ne_zero 2 ht₀
-    exact mul_right_cancel₀ ht2 this
-  intro t; rw [hp_eq, hq_eq, hcd]
-
-/-- Uniqueness: two affine functions agreeing at 2 distinct points are equal -/
-theorem kernel_interpolation_unique_D5 (p q : ℂ → ℂ) (hp : IsInKerD5 p) (hq : IsInKerD5 q)
-    (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁) (hp0 : p t₀ = q t₀) (hp1 : p t₁ = q t₁) :
-    ∀ t, p t = q t := by
-  obtain ⟨a₀, a₁, hp_eq⟩ := hp
-  obtain ⟨b₀, b₁, hq_eq⟩ := hq
-  have h0 : a₀ + a₁ * t₀ = b₀ + b₁ * t₀ := by rw [← hp_eq, ← hq_eq]; exact hp0
-  have h1 : a₀ + a₁ * t₁ = b₀ + b₁ * t₁ := by rw [← hp_eq, ← hq_eq]; exact hp1
-  have hc1 : (a₁ - b₁) * (t₀ - t₁) = 0 := by linear_combination h0 - h1
-  have ht : t₀ - t₁ ≠ 0 := sub_ne_zero.mpr h01
-  have ha1 : a₁ = b₁ := by
-    have := mul_eq_zero.mp hc1
-    cases this with
-    | inl h => exact sub_eq_zero.mp h
-    | inr h => exact absurd h ht
-  have ha0 : a₀ = b₀ := by
-    have := h0; rw [ha1] at this
-    linear_combination this
-  intro t; rw [hp_eq, hq_eq, ha0, ha1]
-
-end KernelProjection
-
-/-! ## Part 4: Time Existence -/
-
-/-- D6 f ≠ 0 at some gauge implies time exists -/
-theorem D6_nonzero_implies_time (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) (hD6 : D6 f x ≠ 0) :
-    ¬ IsInKerD6 f := by
-  intro hker
-  exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
-
-/-! ## Part 5: Lagrangian -/
-
-section Lagrangian
-
-noncomputable def D2Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D2 f x)
-noncomputable def D3Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D3 f x)
-noncomputable def D4Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D4 f x)
-noncomputable def D5Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D5 f x)
-noncomputable def D6Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D6 f x)
-
-theorem D2_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D2Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
-theorem D3_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D3Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
-theorem D4_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D4Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
-theorem D5_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D5Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
-theorem D6_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D6Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
-
-theorem D2_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
-    D2Lagrangian f x = 0 ↔ D2 f x = 0 := Complex.normSq_eq_zero
-theorem D3_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
-    D3Lagrangian f x = 0 ↔ D3 f x = 0 := Complex.normSq_eq_zero
-theorem D4_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
-    D4Lagrangian f x = 0 ↔ D4 f x = 0 := Complex.normSq_eq_zero
-theorem D5_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
-    D5Lagrangian f x = 0 ↔ D5 f x = 0 := Complex.normSq_eq_zero
-theorem D6_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
-    D6Lagrangian f x = 0 ↔ D6 f x = 0 := Complex.normSq_eq_zero
-
-theorem D2_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD2 f) (x : ℂ) (hx : x ≠ 0) :
-    D2Lagrangian f x = 0 := by
-  rw [D2_lagrangian_zero_iff]; exact IsInKerD2_implies_D2_zero f hf x hx
-
-theorem D3_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD3 f) (x : ℂ) (hx : x ≠ 0) :
-    D3Lagrangian f x = 0 := by
-  rw [D3_lagrangian_zero_iff]; exact IsInKerD3_implies_D3_zero f hf x hx
-
-theorem D4_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD4 f) (x : ℂ) (hx : x ≠ 0) :
-    D4Lagrangian f x = 0 := by
-  rw [D4_lagrangian_zero_iff]; exact IsInKerD4_implies_D4_zero f hf x hx
-
-theorem D5_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) (x : ℂ) (hx : x ≠ 0) :
-    D5Lagrangian f x = 0 := by
-  rw [D5_lagrangian_zero_iff]; exact IsInKerD5_implies_D5_zero f hf x hx
-
-theorem D6_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
-    D6Lagrangian f x = 0 := by
-  rw [D6_lagrangian_zero_iff]; exact IsInKerD6_implies_D6_zero f hf x hx
-
-end Lagrangian
-
-/-! ## Part 6: Causal Boundary -/
 
 theorem perpD6_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD6 f t = 0) :
     IsInKerD6 f := by
@@ -484,51 +251,76 @@ theorem perpD6_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD6 f
   simp only [perpProjectionD6, kernelProjectionD6] at ht
   exact sub_eq_zero.mp ht
 
-theorem perpD2_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD2 f t = 0) :
-    IsInKerD2 f := by
-  have : ∀ t, f t = f 0 := fun t => by
-    have := h t; simp only [perpProjectionD2, kernelProjectionD2] at this; exact sub_eq_zero.mp this
-  exact ⟨f 0, this⟩
+/-! ## Arrow of Time from φ/ψ Asymmetry
 
-theorem perpD3_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD3 f t = 0) :
-    IsInKerD3 f := by
-  have : ∀ t, f t = f 0 := fun t => by
-    have := h t; simp only [perpProjectionD3, kernelProjectionD3] at this; exact sub_eq_zero.mp this
-  exact ⟨f 0, this⟩
+φ > 1 causes scale expansion (future), |ψ| < 1 causes decay (past).
+This asymmetry is intrinsic to the golden ratio within Dζ. -/
 
-theorem perpD4_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD4 f t = 0) :
-    IsInKerD4 f := by
-  have : ∀ t, f t = f 1 * t ^ 2 := fun t => by
-    have := h t; simp only [perpProjectionD4, kernelProjectionD4] at this; exact sub_eq_zero.mp this
-  exact ⟨f 1, this⟩
+/-- |ψ| < 1 -/
+theorem abs_psi_lt_one : |ψ| < 1 := by
+  have h : ψ = (1 - Real.sqrt 5) / 2 := rfl
+  have hsqrt5_pos : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5 : ℝ) > 0)
+  have hsqrt5_gt_1 : Real.sqrt 5 > 1 := by
+    have h1 : (1 : ℝ) < 5 := by norm_num
+    calc Real.sqrt 5 > Real.sqrt 1 := Real.sqrt_lt_sqrt (by norm_num) h1
+      _ = 1 := Real.sqrt_one
+  have hpsi_neg : ψ < 0 := by
+    simp only [h]
+    have : 1 - Real.sqrt 5 < 0 := by linarith
+    linarith
+  have hpsi_gt_neg1 : ψ > -1 := by
+    simp only [h]
+    have hsqrt5_lt_3 : Real.sqrt 5 < 3 := by
+      have h9 : (5 : ℝ) < 9 := by norm_num
+      have h3 : Real.sqrt 9 = 3 := by norm_num
+      calc Real.sqrt 5 < Real.sqrt 9 := Real.sqrt_lt_sqrt (by norm_num) h9
+        _ = 3 := h3
+    linarith
+  rw [abs_of_neg hpsi_neg]
+  linarith
 
-theorem perpD5_zero_implies_ker (f : ℂ → ℂ) (h : ∀ t, perpProjectionD5 f t = 0) :
-    IsInKerD5 f := by
-  have hval : ∀ t, f t = (f 1 + f (-1)) / 2 + (f 1 - f (-1)) / 2 * t := fun t => by
-    have := h t; simp only [perpProjectionD5, kernelProjectionD5] at this; exact sub_eq_zero.mp this
-  exact ⟨(f 1 + f (-1)) / 2, (f 1 - f (-1)) / 2, hval⟩
+/-- φ · |ψ| = 1 -/
+theorem phi_mul_abs_psi : φ * |ψ| = 1 := by
+  have hpsi_neg : ψ < 0 := by
+    have h : ψ = (1 - Real.sqrt 5) / 2 := rfl
+    have hsqrt5_gt_1 : Real.sqrt 5 > 1 := by
+      calc Real.sqrt 5 > Real.sqrt 1 := Real.sqrt_lt_sqrt (by norm_num) (by norm_num : (1 : ℝ) < 5)
+        _ = 1 := Real.sqrt_one
+    simp only [h]
+    linarith
+  rw [abs_of_neg hpsi_neg]
+  have h : φ * (-ψ) = -(φ * ψ) := by ring
+  rw [h, phi_mul_psi]
+  ring
 
-theorem kerD2_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD2 f) :
-    ∀ t, perpProjectionD2 f t = 0 := by
-  obtain ⟨c, hf⟩ := hf
-  intro t; simp only [perpProjectionD2, kernelProjectionD2, hf]; ring
+/-- φⁿ > 1 for n ≥ 1 -/
+theorem phi_pow_gt_one (n : ℕ) (hn : n ≥ 1) : φ^n > 1 := by
+  exact one_lt_pow₀ φ_gt_one (Nat.one_le_iff_ne_zero.mp hn)
 
-theorem kerD3_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD3 f) :
-    ∀ t, perpProjectionD3 f t = 0 := by
-  obtain ⟨c, hf⟩ := hf
-  intro t; simp only [perpProjectionD3, kernelProjectionD3, hf]; ring
+/-! ## Lagrangian -/
 
-theorem kerD4_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD4 f) :
-    ∀ t, perpProjectionD4 f t = 0 := by
-  obtain ⟨c, hf⟩ := hf
-  intro t; simp only [perpProjectionD4, kernelProjectionD4, hf]; ring
+section Lagrangian
 
-theorem kerD5_implies_perp_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) :
-    ∀ t, perpProjectionD5 f t = 0 := by
-  obtain ⟨a₀, a₁, hf⟩ := hf
-  intro t; simp only [perpProjectionD5, kernelProjectionD5, hf]; ring
+noncomputable def D6Lagrangian (f : ℂ → ℂ) (x : ℂ) : ℝ := Complex.normSq (D6 f x)
 
-/-! ## Part 7: TimeExistsD6 Properties -/
+theorem D6_lagrangian_nonneg (f : ℂ → ℂ) (x : ℂ) : D6Lagrangian f x ≥ 0 := Complex.normSq_nonneg _
+
+theorem D6_lagrangian_zero_iff (f : ℂ → ℂ) (x : ℂ) :
+    D6Lagrangian f x = 0 ↔ D6 f x = 0 := Complex.normSq_eq_zero
+
+theorem D6_lagrangian_ker_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
+    D6Lagrangian f x = 0 := by
+  rw [D6_lagrangian_zero_iff]; exact IsInKerD6_implies_D6_zero f hf x hx
+
+end Lagrangian
+
+/-! ## Time Existence -/
+
+/-- D6 f ≠ 0 at some gauge implies time exists -/
+theorem D6_nonzero_implies_time (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) (hD6 : D6 f x ≠ 0) :
+    ¬ IsInKerD6 f := by
+  intro hker
+  exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
 
 theorem timeExists_iff_nonzero_perpD6 (f : ℂ → ℂ) :
     ¬ IsInKerD6 f ↔ ∃ t, perpProjectionD6 f t ≠ 0 := by
@@ -543,8 +335,6 @@ theorem timeExists_iff_nonzero_perpD6 (f : ℂ → ℂ) :
 theorem timeExists_has_proper_timeD6 (f : ℂ → ℂ) (hf : ¬ IsInKerD6 f) :
     ∃ t, perpProjectionD6 f t ≠ 0 :=
   (timeExists_iff_nonzero_perpD6 f).mp hf
-
-/-! ## Part 8: D6_zero_implies_ker_poly -/
 
 /-- For cubic polynomials, D6 = 0 everywhere implies a₃ = 0 -/
 theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℂ)
@@ -672,67 +462,9 @@ theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℂ)
   simp only [mul_zero, zero_add] at hnum
   exact (mul_eq_zero.mp hnum).resolve_right hC3_ne
 
-/-! ## Part 9: Kernel Hierarchy -/
-
-section KernelHierarchy
-
-/-- ker(D2) ⊂ ker(D5) -/
-theorem ker_D2_subset_ker_D5 (f : ℂ → ℂ) (hf : IsInKerD2 f) : IsInKerD5 f := by
-  obtain ⟨c, hf⟩ := hf
-  exact ⟨c, 0, fun t => by rw [hf]; ring⟩
-
-/-- ker(D4) ⊄ ker(D5): x² ∈ ker(D4) \ ker(D5) -/
-theorem ker_D4_not_subset_ker_D5 :
-    ¬ (∀ f, IsInKerD4 f → IsInKerD5 f) := by
-  push_neg
-  refine ⟨fun t => t ^ 2, ⟨1, fun t => by ring⟩, ?_⟩
-  intro ⟨a₀, a₁, h⟩
-  have h0 := h 0; simp at h0
-  have h1 := h 1; simp at h1
-  have h2 := h 2; norm_num at h2
-  have ha0 : a₀ = 0 := h0.symm
-  have ha1 : a₁ = 1 := by linear_combination h1.symm - ha0
-  rw [ha0, ha1] at h2; norm_num at h2
-
-/-- D4 detects constants: constant functions are massive under D4 -/
-theorem D4_constant_is_massive (c : ℂ) (hc : c ≠ 0) : ¬ IsInKerD4 (fun _ => c) := by
-  intro ⟨d, hd⟩
-  have h0 := hd 0; simp only [mul_zero, pow_succ, pow_zero] at h0
-  exact hc h0
-
-end KernelHierarchy
-
-/-! ## Part 10: Gauge Scaling -/
+/-! ## Gauge Scaling -/
 
 section GaugeScaling
-
-theorem D2_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
-    D2 (fun t => f (c * t)) x = c * D2 f (c * x) := by
-  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  have hφψ : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
-  simp only [D2, hx, hcx, ↓reduceIte]
-  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
-
-theorem D3_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
-    D3 (fun t => f (c * t)) x = c * D3 f (c * x) := by
-  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  have hφψ : ((↑φ : ℂ) - ↑ψ) ^ 2 ≠ 0 := pow_ne_zero 2 phi_sub_psi_complex_ne
-  simp only [D3, hx, hcx, ↓reduceIte]
-  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
-
-theorem D4_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
-    D4 (fun t => f (c * t)) x = c * D4 f (c * x) := by
-  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  have hφψ : ((↑φ : ℂ) - ↑ψ) ^ 3 ≠ 0 := pow_ne_zero 3 phi_sub_psi_complex_ne
-  simp only [D4, hx, hcx, ↓reduceIte]
-  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
-
-theorem D5_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
-    D5 (fun t => f (c * t)) x = c * D5 f (c * x) := by
-  have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  have hφψ : ((↑φ : ℂ) - ↑ψ) ^ 4 ≠ 0 := pow_ne_zero 4 phi_sub_psi_complex_ne
-  simp only [D5, hx, hcx, ↓reduceIte]
-  field_simp [mul_ne_zero hφψ hx, mul_ne_zero hφψ hcx, hc]
 
 theorem D6_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
     D6 (fun t => f (c * t)) x = c * D6 f (c * x) := by
@@ -742,48 +474,17 @@ theorem D6_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x �
 
 end GaugeScaling
 
-/-! ## Part 11: Time Evolution and Kernel Invariance -/
+/-! ## Time Evolution from Dζ/Poincaré Structure
+
+Time evolution f(t) ↦ f(φt) is the one-parameter subgroup of the Poincaré group
+generated by the golden scaling. ker(D6) invariance = Lorentz invariance of vacuum. -/
 
 section TimeEvolution
 
 noncomputable def timeEvolution (f : ℂ → ℂ) : ℂ → ℂ := fun t => f ((↑φ : ℂ) * t)
 
-theorem ker_D2_invariant (f : ℂ → ℂ) (hf : IsInKerD2 f) :
-    IsInKerD2 (timeEvolution f) := by
-  obtain ⟨c, hf⟩ := hf; exact ⟨c, fun t => by simp [timeEvolution, hf]⟩
-
-theorem ker_D3_invariant (f : ℂ → ℂ) (hf : IsInKerD3 f) :
-    IsInKerD3 (timeEvolution f) := by
-  obtain ⟨c, hf⟩ := hf; exact ⟨c, fun t => by simp [timeEvolution, hf]⟩
-
-theorem ker_D4_invariant (f : ℂ → ℂ) (hf : IsInKerD4 f) :
-    IsInKerD4 (timeEvolution f) := by
-  obtain ⟨c, hf⟩ := hf
-  exact ⟨c * (↑φ : ℂ) ^ 2, fun t => by simp only [timeEvolution, hf]; ring⟩
-
-theorem ker_D5_invariant (f : ℂ → ℂ) (hf : IsInKerD5 f) :
-    IsInKerD5 (timeEvolution f) := by
-  obtain ⟨a₀, a₁, hf⟩ := hf
-  exact ⟨a₀, a₁ * (↑φ : ℂ), fun t => by simp only [timeEvolution, hf]; ring⟩
-
 private theorem phi_complex_ne_zero : (↑φ : ℂ) ≠ 0 :=
   Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
-
-theorem D2_timeEvolution (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D2 (timeEvolution f) x = (↑φ : ℂ) * D2 f ((↑φ : ℂ) * x) :=
-  D2_gauge_scaling f (↑φ) x phi_complex_ne_zero hx
-
-theorem D3_timeEvolution (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D3 (timeEvolution f) x = (↑φ : ℂ) * D3 f ((↑φ : ℂ) * x) :=
-  D3_gauge_scaling f (↑φ) x phi_complex_ne_zero hx
-
-theorem D4_timeEvolution (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D4 (timeEvolution f) x = (↑φ : ℂ) * D4 f ((↑φ : ℂ) * x) :=
-  D4_gauge_scaling f (↑φ) x phi_complex_ne_zero hx
-
-theorem D5_timeEvolution (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D5 (timeEvolution f) x = (↑φ : ℂ) * D5 f ((↑φ : ℂ) * x) :=
-  D5_gauge_scaling f (↑φ) x phi_complex_ne_zero hx
 
 theorem ker_D6_invariant (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     IsInKerD6 (timeEvolution f) := by
@@ -816,94 +517,64 @@ theorem timeEvolution_preserves_D6 (f : ℂ → ℂ) :
       _ = a₀ + a₁ / (↑φ : ℂ) * t + a₂ / (↑φ : ℂ)^2 * t^2 := by field_simp [hφ, hφ2]
   · intro hf hker; exact hf (ker_D6_invariant f hker)
 
-theorem timeEvolution_preserves_D2 (f : ℂ → ℂ) :
-    ¬ IsInKerD2 f ↔ ¬ IsInKerD2 (timeEvolution f) := by
-  have hφ : (↑φ : ℂ) ≠ 0 := phi_complex_ne_zero
-  constructor
-  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
-    exact ⟨c, fun t => by
-      have h := hc (t / (↑φ : ℂ)); simp only [timeEvolution] at h
-      rwa [mul_div_cancel₀ t hφ] at h⟩
-  · intro hf hker; exact hf (ker_D2_invariant f hker)
+/-- For tⁿ, time evolution amplifies by φⁿ -/
+theorem monomial_amplification (n : ℕ) (t : ℂ) :
+    timeEvolution (fun s => s^n) t = (↑φ : ℂ)^n * t^n := by
+  simp only [timeEvolution]; ring
 
-theorem timeEvolution_preserves_D3 (f : ℂ → ℂ) :
-    ¬ IsInKerD3 f ↔ ¬ IsInKerD3 (timeEvolution f) := by
-  have hφ : (↑φ : ℂ) ≠ 0 := phi_complex_ne_zero
-  constructor
-  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
-    exact ⟨c, fun t => by
-      have h := hc (t / (↑φ : ℂ)); simp only [timeEvolution] at h
-      rwa [mul_div_cancel₀ t hφ] at h⟩
-  · intro hf hker; exact hf (ker_D3_invariant f hker)
-
-theorem timeEvolution_preserves_D4 (f : ℂ → ℂ) :
-    ¬ IsInKerD4 f ↔ ¬ IsInKerD4 (timeEvolution f) := by
-  have hφ : (↑φ : ℂ) ≠ 0 := phi_complex_ne_zero
-  constructor
-  · intro hf hker; apply hf; obtain ⟨c, hc⟩ := hker
-    exact ⟨c / (↑φ : ℂ) ^ 2, fun t => by
-      have h := hc (t / (↑φ : ℂ)); simp only [timeEvolution] at h
-      rw [mul_div_cancel₀ t hφ] at h; rw [h]; field_simp⟩
-  · intro hf hker; exact hf (ker_D4_invariant f hker)
-
-theorem timeEvolution_preserves_D5 (f : ℂ → ℂ) :
-    ¬ IsInKerD5 f ↔ ¬ IsInKerD5 (timeEvolution f) := by
-  have hφ : (↑φ : ℂ) ≠ 0 := phi_complex_ne_zero
-  constructor
-  · intro hf hker; apply hf; obtain ⟨a₀, a₁, hc⟩ := hker
-    exact ⟨a₀, a₁ / (↑φ : ℂ), fun t => by
-      have h := hc (t / (↑φ : ℂ)); simp only [timeEvolution] at h
-      rw [mul_div_cancel₀ t hφ] at h; rw [h]; field_simp⟩
-  · intro hf hker; exact hf (ker_D5_invariant f hker)
+/-- Adding kernel component doesn't change D6 -/
+theorem kernel_component_D6_invariant (f g : ℂ → ℂ) (hg : IsInKerD6 g) :
+    ∀ x, x ≠ 0 → D6 (fun t => f t + g t) x = D6 f x := by
+  intro x hx
+  obtain ⟨a₀, a₁, a₂, hg_eq⟩ := hg
+  have hpoly : D6 g x = 0 := by
+    have hg' : g = fun t => a₀ + a₁ * t + a₂ * t^2 := funext hg_eq
+    rw [hg']
+    exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
+  simp only [D6, N6, hx, ↓reduceIte] at hpoly ⊢
+  have hpoly_num : g ((↑φ : ℂ) ^ 3 * x) - 3 * g ((↑φ : ℂ) ^ 2 * x) +
+      g ((↑φ : ℂ) * x) - g ((↑ψ : ℂ) * x) +
+      3 * g ((↑ψ : ℂ) ^ 2 * x) - g ((↑ψ : ℂ) ^ 3 * x) = 0 := by
+    rw [div_eq_zero_iff] at hpoly
+    cases hpoly with
+    | inl h => exact h
+    | inr h => exact absurd h (D6Denom_mul_ne_zero x hx)
+  calc ((f ((↑φ : ℂ)^3*x) + g ((↑φ : ℂ)^3*x)) -
+      3*(f ((↑φ : ℂ)^2*x) + g ((↑φ : ℂ)^2*x)) +
+      (f ((↑φ : ℂ)*x) + g ((↑φ : ℂ)*x)) -
+      (f ((↑ψ : ℂ)*x) + g ((↑ψ : ℂ)*x)) +
+      3*(f ((↑ψ : ℂ)^2*x) + g ((↑ψ : ℂ)^2*x)) -
+      (f ((↑ψ : ℂ)^3*x) + g ((↑ψ : ℂ)^3*x))) / (D6Denom * x)
+    = ((f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) +
+       (g ((↑φ : ℂ)^3*x) - 3*g ((↑φ : ℂ)^2*x) + g ((↑φ : ℂ)*x) -
+       g ((↑ψ : ℂ)*x) + 3*g ((↑ψ : ℂ)^2*x) -
+       g ((↑ψ : ℂ)^3*x))) / (D6Denom * x) := by ring_nf
+    _ = ((f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) +
+       0) / (D6Denom * x) := by rw [hpoly_num]
+    _ = (f ((↑φ : ℂ)^3*x) - 3*f ((↑φ : ℂ)^2*x) + f ((↑φ : ℂ)*x) -
+       f ((↑ψ : ℂ)*x) + 3*f ((↑ψ : ℂ)^2*x) - f ((↑ψ : ℂ)^3*x)) /
+       (D6Denom * x) := by ring_nf
 
 end TimeEvolution
 
-/-! ## Part 12: Entropy -/
+/-! ## Higher Order Reduction
+
+ker(D7) = ker(D6): the 6-point Dζ AF-channel operator is complete. -/
+
+/-- Higher Order Reduction: ker(D7) = ker(D6) -/
+theorem higher_order_reduction :
+    ∀ a : ℂ, (∀ k z, z ≠ 0 → FUST.D7_constrained a (fun _ => k) z = 0) ∧
+             (∀ z, z ≠ 0 → FUST.D7_constrained a id z = 0) ∧
+             (∀ z, z ≠ 0 → FUST.D7_constrained a (fun t => t^2) z = 0) :=
+  FUST.D7_kernel_equals_D6_kernel
+
+/-! ## Entropy and Third Law
+
+f ∉ ker(D6) ⟹ ∃t: entropy > 0 (Dζ third law). -/
 
 section Entropy
-
-noncomputable def entropyAtD2 (f : ℂ → ℂ) (t : ℂ) : ℝ := Complex.normSq (perpProjectionD2 f t)
-noncomputable def entropyAtD3 (f : ℂ → ℂ) (t : ℂ) : ℝ := Complex.normSq (perpProjectionD3 f t)
-noncomputable def entropyAtD4 (f : ℂ → ℂ) (t : ℂ) : ℝ := Complex.normSq (perpProjectionD4 f t)
-noncomputable def entropyAtD5 (f : ℂ → ℂ) (t : ℂ) : ℝ := Complex.normSq (perpProjectionD5 f t)
-
-theorem entropyAtD2_nonneg (f : ℂ → ℂ) (t : ℂ) : entropyAtD2 f t ≥ 0 := Complex.normSq_nonneg _
-theorem entropyAtD3_nonneg (f : ℂ → ℂ) (t : ℂ) : entropyAtD3 f t ≥ 0 := Complex.normSq_nonneg _
-theorem entropyAtD4_nonneg (f : ℂ → ℂ) (t : ℂ) : entropyAtD4 f t ≥ 0 := Complex.normSq_nonneg _
-theorem entropyAtD5_nonneg (f : ℂ → ℂ) (t : ℂ) : entropyAtD5 f t ≥ 0 := Complex.normSq_nonneg _
-
-theorem entropyAtD2_zero_iff (f : ℂ → ℂ) (t : ℂ) :
-    entropyAtD2 f t = 0 ↔ perpProjectionD2 f t = 0 := Complex.normSq_eq_zero
-theorem entropyAtD3_zero_iff (f : ℂ → ℂ) (t : ℂ) :
-    entropyAtD3 f t = 0 ↔ perpProjectionD3 f t = 0 := Complex.normSq_eq_zero
-theorem entropyAtD4_zero_iff (f : ℂ → ℂ) (t : ℂ) :
-    entropyAtD4 f t = 0 ↔ perpProjectionD4 f t = 0 := Complex.normSq_eq_zero
-theorem entropyAtD5_zero_iff (f : ℂ → ℂ) (t : ℂ) :
-    entropyAtD5 f t = 0 ↔ perpProjectionD5 f t = 0 := Complex.normSq_eq_zero
-
-theorem entropy_zero_iff_kerD2 (f : ℂ → ℂ) :
-    (∀ t, entropyAtD2 f t = 0) ↔ IsInKerD2 f := by
-  constructor
-  · intro h; exact perpD2_zero_implies_ker f (fun t => (entropyAtD2_zero_iff f t).mp (h t))
-  · intro hf t; rw [entropyAtD2_zero_iff]; exact kerD2_implies_perp_zero f hf t
-
-theorem entropy_zero_iff_kerD3 (f : ℂ → ℂ) :
-    (∀ t, entropyAtD3 f t = 0) ↔ IsInKerD3 f := by
-  constructor
-  · intro h; exact perpD3_zero_implies_ker f (fun t => (entropyAtD3_zero_iff f t).mp (h t))
-  · intro hf t; rw [entropyAtD3_zero_iff]; exact kerD3_implies_perp_zero f hf t
-
-theorem entropy_zero_iff_kerD4 (f : ℂ → ℂ) :
-    (∀ t, entropyAtD4 f t = 0) ↔ IsInKerD4 f := by
-  constructor
-  · intro h; exact perpD4_zero_implies_ker f (fun t => (entropyAtD4_zero_iff f t).mp (h t))
-  · intro hf t; rw [entropyAtD4_zero_iff]; exact kerD4_implies_perp_zero f hf t
-
-theorem entropy_zero_iff_kerD5 (f : ℂ → ℂ) :
-    (∀ t, entropyAtD5 f t = 0) ↔ IsInKerD5 f := by
-  constructor
-  · intro h; exact perpD5_zero_implies_ker f (fun t => (entropyAtD5_zero_iff f t).mp (h t))
-  · intro hf t; rw [entropyAtD5_zero_iff]; exact kerD5_implies_perp_zero f hf t
 
 noncomputable def entropyAtD6 (f : ℂ → ℂ) (t : ℂ) : ℝ := Complex.normSq (perpProjectionD6 f t)
 
@@ -918,75 +589,11 @@ theorem entropy_zero_iff_kerD6 (f : ℂ → ℂ) :
   · intro h; exact perpD6_zero_implies_ker f (fun t => (entropyAtD6_zero_iff f t).mp (h t))
   · intro hf t; rw [entropyAtD6_zero_iff]; exact kerD6_implies_perp_zero f hf t
 
-end Entropy
-
-/-! ## Part 13: Third Law -/
-
-section ThirdLaw
-
-theorem third_law_D2 (f : ℂ → ℂ) (hf : ¬IsInKerD2 f) :
-    ∃ t, entropyAtD2 f t > 0 := by
-  by_contra h; push_neg at h
-  exact hf ((entropy_zero_iff_kerD2 f).mp
-    (fun t => le_antisymm (h t) (entropyAtD2_nonneg f t)))
-
-theorem third_law_D3 (f : ℂ → ℂ) (hf : ¬IsInKerD3 f) :
-    ∃ t, entropyAtD3 f t > 0 := by
-  by_contra h; push_neg at h
-  exact hf ((entropy_zero_iff_kerD3 f).mp
-    (fun t => le_antisymm (h t) (entropyAtD3_nonneg f t)))
-
-theorem third_law_D4 (f : ℂ → ℂ) (hf : ¬IsInKerD4 f) :
-    ∃ t, entropyAtD4 f t > 0 := by
-  by_contra h; push_neg at h
-  exact hf ((entropy_zero_iff_kerD4 f).mp
-    (fun t => le_antisymm (h t) (entropyAtD4_nonneg f t)))
-
-theorem third_law_D5 (f : ℂ → ℂ) (hf : ¬IsInKerD5 f) :
-    ∃ t, entropyAtD5 f t > 0 := by
-  by_contra h; push_neg at h
-  exact hf ((entropy_zero_iff_kerD5 f).mp
-    (fun t => le_antisymm (h t) (entropyAtD5_nonneg f t)))
-
 theorem third_law_D6 (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
     ∃ t, entropyAtD6 f t > 0 := by
   by_contra h; push_neg at h
   exact hf ((entropy_zero_iff_kerD6 f).mp
     (fun t => le_antisymm (h t) (entropyAtD6_nonneg f t)))
-
-end ThirdLaw
-
-/-! ## Part 14: Time Requires Deviation -/
-
-section TimeRequiresDeviation
-
-theorem time_requires_deviation_D2 (f : ℂ → ℂ)
-    (h : ∃ x, x ≠ 0 ∧ D2 f x ≠ 0) : ∃ t, perpProjectionD2 f t ≠ 0 := by
-  by_contra hAll; push_neg at hAll
-  have hker : IsInKerD2 f := perpD2_zero_implies_ker f hAll
-  obtain ⟨x, hx, hD2⟩ := h
-  exact hD2 (IsInKerD2_implies_D2_zero f hker x hx)
-
-theorem time_requires_deviation_D3 (f : ℂ → ℂ)
-    (h : ∃ x, x ≠ 0 ∧ D3 f x ≠ 0) : ∃ t, perpProjectionD3 f t ≠ 0 := by
-  by_contra hAll; push_neg at hAll
-  have hker : IsInKerD3 f := perpD3_zero_implies_ker f hAll
-  obtain ⟨x, hx, hD3⟩ := h
-  exact hD3 (IsInKerD3_implies_D3_zero f hker x hx)
-
-theorem time_requires_deviation_D4 (f : ℂ → ℂ)
-    (h : ∃ x, x ≠ 0 ∧ D4 f x ≠ 0) : ∃ t, perpProjectionD4 f t ≠ 0 := by
-  by_contra hAll; push_neg at hAll
-  have hker : IsInKerD4 f := perpD4_zero_implies_ker f hAll
-  obtain ⟨x, hx, hD4⟩ := h
-  exact hD4 (IsInKerD4_implies_D4_zero f hker x hx)
-
-theorem time_requires_deviation_D5 (f : ℂ → ℂ)
-    (h : ∃ x, x ≠ 0 ∧ D5 f x ≠ 0) : ∃ t, perpProjectionD5 f t ≠ 0 := by
-  by_contra hAll; push_neg at hAll
-  have hker : IsInKerD5 f := perpD5_zero_implies_ker f hAll
-  obtain ⟨x, hx, hD5⟩ := h
-  exact hD5 (IsInKerD5_implies_D5_zero f hker x hx)
 
 theorem time_requires_deviation_D6 (f : ℂ → ℂ)
     (h : ∃ x, x ≠ 0 ∧ D6 f x ≠ 0) : ∃ t, perpProjectionD6 f t ≠ 0 := by
@@ -995,52 +602,101 @@ theorem time_requires_deviation_D6 (f : ℂ → ℂ)
   obtain ⟨x, hx, hD6⟩ := h
   exact hD6 (IsInKerD6_implies_D6_zero f hker x hx)
 
-end TimeRequiresDeviation
+end Entropy
 
-/-! ## Part 15: Minimum Massive Degree -/
+/-! ## Structural Minimum Time from Dζ
 
-section MinimumMassiveDegree
+t_FUST = 25/12 = (√5)⁵ / |C₃|, where C₃ = 12√5 is the Dζ AF-channel
+spectral coefficient at the minimum massive degree d=3. -/
 
-theorem D2_minimum_massive_degree :
-    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
-    (∃ x, x ≠ 0 ∧ D2 id x ≠ 0) :=
-  ⟨fun x hx => D2_const 1 x hx, ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩⟩
+section StructuralMinTime
 
-theorem D3_minimum_massive_degree :
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
-    (∃ x, x ≠ 0 ∧ D3 id x ≠ 0) :=
-  ⟨fun x hx => D3_const 1 x hx, ⟨1, one_ne_zero, D3_linear_ne_zero 1 one_ne_zero⟩⟩
+/-- D6: t_min = (√5)^5 / |C_3| = (√5)^4 / 12, since |C_3| = 12√5 -/
+noncomputable def structuralMinTimeD6 : ℝ := (Real.sqrt 5)^4 / 12
 
-theorem D4_minimum_massive_degree :
-    (∀ x, x ≠ 0 → D4 (fun t => t ^ 2) x = 0) ∧
-    (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) :=
-  ⟨D4_quadratic, D4_const_ne_zero⟩
+private theorem sqrt5_sq : (Real.sqrt 5)^2 = 5 :=
+  Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
 
-theorem D5_minimum_massive_degree :
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) ∧
-    (∀ x, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+private theorem sqrt5_pow4 : (Real.sqrt 5)^4 = 25 := by
+  calc (Real.sqrt 5)^4 = ((Real.sqrt 5)^2)^2 := by ring
+    _ = 5^2 := by rw [sqrt5_sq]
+    _ = 25 := by norm_num
 
-theorem mass_gap_existence_universal :
-    (∃ f, ¬ IsInKerD2 f) ∧
-    (∃ f, ¬ IsInKerD3 f) ∧
-    (∃ f, ¬ IsInKerD4 f) ∧
-    (∃ f, ¬ IsInKerD5 f) := by
-  refine ⟨⟨id, fun ⟨c, h⟩ => ?_⟩, ⟨id, fun ⟨c, h⟩ => ?_⟩,
-         ⟨fun _ => 1, fun ⟨c, h⟩ => ?_⟩, ⟨fun t => t ^ 2, fun ⟨a₀, a₁, h⟩ => ?_⟩⟩
-  · have h0 := h 0; have h1 := h 1; simp only [id] at h0 h1
-    exact one_ne_zero (by linear_combination h1 - h0)
-  · have h0 := h 0; have h1 := h 1; simp only [id] at h0 h1
-    exact one_ne_zero (by linear_combination h1 - h0)
-  · have h0 := h 0; norm_num at h0
-  · have h0 := h 0; have h1 := h 1; have h2 := h 2
-    norm_num at h0 h1 h2
-    have ha0 : a₀ = 0 := h0.symm
-    have ha1 : a₁ = 1 := by linear_combination h1.symm - ha0
-    rw [ha0, ha1] at h2; norm_num at h2
+private theorem sqrt5_pos : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5 : ℝ) > 0)
 
-end MinimumMassiveDegree
+private theorem sqrt5_ne_zero : Real.sqrt 5 ≠ 0 := ne_of_gt sqrt5_pos
+
+theorem structuralMinTimeD6_eq : structuralMinTimeD6 = 25 / 12 := by
+  simp only [structuralMinTimeD6]; rw [sqrt5_pow4]
+
+theorem structuralMinTimeD6_positive : structuralMinTimeD6 > 0 := by
+  rw [structuralMinTimeD6_eq]; norm_num
+
+/-- C_3 = 12√5 (D6 minimum nonzero spectral coefficient) -/
+theorem C3_eq_12_sqrt5 : φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 = 12 * Real.sqrt 5 := by
+  have hφ2 : φ^2 = φ + 1 := golden_ratio_property
+  have hψ2 : ψ^2 = ψ + 1 := psi_sq
+  have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
+  have hψ3 : ψ^3 = 2*ψ + 1 := by
+    calc ψ^3 = ψ^2 * ψ := by ring
+      _ = (ψ + 1) * ψ := by rw [hψ2]
+      _ = ψ^2 + ψ := by ring
+      _ = (ψ + 1) + ψ := by rw [hψ2]
+      _ = 2*ψ + 1 := by ring
+  have hφ6 : φ^6 = 8*φ + 5 := by
+    have hφ4 : φ^4 = 3*φ + 2 := by
+      calc φ^4 = φ^2 * φ^2 := by ring
+        _ = (φ + 1) * (φ + 1) := by rw [hφ2]
+        _ = φ^2 + 2*φ + 1 := by ring
+        _ = (φ + 1) + 2*φ + 1 := by rw [hφ2]
+        _ = 3*φ + 2 := by ring
+    calc φ^6 = φ^4 * φ^2 := by ring
+      _ = (3*φ + 2) * (φ + 1) := by rw [hφ4, hφ2]
+      _ = 3*φ^2 + 5*φ + 2 := by ring
+      _ = 3*(φ + 1) + 5*φ + 2 := by rw [hφ2]
+      _ = 8*φ + 5 := by ring
+  have hψ6 : ψ^6 = 8*ψ + 5 := by
+    have hψ4 : ψ^4 = 3*ψ + 2 := by
+      calc ψ^4 = ψ^2 * ψ^2 := by ring
+        _ = (ψ + 1) * (ψ + 1) := by rw [hψ2]
+        _ = ψ^2 + 2*ψ + 1 := by ring
+        _ = (ψ + 1) + 2*ψ + 1 := by rw [hψ2]
+        _ = 3*ψ + 2 := by ring
+    calc ψ^6 = ψ^4 * ψ^2 := by ring
+      _ = (3*ψ + 2) * (ψ + 1) := by rw [hψ4, hψ2]
+      _ = 3*ψ^2 + 5*ψ + 2 := by ring
+      _ = 3*(ψ + 1) + 5*ψ + 2 := by rw [hψ2]
+      _ = 8*ψ + 5 := by ring
+  have hφ9 : φ^9 = 34*φ + 21 := by
+    calc φ^9 = φ^6 * φ^3 := by ring
+      _ = (8*φ + 5) * (2*φ + 1) := by rw [hφ6, hφ3]
+      _ = 16*φ^2 + 18*φ + 5 := by ring
+      _ = 16*(φ + 1) + 18*φ + 5 := by rw [hφ2]
+      _ = 34*φ + 21 := by ring
+  have hψ9 : ψ^9 = 34*ψ + 21 := by
+    calc ψ^9 = ψ^6 * ψ^3 := by ring
+      _ = (8*ψ + 5) * (2*ψ + 1) := by rw [hψ6, hψ3]
+      _ = 16*ψ^2 + 18*ψ + 5 := by ring
+      _ = 16*(ψ + 1) + 18*ψ + 5 := by rw [hψ2]
+      _ = 34*ψ + 21 := by ring
+  calc φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9
+    = (34*φ + 21) - 3*(8*φ + 5) + (2*φ + 1) - (2*ψ + 1) + 3*(8*ψ + 5) - (34*ψ + 21) := by
+        rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]
+    _ = 12*φ - 12*ψ := by ring
+    _ = 12 * (φ - ψ) := by ring
+    _ = 12 * Real.sqrt 5 := by rw [phi_sub_psi]
+
+/-- D6 minimum time expressed as (√5)^5 / (12√5) -/
+theorem structuralMinTimeD6_from_D6 :
+    structuralMinTimeD6 = (Real.sqrt 5)^5 / (12 * Real.sqrt 5) := by
+  simp only [structuralMinTimeD6]
+  have h12_ne : (12 : ℝ) ≠ 0 := by norm_num
+  have h12sqrt5_ne : 12 * Real.sqrt 5 ≠ 0 := mul_ne_zero h12_ne sqrt5_ne_zero
+  rw [div_eq_div_iff h12_ne h12sqrt5_ne]
+  have h5 : (Real.sqrt 5)^5 = (Real.sqrt 5)^4 * Real.sqrt 5 := by ring
+  rw [h5]; ring
+
+end StructuralMinTime
 
 /-! ## Frourio Time Coordinate -/
 
@@ -1058,3 +714,49 @@ theorem phi_scale_is_time_shift (x : ℝ) (hx : 0 < x) :
 end FrourioFormulation
 
 end FUST.LeastAction
+
+/-! ## Backward Compatibility: FUST.TimeTheorem namespace -/
+
+namespace FUST.TimeTheorem
+
+open FUST.LeastAction
+
+theorem abs_psi_lt_one : |ψ| < 1 := FUST.LeastAction.abs_psi_lt_one
+theorem phi_mul_abs_psi : φ * |ψ| = 1 := FUST.LeastAction.phi_mul_abs_psi
+theorem phi_pow_gt_one (n : ℕ) (hn : n ≥ 1) : φ^n > 1 := FUST.LeastAction.phi_pow_gt_one n hn
+theorem monomial_amplification (n : ℕ) (t : ℂ) :
+    timeEvolution (fun s => s^n) t = (↑φ : ℂ)^n * t^n :=
+  FUST.LeastAction.monomial_amplification n t
+theorem kernel_component_D6_invariant (f g : ℂ → ℂ) (hg : IsInKerD6 g) :
+    ∀ x, x ≠ 0 → D6 (fun t => f t + g t) x = D6 f x :=
+  FUST.LeastAction.kernel_component_D6_invariant f g hg
+
+noncomputable def structuralMinTimeD6 : ℝ := FUST.LeastAction.structuralMinTimeD6
+theorem structuralMinTimeD6_eq : structuralMinTimeD6 = 25 / 12 :=
+  FUST.LeastAction.structuralMinTimeD6_eq
+theorem structuralMinTimeD6_positive : structuralMinTimeD6 > 0 :=
+  FUST.LeastAction.structuralMinTimeD6_positive
+theorem C3_eq_12_sqrt5 : φ^9 - 3*φ^6 + φ^3 - ψ^3 + 3*ψ^6 - ψ^9 = 12 * Real.sqrt 5 :=
+  FUST.LeastAction.C3_eq_12_sqrt5
+theorem structuralMinTimeD6_from_D6 :
+    structuralMinTimeD6 = (Real.sqrt 5)^5 / (12 * Real.sqrt 5) :=
+  FUST.LeastAction.structuralMinTimeD6_from_D6
+
+end FUST.TimeTheorem
+
+/-! ## Dimensional Analysis -/
+
+namespace FUST.Dim
+
+/-- Structural minimum time with derived dimension -/
+noncomputable def structuralMinTime_dim : ScaleQ dimTime :=
+  ⟨FUST.LeastAction.structuralMinTimeD6⟩
+
+theorem structuralMinTime_dim_val : structuralMinTime_dim.val = 25 / 12 :=
+  FUST.LeastAction.structuralMinTimeD6_eq
+
+/-- Time is positive -/
+theorem structuralMinTime_positive : structuralMinTime_dim.val > 0 :=
+  FUST.LeastAction.structuralMinTimeD6_positive
+
+end FUST.Dim

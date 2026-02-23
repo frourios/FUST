@@ -1,6 +1,6 @@
 import FUST.DifferenceOperators
 import FUST.FrourioLogarithm
-import FUST.Physics.TimeTheorem
+import FUST.Physics.LeastAction
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Finset.Basic
 

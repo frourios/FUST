@@ -171,7 +171,7 @@ Galois conjugation σ: φ ↔ ψ reverses the arrow of time. -/
 
 theorem conjugation_reverses_time :
     φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  ⟨φ_gt_one, FUST.TimeTheorem.abs_psi_lt_one, FUST.TimeTheorem.phi_mul_abs_psi⟩
+  ⟨φ_gt_one, FUST.LeastAction.abs_psi_lt_one, FUST.LeastAction.phi_mul_abs_psi⟩
 
 /-! ## Section 7: Automorphism Uniqueness
 

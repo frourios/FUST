@@ -1,8 +1,8 @@
-% FUST Navier-Stokes - Energy Decay and Planck-Scale Truncated Evolution
-\chapter{Energy Decay and Planck-Scale Truncated Evolution}
+% FUST Navier-Stokes - Energy Decay in Dζ 4D Spacetime
+\chapter{Energy Decay in \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{chap:ns_energy}
 
-\section{Planck Resolution Limit}
+\section{Planck Resolution Limit from \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{sec:ns_planck_resolution}
 
 \begin{definition}[Planck Cutoff Scale]
@@ -10,25 +10,25 @@
 \lean{FUST.NavierStokes.PlanckCutoff.planckCutoffScale}
 \leanok
 \[
-x_P = \frac{\ell_P}{\varphi^3}, \qquad \ell_P = \texttt{structuralMinTimeD6} = \frac{25}{12}
+z_P = \frac{\ell_P}{\varphi^3}, \qquad \ell_P = \texttt{structuralMinTimeD6} = \frac{25}{12}
 \]
 \end{definition}
 
-\begin{theorem}[Below Planck: D6 Unresolvable]
+\begin{theorem}[Below Planck: $D_\zeta$ AF-Channel Unresolvable]
 \label{thm:ns_below_planck}
 \lean{FUST.NavierStokes.PlanckCutoff.D6_below_planck_unresolvable}
 \leanok
 \[
-0 < x < x_P \Rightarrow \varphi^3 x < \ell_P
+0 < z < z_P \Rightarrow \varphi^3 z < \ell_P
 \]
 \end{theorem}
 
-\begin{theorem}[Above Planck: D6 Resolvable]
+\begin{theorem}[Above Planck: $D_\zeta$ Resolvable]
 \label{thm:ns_above_planck}
 \lean{FUST.NavierStokes.PlanckCutoff.D6_above_planck_resolvable}
 \leanok
 \[
-x \geq x_P \Rightarrow \varphi^3 x \geq \ell_P
+z \geq z_P \Rightarrow \varphi^3 z \geq \ell_P
 \]
 \end{theorem}
 
@@ -53,9 +53,9 @@ x \geq x_P \Rightarrow \varphi^3 x \geq \ell_P
 \]
 \end{theorem}
 
-This follows from $\varphi > 1$: since $\varphi^n \to \infty$, the scale $L/\varphi^n$ eventually falls below the structural minimum length. Modes above this threshold are physically meaningless.
+Since $\varphi > 1$, $\varphi^n \to \infty$ and the scale $L/\varphi^n$ eventually falls below the $D_\zeta$ structural minimum. Modes above this threshold are beyond $D_\zeta$'s resolution.
 
-\section{Thermal Dissipation Argument}
+\section{Thermal Dissipation from \texorpdfstring{$D_\zeta$}{Dζ} Third Law}
 \label{sec:ns_thermal_dissipation}
 
 \begin{theorem}[Sub-Planck Thermal Dissipation]
@@ -64,13 +64,13 @@ This follows from $\varphi > 1$: since $\varphi^n \to \infty$, the scale $L/\var
 \leanok
 Three facts justify setting sub-Planck modes to zero:
 \begin{enumerate}
-\item $\ell_P > 0$ (structural minimum length is positive)
+\item $\ell_P > 0$ (structural minimum length from $D_\zeta$ is positive)
 \item Third law: $f \notin \ker(D_6) \Rightarrow \exists t,\; S(f,t) > 0$ (massive states have positive entropy)
-\item $\forall n \geq 3: C_n^2 > 0$ (dissipation is active outside kernel)
+\item $\forall n \geq 3: C_n^2 > 0$ (dissipation is active outside $\ker(D_6)$, the spatial DOF)
 \end{enumerate}
 \end{theorem}
 
-\section{Decay Factor from D6 Dissipation}
+\section{Decay Factor from \texorpdfstring{$D_\zeta$}{Dζ} AF-Channel}
 \label{sec:ns_decay_factor}
 
 \begin{definition}[Decay Factor]
@@ -89,12 +89,12 @@ r_n = \frac{1}{1 + C_n^2}
 \begin{enumerate}
 \item $r_n > 0$ for all $n$
 \item $r_n \leq 1$ for all $n$
-\item $r_n < 1$ for $n \geq 3$ (strict decay outside kernel)
-\item $r_n = 1$ for $n \leq 2$ (kernel modes are stationary)
+\item $r_n < 1$ for $n \geq 3$ (strict decay outside spatial kernel)
+\item $r_n = 1$ for $n \leq 2$ (spatial DOF are stationary)
 \end{enumerate}
 \end{theorem}
 
-The key insight: $C_0 = C_1 = C_2 = 0$ implies $r_0 = r_1 = r_2 = 1$, so kernel modes do not evolve. For $n \geq 3$, $C_n^2 > 0$ implies $r_n < 1$, so high modes decay exponentially.
+$C_0 = C_1 = C_2 = 0$ implies $r_0 = r_1 = r_2 = 1$: the 3 spatial kernel modes (from $D_\zeta$'s $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$) do not evolve. For $n \geq 3$, $C_n^2 > 0$ implies $r_n < 1$: modes beyond spatial DOF decay exponentially.
 
 \section{Truncated Mode Evolution}
 \label{sec:ns_truncated_evolution}
@@ -110,7 +110,7 @@ For mode sequence $\hat{u}_0$, cutoff $N = N_{\max}$, and time $t \geq 0$:
 0 & \text{if } n > N
 \end{cases}
 \]
-where $r_n^t$ denotes real exponentiation ($\texttt{rpow}$), defined for all $t \in \mathbb{R}$.
+where $r_n^t$ denotes real exponentiation, defined for all $t \in \mathbb{R}$.
 \end{definition}
 
 \begin{theorem}[Initial Condition]
@@ -140,7 +140,7 @@ n \leq 2,\; n \leq N \Rightarrow \hat{u}_n(t) = \hat{u}_{0,n} \quad \forall t \g
 \]
 \end{theorem}
 
-This is physically consistent: $C_n = 0$ for $n \leq 2$ means no dissipation acts on kernel modes, so they remain stationary. This is the FUST analogue of the divergence-free, steady-state flow.
+The 3 spatial kernel modes ($n \leq 2$, from $\dim\ker(D_6) = 3$) remain stationary: $C_n = 0$ means no dissipation acts on them.
 
 \section{Mode Energy and Its Decay}
 \label{sec:ns_mode_energy}
@@ -162,11 +162,6 @@ E_n = |\hat{u}_n|^2
 E_n(t) \leq E_n(0) \quad \forall t \geq 0,\; \forall n
 \]
 \end{theorem}
-
-\begin{proof}[Proof sketch]
-For $n \leq N$: $E_n(t) = (\hat{u}_{0,n})^2 \cdot (r_n^t)^2$. Since $0 < r_n \leq 1$ and $t \geq 0$, we have $r_n^t \leq 1$ (by \texttt{rpow\_le\_one}), so $(r_n^t)^2 \leq 1$ and $E_n(t) \leq E_n(0)$.
-For $n > N$: $E_n(t) = 0 \leq E_n(0)$.
-\end{proof}
 
 \section{Total Energy Bound}
 \label{sec:ns_total_energy}
@@ -212,4 +207,4 @@ E_{\mathrm{high}} > 0 \Rightarrow D_{\mathrm{high}} > 0
 \]
 \end{theorem}
 
-If any energy exists in high modes ($n \geq 3$), the dissipation functional is strictly positive. This means energy outside the kernel is \emph{always} being dissipated---it cannot accumulate.
+Any energy in modes beyond the 3 spatial DOF ($n \geq 3$) is actively dissipated by $D_\zeta$'s AF-channel structure.

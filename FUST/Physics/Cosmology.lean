@@ -30,7 +30,7 @@ These are properties of φ itself, not FUST derivations:
 
 namespace FUST.Cosmology
 
-open FUST.TimeTheorem FUST.LeastAction FUST.WaveEquation
+open FUST.LeastAction FUST.WaveEquation
 
 /-! ## Part 1: FUST Time Structure (from TimeTheorem) -/
 

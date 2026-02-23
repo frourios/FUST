@@ -1,108 +1,121 @@
 % Appendices
 \appendix
 
-\chapter{Coefficients and Elimination Patterns of Each Operator}
-\label{app:coefficients}
+\chapter{\texorpdfstring{$D_\zeta$}{Dζ} Composition Structure}
+\label{app:dzeta_composition}
+
+\section{Three Geometric Types}
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Operator & Points & Coefficients & Coeff. sum & Eliminated $K_n$ \\
+Equation & $c$ & Roots & Product & Geometry \\
 \hline
-$D_2$ & $\{\varphi, \psi\}$ & $[1, -1]$ & $0$ & $\{0\}$ \\
-$D_3$ & $\{\varphi, 1, \psi\}$ & $[1, -2, 1]$ & $0$ & $\{0\}$ \\
-$D_4$ & $\{\varphi^2, \varphi, \psi, \psi^2\}$ & $[1, -\varphi^2, \psi^2, -1]$ & $-\sqrt{5}$ & $\{2\}$ \\
-$D_5$ & $\{\varphi^2, \varphi, 1, \psi, \psi^2\}$ & $[1, 1, -4, 1, 1]$ & $0$ & $\{0, 1\}$ \\
-$D_{5.5}$ & $D_5 + \mu \Delta_2$ & Mixed & $0$ & Mixed \\
-$D_6$ & $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ & $[1, -3, 1, -1, 3, -1]$ & $0$ & $\{0, 1, 2\}$ \\
+$x^2 = x + 1$ & $+1$ & $\varphi = (1+\sqrt{5})/2$, $\psi = (1-\sqrt{5})/2$ & $-1$ & Hyperbolic \\
+$x^2 = x - 1$ & $-1$ & $\zeta_6 = e^{i\pi/3}$, $\bar{\zeta}_6 = e^{-i\pi/3}$ & $+1$ & Elliptic \\
+$x^2 = x$ & $0$ & $1$, $0$ & $0$ & Parabolic \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{Note}: Only $D_4$ has non-zero coefficient sum (gauge breaking). Only $D_6$ eliminates $x^0, x^1, x^2$ simultaneously. $D_{5.5}$ is a mixture of $D_5$ (symmetric) and $\Delta_2$ (antisymmetric difference).
+\section{\texorpdfstring{$D_\zeta$}{Dζ} Definition}
+
+\[
+D_\zeta(f)(z) = \frac{\mathrm{AFNum}(\Phi_A(f))(z) + \mathrm{SymNum}(\Phi_S(f))(z)}{z}
+\]
+
+\textbf{Composition order}: hyperbolic ($\Phi_A, \Phi_S$) $\to$ elliptic (AFNum, SymNum) $\to$ parabolic ($\div z$).
+
+\section{Channel Coefficients}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Channel & Fourier coefficients on $\mathbb{Z}/6\mathbb{Z}$ & Value on monomials \\
+\hline
+AFNum (antisymmetric) & $[0, 1, 1, 0, -1, -1]$ & AF$\_$coeff $= 2i\sqrt{3}$ (purely imaginary) \\
+SymNum (symmetric) & $[2, 1, -1, -2, -1, 1]$ & SY$\_$coeff $= 6$ (real) \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{\texorpdfstring{$\Phi_A$}{φ_A} and \texorpdfstring{$\Phi_S$}{φ_S} Stencils}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Channel & $\varphi^3 z$ & $\varphi^2 z$ & $\varphi z$ & $z$ & $\psi z$ & $\psi^2 z$ & $\psi^3 z$ \\
+\hline
+$\Phi_A$ & $1$ & $-4$ & $3+\varphi$ & $0$ & $-(3+\psi)$ & $4$ & $-1$ \\
+$\Phi_S$ & --- & $2$ & $3+\mu$ & $-10$ & $3-\mu$ & $2$ & --- \\
+\hline
+\end{tabular}
+\end{center}
+
+where $\mu = 2/(\varphi + 2)$. Note: $\Phi_A$ has coefficient 0 at $z$ (parabolic point) by antisymmetry; $\Phi_S$ includes it with coefficient $-10$.
+
+\section{Component Operators as \texorpdfstring{$D_\zeta$}{Dζ} Projections}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Operator & Points & Coefficients & Channel & $\dim\ker$ \\
+\hline
+$D_2$ & $\{\varphi, \psi\}$ & $[1, -1]$ & AF ($r=5$) & 1 \\
+$D_3$ & $\{\varphi, 1, \psi\}$ & $[1, -2, 1]$ & SY ($r=4$) & 1 \\
+$D_4$ & $\{\varphi^2, \varphi, \psi, \psi^2\}$ & $[1, -\varphi^2, \psi^2, -1]$ & AF ($r=3$) & 1 \\
+$D_5$ & $\{\varphi^2, \varphi, 1, \psi, \psi^2\}$ & $[1, 1, -4, 1, 1]$ & SY ($r=2$) & 2 \\
+$D_{5\frac{1}{2}}$ & $D_5 + \mu \Delta_2$ & Mixed & AF $\oplus$ SY & 1 \\
+$D_6$ & $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ & $[1, -3, 1, -1, 3, -1]$ & AF ($r=1$) & 3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Gauge Group Derivation from \texorpdfstring{$D_\zeta$}{Dζ}}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$D_\zeta$ channel & Kernel & $\dim$ & Gauge group & Evidence \\
+\hline
+$\Phi_S$ (symmetric) & $\ker(D_6) = \{1,z,z^2\}$ & 3 & SU(3) & Rank-3 determinant $\neq 0$ \\
+$\Phi_A$ (antisymmetric) & $\ker(D_5) = \{1,z\}$ & 2 & SU(2) & AF$\_$coeff $= 2i\sqrt{3}$ \\
+Trivial & $\ker(D_2) = \{1\}$ & 1 & U(1) & Unique compact dim-1 \\
+\hline
+\multicolumn{3}{|r|}{Total:} & $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ & 12 gauge bosons \\
+\hline
+\end{tabular}
+\end{center}
+
+Key constraints:
+\begin{itemize}
+\item $\zeta_6 \neq \varphi^n$ (elliptic-hyperbolic separation prevents reduction)
+\item $|6a + 2i\sqrt{3} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio 3:1 $\Leftrightarrow$ $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$)
+\end{itemize}
 
 \chapter{Neutrality with Respect to the Axiom of Choice}
 \label{app:ac_neutrality}
 
-FUST is \textbf{neutral} with respect to the full Axiom of Choice (AC). That is, the core structures of FUST are constructible within ZF + DC (Dependent Choice) and do not depend on whether full AC holds.
-
-\section{Constructibility within ZF + DC}
+FUST is \textbf{neutral} with respect to the full Axiom of Choice (AC). The core structures of FUST are constructible within ZF + DC (Dependent Choice).
 
 \begin{theorem}[Constructibility within ZF + DC]
 \label{thm:zf_dc_constructible}
-The core structures of FUST (difference operators $D_n$, kernels $\ker(D_n)$, gauge groups) are constructible within the ZF + DC axiom system.
+The core structures of FUST ($D_\zeta$, component operators $D_n$, kernels, gauge groups) are constructible within ZF + DC.
 \end{theorem}
 
 \begin{proof}
-We show that each of the following constructions does not require AC:
-
 \begin{enumerate}
-\item \textbf{Golden ratio $\varphi, \psi$}: Roots of $x^2 - x - 1 = 0$ as algebraic numbers. Constructively definable.
-
-\item \textbf{Coefficients of difference operators $D_n$}: Finite tuples of algebraic numbers (real, embedded in $\mathbb{C}$). Defined by explicit construction.
-
-\item \textbf{Structure of kernels $\ker(D_n)$}: $\ker(D_5)$ and $\ker(D_6)$ are 2-dimensional and 3-dimensional \textbf{finite-dimensional} vector spaces respectively. For finite-dimensional spaces, existence of bases, orthogonal complements, and spectral decomposition do not require AC.
-
-\item \textbf{Identification of gauge groups}: SU(2), SU(3), U(1) are concretely constructible as finite-dimensional Lie groups.
+\item \textbf{$\varphi, \psi, \zeta_6$}: Roots of $x^2 - x - 1 = 0$ and $x^2 - x + 1 = 0$ as algebraic numbers. Constructively definable.
+\item \textbf{$D_\zeta$ and $D_n$ coefficients}: Finite tuples of algebraic numbers.
+\item \textbf{Kernels $\ker(D_n)$}: Finite-dimensional vector spaces (dim 1, 2, 3). No AC needed.
+\item \textbf{Gauge groups}: SU(2), SU(3), U(1) are concretely constructible finite-dimensional Lie groups.
 \end{enumerate}
 \end{proof}
 
-\section{AC Neutrality}
-
 \begin{corollary}[AC Neutrality]
-FUST is neutral with respect to AC. That is:
+FUST is neutral with respect to AC:
 \begin{itemize}
 \item Full AC cannot be derived from ZF + DC + FUST
 \item ZF + DC + $\neg$AC + FUST is also consistent (if ZF + DC + $\neg$AC is consistent)
 \end{itemize}
 \end{corollary}
-
-\section{Analysis of Where Infinity Appears}
-
-Places where infinity appears in FUST:
-
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-Construction & Type of infinity & AC dependence \\
-\hline
-Frourio exponential $\exp_{\mathsf{F}}(x)$ & Infinite series & Not required (explicit construction) \\
-Mellin transform & Integral & Not required (Lebesgue integral) \\
-``For any $n \geq 7$'' & Countable infinity & Not required (concrete for each $n$) \\
-Completeness of function spaces & Limits & DC suffices \\
-\hline
-\end{tabular}
-\end{center}
-
-\textbf{Note}: The Axiom of Dependent Choice (DC) is weaker than AC and suffices for ordinary analysis. FUST operates completely within ZF + DC.
-
-\section{Physical Selection Principles and Mathematical Axiom of Choice}
-
-Relationship between FUST's claim of ``no need for selection principles'' and AC:
-
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline
-Concept & Content \\
-\hline
-\textbf{Physical selection principle} & Principles explaining ``why this universe'' (anthropic principle, etc.) \\
-\textbf{Mathematical Axiom of Choice} & Existence of choice function from families of non-empty sets \\
-\hline
-\end{tabular}
-\end{center}
-
-FUST derives physical laws \textbf{without physical selection principles}. This is consistent with \textbf{not using the mathematical Axiom of Choice}:
-\begin{itemize}
-\item Both avoid ``choice''
-\item FUST's structures are defined by concrete constructions, not requiring abstract choices
-\end{itemize}
-
-\section{Significance}
-
-AC neutrality is evidence that FUST is constructed without assumptions:
-
-\begin{enumerate}
-\item \textbf{Robustness of foundations}: FUST holds regardless of whether AC is true
-\item \textbf{Constructive nature}: Core structures are concretely constructible
-\end{enumerate}
-

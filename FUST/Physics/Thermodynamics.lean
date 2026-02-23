@@ -1,4 +1,4 @@
-import FUST.Physics.TimeTheorem
+import FUST.Physics.LeastAction
 import FUST.Physics.Cosmology
 import FUST.Physics.Probability
 import FUST.Physics.WaveEquation
@@ -24,7 +24,7 @@ All derivations follow from:
 
 namespace FUST.Thermodynamics
 
-open FUST FUST.LeastAction FUST.TimeTheorem FUST.FrourioLogarithm FUST.Cosmology
+open FUST FUST.LeastAction FUST.FrourioLogarithm FUST.Cosmology
 open FUST.WaveEquation
 
 /-! ## Third Law of Thermodynamics

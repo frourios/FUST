@@ -30,7 +30,7 @@ The minimum scale at which $D_6$ begins to detect temporal change:
 
 \begin{definition}[Structural Minimum Time for $D_6$]
 \label{def:mat_min_time}
-\lean{FUST.TimeTheorem.structuralMinTimeD6}
+\lean{FUST.LeastAction.structuralMinTimeD6}
 \leanok
 \[
 t_{\mathrm{FUST}} = \frac{(\sqrt{5})^4}{12} = \frac{25}{12}
@@ -40,14 +40,14 @@ This is derived from the spectral formula $t_{\min}^{D_m} = (\sqrt{5})^{m-1} / |
 
 \begin{theorem}[Structural Minimum Time Value]
 \label{thm:mat_min_time_value}
-\lean{FUST.TimeTheorem.structuralMinTimeD6_eq}
+\lean{FUST.LeastAction.structuralMinTimeD6_eq}
 \leanok
 $t_{\mathrm{FUST}} = 25/12$
 \end{theorem}
 
 \begin{theorem}[Structural Minimum Time Positivity]
 \label{thm:mat_min_time_pos}
-\lean{FUST.TimeTheorem.structuralMinTimeD6_positive}
+\lean{FUST.LeastAction.structuralMinTimeD6_positive}
 \leanok
 $t_{\mathrm{FUST}} > 0$
 \end{theorem}
@@ -72,12 +72,11 @@ $D_6$ & $\{1,x,x^2\}$ & 3 & $12\sqrt{5}$ & $(\sqrt{5})^4/12$ & 25/12 \\
 
 \begin{theorem}[Structural Minimum Time Hierarchy]
 \label{thm:mat_min_time_hierarchy}
-\lean{FUST.TimeTheorem.structural_min_time_hierarchy}
-\leanok
 $t_{\min}^{D_2} < t_{\min}^{D_6} < t_{\min}^{D_5} < t_{\min}^{D_3} = t_{\min}^{D_4}$, i.e.,
 \[
 1 < \frac{25}{12} < \frac{25}{6} < 5
 \]
+(Individual $D_m$ structural minimum times are historical context; the D$\zeta$-unified theory uses only $t_{\mathrm{FUST}} = 25/12$ from D6.)
 \end{theorem}
 
 \section{Why It Cannot Be Further Divided}

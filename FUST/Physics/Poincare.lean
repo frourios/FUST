@@ -3,14 +3,14 @@ Poincaré algebra iso(3,1) = so(3,1) ⋉ ℝ⁴.
 dim iso(3,1) = C(kerDim + posRootCount, 2) + (kerDim + posRootCount) = 6 + 4 = 10.
 kerDim = 3 from ζ₆_N6 kernel, posRootCount = 1 from golden ratio root analysis.
 -/
-import FUST.Dynamics.Lorentz
+import FUST.Physics.Lorentz
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
 
-namespace FUST.Dynamics.Poincare
+namespace FUST.Physics.Poincare
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST Lorentz Zeta6
+open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz Zeta6
 
 /-! ## Module.Finite instance for so(3,1) -/
 
@@ -249,4 +249,4 @@ theorem poincare_algebra :
       if i = j then P5 3 else 0) :=
   ⟨finrank_poincare, translations_commute, rotation_energy, boost_energy, boost_momentum⟩
 
-end FUST.Dynamics.Poincare
+end FUST.Physics.Poincare

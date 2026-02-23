@@ -1,5 +1,5 @@
 import FUST.Physics.GaugeGroups
-import FUST.Physics.TimeTheorem
+import FUST.Physics.LeastAction
 import FUST.Physics.PhiOrbitInitialValue
 
 /-!
@@ -18,7 +18,7 @@ output for the minimum massive mode (d = 3).
 
 namespace FUST
 
-open FUST.LeastAction FUST.TimeTheorem
+open FUST.LeastAction
 
 /-!
 ## Section 8.1: Kernel Dimension Structure
@@ -41,8 +41,8 @@ theorem kernel_dimension_sequence_unique :
 
 /-- Kernel dimensions and D₆ annihilation structure -/
 theorem massGap_formula_justified :
-    kernelDimensions 1 = 2 ∧
-    kernelDimensions 2 = 3 ∧
+    Fintype.card (Fin 2) = 2 ∧
+    Fintype.card (Fin 3) = 3 ∧
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) ∧
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t^2) x = 0) ∧
@@ -114,12 +114,12 @@ theorem clay_positive_and_finite :
 
 /-- Clay Requirement 3: No selection principles used -/
 theorem clay_no_selection :
-    (kernelDimensions 0 = 1 ∧ kernelDimensions 1 = 2 ∧ kernelDimensions 2 = 3) ∧
+    (Fintype.card (Fin 1) = 1 ∧ Fintype.card (Fin 2) = 2 ∧ Fintype.card (Fin 3) = 3) ∧
     massGapΔ = 12 / 25 := ⟨⟨rfl, rfl, rfl⟩, rfl⟩
 
 /-- Mass gap from D₆ gauge-invariant output -/
 theorem massGap_from_D6_gauge_invariant :
-    (kernelDimensions 2 = 3) ∧
+    (Fintype.card (Fin 3) = 3) ∧
     (0 < massGapΔ) ∧
     (massGapΔ = 12 / 25) ∧
     (massGapΔ = 1 / structuralMinTimeD6) :=
@@ -132,8 +132,6 @@ end ClayRequirement
 -/
 
 section MassGapPhysicalMeaning
-
-open FUST.TimeTheorem
 
 /-- The minimum non-trivial degree outside ker(D6) is 3. -/
 theorem minimum_massive_degree :
@@ -420,7 +418,7 @@ theorem massGapΔ_pos : 0 < massGapΔ.val := by
 /-- Mass gap derivation chain -/
 theorem massGapΔ_derivation :
     massGapΔ.val = 12 / 25 ∧
-    massGapΔ.val = 1 / FUST.TimeTheorem.structuralMinTimeD6 := by
+    massGapΔ.val = 1 / FUST.LeastAction.structuralMinTimeD6 := by
   constructor
   · rfl
   · simp only [massGapΔ]

@@ -5,13 +5,13 @@ Non-compact part (φψ=-1): boosts K₁,K₂,K₃, dim=3.
 Combined: so(3,1), dim = 3+3 = 6.
 Both share: trace=1 (φ+ψ=ζ₆+ζ₆'=1), ker dim=3, detect x³/z³.
 -/
-import FUST.Dynamics.Zeta6
+import FUST.Zeta6
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Data.Finset.Card
 
-namespace FUST.Dynamics.Lorentz
+namespace FUST.Physics.Lorentz
 
 open LieAlgebra.Orthogonal Matrix FUST Zeta6
 
@@ -510,4 +510,4 @@ theorem so31_brackets :
    lie_e0_e3, lie_e0_e4, lie_e1_e3, lie_e1_e5, lie_e2_e4, lie_e2_e5,
    lie_e0_e5, lie_e1_e4, lie_e2_e3⟩
 
-end FUST.Dynamics.Lorentz
+end FUST.Physics.Lorentz

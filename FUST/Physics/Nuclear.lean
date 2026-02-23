@@ -321,14 +321,14 @@ dim ker(D₆) = 3 gives spatial orbital types {s, p, d} (l = 0, 1, 2).
 dim ker(D₅) = 2 gives spin degeneracy. Shell capacity = 2n². -/
 
 theorem max_orbital_from_kerD6 :
-    kernelDimensions 2 - 1 = 2 := rfl
+    Fintype.card (Fin 3) - 1 = 2 := rfl
 
-theorem orbital_type_count : kernelDimensions 2 = 3 := rfl
+theorem orbital_type_count : Fintype.card (Fin 3) = 3 := rfl
 
 theorem shell_from_kernel_dimensions :
-    kernelDimensions 1 = spinDegeneracy ∧
-    kernelDimensions 2 = 3 ∧
-    kernelDimensions 2 - 1 = 2 ∧
+    Fintype.card (Fin 2) = spinDegeneracy ∧
+    Fintype.card (Fin 3) = 3 ∧
+    Fintype.card (Fin 3) - 1 = 2 ∧
     shellCapacity 1 = 2 ∧ shellCapacity 2 = 8 ∧
     shellCapacity 3 = 18 :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩

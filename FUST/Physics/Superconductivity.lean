@@ -24,6 +24,56 @@ open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Copper FUST.Chemistry.Niobium
 
+/-! ## D5 Kernel as Dζ Symmetric Channel (r=2)
+
+Cooper pair = dim ker(D5) = 2 electrons. ker(D5) = span{1, z} (affine).
+D5 is the Dζ symmetric-channel projection at r=2.  -/
+
+/-- f ∈ ker(D5) iff f is affine -/
+def IsInKerD5 (f : ℂ → ℂ) : Prop :=
+  ∃ a₀ a₁ : ℂ, ∀ t, f t = a₀ + a₁ * t
+
+theorem D5_polynomial_deg1 (a₀ a₁ : ℂ) (x : ℂ) (hx : x ≠ 0) :
+    D5 (fun t => a₀ + a₁ * t) x = 0 := by
+  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x hx
+  have hlin : D5 (fun t => a₁ * t) x = 0 := by
+    have h := D5_linear x hx
+    calc D5 (fun t => a₁ * t) x = a₁ * D5 id x := by
+          simp only [D5, hx, ↓reduceIte, id]; ring
+      _ = a₁ * 0 := by rw [h]
+      _ = 0 := by ring
+  calc D5 (fun t => a₀ + a₁ * t) x
+    = D5 (fun _ => a₀) x + D5 (fun t => a₁ * t) x := by
+        simp only [D5, hx, ↓reduceIte]; ring
+    _ = 0 + 0 := by rw [hconst, hlin]
+    _ = 0 := by ring
+
+theorem IsInKerD5_implies_D5_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) :
+    ∀ x, x ≠ 0 → D5 f x = 0 := by
+  intro x hx
+  obtain ⟨a₀, a₁, hf⟩ := hf
+  rw [show f = (fun t => a₀ + a₁ * t) from funext hf]
+  exact D5_polynomial_deg1 a₀ a₁ x hx
+
+theorem kernel_interpolation_unique_D5 (p q : ℂ → ℂ) (hp : IsInKerD5 p) (hq : IsInKerD5 q)
+    (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁) (hp0 : p t₀ = q t₀) (hp1 : p t₁ = q t₁) :
+    ∀ t, p t = q t := by
+  obtain ⟨a₀, a₁, hp_eq⟩ := hp
+  obtain ⟨b₀, b₁, hq_eq⟩ := hq
+  have h0 : a₀ + a₁ * t₀ = b₀ + b₁ * t₀ := by rw [← hp_eq, ← hq_eq]; exact hp0
+  have h1 : a₀ + a₁ * t₁ = b₀ + b₁ * t₁ := by rw [← hp_eq, ← hq_eq]; exact hp1
+  have hc1 : (a₁ - b₁) * (t₀ - t₁) = 0 := by linear_combination h0 - h1
+  have ht : t₀ - t₁ ≠ 0 := sub_ne_zero.mpr h01
+  have ha1 : a₁ = b₁ := by
+    have := mul_eq_zero.mp hc1
+    cases this with
+    | inl h => exact sub_eq_zero.mp h
+    | inr h => exact absurd h ht
+  have ha0 : a₀ = b₀ := by
+    have := h0; rw [ha1] at this
+    linear_combination this
+  intro t; rw [hp_eq, hq_eq, ha0, ha1]
+
 /-! ## Section 1: Cooper Pair from D5 Kernel
 
 A Cooper pair consists of spinDeg = 2 electrons with opposite spins.
@@ -37,7 +87,7 @@ abbrev cooperPairSize : ℕ := Nuclear.spinDegeneracy
 theorem cooperPairSize_eq : cooperPairSize = 2 := rfl
 
 theorem cooperPairSize_eq_kerD5_dim :
-    cooperPairSize = kernelDimensions 1 := rfl
+    cooperPairSize = Fintype.card (Fin 2) := rfl
 
 -- Cooper pair charge = 2e (in units of e): spinDeg
 theorem cooperPair_charge_eq_spinDeg :
@@ -70,7 +120,7 @@ theorem spin_pair_embeds_in_spatial (f : ℂ → ℂ) (hf : IsInKerD5 f) :
 
 -- Condensate dimension = dim ker(D6) - dim ker(D5) = 3 - 2 = 1
 theorem condensate_dimension :
-    kernelDimensions 2 - kernelDimensions 1 = 1 := rfl
+    Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 := rfl
 
 -- The quadratic mode is NOT in ker(D5): D5(x²) ≠ 0
 theorem quadratic_not_in_kerD5 :
@@ -297,7 +347,7 @@ theorem superconductivity_classification :
     -- ker(D5) ⊂ ker(D6): spin pair embeds in spatial structure
     (∀ f, IsInKerD5 f → IsInKerD6 f) ∧
     -- Condensate dimension = 1
-    kernelDimensions 2 - kernelDimensions 1 = 1 ∧
+    Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 ∧
     -- CuO₂ coordination = baseCount = 4
     cuprateCoordination = 4 ∧
     -- d-wave nodes = baseCount = 4

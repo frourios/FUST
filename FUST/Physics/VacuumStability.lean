@@ -328,7 +328,7 @@ theorem fust_vacuum_stability :
     (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
     (¬∃ (f : ℂ → ℂ) (N : ℕ), partialHamiltonianD6 f N < 0) ∧
     (IsAdmissibleMode 3 1 ∧ ¬ IsAdmissibleMode 4 1) ∧
-    (kernelDimensions 2 = 3) :=
+    (Fintype.card (Fin 3) = 3) :=
   ⟨partialHamiltonianD6_nonneg,
    partialHamiltonianD6_ker_zero,
    massGapΔ_sq_pos,

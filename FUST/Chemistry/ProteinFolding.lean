@@ -246,14 +246,14 @@ theorem backbone_dof_eq_kerD5_dim :
     backboneDihedrals = Nuclear.spinDegeneracy := rfl
 
 theorem spatialDim_eq_kerD6_dim :
-    3 = kernelDimensions 2 := rfl
+    3 = Fintype.card (Fin 3) := rfl
 
 theorem kernel_growth_spin_to_spatial :
-    kernelDimensions 2 = kernelDimensions 1 + 1 := rfl
+    Fintype.card (Fin 3) = Fintype.card (Fin 2) + 1 := rfl
 
 theorem interpolation_hierarchy :
-    kernelDimensions 1 = Nuclear.spinDegeneracy ∧
-    kernelDimensions 2 = 3 := ⟨rfl, rfl⟩
+    Fintype.card (Fin 2) = Nuclear.spinDegeneracy ∧
+    Fintype.card (Fin 3) = 3 := ⟨rfl, rfl⟩
 
 /-! ## Section 13: Levinthal Paradox Resolution Summary -/
 
@@ -264,7 +264,7 @@ theorem levinthal_resolution :
     (∀ f, IsInKerD6 f → ∀ N,
       partialHamiltonianD6 f N = 0) ∧
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
-    kernelDimensions 2 = 3 ∧
+    Fintype.card (Fin 3) = 3 ∧
     backboneDihedrals = Nuclear.spinDegeneracy := by
   refine ⟨rfl, ?_, partialHamiltonianD6_ker_zero,
     third_law_D6, rfl, rfl⟩

@@ -1,4 +1,4 @@
-import FUST.Physics.GaugeSectors
+import FUST.Physics.GaugeGroups
 import FUST.Physics.WaveEquation
 import FUST.Physics.MassRatios
 import FUST.Physics.CouplingConstants
@@ -344,14 +344,6 @@ def allowedSpinCount : CountQ := ⟨FUST.ParticleSpectrum.allowedSpinCount⟩
 
 theorem allowedChargeCount_val : allowedChargeCount.val = 7 := rfl
 theorem allowedSpinCount_val : allowedSpinCount.val = 4 := rfl
-
-/-! ## Gauge Sector Counts as CountQ -/
-
-def su2Dim : CountQ := ⟨FUST.su2Dim⟩
-def su3Dim : CountQ := ⟨FUST.su3Dim⟩
-
-theorem su2Dim_val : su2Dim.val = 3 := rfl
-theorem su3Dim_val : su3Dim.val = 8 := rfl
 
 /-! ## Derivation consistency -/
 

@@ -19,7 +19,7 @@ No continuous theory (GR, QFT, Bekenstein-Hawking) is assumed.
 
 namespace FUST.BlackHole
 
-open FUST.WaveEquation FUST.TimeTheorem FUST
+open FUST.WaveEquation FUST.LeastAction FUST
 
 /-! ## Part 1: D₆ Completeness (No Singularity)
 

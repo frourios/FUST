@@ -1,5 +1,5 @@
 % FUST Navier-Stokes - Introduction
-\chapter{Global Existence for Navier-Stokes via D6 Planck-Scale Cutoff}
+\chapter{Global Existence for Navier-Stokes via \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{chap:ns_introduction}
 
 \section{Clay Millennium Problem: Fefferman's Statement (A)}
@@ -19,69 +19,68 @@ and external force $f \equiv 0$, prove the existence of smooth $u(x,t)$, $p(x,t)
 \]
 \end{quote}
 
-\section{FUST Reformulation}
+\section{FUST Reformulation via \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{sec:ns_fust_reformulation}
 
-FUST replaces the continuous PDE with an algebraic mode evolution system.
-The velocity field decomposes into D6 eigenmodes on the $\varphi$-scaled lattice:
+The unified operator $D_\zeta = [\mathrm{AFNum}(\Phi_A) + \mathrm{SymNum}(\Phi_S)] / z$ determines 4-dimensional spacetime via $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (from the weight ratio 3:1 in $|D_\zeta|^2 = 12(3a^2 + b^2)$).
+
+The AF-channel projection $D_6$ (antisymmetric, $r = 1$) provides the dissipation structure on the $\varphi$-lattice. FUST replaces the continuous PDE with an algebraic mode evolution system:
 \begin{equation}\label{eq:ns_mode_ode}
 \frac{d\hat{u}_n}{dt} = -C_n^2 \hat{u}_n + \sum_{m+k=n} N_{m,k}\, \hat{u}_m \hat{u}_k
 \end{equation}
-where $C_n = \texttt{dissipationCoeff}(n)$ from $D_6$, and $N_{m,k} = \texttt{nonlinearCoeff}(m,k)$ from the $D_6$ Leibniz deviation.
+where $C_n$ is the spectral coefficient of $D_\zeta$'s AF-channel projection $D_6$, and $N_{m,k}$ is the Leibniz deviation.
 
-\subsection{Key Structural Properties}
+\subsection{Key Structural Properties from \texorpdfstring{$D_\zeta$}{Dζ}}
 \begin{enumerate}
-\item \textbf{Universal probe}: $D_6$ is defined for all $x \neq 0$ (covers the entire $\varepsilon$-$\delta$ domain)
+\item \textbf{4D spacetime}: $D_\zeta$ determines $\dim\ker(D_6) + 1 = 3 + 1 = 4$ via $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$
+\item \textbf{Spatial DOF}: $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dim 3 = spatial dimensions)
 \item \textbf{Dissipation}: $C_n^2 > 0$ for $n \geq 3$, with lower bound $C_n \geq \tfrac{1}{3}\varphi^{3n}$
-\item \textbf{Energy monotonicity}: The nonlinear term redistributes but does not create energy
-\item \textbf{Exponential mode decay}: $C_n \sim \varphi^{3n}$ grows exponentially $\Rightarrow$ analytic regularity
-\item \textbf{Kernel stability}: $\ker(D_6) = \{1, x, x^2\}$ is time-invariant
-\item \textbf{Planck-scale cutoff}: Below the structural minimum length $\ell_P = 25/12$, D6 sampling is unresolvable and energy thermally dissipates
+\item \textbf{Energy monotonicity}: Nonlinear terms redistribute but do not create energy
+\item \textbf{Kernel stability}: $\ker(D_6)$ is time-invariant (spatial steady state)
+\item \textbf{Planck-scale cutoff}: Below the structural minimum $\ell_P = 25/12$, $D_\zeta$ AF-channel sampling is unresolvable
 \end{enumerate}
 
-\section{Planck-Scale Thermal Cutoff}
+\section{Planck-Scale Thermal Cutoff from \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{sec:ns_planck_cutoff}
 
-The central innovation is the Planck-scale thermal cutoff argument:
-
 \begin{enumerate}
-\item \textbf{D6 sampling resolution}: $D_6$ evaluates at $\{\varphi^3 x, \varphi^2 x, \varphi x, \psi x, \psi^2 x, \psi^3 x\}$. When $x$ is too small, sampling points fall below the structural minimum length $\ell_P = 25/12$ (derived from D6 structure in \texttt{TimeTheorem.lean})
+\item \textbf{$D_\zeta$ AF-channel resolution}: $D_6$ evaluates at $\{\varphi^3 z, \varphi^2 z, \varphi z, \psi z, \psi^2 z, \psi^3 z\}$. When $z$ is too small, sampling points fall below $\ell_P = 25/12$
 
-\item \textbf{Planck cutoff scale}: $x_P = \ell_P / \varphi^3$. For $x < x_P$, the outermost D6 sampling point $\varphi^3 x < \ell_P$ is physically unresolvable
+\item \textbf{Planck cutoff scale}: $z_P = \ell_P / \varphi^3$. For $z < z_P$, the outermost point $\varphi^3 z < \ell_P$
 
-\item \textbf{Finite mode cutoff}: For a system of size $L$, since $\varphi > 1$ implies $\varphi^n \to \infty$, there exists $N_{\max}$ such that for all $n \geq N_{\max}$: $L / \varphi^n < \ell_P$. Modes above $N_{\max}$ have sub-Planck scale
+\item \textbf{Finite mode cutoff}: Since $\varphi > 1$ implies $\varphi^n \to \infty$, there exists $N_{\max}$ such that for $n \geq N_{\max}$: $L / \varphi^n < \ell_P$
 
-\item \textbf{Thermal dissipation}: The third law of thermodynamics (massive states have positive entropy) combined with the energy density hierarchy ensures that sub-Planck modes have already thermally dissipated
+\item \textbf{Thermal dissipation}: Third law (massive states have positive entropy) ensures sub-Planck modes are thermally dissipated
 
-\item \textbf{Finite-dimensional reduction}: Only modes $0, 1, \ldots, N_{\max}$ are physical. $\ker(D_6)$ modes ($n \leq 2$) are stationary; dissipative modes ($3 \leq n \leq N_{\max}$) have $C_n^2 > 0$
+\item \textbf{Finite-dimensional reduction}: Only modes $0, 1, \ldots, N_{\max}$ are physical. Kernel modes ($n \leq 2$, spatial DOF) are stationary; dissipative modes ($3 \leq n \leq N_{\max}$) have $C_n^2 > 0$
 
-\item \textbf{Global existence}: Finite-dimensional system + energy non-increasing $\Rightarrow$ no finite-time blowup $\Rightarrow$ global solution
+\item \textbf{Global existence}: Finite-dimensional system + energy non-increasing $\Rightarrow$ global solution
 \end{enumerate}
 
 \section{Continuous Time Evolution}
 \label{sec:ns_continuous_time}
 
-The solution is constructed for continuous time $t \in \mathbb{R}$ ($t \geq 0$), matching Fefferman's requirement of solutions on $[0,\infty) \times \mathbb{R}^3$.
-The decay factor $r_n^t$ uses real exponentiation (rpow), so the evolution is defined for all $t \geq 0$:
+The solution is constructed for continuous time $t \in [0,\infty)$, matching Fefferman's requirement.
+The decay factor $r_n^t$ uses real exponentiation, so evolution is defined for all $t \geq 0$:
 \begin{itemize}
-\item $D_6$ is a universal 6-point sampling operator on the $\varphi^n$-lattice
+\item $D_\zeta$'s AF-channel $D_6$ acts as a 6-point sampling operator on the $\varphi^n$-lattice
 \item Time $t \in [0,\infty)$ is continuous, consistent with the Clay formulation
-\item The universal variable $x \in \mathbb{C}$ (with $D_n$ operators defined on $\mathbb{C}$) and time $t \in \mathbb{R}$ ($t \geq 0$)
+\item The 4D spacetime structure from $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ governs the mode dynamics
 \end{itemize}
 
 \section{Solution Strategy}
 \label{sec:ns_solution_strategy}
 
-We construct a truncated continuous-time evolution. For a system of size $L$, compute $N_{\max}$ from the Planck mode cutoff, then define:
+We construct a truncated continuous-time evolution. For system size $L$, compute $N_{\max}$ from the Planck mode cutoff, then define:
 \[
 \hat{u}_n(t) = \begin{cases}
 \hat{u}_n(0) \cdot r_n^t & \text{if } n \leq N_{\max} \\
 0 & \text{if } n > N_{\max}
 \end{cases}
 \]
-where $r_n = 1/(1 + C_n^2)$ and $r_n^t$ denotes real exponentiation ($\texttt{rpow}$).
+where $r_n = 1/(1 + C_n^2)$ and $r_n^t$ denotes real exponentiation.
 \begin{itemize}
-\item $\ker(D_6)$ modes ($n \leq 2$): $C_n = 0 \Rightarrow r_n = 1$ (stationary for all $t$)
-\item High modes ($3 \leq n \leq N_{\max}$): $C_n^2 > 0 \Rightarrow r_n < 1$ (exponential decay as $t \to \infty$)
-\item Sub-Planck modes ($n > N_{\max}$): set to $0$ (thermally dissipated)
+\item Kernel modes ($n \leq 2$, spatial DOF from $D_\zeta$): $C_n = 0 \Rightarrow r_n = 1$ (stationary)
+\item High modes ($3 \leq n \leq N_{\max}$): $C_n^2 > 0 \Rightarrow r_n < 1$ (exponential decay)
+\item Sub-Planck modes ($n > N_{\max}$): set to $0$ (below $D_\zeta$ resolution)
 \end{itemize}

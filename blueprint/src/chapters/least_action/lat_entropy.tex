@@ -28,14 +28,14 @@ $\varphi > 1$
 
 \begin{theorem}[$|\psi| < 1$]
 \label{thm:mat_psi_lt_one}
-\lean{FUST.TimeTheorem.abs_psi_lt_one}
+\lean{FUST.LeastAction.abs_psi_lt_one}
 \leanok
 $|\psi| < 1$
 \end{theorem}
 
 \begin{theorem}[$\varphi \cdot |\psi| = 1$]
 \label{thm:mat_phi_psi_prod}
-\lean{FUST.TimeTheorem.phi_mul_abs_psi}
+\lean{FUST.LeastAction.phi_mul_abs_psi}
 \leanok
 $\varphi \cdot |\psi| = 1$
 \end{theorem}
@@ -126,7 +126,7 @@ Time evolution for monomials $f(t) = t^n$:
 
 \begin{theorem}[Monomial Amplification]
 \label{thm:mat_monomial_amp}
-\lean{FUST.TimeTheorem.monomial_amplification}
+\lean{FUST.LeastAction.monomial_amplification}
 \leanok
 \[
 \mathrm{timeEvolution}(t^n)(t) = \varphi^n \cdot t^n
@@ -135,7 +135,7 @@ Time evolution for monomials $f(t) = t^n$:
 
 \begin{theorem}[$\varphi^n > 1$ for $n \geq 1$]
 \label{thm:mat_phi_pow}
-\lean{FUST.TimeTheorem.phi_pow_gt_one}
+\lean{FUST.LeastAction.phi_pow_gt_one}
 \leanok
 For $n \geq 1$, $\varphi^n > 1$
 \end{theorem}
@@ -148,7 +148,7 @@ Thus, time evolution amplifies $\ker(D_6)^\perp$ components ($n \geq 3$) by a fa
 The following are derived from $D_6$ structure:
 \begin{enumerate}
 \item $\varphi > 1$ (definition of future direction) --- \texttt{FUST.phi\_gt\_one}
-\item $|\psi| < 1$ (definition of past direction) --- \texttt{FUST.TimeTheorem.abs\_psi\_lt\_one}
+\item $|\psi| < 1$ (definition of past direction) --- \texttt{FUST.LeastAction.abs\_psi\_lt\_one}
 \item $\ker(D_6)$ is invariant under time evolution --- \texttt{FUST.LeastAction.ker\_D6\_invariant}
 \item $D_6[\mathrm{timeEvolution}(f)](x) = \varphi \cdot D_6[f](\varphi x)$ --- \texttt{FUST.LeastAction.D6\_timeEvolution}
 \end{enumerate}

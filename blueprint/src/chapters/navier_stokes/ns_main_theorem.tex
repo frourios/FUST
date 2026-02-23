@@ -1,11 +1,11 @@
-% FUST Navier-Stokes - Main Theorem (Clay Conditions Satisfied)
-\chapter{Main Theorem: Clay Conditions Satisfied}
+% FUST Navier-Stokes - Main Theorem in Dζ 4D Spacetime
+\chapter{Main Theorem: Clay Conditions in \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{chap:ns_main_theorem}
 
 \section{Clay-Compatible Initial Data}
 \label{sec:ns_initial_data}
 
-\begin{definition}[Clay Initial Data in FUST Mode Space]
+\begin{definition}[Clay Initial Data in $D_\zeta$ Mode Space]
 \label{def:ns_clay_initial}
 \lean{FUST.NavierStokes.PlanckCutoff.ClayInitialData}
 \leanok
@@ -18,19 +18,17 @@ A Clay-compatible initial datum consists of:
 \end{enumerate}
 \end{definition}
 
-The rapid decay condition encodes Fefferman's requirement $|\partial^\alpha u_0(x)| \leq C_{\alpha K}(1+|x|)^{-K}$: super-polynomial mode decay ensures infinite differentiability and finite energy.
-
-\section{Clay NS Problem with System Size}
+\section{Clay NS Problem in \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{sec:ns_clay_problem}
 
 \begin{definition}[Clay NS Problem]
 \label{def:ns_clay_problem}
 \lean{FUST.NavierStokes.PlanckCutoff.ClayNSProblem}
 \leanok
-A Clay NS problem consists of:
+A Clay NS problem in $D_\zeta$'s 4D spacetime consists of:
 \begin{enumerate}
-\item \textbf{Spatial dimension}: $d = 3$
-\item \textbf{System size}: $L > 0$ (physical system size for Planck-scale cutoff computation)
+\item \textbf{Spacetime dimension}: $d = 4$ (from $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$, $\dim\ker(D_6) + 1 = 3 + 1$)
+\item \textbf{System size}: $L > 0$ (for Planck-scale cutoff computation)
 \item \textbf{Initial data}: $\hat{u}_0 \in \texttt{ClayInitialData}$
 \end{enumerate}
 \end{definition}
@@ -53,7 +51,7 @@ This is well-defined by the Planck mode cutoff theorem (\ref{thm:ns_planck_mode_
 \label{def:ns_clay_solution}
 \lean{FUST.NavierStokes.PlanckCutoff.ClayNSSolution}
 \leanok
-For a given Clay NS problem, a solution consists of:
+For a given Clay NS problem in $D_\zeta$'s 4D spacetime, a solution consists of:
 \begin{enumerate}
 \item[(i)] \textbf{Mode evolution}: $\hat{u} : \mathbb{R} \to (\mathbb{N} \to \mathbb{R})$ for all time $t \geq 0$
 \item[(ii)] \textbf{Initial condition}: $\hat{u}(0) = \hat{u}_0$ (truncated at $N_{\max}$)
@@ -66,7 +64,7 @@ For a given Clay NS problem, a solution consists of:
 \end{enumerate}
 \end{definition}
 
-The key new condition compared to the previous formulation is (iii): the solution is \emph{finite-dimensional}, with all modes above $N_{\max}$ identically zero. This is justified by the Planck-scale thermal cutoff: modes with scale below the structural minimum length $\ell_P = 25/12$ have already thermally dissipated and carry no physical information.
+Condition (iii) is the key: the solution is \emph{finite-dimensional}, with all modes above $N_{\max}$ identically zero. This is justified by $D_\zeta$'s Planck-scale thermal cutoff.
 
 \section{Correspondence with Fefferman's Requirements}
 \label{sec:ns_fefferman_correspondence}
@@ -74,14 +72,14 @@ The key new condition compared to the previous formulation is (iii): the solutio
 \begin{center}
 \begin{tabular}{|c|l|l|c|}
 \hline
-\# & Fefferman's Requirement & FUST Implementation & Status \\
+\# & Fefferman's Requirement & $D_\zeta$ Implementation & Status \\
 \hline
-A1 & Spatial dimension $= 3$ & \texttt{spatialDim\_eq : spatialDim = 3} & $\checkmark$ \\
-A2 & $\nu > 0$ (positive viscosity) & $C_n^2 > 0$ for $n \geq 3$ & $\checkmark$ \\
+A1 & Spacetime dimension $= 4$ & \texttt{spacetimeDim\_eq : spacetimeDim = 4} & $\checkmark$ \\
+A2 & $\nu > 0$ (positive viscosity) & $C_n^2 > 0$ for $n \geq 3$ (AF-channel) & $\checkmark$ \\
 A3 & $u_0 \in C^\infty$ (smooth initial data) & \texttt{rapidDecay}: $|\hat{u}_{0,n}| \leq C/\varphi^{kn}$ & $\checkmark$ \\
 A4 & $\mathrm{div}\, u_0 = 0$ & \texttt{divFree}: $\hat{u}_0(0) = 0$ & $\checkmark$ \\
 A5 & Finite initial energy & $E(0) < \infty$ (from rapid decay) & $\checkmark$ \\
-A6 & Global smooth solution & \texttt{truncatedEvolution} with decay factor & $\checkmark$ \\
+A6 & Global smooth solution & \texttt{truncatedEvolution} with $D_\zeta$ decay & $\checkmark$ \\
 A7 & $\int|u(t)|^2 < C$ for all $t$ & \texttt{energyNonIncreasing}: $E(t) \leq E(0)$ & $\checkmark$ \\
 A8 & Kernel modes invariant & \texttt{kernelModesInvariant}: $C_n=0 \Rightarrow r_n=1$ & $\checkmark$ \\
 A9 & High modes decay & \texttt{highModeDecay}: $C_n^2>0 \Rightarrow r_n<1$ & $\checkmark$ \\
@@ -92,29 +90,29 @@ A12 & Finite-dimensional & \texttt{finiteDimensional}: $n > N_{\max} \Rightarrow
 \end{tabular}
 \end{center}
 
-\section{D6 Structural Conditions (NavierStokes.lean)}
+\section{\texorpdfstring{$D_\zeta$}{Dζ} Structural Conditions}
 \label{sec:ns_d6_conditions}
 
-\begin{theorem}[Clay NS Conditions]
+\begin{theorem}[Clay NS Conditions from $D_\zeta$]
 \label{thm:ns_clay_conditions}
 \lean{FUST.NavierStokes.PlanckCutoff.clay_conditions_verified}
 \leanok
-The FUST framework provides all structural prerequisites:
+The $D_\zeta$ framework provides all structural prerequisites:
 \begin{center}
 \begin{tabular}{|c|l|c|}
 \hline
 \# & Condition & Status \\
 \hline
-1 & $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (3-dim smooth space) & $\checkmark$ \\
-2 & $D_6[x^3] \neq 0$ (dimension exactly 3) & $\checkmark$ \\
-3 & $C_n^2 > 0$ for $n \geq 3$ (dissipation outside kernel) & $\checkmark$ \\
+1 & $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dim 3 = spatial DOF from $I_4$) & $\checkmark$ \\
+2 & $D_6[z^3] \neq 0$ (dimension exactly 3) & $\checkmark$ \\
+3 & $C_n^2 > 0$ for $n \geq 3$ (dissipation outside spatial kernel) & $\checkmark$ \\
 4 & $N_{1,2} \neq 0$ (nonlinear term exists) & $\checkmark$ \\
 5 & $|C_n| \leq 10\varphi^{3n}$ (upper bound) & $\checkmark$ \\
 6 & $|N_{m,n}| \leq 30\varphi^{3(m+n)}$ (nonlinear upper bound) & $\checkmark$ \\
 7 & $C_n \geq \tfrac{1}{3}\varphi^{3n}$ for $n \geq 4$ (lower bound) & $\checkmark$ \\
 8 & $E_{\mathrm{high}} > 0 \Rightarrow D_{\mathrm{high}} > 0$ (energy decay) & $\checkmark$ \\
 9 & $\ker(D_6)$ invariant under time evolution & $\checkmark$ \\
-10 & $\ell_P > 0$ (structural minimum length) & $\checkmark$ \\
+10 & $\ell_P > 0$ ($D_\zeta$ structural minimum) & $\checkmark$ \\
 11 & $\forall L > 0,\; \exists N: L/\varphi^n < \ell_P$ (Planck mode cutoff) & $\checkmark$ \\
 12 & Clay NS statement (global existence) & $\checkmark$ \\
 \hline
@@ -122,51 +120,47 @@ The FUST framework provides all structural prerequisites:
 \end{center}
 \end{theorem}
 
-\section{Main Theorem: Global Existence via Planck Cutoff}
+\section{Main Theorem: Global Existence in \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{sec:ns_main_proof}
 
-\begin{theorem}[Clay NS from Planck Cutoff]
+\begin{theorem}[Clay NS from $D_\zeta$ Planck Cutoff]
 \label{thm:ns_clay_from_planck_cutoff}
 \lean{FUST.NavierStokes.PlanckCutoff.clay_ns_from_planck_cutoff}
 \leanok
-For every Clay-admissible initial datum with system size $L > 0$, a global smooth solution exists:
+For every Clay-admissible initial datum in $D_\zeta$'s 4D spacetime with system size $L > 0$, a global smooth solution exists:
 \[
 \forall\, \mathrm{prob} : \texttt{ClayNSProblem},\quad \exists\, \mathrm{sol} : \texttt{ClayNSSolution}(\mathrm{prob})
 \]
 \end{theorem}
 
 \begin{proof}
-We construct the solution via the truncated evolution. Let $N_{\max} = \texttt{prob.nMax}$, then:
+Construct via truncated evolution. Let $N_{\max} = \texttt{prob.nMax}$, then:
 \[
 \hat{u}_n(t) = \begin{cases}
 \hat{u}_{0,n} \cdot r_n^t & \text{if } n \leq N_{\max} \\
 0 & \text{if } n > N_{\max}
 \end{cases}
 \]
-where $r_n = 1/(1 + C_n^2)$ and $r_n^t$ denotes real exponentiation ($\texttt{rpow}$).
 
-\textbf{(ii) Initial condition}: At $t = 0$, $r_n^0 = 1$, so $\hat{u}_n(0) = \hat{u}_{0,n}$ for $n \leq N_{\max}$ and $0$ otherwise.
+\textbf{(ii) Initial condition}: At $t = 0$, $r_n^0 = 1$.
 
-\textbf{(iii) Finite-dimensional}: By construction, $\hat{u}_n(t) = 0$ for all $n > N_{\max}$ and all $t$.
+\textbf{(iii) Finite-dimensional}: $\hat{u}_n(t) = 0$ for $n > N_{\max}$.
 
-\textbf{(iv) Kernel invariance}: For $t \geq 0$, $n \leq 2$, $n \leq N_{\max}$: $C_n = 0$ implies $r_n = 1$, so $r_n^t = 1^t = 1$ and $\hat{u}_n(t) = \hat{u}_{0,n}$.
+\textbf{(iv) Kernel invariance}: For $n \leq 2$ (spatial DOF), $C_n = 0 \Rightarrow r_n = 1 \Rightarrow \hat{u}_n(t) = \hat{u}_{0,n}$.
 
-\textbf{(v) High mode decay}: For $t \geq 0$, $n \geq 3$: if $n \leq N_{\max}$, then $C_n^2 > 0$ implies $0 < r_n < 1$, so $r_n^t \leq 1$ and $|\hat{u}_n(t)|^2 \leq |\hat{u}_{0,n}|^2$. If $n > N_{\max}$, then $|\hat{u}_n(t)|^2 = 0 \leq |\hat{u}_{0,n}|^2$.
+\textbf{(v) High mode decay}: For $n \geq 3$, $0 < r_n < 1 \Rightarrow r_n^t \leq 1$.
 
-\textbf{(vi) Energy non-increasing}: $E(t) = \sum_n |\hat{u}_{0,n}|^2 (r_n^t)^2 \leq \sum_n |\hat{u}_{0,n}|^2 = E(0)$.
+\textbf{(vi) Energy non-increasing}: $E(t) = \sum_n |\hat{u}_{0,n}|^2 (r_n^t)^2 \leq E(0)$.
 
-\textbf{(vii) Dissipation active}: If $E_\mathrm{high}(t) > 0$, then some $\hat{u}_n(t) \neq 0$ with $n \geq 3$. Since $C_n^2 > 0$, $D_\mathrm{high}(t) > 0$.
+\textbf{(vii) Dissipation active}: $C_n^2 > 0$ for $n \geq 3$.
 
-\textbf{(viii) $\ker(D_6)$ invariance}: Follows from \texttt{ker\_D6\_invariant\_timeEvolution}.
+\textbf{(viii) $\ker(D_6)$ invariance}: From \texttt{ker\_D6\_invariant\_timeEvolution}.
 \end{proof}
 
 \section{Acceptance of Arbitrary Initial Data}
 \label{sec:ns_arbitrary_initial}
 
-The \texttt{ClayInitialData} structure has three conditions: \texttt{divFree}, \texttt{finiteEnergy}, and \texttt{rapidDecay}.
-However, the \texttt{finiteEnergy} condition is \emph{redundant}: since $\texttt{totalEnergy}(\hat{u}_0, N) = \sum_{n=0}^{N} |\hat{u}_{0,n}|^2 \geq 0$ is a sum of squares, it is non-negative for \textbf{any} mode sequence (\texttt{totalEnergy\_nonneg}).
-
-Therefore, the only genuine constraints on initial data are:
+The only genuine constraints on initial data are:
 \begin{enumerate}
 \item \textbf{Divergence-free}: $\hat{u}_0(0) = 0$
 \item \textbf{Rapid decay}: $\forall k,\; \exists C > 0,\; \forall n \geq 3: |\hat{u}_{0,n}| \leq C / \varphi^{kn}$
@@ -176,17 +170,11 @@ Therefore, the only genuine constraints on initial data are:
 \label{thm:ns_accepts_arbitrary}
 \lean{FUST.NavierStokes.PlanckCutoff.accepts_arbitrary_initial_data}
 \leanok
-For any mode sequence $\hat{u}_0 : \mathbb{N} \to \mathbb{R}$ satisfying divergence-free and rapid decay, there exists a Clay NS problem (with default system size $L = 1$) and a global solution:
-\[
-\forall\, \hat{u}_0,\quad
-\hat{u}_0(0) = 0 \;\wedge\; \text{rapidDecay}(\hat{u}_0)
-\;\Rightarrow\;
-\exists\, \mathrm{prob},\; \exists\, \mathrm{sol} : \texttt{ClayNSSolution}(\mathrm{prob})
-\]
+For any mode sequence satisfying divergence-free and rapid decay, there exists a Clay NS problem in $D_\zeta$'s 4D spacetime (with default $L = 1$) and a global solution.
 \end{theorem}
 
 \begin{proof}
-Construct \texttt{ClayInitialData} via \texttt{mk\_ClayInitialData}, which fills in \texttt{finiteEnergy} automatically using \texttt{totalEnergy\_nonneg}. Then construct \texttt{ClayNSProblem} with spatial dimension 3 and system size $L = 1$, and apply \texttt{clay\_ns\_from\_planck\_cutoff}.
+Construct \texttt{ClayNSProblem} with spacetime dimension 4 ($I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$) and system size $L = 1$, then apply \texttt{clay\_ns\_from\_planck\_cutoff}.
 \end{proof}
 
 \section{Complete Verification}
@@ -196,5 +184,5 @@ Construct \texttt{ClayInitialData} via \texttt{mk\_ClayInitialData}, which fills
 \label{thm:ns_clay_verified}
 \lean{FUST.NavierStokes.PlanckCutoff.clay_conditions_verified}
 \leanok
-All 15 structural conditions---including Planck cutoff, finite mode cutoff, and the Clay NS global existence statement---are satisfied. This is formally verified with 0 \texttt{sorry}, 0 \texttt{axiom}, 0 warnings.
+All 15 structural conditions---including $D_\zeta$ Planck cutoff, finite mode cutoff, and the Clay NS global existence statement---are satisfied. Formally verified with 0 \texttt{sorry}, 0 \texttt{axiom}, 0 warnings.
 \end{theorem}

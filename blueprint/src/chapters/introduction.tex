@@ -13,12 +13,73 @@ The purpose of this research is to overcome this situation and achieve the follo
 \textbf{To prove that the structural hierarchy of the observable universe is uniquely determined within the ZF + DC axiom system with the golden ratio as base, without using the full axiom of choice (AC) or physical fine-tuning.}
 \end{quote}
 
-\section{Methodology: The Universal Probe Parameter x}
-\label{sec:methodology}
+\section{The Unified Operator \texorpdfstring{$D_\zeta$}{Dζ}: Composing Three Geometries}
+\label{sec:unified_operator}
 
-The variable $x$ introduced in this theory is not a physical spacetime coordinate, but a \textbf{Universal Probe Parameter} for scanning the algebraic structure of the universe. Through the behavior (kernel structure) of the difference operators $D_n$ with respect to this $x$, the ``type'' of physical laws is determined. Physical spacetime and distance are treated as concepts that derive secondarily from this algebraic structure.
+The core of FUST is the \textbf{unified difference operator} $D_\zeta$, which composes three fundamental geometric types arising from the family $x^2 = x + c$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Geometry & $c$ & Roots & Product & Algebraic type \\
+\hline
+Hyperbolic & $+1$ & $\varphi, \psi$ & $\varphi\psi = -1$ & $\varphi$-dilation lattice \\
+Elliptic & $-1$ & $\zeta_6, \bar{\zeta}_6$ & $\zeta_6 \bar{\zeta}_6 = +1$ & Roots of unity (compact) \\
+Parabolic & $0$ & $1, 0$ & $1 \cdot 0 = 0$ & Degenerate (normalization) \\
+\hline
+\end{tabular}
+\end{center}
+
+where $\varphi = (1+\sqrt{5})/2$ (golden ratio), $\psi = (1-\sqrt{5})/2$, and $\zeta_6 = e^{i\pi/3}$ (primitive 6th root of unity).
+
+The unified operator is defined as:
+\[
+D_\zeta(f)(z) = \frac{\mathrm{AFNum}(\Phi_A(f))(z) + \mathrm{SymNum}(\Phi_S(f))(z)}{z}
+\]
+where $\Phi_A$ (antisymmetric channel) and $\Phi_S$ (symmetric channel) compose hyperbolic $\varphi$-dilation with elliptic $\zeta_6$-rotation via the $\mathbb{Z}/6\mathbb{Z}$ discrete Fourier transform, and the division by $z$ incorporates the parabolic normalization (the degenerate root $x = 0$ of $x^2 = x + 0$).
+
+\textbf{Composition order}: The algebraic structure forces the order
+\[
+\text{hyperbolic}(+1) \to \text{elliptic}(-1) \to \text{parabolic}(0)
+\]
+because the $\zeta_6$ DFT (elliptic layer) must act before the $z$-division (parabolic layer); reversing this order shifts the Fourier mode index and destroys the antisymmetric channel.
+
+\section{From \texorpdfstring{$D_\zeta$}{Dζ} to the Standard Model}
+\label{sec:from_dzeta}
+
+The unified $D_\zeta$ achieves a remarkable structural result: the Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is \textbf{uniquely derived} from $D_\zeta$ without free parameters.
+
+The derivation proceeds through the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition of $D_\zeta$:
+
+\begin{enumerate}
+\item \textbf{Symmetric channel $\Phi_S$} (even parity): Acts on $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dimension 3). The rank-3 theorem ($\Phi_S = 2 \cdot N_5 + N_3 + \mu \cdot N_2$ with 3 linearly independent components) gives an irreducible action on a 3-dimensional space, yielding $\mathrm{SU}(3)$.
+
+\item \textbf{Antisymmetric channel $\Phi_A$} (odd parity): The Fourier coefficient $\mathrm{AF\_coeff} = 2i\sqrt{3}$ is purely imaginary and nonzero. On $\ker(D_5) = \mathrm{span}\{1, z\}$ (dimension 2), this provides a non-diagonal mixing orthogonal to $\varphi$-dilation, yielding $\mathrm{SU}(2)$.
+
+\item \textbf{Trivial channel}: On $\ker(D_2) = \mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
+
+\item \textbf{Non-reducibility}: $\zeta_6 \neq \varphi^n$ for any $n \in \mathbb{N}$ (since $\zeta_6$ has nonzero imaginary part while $\varphi^n$ is real), ensuring $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces and prevents reduction to smaller groups.
+
+\item \textbf{Weight ratio}: $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$, encoding the $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ spacetime decomposition as a 3:1 weight ratio.
+\end{enumerate}
 
 \section{On the Choice of the Golden Ratio}
 \label{sec:golden_ratio_choice}
 
 \textbf{Important limitation}: The golden ratio $\varphi$ is \textbf{defined} as the positive root of $x^2 = x + 1$, but ``why this equation is special'' is a \textbf{metamathematical choice}. However, the golden ratio is the ``most difficult irrational number to approximate'' by Hurwitz's theorem, and is the unique basis that maximizes the stability of algebraic structures. The choice of $\varphi$ in FUST is not arbitrary but a mathematical requirement to guarantee the \textbf{robustness} of the structure. FUST's claim is that after this choice is made, the structure is uniquely determined \textbf{without additional physical selection principles}.
+
+\section{Methodology: Rank-2 Lattice \texorpdfstring{$\langle \varphi, \zeta_6 \rangle$}{⟨φ,ζ6⟩}}
+\label{sec:methodology}
+
+The variable $z$ in $D_\zeta$ is not a physical spacetime coordinate, but a \textbf{Universal Probe Parameter} for scanning the algebraic structure of the universe. The unified operator $D_\zeta$ acts on the rank-2 lattice $\langle \varphi, \zeta_6 \rangle \cong \mathbb{Z} \times \mathbb{Z}/6\mathbb{Z}$, where:
+
+\begin{itemize}
+\item $\varphi$-dilation ($z \mapsto \varphi z$) generates the non-compact hyperbolic direction
+\item $\zeta_6$-rotation ($z \mapsto \zeta_6 z$) generates the compact elliptic direction
+\end{itemize}
+
+Through the kernel structure of $D_\zeta$ and its component operators, the ``type'' of physical laws is determined. Physical spacetime and distance are treated as concepts that derive secondarily from this algebraic structure. The kernel hierarchy
+\[
+\ker(D_2) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3
+\]
+determines spatial dimensions, fermion generations, gauge groups, and all coupling constants.

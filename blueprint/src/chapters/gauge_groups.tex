@@ -1,396 +1,235 @@
-% Chapter 7: Gauge Groups and Parameter Space
-\chapter{Gauge Groups and Parameter Space}
+% Chapter 7: Standard Gauge Group from Dζ
+\chapter{Standard Gauge Group from \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{chap:gauge_groups}
 
-\section{Mathematical Structure of the Gauge Sector}
-\label{sec:gauge_sector}
+\section{Overview: Unique Derivation from \texorpdfstring{$D_\zeta$}{Dζ}}
+\label{sec:gauge_overview}
 
-This chapter derives the \textbf{gauge group parameter space} from the $\varphi$-dilation eigenvalue structure of the kernel of difference operators.
+This chapter proves that the Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is \textbf{uniquely determined} by the unified operator $D_\zeta$, with no free parameters or selection principles. The derivation uses the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition of $D_\zeta$ and the kernel hierarchy of its component operators.
 
-\begin{theorem}[Gauge Parameter Space from $\varphi$-Dilation]
-\label{thm:gauge_parameter_space}
-\lean{FUST.gauge\_parameter\_space}
+\begin{theorem}[Standard Gauge Group Uniqueness]
+\label{thm:standard_gauge_unique}
+\lean{FUST.standard_gauge_group_unique}
 \leanok
-The $\varphi$-dilation operator $U_\varphi: f(z) \mapsto f(\varphi z)$ acts on the monomial basis $\{z^k\}$ of each kernel with eigenvalues $\{\varphi^k\}$. Since these eigenvalues are pairwise distinct, any gauge transformation commuting with $\varphi$-dilation must be diagonal. This gives a binary classification for each kernel:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Kernel & Dim & $\varphi$-preserving & $\varphi$-breaking \\
-\hline
-$\ker(D_5)$ & 2 & $\mathrm{U}(1)^2$ (diagonal) & $\mathrm{SU}(2)$ (non-diagonal) \\
-$\ker(D_6)$ & 3 & $\mathrm{U}(1)^3$ (diagonal) & $\mathrm{SU}(3)$ (non-diagonal) \\
-\hline
-\end{tabular}
-\end{center}
-
-Scaling $x \to e^{i\theta}x$ gives $G_1 = \mathrm{U}(1)$ (unique).
-
-The gauge parameter space is $\mathcal{G} = G_6 \times G_5$ with $|\mathcal{G}| = 2 \times 2 = 4$.
-\end{theorem}
-
-\subsection{\texorpdfstring{$\varphi$}{φ}-Dilation Commutant Theorem}
-
-\begin{theorem}[$\varphi$-Dilation Commutant is Diagonal]
-\label{thm:commutant_diagonal}
-\lean{FUST.phiDilation\_commutant\_diagonal}
-\leanok
-Let $S = \mathrm{diag}(1, \varphi, \varphi^2)$ be the $\varphi$-dilation scaling matrix on $\ker(D_6)$. If $M \in \mathrm{GL}(3, \mathbb{C})$ satisfies $MS = SM$, then $M$ is diagonal: $M_{ij} = 0$ for $i \neq j$.
-\end{theorem}
-
-\begin{proof}
-From $MS = SM$, entry-wise:
-\[
-M_{ij} \cdot \varphi^j = \varphi^i \cdot M_{ij}
-\]
-Thus $M_{ij}(\varphi^j - \varphi^i) = 0$. Since the eigenvalues $\{1, \varphi, \varphi^2\} = \{1, \varphi, \varphi + 1\}$ are pairwise distinct ($\varphi > 1$ implies $1 \neq \varphi \neq \varphi + 1 \neq 1$), we have $\varphi^j - \varphi^i \neq 0$ for $i \neq j$, hence $M_{ij} = 0$.
-\end{proof}
-
-\textbf{Consequence}: The gauge transformations commuting with $\varphi$-dilation are exactly the diagonal unitary matrices $\mathrm{U}(1)^n$, one independent $\mathrm{U}(1)$ per eigenspace. Non-diagonal transformations such as $\mathrm{SU}(n)$ necessarily break $\varphi$-dilation symmetry.
-
-\subsection{Infinite Dihedral Group and Weyl Reflection}
-
-The fundamental group of Frourio algebra is:
-\[
-D_\infty = \langle u, r \mid r^2 = 1,\; rur = u^{-1} \rangle
-\]
-where $U: f(x) \mapsto f(\varphi x)$ (scale transformation) and $R: f(x) \mapsto f(-x)$ (inversion).
-
-The relation $rur = u^{-1}$ represents the \textbf{Weyl reflection} $u \mapsto u^{-1}$, corresponding to the Weyl group $\mathbb{Z}_2$ of $\mathrm{SU}(2)$.
-
-\subsection{Phase Quantization and Half-Integer Spin}
-
-For any positive number $a > 0$, $a^{i\pi/\log a} = e^{i\pi} = -1$ holds. This is not unique to the golden ratio.
-
-\textbf{Why $\varphi$ is special}: The reason lies in its extremal properties (see below). The meaning of phase quantization is as follows:
-
-For the scale generator $u: f(x) \mapsto f(\varphi x)$ of $D_\infty$, consider the complex power $u^s = \varphi^s$. The equality $u^{i\pi/\log\varphi} = -1$ implies phase quantization at angle $\theta = \pi$.
-
-\textbf{Consequence: Selection of half-integer spin}
-
-$-1 = e^{i\pi}$ implies representations that change sign under $2\pi$ rotation (fermions):
-\begin{itemize}
-\item In the spin-$j$ representation of $\mathrm{SU}(2)$, the eigenvalue of $e^{2\pi i J_z}$ is $e^{2\pi i m}$ ($m = -j, \ldots, j$)
-\item For $j = 1/2$, $m = \pm 1/2$ gives $e^{\pi i} = -1$
-\end{itemize}
-
-\subsection{Extremal Properties of the Golden Ratio}
-
-In the metallic ratio family $\Lambda_p = \frac{p + \sqrt{p^2+4}}{2}$, $p = 1$ (golden ratio $\varphi$) has the following \textbf{extremal properties}:
-
+The following properties of $D_\zeta$ uniquely determine the gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
 \begin{enumerate}
-\item \textbf{Worst approximable irrational}: By Hurwitz's theorem, for any irrational $\alpha$, there exist infinitely many integers $p, q$ with $|q\alpha - p| < 1/(\sqrt{5} q)$. The constant $\sqrt{5}$ is optimal for $\varphi$; all other irrationals have better approximations.
-\item \textbf{Minimal operator norm}: In the metallic ratio family, $\|D_\Phi\|$ is minimal.
-\item \textbf{Maximal zero spacing in Mellin symbol}: The spectral structure is simplest.
+\item $\Phi_S$ has rank 3 (3 linearly independent sub-operators) $\Rightarrow$ $\mathrm{SU}(3)$
+\item $\mathrm{AF\_coeff} = 2i\sqrt{3} \neq 0$ is purely imaginary $\Rightarrow$ $\mathrm{SU}(2)$
+\item $\ker(D_2) = \mathrm{span}\{1\}$ is 1-dimensional $\Rightarrow$ $\mathrm{U}(1)$
+\item $\zeta_6 \neq \varphi^n$ for all $n$ (ensures non-reducibility)
+\item $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio 3:1)
 \end{enumerate}
-
-\section{Kernel Dimension Structure and Gauge Group Constraints}
-\label{sec:kernel_dimension}
-
-Gauge group constraints are obtained from the \textbf{$\varphi$-dilation eigenvalue structure on the kernels of $D_5$ and $D_6$}.
-
-\textbf{Two regimes}: The gauge group on each kernel depends on whether $\varphi$-dilation symmetry is preserved:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-$\varphi$-dilation & $\ker(D_5)$ (dim 2) & $\ker(D_6)$ (dim 3) & Physical identification \\
-\hline
-Preserving & $\mathrm{U}(1)^2$ (diagonal) & $\mathrm{U}(1)^3$ (diagonal) & Abelian theory \\
-Breaking & $\mathrm{SU}(2)$ (non-diagonal) & $\mathrm{SU}(3)$ (non-diagonal) & Standard Model \\
-\hline
-\end{tabular}
-\end{center}
-
-\textbf{Scaling symmetry of polynomial variable} (preserves grading and product structure):
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Domain & Derivation & Gauge group & Physical identification \\
-\hline
-Polynomial variable $x$ & $x \to e^{i\theta}x$ & U(1) & Hypercharge $\mathrm{U}(1)_Y$ \\
-\hline
-\end{tabular}
-\end{center}
-
-Note: $x$ is not a spacetime coordinate but a variable of the polynomial ring $\mathbb{C}[x]$.
-
-\subsection{Why SO(3) and SO(2) are Excluded}
-
-Under the $\mathbb{R}$-formulation, $\mathrm{SO}(3)$ and $\mathrm{SO}(2)$ appeared as additional possibilities. The complex extension eliminates them:
-\begin{itemize}
-\item \textbf{SO(3)}: As a subgroup of the unitary group on $\mathbb{C}^3$, the real form $\mathrm{SO}(3)$ does not arise naturally. Since $\ker(D_6)$ is a complex vector space, the natural group is $\mathrm{SU}(3)$ (not $\mathrm{SO}(3)$).
-\item \textbf{SO(2)}: $\mathrm{SO}(2) \cong \mathrm{U}(1)$, so it is already contained in $\mathrm{U}(1)^2$. It does not constitute an independent choice.
-\item \textbf{SU(2)$\times$U(1)}: On $\ker(D_6)$, $\varphi$-dilation acts with 3 distinct eigenvalues $\{1, \varphi, \varphi+1\}$. An $\mathrm{SU}(2)\times\mathrm{U}(1)$ gauge group would require a 2-dimensional degenerate eigenspace, which does not exist.
-\end{itemize}
-
-\begin{theorem}[Kernel Dimensions]
-\label{thm:kernel_dim}
-\lean{FUST.ker\_D5\_dim, FUST.ker\_D6\_dim}
-\leanok
-\[
-\ker(D_5) = \mathrm{span}\{1, x\} \quad (\dim = 2)
-\]
-\[
-\ker(D_6) = \mathrm{span}\{1, x, x^2\} \quad (\dim = 3)
-\]
 \end{theorem}
 
-\begin{proof}
-Solve $D_5[x^c]/x^c = \varphi^{2c} + \varphi^c - 4 + \psi^c + \psi^{2c}$:
-\begin{itemize}
-\item $c = 0$: $1 + 1 - 4 + 1 + 1 = 0$ $\checkmark$
-\item $c = 1$: $(\varphi^2 + \psi^2) + (\varphi + \psi) - 4 = 3 + 1 - 4 = 0$ $\checkmark$
-\item $c = 2$: $(\varphi^4 + \psi^4) + (\varphi^2 + \psi^2) - 4 = 7 + 3 - 4 = 6 \neq 0$
-\end{itemize}
-Thus $\ker(D_5) = \mathrm{span}\{1, x\}$.
+\section{\texorpdfstring{$\zeta_6$}{ζ6} Separation from \texorpdfstring{$\varphi$}{φ}-Eigenspectrum}
+\label{sec:zeta6_separation}
 
-By Binet's formula, $D_6[x^c] \propto F_{3c} - 3F_{2c} + F_c$:
-\begin{itemize}
-\item $c = 0$: $0 - 0 + 0 = 0$ $\checkmark$
-\item $c = 1$: $2 - 3 \cdot 1 + 1 = 0$ $\checkmark$
-\item $c = 2$: $8 - 3 \cdot 3 + 1 = 0$ $\checkmark$
-\item $c = 3$: $34 - 3 \cdot 8 + 2 = 12 \neq 0$
-\end{itemize}
-Thus $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$.
-\end{proof}
+\begin{theorem}[$\zeta_6 \neq \varphi^n$]
+\label{thm:zeta6_ne_phi}
+\lean{FUST.zeta6_ne_phi_pow}
+\leanok
+For all $n \in \mathbb{N}$, $\zeta_6 \neq \varphi^n$, since $\mathrm{Im}(\zeta_6) = \sqrt{3}/2 \neq 0$ while $\varphi^n \in \mathbb{R}$.
+\end{theorem}
 
-\textbf{$\varphi$-Dilation eigenvalues}:
+This separation guarantees that $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces, preventing gauge group reduction. On $\ker(D_6)$ with basis $\{1, z, z^2\}$, the $\varphi$-dilation eigenvalues are $\{1, \varphi, \varphi^2\}$ (all real and distinct), but $\zeta_6$ acts non-diagonally on this basis, providing the off-diagonal mixing necessary for non-abelian gauge structure.
+
+\section{Channel Non-Degeneracy}
+\label{sec:channel_nondegeneracy}
+
+\begin{theorem}[AF Channel is Non-Degenerate]
+\label{thm:AF_nondegenerate}
+\lean{FUST.AF_channel_nondegenerate}
+\leanok
+$\mathrm{AF\_coeff} \neq 0$, since $|\mathrm{AF\_coeff}|^2 = 12 \neq 0$.
+\end{theorem}
+
+\begin{theorem}[AF Channel is Purely Imaginary]
+\label{thm:AF_imaginary}
+\lean{FUST.AF_coeff_re_zero}
+\leanok
+$\mathrm{Re}(\mathrm{AF\_coeff}) = 0$, i.e., $\mathrm{AF\_coeff} = 2i\sqrt{3}$.
+\end{theorem}
+
+The AF channel being purely imaginary means it acts \textbf{orthogonally} to the real $\varphi$-dilation diagonal. On $\ker(D_5) = \mathrm{span}\{1, z\}$, the AF direction provides the off-diagonal generator needed for $\mathrm{su}(2)$.
+
+\section{Kernel Hierarchy and Dimensions}
+\label{sec:kernel_hierarchy}
+
+\begin{theorem}[Kernel Hierarchy]
+\label{thm:kernel_hierarchy}
+\lean{FUST.kernel_hierarchy}
+\leanok
+\[
+\ker(D_2) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3
+\]
+\begin{itemize}
+\item $D_2[1] = 0$, $D_2[z] \neq 0$ ($\ker(D_2) = \mathrm{span}\{1\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,1) = 1$)
+\item $D_5[1] = D_5[z] = 0$, $D_5[z^2] \neq 0$ ($\ker(D_5) = \mathrm{span}\{1, z\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,2) = 2$)
+\item $D_6[1] = D_6[z] = D_6[z^2] = 0$, $D_6[z^3] \neq 0$ ($\ker(D_6) = \mathrm{span}\{1, z, z^2\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,3) = 3$)
+\end{itemize}
+\end{theorem}
+
+\section{\texorpdfstring{$\varphi$}{φ}-Dilation Eigenvalue Structure}
+\label{sec:phi_dilation}
 
 \begin{theorem}[$\varphi$-Dilation Eigenvalues are Pairwise Distinct]
 \label{thm:eigenvalues_distinct}
-\lean{FUST.kerD6\_eigenvalues\_distinct}
+\lean{FUST.kerD6_eigenvalues_distinct}
 \leanok
-The $\varphi$-dilation eigenvalues on $\ker(D_6)$ are:
+On $\ker(D_6)$, the $\varphi$-dilation $U_\varphi: f(z) \mapsto f(\varphi z)$ has eigenvalues:
 \[
 \varphi^0 = 1, \quad \varphi^1 = \varphi, \quad \varphi^2 = \varphi + 1
 \]
 These are pairwise distinct since $\varphi > 1$.
 \end{theorem}
 
-\textbf{Kernel hierarchy}:
-\[
-\ker(D_2) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3
-\]
-
-\section{Derivation of U(1)}
-\label{sec:U1_derivation}
-
-Scaling of the polynomial variable $x \to e^{i\theta} x$ acts on $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ as:
-\[
-1 \mapsto 1, \quad x \mapsto e^{i\theta} x, \quad x^2 \mapsto e^{2i\theta} x^2
-\]
-defining a $\mathrm{U}(1)$ representation with degrees $\{0, 1, 2\}$. This is \textbf{hypercharge $\mathrm{U}(1)_Y$}.
-
-\textbf{Uniqueness}: The only 1-dimensional compact connected Lie group is $\mathrm{U}(1) \cong S^1$.
-
-\section{Derivation of SU(2)}
-\label{sec:SU2_derivation}
-
-\subsection{su(2) Structure on Kernel of D5}
-
-View $V_0 := \ker(D_5) = \mathrm{span}\{1, x\}$ as a 2-dimensional vector space. For the basis $|{\uparrow}\rangle = 1$, $|{\downarrow}\rangle = x$, define ladder operators:
-\[
-\sigma_+ := \frac{d}{dx}\Big|_{V_0}: x \mapsto 1, \; 1 \mapsto 0
-\]
-\[
-\sigma_- := P_0 \circ M_x\Big|_{V_0}: 1 \mapsto x
-\]
-where $P_0$ is the projection onto $V_0$ and $M_x$ is multiplication by $x$.
-
-\subsection{Computation of Commutation Relations}
-
-\begin{align*}
-[\sigma_+, \sigma_-](1) &= \sigma_+ \sigma_-(1) - \sigma_- \sigma_+(1) = \sigma_+(x) - \sigma_-(0) = 1 = |{\uparrow}\rangle \\
-[\sigma_+, \sigma_-](x) &= \sigma_+ \sigma_-(x) - \sigma_- \sigma_+(x) = 0 - x = -|{\downarrow}\rangle
-\end{align*}
-
-Setting $\sigma_z := [\sigma_+, \sigma_-]$:
-\[
-\sigma_z |{\uparrow}\rangle = |{\uparrow}\rangle, \quad \sigma_z |{\downarrow}\rangle = -|{\downarrow}\rangle
-\]
-
-\subsection{Verification of su(2) Commutation Relations}
-
-$[\sigma_z, \sigma_+](x) = \sigma_z(1) - \sigma_+(-x) = 1 + 1 = 2 = 2\sigma_+(x)$
-
-Thus $[\sigma_z, \sigma_+] = 2\sigma_+$, $[\sigma_z, \sigma_-] = -2\sigma_-$, $[\sigma_+, \sigma_-] = \sigma_z$.
-
-These are the \textbf{standard su(2) commutation relations}, giving the spin-1/2 representation.
-
-\subsection{SU(2) as \texorpdfstring{$\varphi$}{φ}-Dilation Breaking}
-
-The $\varphi$-dilation eigenvalues on $\ker(D_5) = \mathrm{span}\{1, x\}$ are $\{1, \varphi\}$, which are distinct. By the commutant theorem, the gauge group commuting with $\varphi$-dilation is $\mathrm{U}(1)^2$. The SU(2) gauge group \textbf{breaks} $\varphi$-dilation symmetry: it mixes the eigenspaces with distinct eigenvalues.
-
-\section{Derivation of SU(3)}
-\label{sec:SU3_derivation}
-
-\subsection{Unitary Group on Kernel of D6}
-
-View $V := \ker(D_6) = \mathrm{span}\{1, x, x^2\}$ as a 3-dimensional complex vector space. The unitary group on $V$ is $\mathrm{U}(3)$, the special unitary group is $\mathrm{SU}(3)$.
-
-\begin{theorem}[Gauge Group from $\varphi$-Dilation Breaking]
-\label{thm:gauge_space}
-The $\varphi$-dilation eigenvalues $\{1, \varphi, \varphi+1\}$ on $\ker(D_6)$ are pairwise distinct. Therefore:
-\begin{itemize}
-\item $\varphi$-preserving gauge: $\mathrm{U}(1)^3$ (diagonal unitary, unique by commutant theorem)
-\item $\varphi$-breaking gauge: $\mathrm{SU}(3)$ (non-diagonal unitary mixing 3 eigenspaces)
-\end{itemize}
-\end{theorem}
-
-\subsection{Justification via Kernel Hierarchy}
-
-From the kernel inclusion $\ker(D_2) \subset \ker(D_5) \subset \ker(D_6)$, three independent subspaces emerge naturally:
-\[
-V_0 := \ker(D_2) = \mathrm{span}\{1\}
-\]
-\[
-V_1 := \ker(D_5) / \ker(D_2) \cong \mathrm{span}\{x\}
-\]
-\[
-V_2 := \ker(D_6) / \ker(D_5) \cong \mathrm{span}\{x^2\}
-\]
-
-We have $\ker(D_6) = V_0 \oplus V_1 \oplus V_2$, and the \textbf{unitary transformations mixing these 3 directions} constitute $\mathrm{SU}(3)$.
-
-\subsection{Symmetry Breaking by D5}
-
-Eigenvalue decomposition of $D_5|_V$:
-\[
-D_5(1) = 0, \quad D_5(x) = 0, \quad D_5(x^2) = 6 \cdot x^2
-\]
-
-$D_5$ decomposes $V$ into eigenspaces $V_0 \oplus V_1$ and $V_2$. This corresponds to symmetry breaking $\mathrm{SU}(3) \to \mathrm{SU}(2) \times \mathrm{U}(1)$.
-
-\section{Consistency of Direct Product Structure}
-\label{sec:direct_product}
-
-\begin{theorem}[Gauge Group Consistency Theorem]
-\label{thm:gauge_consistency}
-\lean{FUST.gauge\_group\_consistency}
+\begin{theorem}[$\varphi$-Dilation Commutant is Diagonal]
+\label{thm:commutant_diagonal}
+\lean{FUST.phiDilation_commutant_diagonal}
 \leanok
-The kernel structure of the Frourio difference hierarchy is consistent with the gauge group
-\[
-G = \mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)
-\]
-This is the $\varphi$-dilation breaking point in the gauge parameter space $\mathcal{G}$.
+Let $S = \mathrm{diag}(1, \varphi, \varphi^2)$ be the scaling matrix on $\ker(D_6)$. If $M \in \mathrm{GL}(3, \mathbb{C})$ satisfies $MS = SM$, then $M$ is diagonal.
 \end{theorem}
 
 \begin{proof}
-\begin{enumerate}
-\item \textbf{U(1)}: Derived from natural scaling on $\ker(D_6)$. The only 1-dimensional compact connected Lie group is $\mathrm{U}(1)$.
-\item \textbf{SU(2)}: su(2) algebra is naturally realized on $\ker(D_5) = \mathrm{span}\{1, x\}$. The only 3-dimensional compact simple Lie group is $\mathrm{SU}(2)$.
-\item \textbf{SU(3)}: Unitary group mixing the 3 directions of $\ker(D_6) = V_0 \oplus V_1 \oplus V_2$. The only 8-dimensional compact simple Lie group is $\mathrm{SU}(3)$.
-\item \textbf{Direct product structure}: Guaranteed by the following algebraic mechanisms:
-   \begin{itemize}
-   \item $[D_5, D_6] = 0$ (commutativity of operators)
-   \item PBW-type standard form: $\mathcal{F}(A) \cong (A \rtimes k[D_\infty]) \oplus (A \rtimes k[D_\infty])\Delta$
-   \item Ore exchange relation $\Delta M_a - M_{\sigma_u(a)}\Delta = \tilde{\delta}(a)$ resolves critical pairs
-   \item Kernel hierarchy $\ker(D_2) \subset \ker(D_5) \subset \ker(D_6)$ gives an \textbf{increasing sequence of dimensions $1 \to 2 \to 3$}, guaranteeing independence of each group
-   \end{itemize}
-\end{enumerate}
+From $MS = SM$, entry-wise: $M_{ij} \cdot \varphi^j = \varphi^i \cdot M_{ij}$, so $M_{ij}(\varphi^j - \varphi^i) = 0$. Since eigenvalues are pairwise distinct, $M_{ij} = 0$ for $i \neq j$.
 \end{proof}
 
-\subsection{Dimension Matching}
+\section{Symmetric Channel \texorpdfstring{$\Phi_S \to \mathrm{SU}(3)$}{Φ_S → SU(3)}}
+\label{sec:SU3_derivation}
 
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Origin & Derivation & Gauge group & Dimension \\
-\hline
-$\ker(D_6)$ scaling & dim 1 connected compact group & U(1) & 1 \\
-su(2) on $\ker(D_5)$ & dim 3 simple compact group & SU(2) & 3 \\
-$\ker(D_6) = V_0 \oplus V_1 \oplus V_2$ & dim 8 simple compact group & SU(3) & 8 \\
-\hline
-\end{tabular}
-\end{center}
-
-Total: $1 + 3 + 8 = 12$ dimensions (matching the Standard Model gauge group).
-
-\section{Gauge Parameter Space and \texorpdfstring{$\varphi$}{φ}-Dilation Classification}
-\label{sec:phi_dilation_classification}
-
-The $\varphi$-dilation commutant theorem reduces the gauge parameter space from 12 (under $\mathbb{R}$) to 4 sectors:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Sector & $G_6$ ($\ker D_6$) & $G_5$ ($\ker D_5$) & Physical theory \\
-\hline
-1 & $\mathrm{SU}(3)$ ($\varphi$-breaking) & $\mathrm{SU}(2)$ ($\varphi$-breaking) & Standard Model \\
-2 & $\mathrm{U}(1)^3$ ($\varphi$-preserving) & $\mathrm{U}(1)^2$ ($\varphi$-preserving) & Fully abelian \\
-3 & $\mathrm{SU}(3)$ ($\varphi$-breaking) & $\mathrm{U}(1)^2$ ($\varphi$-preserving) & Mixed I \\
-4 & $\mathrm{U}(1)^3$ ($\varphi$-preserving) & $\mathrm{SU}(2)$ ($\varphi$-breaking) & Mixed II \\
-\hline
-\end{tabular}
-\end{center}
-
-$G_1 = \mathrm{U}(1)$ is unique in all sectors (no choice).
-
-\textbf{Key structural result}: Each gauge choice is a binary decision (preserve or break $\varphi$-dilation on each kernel), and the 4 sectors are the only mathematically consistent possibilities.
-
-\subsection{Selection by Describability}
-
-All 4 sectors are mathematically consistent, but \textbf{the sectors where ``an intelligence capable of describing this theory'' can exist are limited}:
+\begin{theorem}[Symmetric Channel Determines SU(3)]
+\label{thm:symmetric_SU3}
+\lean{FUST.Zeta6.Phi_S_rank_three}
+\leanok
+$\Phi_S = 2 \cdot N_5 + N_3 + \mu \cdot N_2$ decomposes into 3 linearly independent sub-operators.
 \begin{itemize}
-\item Without \textbf{confinement} (non-abelian nature of SU(3)), stable hadrons cannot form $\Rightarrow$ no atomic nuclei
-\item Without \textbf{electroweak symmetry} (SU(2)$\times$U(1)), stable electron orbits enabling chemical bonds cannot exist
+\item The $3 \times 3$ determinant of $(\sigma_{N_5}, \sigma_{N_3}, \sigma_{N_2})$ at $s = 1, 5, 7$ equals $-6952(\varphi - \psi) \neq 0$
+\item These 3 independent components act on $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dimension 3)
+\item Rank $=$ dim $\Rightarrow$ irreducible action on a 3-dimensional space
+\item $\zeta_6 \neq \varphi^n$ ensures $\zeta_6$-rotation mixes $\varphi$-eigenspaces non-diagonally
+\item The unique compact simple Lie group acting irreducibly on $\mathbb{C}^3$ is $\mathrm{SU}(3)$
 \end{itemize}
+\end{theorem}
+
+$\mathrm{SU}(3)$ has dimension $3^2 - 1 = 8$ (8 gluons).
+
+\section{Antisymmetric Channel \texorpdfstring{$\Phi_A \to \mathrm{SU}(2)$}{Φ_A → SU(2)}}
+\label{sec:SU2_derivation}
+
+\begin{theorem}[Antisymmetric Channel Determines SU(2)]
+\label{thm:antisymmetric_SU2}
+\lean{FUST.AF_channel_nondegenerate, FUST.AF_coeff_re_zero}
+\leanok
+\begin{itemize}
+\item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ is nonzero and purely imaginary
+\item On $\ker(D_5) = \mathrm{span}\{1, z\}$ (dimension 2), $\varphi$-dilation has eigenvalues $\{1, \varphi\}$ (diagonal, real)
+\item The AF direction provides the off-diagonal, purely imaginary generator
+\item One real direction ($\varphi$-dilation Cartan) $+$ one imaginary direction (AF root) $=$ $\mathrm{su}(2)$ algebra
+\item The unique compact simple Lie group on $\mathbb{C}^2$ is $\mathrm{SU}(2)$
+\end{itemize}
+\end{theorem}
+
+$\mathrm{SU}(2)$ has dimension $2^2 - 1 = 3$ ($W^\pm, Z$ bosons).
+
+\subsection{su(2) Commutation Relations}
+
+View $V_0 := \ker(D_5) = \mathrm{span}\{1, z\}$ as a 2-dimensional space with basis $|{\uparrow}\rangle = 1$, $|{\downarrow}\rangle = z$.
+
+Ladder operators: $\sigma_+ := d/dz|_{V_0}$, $\sigma_- := P_0 \circ M_z|_{V_0}$, $\sigma_z := [\sigma_+, \sigma_-]$.
+
+These satisfy $[\sigma_z, \sigma_+] = 2\sigma_+$, $[\sigma_z, \sigma_-] = -2\sigma_-$, $[\sigma_+, \sigma_-] = \sigma_z$ --- the standard $\mathrm{su}(2)$ commutation relations (spin-1/2).
+
+\section{Trivial Channel \texorpdfstring{$\to \mathrm{U}(1)$}{→ U(1)}}
+\label{sec:U1_derivation}
+
+\begin{theorem}[Trivial Channel Determines U(1)]
+\label{thm:trivial_U1}
+On $\ker(D_2) = \mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
+\end{theorem}
+
+\section{Weight Ratio and Spacetime Structure}
+\label{sec:weight_ratio}
+
+\begin{theorem}[$D_\zeta$ Norm-Squared Decomposition]
+\label{thm:normSq_decomposition}
+\lean{FUST.Zeta6.Dzeta_normSq_decomposition}
+\leanok
+\[
+|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
+\]
+\end{theorem}
+
+The weight ratio $3 : 1$ between symmetric ($a$, SU(3)) and antisymmetric ($b$, SU(2)) channels encodes the spacetime decomposition $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (3 spatial + 1 temporal dimension).
+
+\section{Dimension Matching}
+\label{sec:dimension_matching}
 
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-Sector & Mathematical consistency & Possibility of describer \\
+$D_\zeta$ channel & Kernel & $\dim$ & Gauge group & $\dim(G)$ \\
 \hline
-$(\mathrm{SU}(3), \mathrm{SU}(2), \mathrm{U}(1))$ & $\checkmark$ & $\checkmark$ (confinement + stable atoms) \\
-$(\mathrm{U}(1)^3, \mathrm{U}(1)^2, \mathrm{U}(1))$ & $\checkmark$ & $\times$ (no confinement) \\
-$(\mathrm{SU}(3), \mathrm{U}(1)^2, \mathrm{U}(1))$ & $\checkmark$ & $\times$ (no electroweak) \\
-$(\mathrm{U}(1)^3, \mathrm{SU}(2), \mathrm{U}(1))$ & $\checkmark$ & $\times$ (no confinement) \\
+Symmetric ($\Phi_S$) & $\ker(D_6) = \{1, z, z^2\}$ & 3 & SU(3) & 8 \\
+Antisymmetric ($\Phi_A$) & $\ker(D_5) = \{1, z\}$ & 2 & SU(2) & 3 \\
+Trivial & $\ker(D_2) = \{1\}$ & 1 & U(1) & 1 \\
+\hline
+\multicolumn{4}{|r|}{Total gauge dimensions:} & 12 \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{FUST's claim}: All 4 sectors are mathematically equivalent, but the fact that ``FUST is being described'' is only valid in a sector where describers (observers) exist. This is not the physical anthropic principle but \textbf{logical self-consistency}.
+$12 = 8 + 3 + 1$: matching the 12 gauge bosons of the Standard Model (8 gluons $+ W^\pm + Z +$ photon).
 
-\section{Gauge Boson Mass Mechanism from Kernel Hierarchy}
+\section{Gauge Boson Mass Mechanism}
 \label{sec:gauge_mass_mechanism}
 
-The kernel inclusion $\ker(D_5) \subsetneq \ker(D_6)$ provides a structural mass mechanism
-for gauge bosons, playing the role of the Higgs mechanism in the Standard Model.
+The kernel inclusion $\ker(D_5) \subsetneq \ker(D_6)$ provides a structural mass mechanism:
 
-\subsection{The Higgs Degree of Freedom}
-
-The key observation is:
 \[
-x^2 \in \ker(D_6) \setminus \ker(D_5): \quad D_6(x^2) = 0 \text{ but } D_5(x^2) \neq 0.
+z^2 \in \ker(D_6) \setminus \ker(D_5): \quad D_6(z^2) = 0 \text{ but } D_5(z^2) \neq 0.
 \]
-This extra degree of freedom $x^2$ acts as the \textbf{Higgs field}: it belongs to the color sector
-($\ker D_6$) but not the weak sector ($\ker D_5$).
 
-\subsection{Mass/Massless Classification}
+This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs to $\mathrm{SU}(3)$ ($\ker D_6$) but not to $\mathrm{SU}(2)$ ($\ker D_5$), breaking electroweak symmetry.
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-Gauge boson & Symmetry origin & Mass mechanism & FDim \\
+Gauge boson & Origin in $D_\zeta$ & Mass mechanism & Mass \\
 \hline
-Gluon (8) & $\ker(D_6)$, $\mathrm{SU}(3)$ & $D_6 = 0$ $\to$ massless & --- \\
-Photon & Grading, $\mathrm{U}(1)$ & all $D_m$ preserve $\to$ massless & --- \\
-$W^\pm$ & $\ker(D_5)$, $\mathrm{SU}(2)$ & $D_5(x^2) \neq 0$ $\to$ massive & $(20,-24,-26)$ \\
-$Z$ & $\ker(D_5)$, $\mathrm{SU}(2)$ & DimSum2 via $\theta_W$ & $(40,...) \oplus (42,...)$ \\
-$H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & $(21,...) \oplus (18,...)$ \\
-DM & $D_{5\frac{1}{2}}$ sector & $D_{5\frac{1}{2}}[x] \neq 0$ $\to$ massive & $(21,-25,-24)$ \\
-Graviton & $D_6$ gravity sector & $\Box_\varphi[t^{-1}] = 0$ $\to$ massless & --- \\
+Gluon (8) & $\Phi_S$ on $\ker(D_6)$ & $D_6 = 0$ & massless \\
+Photon & U(1) grading & All $D_m$ preserve & massless \\
+$W^\pm$ & $\Phi_A$ on $\ker(D_5)$ & $D_5(z^2) \neq 0$ & massive \\
+$Z$ & $\Phi_A$ on $\ker(D_5)$ & via $\theta_W$ mixing & massive \\
+$H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & massive \\
 \hline
 \end{tabular}
 \end{center}
 
-The W boson mass is quantitatively determined:
-\[
-\frac{m_W}{m_e} = \varphi^{C(5,2)+C(6,2)} \times \frac{C(6,2)}{C(6,2)+C(2,2)} = \varphi^{25} \times \frac{15}{16}
-\]
-with 0.002\% agreement against PDG data.
-$m_Z^2$ and $m_H$ are \texttt{DimSum2}: formal sums of ScaleQ with different FDim,
-whose $\mathbb{R}$-evaluation gives the physical mass.
-See Chapter~\ref{chap:pd_mass_ratios} for details.
+\section{Extremal Properties of the Golden Ratio}
+\label{sec:extremal_properties}
+
+In the metallic ratio family $\Lambda_p = \frac{p + \sqrt{p^2+4}}{2}$, $p = 1$ (golden ratio $\varphi$) has:
+
+\begin{enumerate}
+\item \textbf{Worst approximable irrational}: By Hurwitz's theorem, the constant $\sqrt{5}$ is optimal for $\varphi$
+\item \textbf{Minimal operator norm}: $\|D_\Phi\|$ is minimal in the metallic ratio family
+\item \textbf{Maximal zero spacing in Mellin symbol}: Simplest spectral structure
+\end{enumerate}
+
+\section{Infinite Dihedral Group}
+\label{sec:dihedral}
+
+The symmetry group of Frourio algebra is $D_\infty = \langle u, r \mid r^2 = 1,\; rur = u^{-1} \rangle$
+where $U: f(z) \mapsto f(\varphi z)$ and $R: f(z) \mapsto f(-z)$. The Weyl reflection $u \mapsto u^{-1}$ corresponds to the Weyl group $\mathbb{Z}_2$ of $\mathrm{SU}(2)$.
+
+\section{Summary}
+\label{sec:gauge_summary}
+
+\textbf{No free parameters}: The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is the unique output of $D_\zeta$'s algebraic structure. The derivation uses:
+\begin{itemize}
+\item $\Phi_S$ rank 3 (from $D_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ symmetric channel)
+\item AF$\_$coeff $= 2i\sqrt{3}$ (from $D_\zeta$'s antisymmetric channel)
+\item Kernel hierarchy $1 \to 2 \to 3$ (from $D_2 \subset D_5 \subset D_6$)
+\item $\zeta_6 \neq \varphi^n$ (elliptic-hyperbolic separation)
+\item $|6a + 2i\sqrt{3} \cdot b|^2 = 12(3a^2 + b^2)$ (spacetime weight ratio)
+\end{itemize}

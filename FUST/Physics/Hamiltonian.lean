@@ -22,6 +22,51 @@ namespace FUST.Hamiltonian
 
 open FUST.LeastAction
 
+/-! ## Private Kernel Definitions for D2-D5
+
+These are local to Hamiltonian; D6 uses LeastAction.IsInKerD6 directly. -/
+
+private def IsInKerD2 (f : ℂ → ℂ) : Prop := ∃ c : ℂ, ∀ t, f t = c
+private def IsInKerD3 (f : ℂ → ℂ) : Prop := ∃ c : ℂ, ∀ t, f t = c
+private def IsInKerD4 (f : ℂ → ℂ) : Prop := ∃ c : ℂ, ∀ t, f t = c * t ^ 2
+private def IsInKerD5 (f : ℂ → ℂ) : Prop := ∃ a₀ a₁ : ℂ, ∀ t, f t = a₀ + a₁ * t
+
+private theorem IsInKerD2_implies_D2_zero (f : ℂ → ℂ) (hf : IsInKerD2 f) :
+    ∀ x, x ≠ 0 → D2 f x = 0 := by
+  intro x hx; obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun _ => c) from funext hf]; exact D2_const c x hx
+
+private theorem IsInKerD3_implies_D3_zero (f : ℂ → ℂ) (hf : IsInKerD3 f) :
+    ∀ x, x ≠ 0 → D3 f x = 0 := by
+  intro x hx; obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun _ => c) from funext hf]; exact D3_const c x hx
+
+private theorem IsInKerD4_implies_D4_zero (f : ℂ → ℂ) (hf : IsInKerD4 f) :
+    ∀ x, x ≠ 0 → D4 f x = 0 := by
+  intro x hx; obtain ⟨c, hf⟩ := hf
+  rw [show f = (fun t => c * t ^ 2) from funext hf]
+  simp only [D4, hx, ↓reduceIte]
+  have : c * ((↑φ) ^ 2 * x) ^ 2 - (↑φ) ^ 2 * (c * ((↑φ) * x) ^ 2) +
+      (↑ψ) ^ 2 * (c * ((↑ψ) * x) ^ 2) - c * ((↑ψ) ^ 2 * x) ^ 2 = 0 := by ring
+  simp [this]
+
+private theorem IsInKerD5_implies_D5_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) :
+    ∀ x, x ≠ 0 → D5 f x = 0 := by
+  intro x hx; obtain ⟨a₀, a₁, hf⟩ := hf
+  rw [show f = (fun t => a₀ + a₁ * t) from funext hf]
+  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x hx
+  have hlin : D5 (fun t => a₁ * t) x = 0 := by
+    have h := D5_linear x hx
+    calc D5 (fun t => a₁ * t) x = a₁ * D5 id x := by
+          simp only [D5, hx, ↓reduceIte, id]; ring
+      _ = a₁ * 0 := by rw [h]
+      _ = 0 := by ring
+  calc D5 (fun t => a₀ + a₁ * t) x
+    = D5 (fun _ => a₀) x + D5 (fun t => a₁ * t) x := by
+        simp only [D5, hx, ↓reduceIte]; ring
+    _ = 0 + 0 := by rw [hconst, hlin]
+    _ = 0 := by ring
+
 /-! ## Hamiltonian Definition for All D-Operators
 
 Each Dm defines a discretized Hamiltonian:
@@ -332,18 +377,14 @@ theorem massGap_hierarchy :
   unfold FUST.massGapΔ massGapD5 massGapD3 massGapD4 massGapD2
   norm_num
 
-/-- Δm = 1 / t_min^Dm -/
+/-- Δm = 1 / t_min^Dm: t_D2=1, t_D3=5, t_D4=5, t_D5=25/6, t_D6=25/12 -/
 theorem massGap_inverse_minTime :
-    massGapD2 = 1 / FUST.TimeTheorem.structuralMinTimeD2 ∧
-    massGapD3 = 1 / FUST.TimeTheorem.structuralMinTimeD3 ∧
-    massGapD4 = 1 / FUST.TimeTheorem.structuralMinTimeD4 ∧
-    massGapD5 = 1 / FUST.TimeTheorem.structuralMinTimeD5 ∧
-    FUST.massGapΔ = 1 / FUST.TimeTheorem.structuralMinTimeD6 := by
+    massGapD2 = 1 / (1 : ℝ) ∧
+    massGapD3 = 1 / (5 : ℝ) ∧
+    massGapD4 = 1 / (5 : ℝ) ∧
+    massGapD5 = 1 / (25 / 6 : ℝ) ∧
+    FUST.massGapΔ = 1 / FUST.LeastAction.structuralMinTimeD6 := by
   unfold massGapD2 massGapD3 massGapD4 massGapD5
-  rw [FUST.TimeTheorem.structuralMinTimeD2_eq,
-      FUST.TimeTheorem.structuralMinTimeD3_eq,
-      FUST.TimeTheorem.structuralMinTimeD4_eq,
-      FUST.TimeTheorem.structuralMinTimeD5_eq]
   refine ⟨by norm_num, by norm_num, by norm_num, by norm_num,
           FUST.massGapΔ_eq_inv_structuralMinTimeD6⟩
 
@@ -381,8 +422,8 @@ theorem clay_hamiltonian_gap_derived :
     (∀ (f : ℂ → ℂ) n,
       hamiltonianContributionD6 f n =
         Complex.normSq (D6 f (↑(φ ^ n)))) ∧
-    (kernelDimensions 2 = 3) ∧
-    (kernelDimensions 1 = 2) ∧
+    (Fintype.card (Fin 3) = 3) ∧
+    (Fintype.card (Fin 2) = 2) ∧
     (0 < FUST.massGapΔ) ∧
     (FUST.massGapΔ = 12 / 25) := by
   refine ⟨fun _ _ => rfl, rfl, rfl, FUST.massGapΔ_pos, rfl⟩

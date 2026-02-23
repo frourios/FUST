@@ -1,10 +1,10 @@
-import FUST.Dynamics.Zeta6
+import FUST.Zeta6
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Slope
 
-namespace FUST.Dynamics.ScalingLimit
+namespace FUST.ScalingLimit
 
 open Complex Filter Topology
 
@@ -132,4 +132,4 @@ theorem D_t_at_lnphi (n : ℕ) (z : ℂ) (hz : z ≠ 0) :
     ↑(Real.sinh (↑n * Real.log φ) / Real.sinh (Real.log φ)) * z ^ (n - 1) := by
   exact D_t_monomial n (Real.log φ) (ne_of_gt (Real.log_pos φ_gt_one)) z hz
 
-end FUST.Dynamics.ScalingLimit
+end FUST.ScalingLimit

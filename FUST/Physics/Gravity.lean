@@ -3,12 +3,12 @@ General relativity from localized Lorentz symmetry.
 Global so(3,1) invariance (Poincare.lean) → local ω : I4 → so(3,1) → gravity.
 All dimensions derived from ζ₆/φψ duality: kerDim=3, posRootCount=1, spacetime=4.
 -/
-import FUST.Dynamics.Poincare
+import FUST.Physics.Poincare
 
-namespace FUST.Dynamics.Gravity
+namespace FUST.Physics.Gravity
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST Lorentz Poincare Zeta6
+open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz Physics.Poincare Zeta6
 
 /-! ## Lorentz connection: localized so(3,1) -/
 
@@ -270,4 +270,4 @@ theorem bianchi_entries (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ ν ρ α β : 
 
 end EinsteinEquations
 
-end FUST.Dynamics.Gravity
+end FUST.Physics.Gravity

@@ -1,11 +1,11 @@
 % FUST Navier-Stokes - Nonlinear Terms
-\chapter{Nonlinear Terms}
+\chapter{Nonlinear Terms from \texorpdfstring{$D_\zeta$}{Dζ} Leibniz Deviation}
 \label{chap:ns_nonlinear}
 
 \section{Nonlinear Term as Leibniz Deviation}
 \label{sec:ns_leibniz}
 
-The deviation from the Leibniz rule of $D_6$ gives the nonlinear term:
+The deviation from the Leibniz rule of $D_\zeta$'s AF-channel projection $D_6$ gives the nonlinear term:
 
 \begin{definition}[Nonlinear Coefficient]
 \label{def:ns_nonlinear}
@@ -25,6 +25,8 @@ N_{1,2} = C_3 \neq 0
 \]
 \end{theorem}
 
+This is physically significant: the product of two kernel elements $z \cdot z^2 = z^3$ exits the kernel ($C_3 \neq 0$), triggering nonlinear energy transfer from spatial modes to dissipative modes.
+
 \section{Growth Estimate of Nonlinear Term}
 \label{sec:ns_nonlinear_growth}
 
@@ -37,17 +39,16 @@ N_{1,2} = C_3 \neq 0
 \]
 \end{theorem}
 
-\section{Dissipation Dominance}
+\section{Dissipation Dominance in \texorpdfstring{$D_\zeta$}{Dζ} AF-Channel}
 \label{sec:ns_dominance}
 
 \begin{theorem}[Dissipation Dominates Nonlinearity]
 \label{thm:ns_dominance}
-At high modes:
+At high modes in $D_\zeta$'s AF-channel:
 \begin{itemize}
 \item Dissipation: $C_n^2 \sim \varphi^{6n}$
 \item Nonlinear: $N_{m,n}^2 \lesssim \varphi^{6(m+n)}$
 \end{itemize}
 \end{theorem}
 
-The square of the dissipation coefficient has the same scaling as the square of the nonlinear coefficient, but dissipation is certainly positive (with a lower bound), while the nonlinear term only redistributes energy without generating it.
-
+Dissipation is certainly positive (with lower bound $C_n \geq \frac{1}{3}\varphi^{3n}$ for $n \geq 4$), while the nonlinear term only redistributes energy. This is the mechanism by which $D_\zeta$'s structure prevents finite-time blowup.

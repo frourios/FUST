@@ -36,14 +36,6 @@ import FUST.Chemistry.Translation
 import FUST.Chemistry.WaterAnomalies
 import FUST.Chemistry.WaterMolecules
 
-import FUST.Dynamics.EulerOperator
-import FUST.Dynamics.Gravity
-import FUST.Dynamics.Lorentz
-import FUST.Dynamics.Poincare
-import FUST.Dynamics.ScalingLimit
-import FUST.Dynamics.YangMills
-import FUST.Dynamics.Zeta6
-
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 
@@ -52,10 +44,11 @@ import FUST.Physics.Cosmology
 import FUST.Physics.CouplingConstants
 import FUST.Physics.FusionReactor
 import FUST.Physics.GaugeGroups
-import FUST.Physics.GaugeSectors
 import FUST.Physics.GravitationalCoupling
+import FUST.Physics.Gravity
 import FUST.Physics.Hamiltonian
 import FUST.Physics.LeastAction
+import FUST.Physics.Lorentz
 import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
@@ -68,6 +61,7 @@ import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PhiBloch
 import FUST.Physics.PhiOrbitInitialValue
 import FUST.Physics.PMNSMixingAngles
+import FUST.Physics.Poincare
 import FUST.Physics.Probability
 import FUST.Physics.QuantumStructure
 import FUST.Physics.QuarkMassRatios
@@ -75,7 +69,6 @@ import FUST.Physics.ScaleStructure
 import FUST.Physics.StateFunctionConstraint
 import FUST.Physics.Superconductivity
 import FUST.Physics.Thermodynamics
-import FUST.Physics.TimeTheorem
 import FUST.Physics.VacuumStability
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
@@ -86,6 +79,9 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
+import FUST.EulerOperator
 import FUST.FibonacciArithmetic
 import FUST.FrourioLogarithm
+import FUST.ScalingLimit
 import FUST.SpectralCoefficients
+import FUST.Zeta6

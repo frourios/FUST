@@ -208,7 +208,7 @@ theorem magnet_pair_embedding :
 
 -- Condensate dimension = 1
 theorem magnet_condensate_dim :
-    kernelDimensions 2 - kernelDimensions 1 = 1 := condensate_dimension
+    Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 := condensate_dimension
 
 /-! ## Section 7: Magnet Material Stability — Nuclear Magic Numbers -/
 
@@ -229,11 +229,10 @@ theorem magnet_coordination :
 -- Vortex: Cooper pair size = 2, condensate dimension = 1
 theorem vortex_structure :
     cooperPairSize = 2 ∧
-    kernelDimensions 2 - kernelDimensions 1 = 1 := ⟨rfl, condensate_dimension⟩
+    Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 := ⟨rfl, condensate_dimension⟩
 
 /-! ## Section 8: Summary -/
 
-open FUST.Dim in
 theorem fusion_reactor_classification :
     -- D⁺ and T⁺ have distinct FDim
     dimDeuteronIon ≠ dimTritonIon ∧

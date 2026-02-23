@@ -1,16 +1,16 @@
-% FUST Navier-Stokes - Lower Bound on Dissipation (Core Theorem)
-\chapter{Lower Bound on Dissipation (Core Theorem)}
+% FUST Navier-Stokes - Lower Bound on Dissipation
+\chapter{Lower Bound on \texorpdfstring{$D_\zeta$}{Dζ} AF-Channel Dissipation}
 \label{chap:ns_lower_bound}
 
 \section{Upper and Lower Bounds}
 \label{sec:ns_bounds}
 
-Upper bound on dissipation coefficient:
+Upper bound on the AF-channel spectral coefficient:
 \[
 |C_n| \leq 10 \cdot \varphi^{3n}
 \]
 
-For proving global existence, the upper bound alone is insufficient; the \textbf{lower bound} is essentially important.
+For proving global existence, the upper bound alone is insufficient; the \textbf{lower bound} is essential.
 
 \begin{theorem}[Dissipation Lower Bound]
 \label{thm:ns_lower_bound}
@@ -45,13 +45,12 @@ C_n > \frac{1}{2}\varphi^{3n} - 5 > \frac{1}{3}\varphi^{3n}
 \end{enumerate}
 \end{proof}
 
-\section{Physical Meaning}
+\section{Physical Meaning in \texorpdfstring{$D_\zeta$}{Dζ} 4D Spacetime}
 \label{sec:ns_lower_physics}
 
-The existence of a dissipation lower bound guarantees:
+The lower bound guarantees that in $D_\zeta$'s 4D spacetime ($I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$):
 \begin{itemize}
-\item Dissipation at high modes does not vanish
-\item Energy accumulating at high modes is necessarily dissipated
-\item Energy concentration in finite time (blowup) is impossible
+\item Dissipation at modes beyond the 3 spatial DOF ($n \geq 3$) never vanishes
+\item Energy cannot accumulate at high modes
+\item Finite-time blowup is structurally impossible
 \end{itemize}
-

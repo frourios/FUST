@@ -1,4 +1,4 @@
-import FUST.Physics.TimeTheorem
+import FUST.Physics.LeastAction
 
 /-!
 # FUST Wave Equation
@@ -126,7 +126,7 @@ theorem D6_cubic_nonzero (x : ℂ) (hx : x ≠ 0) : D6 (fun t => t^3) x ≠ 0 :=
 
 /-- Time evolution uniqueness: φ > 1 is the unique expansion factor -/
 theorem time_evolution_unique : φ > 1 ∧ |ψ| < 1 :=
-  ⟨φ_gt_one, FUST.TimeTheorem.abs_psi_lt_one⟩
+  ⟨φ_gt_one, FUST.LeastAction.abs_psi_lt_one⟩
 
 /-! ## Part 5: Summary Theorems -/
 

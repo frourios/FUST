@@ -6,7 +6,7 @@
 import FUST.DifferenceOperators
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
-namespace FUST.Dynamics.Zeta6
+namespace FUST.Zeta6
 
 open Complex FUST
 
@@ -729,4 +729,4 @@ theorem Φ_S_rank_three :
   by_contra hc
   exact absurd (mul_ne_zero (by norm_num : (-6952 : ℂ) ≠ 0) hc) (not_not.mpr h)
 
-end FUST.Dynamics.Zeta6
+end FUST.Zeta6
