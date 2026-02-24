@@ -237,7 +237,7 @@ theorem WElectronRatio_from_kernel :
     (WElectronExponent = 25) ∧
     -- Factor from D₆/D₂ boundary
     (WElectronFactor = 15 / 16) := by
-  refine ⟨D5_not_annihilate_quadratic, D6_quadratic, rfl, WElectronFactor_eq⟩
+  refine ⟨D5_not_annihilate_quadratic, fun x _hx => D6_quadratic x, rfl, WElectronFactor_eq⟩
 
 /-- Z/electron mass ratio derived from W and Weinberg angle -/
 noncomputable abbrev ZElectronRatio : ℝ :=
@@ -265,8 +265,8 @@ theorem gauge_boson_mass_hierarchy :
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
     -- W mass ratio is positive
     (WElectronRatio > 0) := by
-  refine ⟨fun x hx => D6_const 1 x hx, fun x hx => D6_linear x hx,
-          D6_quadratic, D5_not_annihilate_quadratic, WElectronRatio_pos⟩
+  refine ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+          fun x _hx => D6_quadratic x, D5_not_annihilate_quadratic, WElectronRatio_pos⟩
 
 /-! ## Summary Theorem -/
 

@@ -101,7 +101,8 @@ theorem kernel_dimension :
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_cubic_nonzero⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+  fun x _hx => D6_quadratic x, D6_cubic_nonzero⟩
 
 theorem info_accessible :
     ∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0 := D6_cubic_nonzero

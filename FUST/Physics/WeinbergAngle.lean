@@ -46,13 +46,13 @@ D₃ → D₅ is the unique transition where kernel dimension increases from 1 t
 
 /-- D₃ has gauge invariance: kernel contains constants -/
 theorem D3_gauge : ∀ z : ℂ, z ≠ 0 → D3 (fun _ => 1) z = 0 :=
-  fun z hz => D3_const 1 z hz
+  fun z _hz => D3_const 1 z
 
 /-- D₅ has extended kernel: contains both constants and linear -/
 theorem D5_extended_kernel :
     (∀ z : ℂ, z ≠ 0 → D5 (fun _ => 1) z = 0) ∧
     (∀ z : ℂ, z ≠ 0 → D5 id z = 0) :=
-  ⟨fun z hz => D5_const 1 z hz, D5_linear⟩
+  ⟨fun z _hz => D5_const 1 z, fun z _hz => D5_linear z⟩
 
 /-- D₃ kernel is strictly smaller than D₅ kernel: D₃ does NOT annihilate linear -/
 theorem D3_not_annihilate_linear :
@@ -153,6 +153,6 @@ theorem weinberg_summary :
     (Nat.choose 3 2 : ℚ) / (Nat.choose 3 2 + Nat.choose 5 2) = 3 / 13 := by
   refine ⟨D3_gauge, ?_, D3_not_annihilate_linear, by norm_num [Nat.choose]⟩
   intro z hz
-  exact ⟨D5_const 1 z hz, D5_linear z hz⟩
+  exact ⟨D5_const 1 z, D5_linear z⟩
 
 end FUST.WeinbergAngle

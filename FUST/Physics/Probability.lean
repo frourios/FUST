@@ -38,9 +38,7 @@ section SameDegreeRatio
 theorem D6_linear_scalar (a : ℂ) (f : ℂ → ℂ) (x : ℂ) :
     D6 (fun t => a * f t) x = a * D6 f x := by
   simp only [D6, N6]
-  split_ifs with hx
-  · simp
-  · ring
+  ring
 
 /-- Same-degree ratio is gauge-invariant -/
 theorem same_degree_ratio_gauge_invariant

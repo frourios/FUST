@@ -33,18 +33,18 @@ D5 is the Dζ symmetric-channel projection at r=2.  -/
 def IsInKerD5 (f : ℂ → ℂ) : Prop :=
   ∃ a₀ a₁ : ℂ, ∀ t, f t = a₀ + a₁ * t
 
-theorem D5_polynomial_deg1 (a₀ a₁ : ℂ) (x : ℂ) (hx : x ≠ 0) :
+theorem D5_polynomial_deg1 (a₀ a₁ : ℂ) (x : ℂ) :
     D5 (fun t => a₀ + a₁ * t) x = 0 := by
-  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x hx
+  have hconst : D5 (fun _ => a₀) x = 0 := D5_const a₀ x
   have hlin : D5 (fun t => a₁ * t) x = 0 := by
-    have h := D5_linear x hx
+    have h := D5_linear x
     calc D5 (fun t => a₁ * t) x = a₁ * D5 id x := by
-          simp only [D5, hx, ↓reduceIte, id]; ring
+          simp only [D5, N5, id]; ring
       _ = a₁ * 0 := by rw [h]
       _ = 0 := by ring
   calc D5 (fun t => a₀ + a₁ * t) x
     = D5 (fun _ => a₀) x + D5 (fun t => a₁ * t) x := by
-        simp only [D5, hx, ↓reduceIte]; ring
+        simp only [D5, N5]; ring
     _ = 0 + 0 := by rw [hconst, hlin]
     _ = 0 := by ring
 
@@ -53,7 +53,7 @@ theorem IsInKerD5_implies_D5_zero (f : ℂ → ℂ) (hf : IsInKerD5 f) :
   intro x hx
   obtain ⟨a₀, a₁, hf⟩ := hf
   rw [show f = (fun t => a₀ + a₁ * t) from funext hf]
-  exact D5_polynomial_deg1 a₀ a₁ x hx
+  exact D5_polynomial_deg1 a₀ a₁ x
 
 theorem kernel_interpolation_unique_D5 (p q : ℂ → ℂ) (hp : IsInKerD5 p) (hq : IsInKerD5 q)
     (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁) (hp0 : p t₀ = q t₀) (hp1 : p t₁ = q t₁) :

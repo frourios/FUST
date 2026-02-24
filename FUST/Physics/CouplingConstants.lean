@@ -56,7 +56,7 @@ theorem D_max_from_kernel :
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) := by
   constructor
   · intro x hx
-    exact ⟨D6_const 1 x hx, D6_linear x hx, D6_quadratic x hx⟩
+    exact ⟨D6_const 1 x, D6_linear x, D6_quadratic x⟩
   · exact WaveEquation.D6_cubic_nonzero
 
 /-- Number of active D-levels derived from D_min and D_max -/
@@ -160,12 +160,12 @@ The D₃/D₅ selection is justified by kernel dimension:
 -/
 
 theorem D3_minimal_kernel : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+  fun x _hx => D3_const 1 x
 
 theorem D5_extended_kernel :
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear⟩
+  ⟨fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
 
 /-! ## CKM Decay Structure
 
@@ -214,7 +214,7 @@ theorem coupling_constants_from_kernel_structure :
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) := by
   refine ⟨by norm_num [Nat.choose], rfl, D3_minimal_kernel, ?_⟩
   intro x hx
-  exact ⟨D5_const 1 x hx, D5_linear x hx⟩
+  exact ⟨D5_const 1 x, D5_linear x⟩
 
 end FUST.CouplingConstants
 

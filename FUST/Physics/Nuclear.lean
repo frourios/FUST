@@ -250,7 +250,7 @@ theorem intruder_threshold_is_kerD6 :
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) ∧
     operatorKerDim 6 = 3 :=
-  ⟨D6_quadratic, D6_detects_cubic, rfl⟩
+  ⟨fun x _hx => D6_quadratic x, D6_detects_cubic, rfl⟩
 
 def intruderDeg (N : ℕ) : ℕ := spinDegeneracy * (N + 1)
 

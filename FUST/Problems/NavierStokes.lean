@@ -1080,7 +1080,8 @@ theorem clay_conditions_verified :
     (structuralMinTimeD6 > 0) ∧
     (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < structuralMinTimeD6) ∧
     ClayNSStatement :=
-  ⟨D6_const 1, D6_linear, D6_quadratic, D6_not_annihilate_cubic,
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+   fun x _hx => D6_quadratic x, D6_not_annihilate_cubic,
    dissipation_positive_outside_kernel,
    nonlinearCoeff_1_2_ne_zero,
    polynomial_growth,

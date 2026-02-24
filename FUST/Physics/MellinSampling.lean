@@ -40,11 +40,11 @@ structure KernelDecomposition (f : ℂ → ℂ) where
 
 theorem kernel_part_annihilated (a b c d : ℂ) (x : ℂ) (hx : x ≠ 0) :
     D6 (fun t => a * t⁻¹ ^ 2 + b + c * t + d * t ^ 2) x = 0 := by
-  have h1 := D6_const b x hx
-  have h2 := D6_linear x hx
-  have h3 := D6_quadratic x hx
+  have h1 := D6_const b x
+  have h2 := D6_linear x
+  have h3 := D6_quadratic x
   have h4 := FUST.GravitationalCoupling.D6_inv_sq_zero x hx
-  simp only [D6, N6, hx, ↓reduceIte] at h1 h2 h3 h4 ⊢
+  simp only [D6, N6] at h1 h2 h3 h4 ⊢
   have h_denom : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
   rw [div_eq_zero_iff] at h1 h2 h3 h4 ⊢
   left

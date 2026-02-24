@@ -22,7 +22,7 @@ theorem D6_kernel_dim_3 :
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨D6_const 1, D6_linear, D6_quadratic⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x, fun x _hx => D6_quadratic x⟩
 
 /-! ## Kernel Membership -/
 
@@ -31,9 +31,9 @@ def IsInKerD6 (f : ℂ → ℂ) : Prop :=
   ∃ a₀ a₁ a₂ : ℂ, ∀ t, f t = a₀ + a₁ * t + a₂ * t^2
 
 /-- D6 applied to degree-2 polynomial is zero -/
-theorem D6_polynomial_deg2 (a₀ a₁ a₂ : ℂ) (x : ℂ) (hx : x ≠ 0) :
+theorem D6_polynomial_deg2 (a₀ a₁ a₂ : ℂ) (x : ℂ) :
     D6 (fun t => a₀ + a₁ * t + a₂ * t^2) x = 0 := by
-  simp only [D6, N6, D6Denom, hx, ↓reduceIte]
+  simp only [D6, N6, D6Denom]
   have hφ3 : (↑φ : ℂ)^3 = 2 * ↑φ + 1 := phi_cubed_complex
   have hψ3 : (↑ψ : ℂ)^3 = 2 * ↑ψ + 1 := psi_cubed_complex
   have hφ2 : (↑φ : ℂ)^2 = ↑φ + 1 := golden_ratio_property_complex
@@ -93,7 +93,7 @@ theorem IsInKerD6_implies_D6_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
   obtain ⟨a₀, a₁, a₂, hf_eq⟩ := hf
   have hf' : f = fun t => a₀ + a₁ * t + a₂ * t^2 := funext hf_eq
   rw [hf']
-  exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
+  exact D6_polynomial_deg2 a₀ a₁ a₂ x
 
 /-! ## Kernel Projection -/
 
@@ -192,10 +192,10 @@ theorem kernel_interpolation_unique_D6 (p q : ℂ → ℂ) (hp : IsInKerD6 p) (h
   have ha2 : a₂ = b₂ := by simp only [c₂] at hc2_zero; exact sub_eq_zero.mp hc2_zero
   rw [ha0, ha1, ha2]
 
-theorem kernelProjectionD6_annihilated (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
+theorem kernelProjectionD6_annihilated (f : ℂ → ℂ) (x : ℂ) :
     D6 (kernelProjectionD6 f) x = 0 := by
   simp only [kernelProjectionD6]
-  exact D6_polynomial_deg2 _ _ _ x hx
+  exact D6_polynomial_deg2 _ _ _ x
 
 theorem kernelProjectionD6_is_in_ker (f : ℂ → ℂ) : IsInKerD6 (kernelProjectionD6 f) := by
   use f 0, (f 1 - f (-1)) / 2, (f 1 + f (-1) - 2 * f 0) / 2
@@ -223,10 +223,10 @@ noncomputable def perpProjectionD6 (f : ℂ → ℂ) : ℂ → ℂ :=
 
 theorem perpProjectionD6_D6_eq (f : ℂ → ℂ) (x : ℂ) (hx : x ≠ 0) :
     D6 (perpProjectionD6 f) x = D6 f x := by
-  have hker := kernelProjectionD6_annihilated f x hx
-  rw [D6_eq_N6_div _ _ hx, D6_eq_N6_div f _ hx]
+  have hker := kernelProjectionD6_annihilated f x
+  rw [D6_eq_N6_div _ x, D6_eq_N6_div f x]
   congr 1
-  rw [D6_eq_N6_div _ _ hx] at hker
+  rw [D6_eq_N6_div _ x] at hker
   have hdenom_ne : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
   have hnum_zero : N6 (kernelProjectionD6 f) x = 0 := by
     exact (div_eq_zero_iff.mp hker).resolve_right hdenom_ne
@@ -341,7 +341,7 @@ theorem D6_zero_implies_ker_poly (a₀ a₁ a₂ a₃ : ℂ)
     (h : ∀ x, x ≠ 0 → D6 (fun t => a₀ + a₁ * t + a₂ * t ^ 2 + a₃ * t ^ 3) x = 0) :
     a₃ = 0 := by
   have h1 := h 1 one_ne_zero
-  simp only [D6, N6, one_ne_zero, ↓reduceIte, mul_one] at h1
+  simp only [D6, N6, mul_one] at h1
   have hdenom_ne : D6Denom ≠ 0 := D6Denom_ne_zero
   have hnum := (div_eq_zero_iff.mp h1).resolve_right hdenom_ne
   have hφ2 := golden_ratio_property_complex
@@ -469,7 +469,7 @@ section GaugeScaling
 theorem D6_gauge_scaling (f : ℂ → ℂ) (c x : ℂ) (hc : c ≠ 0) (hx : x ≠ 0) :
     D6 (fun t => f (c * t)) x = c * D6 f (c * x) := by
   have hcx : c * x ≠ 0 := mul_ne_zero hc hx
-  simp only [D6, N6, D6Denom, hx, hcx, ↓reduceIte]
+  simp only [D6, N6, D6Denom]
   field_simp [D6Denom_mul_ne_zero x hx, D6Denom_mul_ne_zero (c * x) hcx, hc]
 
 end GaugeScaling
@@ -530,8 +530,8 @@ theorem kernel_component_D6_invariant (f g : ℂ → ℂ) (hg : IsInKerD6 g) :
   have hpoly : D6 g x = 0 := by
     have hg' : g = fun t => a₀ + a₁ * t + a₂ * t^2 := funext hg_eq
     rw [hg']
-    exact D6_polynomial_deg2 a₀ a₁ a₂ x hx
-  simp only [D6, N6, hx, ↓reduceIte] at hpoly ⊢
+    exact D6_polynomial_deg2 a₀ a₁ a₂ x
+  simp only [D6, N6] at hpoly ⊢
   have hpoly_num : g ((↑φ : ℂ) ^ 3 * x) - 3 * g ((↑φ : ℂ) ^ 2 * x) +
       g ((↑φ : ℂ) * x) - g ((↑ψ : ℂ) * x) +
       3 * g ((↑ψ : ℂ) ^ 2 * x) - g ((↑ψ : ℂ) ^ 3 * x) = 0 := by

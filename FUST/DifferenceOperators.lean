@@ -7,45 +7,50 @@ namespace FUST
 
 open Complex
 
-/-- D2: Frourio golden 2-point difference
-    D₂ f(z) = (f(φz) - f(ψz)) / ((φ - ψ)z) -/
-noncomputable def D2 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ) * z) - f ((↑ψ : ℂ) * z)) / (((↑φ : ℂ) - ↑ψ) * z)
-
-/-- D3: Frourio golden 3-point difference (points: φ, 1, ψ, coefficients: [1, -2, 1])
-    D₃ f(z) = (f(φz) - 2f(z) + f(ψz)) / ((φ - ψ)²z) -/
-noncomputable def D3 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ) * z) - 2 * f z + f ((↑ψ : ℂ) * z)) / (((↑φ : ℂ) - ↑ψ)^2 * z)
-
-/-- D4: Frourio golden 4-point difference
-    D₄ f(z) = (f(φ²z) - φ²f(φz) + ψ²f(ψz) - f(ψ²z)) / ((φ - ψ)³z) -/
-noncomputable def D4 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ)^2 * z) - (↑φ : ℂ)^2 * f ((↑φ : ℂ) * z)
-    + (↑ψ : ℂ)^2 * f ((↑ψ : ℂ) * z) - f ((↑ψ : ℂ)^2 * z)) / (((↑φ : ℂ) - ↑ψ)^3 * z)
-
-/-- D5: Frourio golden 5-point difference with coefficients a=-1, b=-4
-    D₅ f(z) = (f(φ²z) + f(φz) - 4f(z) + f(ψz) + f(ψ²z)) / ((φ - ψ)⁴z) -/
-noncomputable def D5 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ)^2 * z) + f ((↑φ : ℂ) * z) - 4 * f z
-    + f ((↑ψ : ℂ) * z) + f ((↑ψ : ℂ)^2 * z)) / (((↑φ : ℂ) - ↑ψ)^4 * z)
-
-/-- N2: numerator of D2, without the (φ-ψ)·z denominator -/
+/-- N2: numerator of D2 -/
 noncomputable def N2 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ) * z) - f ((↑ψ : ℂ) * z)
 
-/-- N3: numerator of D3, without the (φ-ψ)²·z denominator -/
+/-- N3: numerator of D3 -/
 noncomputable def N3 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ) * z) - 2 * f z + f ((↑ψ : ℂ) * z)
 
-/-- N5: numerator of D5, without the (φ-ψ)⁴·z denominator -/
+/-- N4: numerator of D4 -/
+noncomputable def N4 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  f ((↑φ : ℂ)^2 * z) - (↑φ : ℂ)^2 * f ((↑φ : ℂ) * z)
+    + (↑ψ : ℂ)^2 * f ((↑ψ : ℂ) * z) - f ((↑ψ : ℂ)^2 * z)
+
+/-- N5: numerator of D5 -/
 noncomputable def N5 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ) ^ 2 * z) + f ((↑φ : ℂ) * z) - 4 * f z +
   f ((↑ψ : ℂ) * z) + f ((↑ψ : ℂ) ^ 2 * z)
 
-/-- N6: numerator of D6, without the (φ-ψ)⁵·z denominator -/
+/-- N6: numerator of D6 -/
 noncomputable def N6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ)^3 * z) - 3 * f ((↑φ : ℂ)^2 * z) + f ((↑φ : ℂ) * z) -
   f ((↑ψ : ℂ) * z) + 3 * f ((↑ψ : ℂ)^2 * z) - f ((↑ψ : ℂ)^3 * z)
+
+/-- D₂ f(z) = N2(f)(z) / ((φ - ψ)z) -/
+noncomputable def D2 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  N2 f z / (((↑φ : ℂ) - ↑ψ) * z)
+
+/-- D₃ f(z) = N3(f)(z) / ((φ - ψ)²z) -/
+noncomputable def D3 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  N3 f z / (((↑φ : ℂ) - ↑ψ)^2 * z)
+
+/-- D₄ f(z) = N4(f)(z) / ((φ - ψ)³z) -/
+noncomputable def D4 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  N4 f z / (((↑φ : ℂ) - ↑ψ)^3 * z)
+
+/-- D₅ f(z) = N5(f)(z) / ((φ - ψ)⁴z) -/
+noncomputable def D5 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  N5 f z / (((↑φ : ℂ) - ↑ψ)^4 * z)
+
+/-- D5½: Half-order difference operator
+    D₅.₅ f(z) = D₅ f(z) + μ · (f(φz) - f(ψz)) where μ = 2/(φ+2) -/
+noncomputable def D5half (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
+  D5 f z + μ * N2 f z
 
 /-- D6 normalization constant: (φ - ψ)⁵ -/
 noncomputable def D6Denom : ℂ := ((↑φ : ℂ) - ↑ψ)^5
@@ -59,12 +64,11 @@ theorem D6Denom_mul_ne_zero (z : ℂ) (hz : z ≠ 0) : D6Denom * z ≠ 0 :=
 /-- D6: Frourio golden 6-point difference with coefficients A=3, B=1
     D₆ f(z) = N6(f)(z) / (D6Denom · z) -/
 noncomputable def D6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else N6 f z / (D6Denom * z)
+  N6 f z / (D6Denom * z)
 
 /-- D6 equals N6 divided by D6Denom · z -/
-theorem D6_eq_N6_div (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
-    D6 f z = N6 f z / (D6Denom * z) := by
-  simp only [D6, hz, ↓reduceIte]
+theorem D6_eq_N6_div (f : ℂ → ℂ) (z : ℂ) :
+  D6 f z = N6 f z / (D6Denom * z) := rfl
 
 /-- N6 distributes over finite sums -/
 theorem N6_finset_sum {ι : Type*}
@@ -83,21 +87,15 @@ theorem N6_finset_sum {ι : Type*}
       rw [this]; simp only [N6]; ring
     rw [step1, ih]
 
-/-- D5½: Half-order difference operator
-    D₅.₅ f(z) = D₅ f(z) + μ · (f(φz) - f(ψz)) where μ = 2/(φ+2) -/
-noncomputable def D5half (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
-  D5 f z + μ * (f ((↑φ : ℂ) * z) - f ((↑ψ : ℂ) * z))
-
 section KernelTheorems
 
 /-- D2 annihilates constants: D₂[1] = 0 -/
-theorem D2_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) : D2 (fun _ => c) z = 0 := by
-  simp only [D2, hz, ↓reduceIte, sub_self, zero_div]
+theorem D2_const (c : ℂ) (z : ℂ) : D2 (fun _ => c) z = 0 := by
+  simp only [D2, N2, sub_self, zero_div]
 
 /-- D2 does NOT annihilate x: z ∉ ker(D2) -/
 theorem D2_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D2 id z ≠ 0 := by
-  simp only [D2, hz, ↓reduceIte, id_eq]
+  simp only [D2, N2, id_eq]
   have hnum : (↑φ : ℂ) * z - ↑ψ * z = ((↑φ : ℂ) - ↑ψ) * z := by ring
   rw [hnum]
   have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
@@ -105,14 +103,14 @@ theorem D2_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D2 id z ≠ 0 := by
   exact div_ne_zero hden_ne hden_ne
 
 /-- D3 annihilates constants: D₃[1] = 0 (coefficient sum = 1 - 2 + 1 = 0) -/
-theorem D3_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) : D3 (fun _ => c) z = 0 := by
-  simp only [D3, hz, ↓reduceIte]
+theorem D3_const (c : ℂ) (z : ℂ) : D3 (fun _ => c) z = 0 := by
+  simp only [D3, N3]
   have hnum : c - 2 * c + c = 0 := by ring
   simp only [hnum, zero_div]
 
 /-- D3 does NOT annihilate x: z ∉ ker(D3) -/
 theorem D3_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D3 id z ≠ 0 := by
-  simp only [D3, hz, ↓reduceIte, id_eq]
+  simp only [D3, N3, id_eq]
   have hcoeff : (↑φ : ℂ) + ↑ψ - 2 = -1 := by
     have h := phi_add_psi_complex; linear_combination h
   have hnum : (↑φ : ℂ) * z - 2 * z + ↑ψ * z = ((↑φ : ℂ) + ↑ψ - 2) * z := by ring
@@ -124,7 +122,7 @@ theorem D3_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D3 id z ≠ 0 := by
 
 /-- D4 does NOT annihilate constants: 1 ∉ ker(D4) -/
 theorem D4_const_ne_zero (z : ℂ) (hz : z ≠ 0) : D4 (fun _ => 1) z ≠ 0 := by
-  simp only [D4, hz, ↓reduceIte]
+  simp only [D4, N4]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hnum : (1 : ℂ) - (↑φ : ℂ)^2 * 1 + (↑ψ : ℂ)^2 * 1 - 1 = -((↑φ : ℂ) - ↑ψ) := by
@@ -137,14 +135,14 @@ theorem D4_const_ne_zero (z : ℂ) (hz : z ≠ 0) : D4 (fun _ => 1) z ≠ 0 := b
   exact div_ne_zero hφψ_ne hden_ne
 
 /-- D4 annihilates x²: x² ∈ ker(D4) -/
-theorem D4_quadratic (z : ℂ) (hz : z ≠ 0) : D4 (fun t => t^2) z = 0 := by
-  simp only [D4, hz, ↓reduceIte]
+theorem D4_quadratic (z : ℂ) : D4 (fun t => t^2) z = 0 := by
+  simp only [D4, N4]
   have : (φ^2 * z)^2 - φ^2 * (φ * z)^2 + ψ^2 * (ψ * z)^2 - (ψ^2 * z)^2 = 0 := by ring
   simp [this]
 
 /-- D4 does NOT annihilate x: z ∉ ker(D4) -/
 theorem D4_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D4 id z ≠ 0 := by
-  simp only [D4, hz, ↓reduceIte, id_eq]
+  simp only [D4, N4, id]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ3 := phi_cubed_complex
@@ -160,14 +158,14 @@ theorem D4_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D4 id z ≠ 0 := by
   exact div_ne_zero (mul_ne_zero hφψ_ne hz) hden_ne
 
 /-- D5 annihilates constants: D₅[1] = 0 (coefficient sum = 1+1-4+1+1 = 0) -/
-theorem D5_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) : D5 (fun _ => c) z = 0 := by
-  simp only [D5, hz, ↓reduceIte]
+theorem D5_const (c : ℂ) (z : ℂ) : D5 (fun _ => c) z = 0 := by
+  simp only [D5, N5]
   have h : c + c - 4 * c + c + c = 0 := by ring
   simp [h]
 
 /-- D5 annihilates x: D₅[x] = 0 -/
-theorem D5_linear (z : ℂ) (hz : z ≠ 0) : D5 id z = 0 := by
-  simp only [D5, hz, ↓reduceIte, id_eq]
+theorem D5_linear (z : ℂ) : D5 id z = 0 := by
+  simp only [D5, N5, id_eq]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hsum := phi_add_psi_complex
@@ -182,7 +180,7 @@ theorem D5_linear (z : ℂ) (hz : z ≠ 0) : D5 id z = 0 := by
 /-- D5 does NOT annihilate x²: x² ∉ ker(D5) -/
 theorem D5_not_annihilate_quadratic (z : ℂ) (hz : z ≠ 0) :
     D5 (fun t => t^2) z ≠ 0 := by
-  simp only [D5, hz, ↓reduceIte]
+  simp only [D5, N5]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ4 := phi_pow4_complex
@@ -197,13 +195,13 @@ theorem D5_not_annihilate_quadratic (z : ℂ) (hz : z ≠ 0) :
     (mul_ne_zero (pow_ne_zero 4 phi_sub_psi_complex_ne) hz)
 
 /-- D6 annihilates constants: D₆[1] = 0 (coefficient sum = 1-3+1-1+3-1 = 0) -/
-theorem D6_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) : D6 (fun _ => c) z = 0 := by
-  simp only [D6, N6, hz, ↓reduceIte]
+theorem D6_const (c : ℂ) (z : ℂ) : D6 (fun _ => c) z = 0 := by
+  simp only [D6, N6]
   ring_nf
 
 /-- D6 annihilates x: D₆[x] = 0 -/
-theorem D6_linear (z : ℂ) (hz : z ≠ 0) : D6 id z = 0 := by
-  simp only [D6, N6, hz, ↓reduceIte, id_eq]
+theorem D6_linear (z : ℂ) : D6 id z = 0 := by
+  simp only [D6, N6, id_eq]
   have hφ3 := phi_cubed_complex
   have hψ3 := psi_cubed_complex
   have hφ2 := golden_ratio_property_complex
@@ -219,8 +217,8 @@ theorem D6_linear (z : ℂ) (hz : z ≠ 0) : D6 id z = 0 := by
   simp [hnum]
 
 /-- D6 annihilates x²: D₆[x²] = 0 -/
-theorem D6_quadratic (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t^2) z = 0 := by
-  simp only [D6, N6, hz, ↓reduceIte]
+theorem D6_quadratic (z : ℂ) : D6 (fun t => t^2) z = 0 := by
+  simp only [D6, N6]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ4 := phi_pow4_complex
@@ -242,16 +240,16 @@ theorem D6_quadratic (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t^2) z = 0 := by
 
 /-- D5half annihilates constants: D₅.₅[1] = 0
     This preserves gauge invariance (same as D5) -/
-theorem D5half_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) : D5half (fun _ => c) z = 0 := by
-  simp only [D5half]
-  have hD5 : D5 (fun _ => c) z = 0 := D5_const c z hz
+theorem D5half_const (c : ℂ) (z : ℂ) : D5half (fun _ => c) z = 0 := by
+  simp only [D5half, N2]
+  have hD5 : D5 (fun _ => c) z = 0 := D5_const c z
   simp only [hD5, zero_add, sub_self, mul_zero]
 
 /-- D5half does NOT annihilate linear functions: D₅.₅[x] ≠ 0
     Key difference from D5: D5[x] = 0 but D5half[x] ≠ 0 -/
 theorem D5half_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D5half id z ≠ 0 := by
-  simp only [D5half, id_eq]
-  have hD5 : D5 id z = 0 := D5_linear z hz
+  simp only [D5half, N2, id_eq]
+  have hD5 : D5 id z = 0 := D5_linear z
   simp only [hD5, zero_add]
   have hdiff_ne := phi_sub_psi_complex_ne
   have hφ2_ne : (↑φ : ℂ) + 2 ≠ 0 := by
@@ -264,8 +262,8 @@ theorem D5half_linear_ne_zero (z : ℂ) (hz : z ≠ 0) : D5half id z ≠ 0 := by
 
 /-- D5half at x=1 for quadratic: explicit nonzero value -/
 theorem D5half_quadratic_at_one : D5half (fun t => t^2) 1 ≠ 0 := by
-  unfold D5half D5
-  simp only [one_ne_zero, ↓reduceIte, one_pow, mul_one]
+  unfold D5half D5 N5 N2
+  simp only [one_pow, mul_one]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ4 := phi_pow4_complex
@@ -307,13 +305,13 @@ theorem D5half_quadratic_at_one : D5half (fun t => t^2) 1 ≠ 0 := by
     This proves D5half is NOT equivalent to D6 -/
 theorem D5half_differs_from_D6 :
     (∀ z, z ≠ 0 → D6 id z = 0) ∧ (∀ z, z ≠ 0 → D5half id z ≠ 0) :=
-  ⟨D6_linear, D5half_linear_ne_zero⟩
+  ⟨fun c _z => D6_linear c, D5half_linear_ne_zero⟩
 
 /-- D5half differs from D5: D5[x] = 0 but D5half[x] ≠ 0
     This proves D5half is NOT equivalent to D5 -/
 theorem D5half_differs_from_D5 :
     (∀ z, z ≠ 0 → D5 id z = 0) ∧ (∀ z, z ≠ 0 → D5half id z ≠ 0) :=
-  ⟨D5_linear, D5half_linear_ne_zero⟩
+  ⟨fun c _z => D5_linear c, D5half_linear_ne_zero⟩
 
 /-- D5half Independence Theorem:
     D5half is algebraically independent from both D5 and D6.
@@ -328,12 +326,8 @@ theorem D5half_independence :
     (∀ z, z ≠ 0 → D5 id z = 0) ∧
     -- D6 annihilates linear
     (∀ z, z ≠ 0 → D6 id z = 0) :=
-  ⟨D5half_const, D5half_linear_ne_zero, D5_linear, D6_linear⟩
-
-/-- D5half preserves gauge invariance: D5half[1] = 0
-    The half-order structure does NOT break gauge symmetry -/
-theorem D5half_gauge_invariant (z : ℂ) (hz : z ≠ 0) : D5half (fun _ => 1) z = 0 :=
-  D5half_const 1 z hz
+  ⟨fun c z _hz => D5half_const c z, D5half_linear_ne_zero,
+  fun c _z => D5_linear c, fun c _z => D6_linear c⟩
 
 /-- The antisymmetric term μ·(f(φx) - f(ψx)) is what makes D5half independent.
     This term vanishes for constants but not for linear functions. -/
@@ -351,23 +345,6 @@ theorem D5half_antisymmetric_term_key (z : ℂ) (hz : z ≠ 0) :
 
 end KernelTheorems
 
-section KernelDimensions
-
-/-- ker(D₅) contains {1, x}, so dim ≥ 2 -/
-theorem D5_ker_contains_const_and_linear :
-    (∀ c z, z ≠ 0 → D5 (fun _ => c) z = 0) ∧
-    (∀ z, z ≠ 0 → D5 id z = 0) :=
-  ⟨D5_const, D5_linear⟩
-
-/-- ker(D₆) contains {1, z, x²}, so dim ≥ 3 -/
-theorem D6_ker_contains_polynomials :
-    (∀ c z, z ≠ 0 → D6 (fun _ => c) z = 0) ∧
-    (∀ z, z ≠ 0 → D6 id z = 0) ∧
-    (∀ z, z ≠ 0 → D6 (fun t => t^2) z = 0) :=
-  ⟨D6_const, D6_linear, D6_quadratic⟩
-
-end KernelDimensions
-
 /-!
 ## Coefficient Uniqueness Theorems
 
@@ -381,14 +358,13 @@ section CoefficientUniqueness
 
 /-- D5 general form with parameters (a, b) -/
 noncomputable def D5_general (a b : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ)^2 * z) - a * f ((↑φ : ℂ) * z)
+  (f ((↑φ : ℂ)^2 * z) - a * f ((↑φ : ℂ) * z)
     + b * f z - a * f ((↑ψ : ℂ) * z) + f ((↑ψ : ℂ)^2 * z)) / (((↑φ : ℂ) - ↑ψ)^4 * z)
 
 /-- D6 general form with parameters (A, B) -/
 noncomputable def D6_general (A B : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else
-    (f ((↑φ : ℂ)^3 * z) - A * f ((↑φ : ℂ)^2 * z) + B * f ((↑φ : ℂ) * z) -
-     B * f ((↑ψ : ℂ) * z) + A * f ((↑ψ : ℂ)^2 * z) - f ((↑ψ : ℂ)^3 * z)) / (((↑φ : ℂ) - ↑ψ)^5 * z)
+  (f ((↑φ : ℂ)^3 * z) - A * f ((↑φ : ℂ)^2 * z) + B * f ((↑φ : ℂ) * z) -
+   B * f ((↑ψ : ℂ) * z) + A * f ((↑ψ : ℂ)^2 * z) - f ((↑ψ : ℂ)^3 * z)) / (((↑φ : ℂ) - ↑ψ)^5 * z)
 
 /-- Condition C0: D5[1] = 0 implies 2 - 2a + b = 0 -/
 theorem D5_C0_condition (a b : ℂ) :
@@ -396,7 +372,7 @@ theorem D5_C0_condition (a b : ℂ) :
   constructor
   · intro h
     have h1 := h 1 one_ne_zero
-    simp only [D5_general, one_ne_zero, ↓reduceIte, mul_one] at h1
+    simp only [D5_general, mul_one] at h1
     have hne : ((↑φ : ℂ) - ↑ψ)^4 ≠ 0 := pow_ne_zero 4 phi_sub_psi_complex_ne
     rw [div_eq_zero_iff] at h1
     cases h1 with
@@ -406,7 +382,7 @@ theorem D5_C0_condition (a b : ℂ) :
       have : ((↑φ : ℂ) - ↑ψ) ^ 4 * 1 = 0 := by rw [mul_one]; exact h1
       exact hne ((mul_eq_zero.mp this).resolve_right one_ne_zero)
   · intro hb z hz
-    simp only [D5_general, hz, ↓reduceIte]
+    simp only [D5_general]
     have hnum : 1 - a * 1 + b * 1 - a * 1 + 1 = 2 - 2 * a + b := by ring
     rw [hnum, hb]
     ring_nf
@@ -420,7 +396,7 @@ theorem D5_C1_condition (a b : ℂ) :
   constructor
   · intro h
     have hz := h 1 one_ne_zero
-    simp only [D5_general, one_ne_zero, ↓reduceIte, id_eq, mul_one] at hz
+    simp only [D5_general, id_eq, mul_one] at hz
     have hne : ((↑φ : ℂ) - ↑ψ)^4 ≠ 0 := pow_ne_zero 4 phi_sub_psi_complex_ne
     rw [div_eq_zero_iff] at hz
     cases hz with
@@ -434,7 +410,7 @@ theorem D5_C1_condition (a b : ℂ) :
       have : ((↑φ : ℂ) - ↑ψ) ^ 4 * 1 = 0 := by rw [mul_one]; exact hz
       exact hne ((mul_eq_zero.mp this).resolve_right one_ne_zero)
   · intro hb z hz
-    simp only [D5_general, hz, ↓reduceIte, id_eq]
+    simp only [D5_general, id_eq]
     have hcoef : (↑φ : ℂ)^2 + (↑ψ : ℂ)^2 - a * ((↑φ : ℂ) + ↑ψ) + b = 0 := by
       rw [h1, h2, hb]; ring
     have hnum : (↑φ : ℂ)^2 * z - a * ((↑φ : ℂ) * z) + b * z - a * ((↑ψ : ℂ) * z) + (↑ψ : ℂ)^2 * z =
@@ -459,11 +435,7 @@ theorem D5_coefficients_unique :
 /-- D5 with determined coefficients equals D5 -/
 theorem D5_general_eq_D5 (f : ℂ → ℂ) (z : ℂ) :
     D5_general (-1) (-4) f z = D5 f z := by
-  simp only [D5_general, D5]
-  by_cases hz : z = 0
-  · simp [hz]
-  · simp only [hz, ↓reduceIte]
-    ring_nf
+  simp only [D5_general, D5, N5]; ring_nf
 
 /-- Condition D1: D6[x] = 0 implies F₃ - A·F₂ + B·F₁ = 0, i.e., 2 - A + B = 0 -/
 theorem D6_D1_condition (A B : ℂ) :
@@ -475,7 +447,7 @@ theorem D6_D1_condition (A B : ℂ) :
   constructor
   · intro h
     have hz := h 1 one_ne_zero
-    simp only [D6_general, one_ne_zero, ↓reduceIte, id_eq, mul_one] at hz
+    simp only [D6_general, id_eq, mul_one] at hz
     rw [div_eq_zero_iff] at hz
     cases hz with
     | inl hz =>
@@ -488,7 +460,7 @@ theorem D6_D1_condition (A B : ℂ) :
       have : D6Denom = 0 := by unfold D6Denom; exact hz
       exact D6Denom_ne_zero this
   · intro hB z hz
-    simp only [D6_general, hz, ↓reduceIte, id_eq]
+    simp only [D6_general, id_eq]
     have hnum : (↑φ : ℂ)^3 * z - A * ((↑φ : ℂ)^2 * z) + B * ((↑φ : ℂ) * z) - B * ((↑ψ : ℂ) * z) +
         A * ((↑ψ : ℂ)^2 * z) - (↑ψ : ℂ)^3 * z = (((↑φ : ℂ)^3 - (↑ψ : ℂ)^3) - A * ((↑φ : ℂ)^2
         - (↑ψ : ℂ)^2) + B * ((↑φ : ℂ) - ↑ψ)) * z := by ring
@@ -511,7 +483,7 @@ theorem D6_D2_condition (A B : ℂ) :
   constructor
   · intro h
     have hz := h 1 one_ne_zero
-    simp only [D6_general, one_ne_zero, ↓reduceIte, mul_one] at hz
+    simp only [D6_general, mul_one] at hz
     rw [div_eq_zero_iff] at hz
     cases hz with
     | inl hz =>
@@ -524,7 +496,7 @@ theorem D6_D2_condition (A B : ℂ) :
       have : D6Denom = 0 := by unfold D6Denom; exact hz
       exact D6Denom_ne_zero this
   · intro hB z hz
-    simp only [D6_general, hz, ↓reduceIte]
+    simp only [D6_general]
     have hcoef : (↑φ : ℂ)^6 - (↑ψ : ℂ)^6 - A * ((↑φ : ℂ)^4 - (↑ψ : ℂ)^4) +
         B * ((↑φ : ℂ)^2 - (↑ψ : ℂ)^2) = 0 := by
       have h1 : (↑φ : ℂ)^6 - (↑ψ : ℂ)^6 = 8 * ((↑φ : ℂ) - ↑ψ) := by linear_combination hφ6 - hψ6
@@ -554,11 +526,7 @@ theorem D6_coefficients_unique :
 /-- D6 with determined coefficients equals D6 -/
 theorem D6_general_eq_D6 (f : ℂ → ℂ) (z : ℂ) :
     D6_general 3 1 f z = D6 f z := by
-  simp only [D6_general, D6, N6, D6Denom]
-  by_cases hz : z = 0
-  · simp [hz]
-  · simp only [hz, ↓reduceIte]
-    ring_nf
+  simp only [D6_general, D6, N6, D6Denom]; ring_nf
 
 /-- Main Theorem 4.1: Complete coefficient uniqueness for D5 and D6 -/
 theorem FUST_coefficient_uniqueness :
@@ -609,12 +577,6 @@ theorem halfOrderParam_unique_from_condition (μ : ℂ) (h : μ * ((↑φ : ℂ)
 
 /-! ### Coefficient sums and gauge invariance -/
 
-/-- D2 coefficient sum: 1 - 1 = 0 -/
-theorem D2_coeff_sum : (1 : ℂ) - 1 = 0 := by ring
-
-/-- D3 coefficient sum: 1 - 2 + 1 = 0 -/
-theorem D3_coeff_sum : (1 : ℂ) - 2 + 1 = 0 := by ring
-
 /-- D4 coefficient sum: 1 - φ² + ψ² - 1 ≠ 0 -/
 theorem D4_coeff_sum_ne_zero : (1 : ℂ) - (↑φ : ℂ)^2 + (↑ψ : ℂ)^2 - 1 ≠ 0 := by
   intro heq
@@ -624,29 +586,10 @@ theorem D4_coeff_sum_ne_zero : (1 : ℂ) - (↑φ : ℂ)^2 + (↑ψ : ℂ)^2 - 1
   have : (↑φ : ℂ) - ↑ψ = 0 := by linear_combination -this
   exact phi_sub_psi_complex_ne this
 
-/-- D5 coefficient sum: 1 + 1 - 4 + 1 + 1 = 0 -/
-theorem D5_coeff_sum : (1 : ℂ) + 1 - 4 + 1 + 1 = 0 := by ring
-
-/-- D6 coefficient sum: 1 - 3 + 1 - 1 + 3 - 1 = 0 -/
-theorem D6_coeff_sum : (1 : ℂ) - 3 + 1 - 1 + 3 - 1 = 0 := by ring
-
-/-- Gauge invariance: coefficient sum = 0 implies D[1] = 0 for z ≠ 0 -/
-theorem D2_gauge_invariant (z : ℂ) (hz : z ≠ 0) : D2 (fun _ => 1) z = 0 :=
-  D2_const 1 z hz
-
-theorem D3_gauge_invariant (z : ℂ) (hz : z ≠ 0) : D3 (fun _ => 1) z = 0 :=
-  D3_const 1 z hz
-
-theorem D5_gauge_invariant (z : ℂ) (hz : z ≠ 0) : D5 (fun _ => 1) z = 0 :=
-  D5_const 1 z hz
-
-theorem D6_gauge_invariant (z : ℂ) (hz : z ≠ 0) : D6 (fun _ => 1) z = 0 :=
-  D6_const 1 z hz
-
 /-- D4 breaks gauge invariance: D4[1] ≠ 0 for general constant -/
 theorem D4_not_gauge_invariant : ∃ (c : ℂ) (z : ℂ), z ≠ 0 ∧ c ≠ 0 ∧ D4 (fun _ => c) z ≠ 0 := by
   use 1, 1, one_ne_zero, one_ne_zero
-  simp only [D4, one_ne_zero, ↓reduceIte]
+  simp only [D4, N4]
   have hcoeff_ne : (1 : ℂ) - (↑φ : ℂ)^2 + (↑ψ : ℂ)^2 - 1 ≠ 0 := D4_coeff_sum_ne_zero
   have hnum_eq : (1 : ℂ) - (↑φ : ℂ)^2 * 1 + (↑ψ : ℂ)^2 * 1 - 1 =
       1 - (↑φ : ℂ)^2 + (↑ψ : ℂ)^2 - 1 := by ring
@@ -655,15 +598,10 @@ theorem D4_not_gauge_invariant : ∃ (c : ℂ) (z : ℂ), z ≠ 0 ∧ c ≠ 0 �
     rw [mul_one]; exact pow_ne_zero 3 phi_sub_psi_complex_ne
   exact div_ne_zero hcoeff_ne hden_ne
 
-/-- Kernel dimension of D5 is 2 (derived from D5_const and D5_linear) -/
-theorem D5_kernel_contains_const_and_linear (z : ℂ) (hz : z ≠ 0) :
-    D5 (fun _ => 1) z = 0 ∧ D5 id z = 0 :=
-  ⟨D5_const 1 z hz, D5_linear z hz⟩
-
 /-- Kernel dimension of D6 is 3 (derived from D6_const, D6_linear, D6_quadratic) -/
-theorem D6_kernel_contains_polynomials_up_to_degree_2 (z : ℂ) (hz : z ≠ 0) :
+theorem D6_kernel_contains_polynomials_up_to_degree_2 (z : ℂ) :
     D6 (fun _ => 1) z = 0 ∧ D6 id z = 0 ∧ D6 (fun t => t^2) z = 0 :=
-  ⟨D6_const 1 z hz, D6_linear z hz, D6_quadratic z hz⟩
+  ⟨D6_const 1 z, D6_linear z, D6_quadratic z⟩
 
 end AlgebraicConstants
 
@@ -681,7 +619,7 @@ section D7Reduction
 
 /-- D7 general antisymmetric form with parameters (a, b, c) -/
 noncomputable def D7_general (a b c : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (f ((↑φ : ℂ)^4 * z) - a * f ((↑φ : ℂ)^3 * z) + b * f ((↑φ : ℂ)^2 * z)
+  (f ((↑φ : ℂ)^4 * z) - a * f ((↑φ : ℂ)^3 * z) + b * f ((↑φ : ℂ)^2 * z)
     - c * f ((↑φ : ℂ) * z) + c * f ((↑ψ : ℂ) * z) - b * f ((↑ψ : ℂ)^2 * z)
     + a * f ((↑ψ : ℂ)^3 * z) - f ((↑ψ : ℂ)^4 * z)) / (((↑φ : ℂ) - ↑ψ)^6 * z)
 
@@ -689,7 +627,7 @@ noncomputable def D7_general (a b c : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
 theorem D7_E0_condition (a b c : ℂ) :
     ∀ z : ℂ, z ≠ 0 → D7_general a b c (fun _ => 1) z = 0 := by
   intro z hz
-  simp only [D7_general, hz, ↓reduceIte]
+  simp only [D7_general]
   have hsum : (1 : ℂ) - a * 1 + b * 1 - c * 1 + c * 1 - b * 1 + a * 1 - 1 = 0 := by ring
   rw [hsum, zero_div]
 
@@ -707,7 +645,7 @@ theorem D7_E1_condition (a b c : ℂ) :
   constructor
   · intro h
     have hz := h 1 one_ne_zero
-    simp only [D7_general, one_ne_zero, ↓reduceIte, id_eq, mul_one] at hz
+    simp only [D7_general, id_eq, mul_one] at hz
     have hne : ((↑φ : ℂ) - ↑ψ)^6 ≠ 0 := pow_ne_zero 6 phi_sub_psi_complex_ne
     rw [div_eq_zero_iff] at hz
     cases hz with
@@ -733,7 +671,7 @@ theorem D7_E1_condition (a b c : ℂ) :
     | inr hz =>
       exfalso; exact pow_ne_zero 6 phi_sub_psi_complex_ne hz
   · intro hcond z hz
-    simp only [D7_general, hz, ↓reduceIte, id_eq]
+    simp only [D7_general, id_eq]
     have hcoef : (↑φ : ℂ)^4 - (↑ψ : ℂ)^4 - a * ((↑φ : ℂ)^3
         - (↑ψ : ℂ)^3) + b * ((↑φ : ℂ)^2 - (↑ψ : ℂ)^2) - c * ((↑φ : ℂ) - ↑ψ) = 0 := by
       have hF4 : (↑φ : ℂ)^4 - (↑ψ : ℂ)^4 = 3 * ((↑φ : ℂ) - ↑ψ) := by linear_combination hφ4 - hψ4
@@ -762,7 +700,7 @@ theorem D7_E2_condition (a b c : ℂ) :
   constructor
   · intro h
     have hz := h 1 one_ne_zero
-    simp only [D7_general, one_ne_zero, ↓reduceIte, mul_one] at hz
+    simp only [D7_general, mul_one] at hz
     have hne : ((↑φ : ℂ) - ↑ψ)^6 ≠ 0 := pow_ne_zero 6 phi_sub_psi_complex_ne
     rw [div_eq_zero_iff] at hz
     cases hz with
@@ -789,7 +727,7 @@ theorem D7_E2_condition (a b c : ℂ) :
     | inr hz =>
       exfalso; exact pow_ne_zero 6 phi_sub_psi_complex_ne hz
   · intro hcond z hz
-    simp only [D7_general, hz, ↓reduceIte]
+    simp only [D7_general]
     have hF8 : (↑φ : ℂ)^8 - (↑ψ : ℂ)^8 = 21 * ((↑φ : ℂ) - ↑ψ) := by
         linear_combination hφ8 - hψ8
     have hF6 : (↑φ : ℂ)^6 - (↑ψ : ℂ)^6 = 8 * ((↑φ : ℂ) - ↑ψ) := by
@@ -827,9 +765,9 @@ noncomputable def D7_constrained (a : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   D7_general a (3 * a - 9) (a - 6) f z
 
 /-- D7_constrained annihilates constants -/
-theorem D7_constrained_const (a : ℂ) (k : ℂ) (z : ℂ) (hz : z ≠ 0) :
+theorem D7_constrained_const (a : ℂ) (k : ℂ) (z : ℂ) :
     D7_constrained a (fun _ => k) z = 0 := by
-  simp only [D7_constrained, D7_general, hz, ↓reduceIte]
+  simp only [D7_constrained, D7_general]
   have hsum : k - a * k + (3*a - 9) * k - (a - 6) * k
             + (a - 6) * k - (3*a - 9) * k + a * k - k = 0 := by ring
   rw [hsum, zero_div]
@@ -854,7 +792,7 @@ theorem D7_kernel_equals_D6_kernel (a : ℂ) :
     (∀ c z, z ≠ 0 → D7_constrained a (fun _ => c) z = 0) ∧
     (∀ z, z ≠ 0 → D7_constrained a id z = 0) ∧
     (∀ z, z ≠ 0 → D7_constrained a (fun t => t^2) z = 0) :=
-  ⟨fun c z hz => D7_constrained_const a c z hz,
+  ⟨fun c z _hz => D7_constrained_const a c z,
    D7_constrained_linear a,
    D7_constrained_quadratic a⟩
 
@@ -883,7 +821,7 @@ section D6Completeness
 
 /-- D6 detects cubic terms: D6[x³] ≠ 0 -/
 theorem D6_detects_cubic (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t^3) z ≠ 0 := by
-  simp only [D6, N6, hz, ↓reduceIte]
+  simp only [D6, N6]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ3 := phi_cubed_complex
@@ -924,9 +862,9 @@ theorem F6_restricted_completeness :
     (∀ a : ℂ, ∀ c z, z ≠ 0 → D7_constrained a (fun _ => c) z = 0) ∧
     (∀ a : ℂ, ∀ z, z ≠ 0 → D7_constrained a id z = 0) ∧
     (∀ a : ℂ, ∀ z, z ≠ 0 → D7_constrained a (fun t => t^2) z = 0) := by
-  refine ⟨?_, D6_linear, D6_quadratic, D6_detects_cubic, ?_, ?_, ?_⟩
-  · exact fun c z hz => D6_const c z hz
-  · exact fun a c z hz => D7_constrained_const a c z hz
+  refine ⟨?_, fun c z => D6_linear c, fun c z => D6_quadratic c, D6_detects_cubic, ?_, ?_, ?_⟩
+  · exact fun c z hz => D6_const c z
+  · exact fun a c z hz => D7_constrained_const a c z
   · exact fun a z hz => D7_constrained_linear a z hz
   · exact fun a z hz => D7_constrained_quadratic a z hz
 
@@ -934,7 +872,7 @@ end D6Completeness
 
 /-- D6 does not annihilate quartic: D6[x⁴] ≠ 0 -/
 theorem D6_quartic_nonzero (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t^4) z ≠ 0 := by
-  simp only [D6, N6, hz, ↓reduceIte]
+  simp only [D6, N6]
   have hφ2 : (↑φ : ℂ)^2 = ↑φ + 1 := golden_ratio_property_complex
   have hψ2 : (↑ψ : ℂ)^2 = ↑ψ + 1 := psi_sq_complex
   have hφ4 := phi_pow4_complex
@@ -970,9 +908,8 @@ section ParitySelection
 
 /-- Symmetric D6: coefficients [1, A, B, B, A, 1] at {φ³,φ²,φ,ψ,ψ²,ψ³} -/
 noncomputable def D6_symmetric (A B : ℂ) (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else
-    (f ((↑φ : ℂ)^3 * z) + A * f ((↑φ : ℂ)^2 * z) + B * f ((↑φ : ℂ) * z) +
-     B * f ((↑ψ : ℂ) * z) + A * f ((↑ψ : ℂ)^2 * z) + f ((↑ψ : ℂ)^3 * z)) / (((↑φ : ℂ) - ↑ψ)^5 * z)
+  (f ((↑φ : ℂ)^3 * z) + A * f ((↑φ : ℂ)^2 * z) + B * f ((↑φ : ℂ) * z) +
+   B * f ((↑ψ : ℂ) * z) + A * f ((↑ψ : ℂ)^2 * z) + f ((↑ψ : ℂ)^3 * z)) / (((↑φ : ℂ) - ↑ψ)^5 * z)
 
 /-- D6_sym[1]=0 ↔ A+B=-1 (uses 1 kernel condition) -/
 theorem D6_sym_C0 (A B : ℂ) :
@@ -980,7 +917,7 @@ theorem D6_sym_C0 (A B : ℂ) :
   constructor
   · intro h
     have h1 := h 1 one_ne_zero
-    simp only [D6_symmetric, one_ne_zero, ↓reduceIte, mul_one] at h1
+    simp only [D6_symmetric, mul_one] at h1
     have hne : ((↑φ : ℂ) - ↑ψ) ^ 5 ≠ 0 := by
       apply pow_ne_zero
       exact phi_sub_psi_complex_ne
@@ -989,7 +926,7 @@ theorem D6_sym_C0 (A B : ℂ) :
       exact absurd h1 (div_ne_zero h_ne hne)
     linear_combination hnum / 2
   · intro hab z hz
-    simp only [D6_symmetric, hz, ↓reduceIte]
+    simp only [D6_symmetric]
     have : 1 + A * 1 + B * 1 + B * 1 + A * 1 + 1 = 2 * (A + B + 1) := by ring
     rw [this, hab]; ring
 
@@ -1004,7 +941,7 @@ theorem D6_sym_C1 (A B : ℂ) :
   constructor
   · intro h
     have h1 := h 1 one_ne_zero
-    simp only [D6_symmetric, one_ne_zero, ↓reduceIte, id_eq, mul_one] at h1
+    simp only [D6_symmetric, id_eq, mul_one] at h1
     have hne : ((↑φ : ℂ) - ↑ψ) ^ 5 ≠ 0 := by
       apply pow_ne_zero
       exact phi_sub_psi_complex_ne
@@ -1019,7 +956,7 @@ theorem D6_sym_C1 (A B : ℂ) :
     rw [hfact, hL3, hL2, hL1] at hnum
     linear_combination hnum
   · intro hab z hz
-    simp only [D6_symmetric, hz, ↓reduceIte, id_eq]
+    simp only [D6_symmetric, id_eq]
     have : (↑φ : ℂ) ^ 3 * z + A * ((↑φ : ℂ) ^ 2 * z) + B * ((↑φ : ℂ) * z) + B * ((↑ψ : ℂ) * z) +
         A * ((↑ψ : ℂ) ^ 2 * z) + (↑ψ : ℂ) ^ 3 * z =
         (((↑φ : ℂ) ^ 3 + (↑ψ : ℂ) ^ 3) + A * ((↑φ : ℂ) ^ 2
@@ -1043,7 +980,7 @@ theorem D6_sym_coefficients (A B : ℂ)
     Numerator = L₆ + A·L₄ + B·L₂ = 18 + (-3/2)·7 + (1/2)·3 = 9 ≠ 0 -/
 theorem D6_sym_not_ker_quadratic (z : ℂ) (hz : z ≠ 0) :
     D6_symmetric (-3/2) (1/2) (fun t => t^2) z ≠ 0 := by
-  simp only [D6_symmetric, hz, ↓reduceIte]
+  simp only [D6_symmetric]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hL1 := phi_add_psi_complex
@@ -1086,7 +1023,7 @@ theorem parity_selection_D6 :
       (∀ z, z ≠ 0 → D6_symmetric A B (fun _ => 1) z = 0) →
       (∀ z, z ≠ 0 → D6_symmetric A B id z = 0) →
       ∀ z, z ≠ 0 → D6_symmetric A B (fun t => t^2) z ≠ 0) := by
-  refine ⟨⟨D6_const, D6_linear, D6_quadratic⟩, ?_⟩
+  refine ⟨⟨fun c z hz => D6_const c z, fun c z => D6_linear c, fun c z => D6_quadratic c⟩, ?_⟩
   intro A B h0 h1
   have ⟨hA, hB⟩ := D6_sym_coefficients A B h0 h1
   subst hA; subst hB

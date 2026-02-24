@@ -132,7 +132,7 @@ where D₃ through D₆ contribute via their pair counts and kernel dimensions.
 -/
 
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+  fun x _hx => D3_const 1 x
 
 /-! ## CMB Temperature: 152
 
@@ -507,7 +507,7 @@ section InverseSquareLaw
 
 /-- D₆ annihilates t⁻²: the inverse-square monomial is in the extended kernel. -/
 theorem D6_inv_sq_zero (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t⁻¹ ^ 2) z = 0 := by
-  rw [D6_eq_N6_div _ z hz, div_eq_zero_iff]
+  rw [D6_eq_N6_div _ z, div_eq_zero_iff]
   left
   simp only [N6]
   have hφ := Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
@@ -529,7 +529,7 @@ theorem D6_inv_sq_zero (z : ℂ) (hz : z ≠ 0) : D6 (fun t => t⁻¹ ^ 2) z = 0
 /-- D₆(t⁻¹)(z) = 6/((φ-ψ)⁴z²): the gravitational force is inverse-square. -/
 theorem D6_inv_one (z : ℂ) (hz : z ≠ 0) :
     D6 (fun t => t⁻¹) z = 6 / (((↑φ : ℂ) - ↑ψ) ^ 4 * z ^ 2) := by
-  rw [D6_eq_N6_div _ z hz]
+  rw [D6_eq_N6_div _ z]
   simp only [N6]
   have hφ := Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
   have hψ := Complex.ofReal_ne_zero.mpr (ne_of_lt psi_neg)
@@ -557,7 +557,7 @@ theorem D6_inv_one (z : ℂ) (hz : z ≠ 0) :
 /-- D₆ preserves pointwise equality at evaluation points -/
 lemma D6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
     (hfg : ∀ y, y ≠ 0 → f y = g y) : D6 f z = D6 g z := by
-  simp only [D6, N6, hz, ↓reduceIte]
+  simp only [D6, N6]
   have hφ := Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
   have hψ := Complex.ofReal_ne_zero.mpr (ne_of_lt psi_neg)
   rw [hfg _ (mul_ne_zero (pow_ne_zero 3 hφ) hz),
@@ -605,14 +605,14 @@ theorem dAlembertian_cubic_zero (z : ℂ) (hz : z ≠ 0) :
       (((↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
         (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9) / D6Denom) * y ^ 2 := by
     intro y hy
-    simp only [D6, N6, hy, ↓reduceIte]
+    simp only [D6, N6]
     unfold D6Denom; field_simp
   have hfg : ∀ y, y ≠ 0 → D6 (fun t => t ^ 3) y =
       (((↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
         (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9) / D6Denom) *
       (fun t => t ^ 2) y := by
     intro y hy; simp only; exact hD6_cubic y hy
-  rw [D6_congr_nonzero _ _ z hz hfg, D6_homogeneous, D6_quadratic z hz, mul_zero]
+  rw [D6_congr_nonzero _ _ z hz hfg, D6_homogeneous, D6_quadratic z, mul_zero]
 
 /-- □_φ kernel: □_φ[tⁿ] = 0 for n = -1, 0, 1, 2, 3 -/
 theorem dAlembertian_extended_kernel :

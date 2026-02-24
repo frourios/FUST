@@ -210,9 +210,9 @@ theorem folding_action_zero_iff_ker (f : ℂ → ℂ) (x : ℂ) :
   D6_lagrangian_zero_iff f x
 
 theorem native_state_zero_action (f : ℂ → ℂ)
-    (hf : IsInKerD6 f) (N : ℕ) :
-    partialHamiltonianD6 f N = 0 :=
-  partialHamiltonianD6_ker_zero f hf N
+    (hf : FUST.IntegralDzeta.IsInKerDζ f) (N : ℕ) :
+    partialActionDζ f N = 0 :=
+  partialActionDζ_ker_zero f hf N
 
 /-! ## Section 10: Uniqueness from Interpolation -/
 
@@ -261,12 +261,12 @@ theorem levinthal_resolution :
     rotamersPerResidue = 16 ∧
     (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 →
       D6Lagrangian f x = 0) ∧
-    (∀ f, IsInKerD6 f → ∀ N,
-      partialHamiltonianD6 f N = 0) ∧
+    (∀ f, FUST.IntegralDzeta.IsInKerDζ f → ∀ N,
+      partialActionDζ f N = 0) ∧
     (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
     Fintype.card (Fin 3) = 3 ∧
     backboneDihedrals = Nuclear.spinDegeneracy := by
-  refine ⟨rfl, ?_, partialHamiltonianD6_ker_zero,
+  refine ⟨rfl, ?_, partialActionDζ_ker_zero,
     third_law_D6, rfl, rfl⟩
   intro f hf x hx
   rw [D6_lagrangian_zero_iff]

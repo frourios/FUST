@@ -45,20 +45,20 @@ D₃ and D₄ are "selected" (minimal kernel dimension 1):
 
 /-- D₃ annihilates constants (gauge invariance) -/
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+  fun x _hx => D3_const 1 x
 
 /-- D₅ has extended kernel (annihilates linear functions too) -/
 theorem D5_extended_kernel :
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear⟩
+  ⟨fun x _hx => D5_const 1 x, fun x _hz => D5_linear x⟩
 
 /-- D₆ has full kernel (dimension 3) -/
 theorem D6_full_kernel :
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hz => D6_linear x, fun x _hx => D6_quadratic x⟩
 
 /-! ## Part 2: Correction Values from Hierarchy Transition -/
 
@@ -154,7 +154,7 @@ theorem D5_coefficients_from_kernel :
     D5_coeff_a = -1 ∧ D5_coeff_b = -4 ∧
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨rfl, rfl, fun x hx => D5_const 1 x hx, D5_linear⟩
+  ⟨rfl, rfl, fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
 
 /-- D6 coefficients from drift annihilation (A = C(3,2) = 3, B = C(2,2) = 1) -/
 abbrev D6_coeff_A : ℝ := 3

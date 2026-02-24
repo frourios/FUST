@@ -247,27 +247,27 @@ noncomputable def SymNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
 
 /-- Dζ₆: r=1, C^{(1)} antisymmetric, dim = (-5, 1, 1) -/
 noncomputable def Dζ₆ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (D6 f) z / ((ζ₆ - ζ₆') * z)
+  AFNum (D6 f) z / ((ζ₆ - ζ₆') * z)
 
 /-- Dζ₅: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
 noncomputable def Dζ₅ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (D5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+  SymNum (D5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
 
 /-- Dζ₅h: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
 noncomputable def Dζ₅h (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (D5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
+  SymNum (D5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
 
 /-- Dζ₄: r=3, C^{(3)} = -C^{(1)} antisymmetric, dim = (-3, 1, 3) -/
 noncomputable def Dζ₄ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (D4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
+  AFNum (D4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
 
 /-- Dζ₃: r=4, C^{(4)} symmetric, dim = (-2, 0, 4) -/
 noncomputable def Dζ₃ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else SymNum (D3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
+  SymNum (D3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
 
 /-- Dζ₂: r=5, C^{(5)} = C^{(1)} antisymmetric, dim = (-1, 1, 5) -/
 noncomputable def Dζ₂ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else AFNum (D2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
+  AFNum (D2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
 
 private lemma zeta6k_mul_ne (k : ℕ) (z : ℂ) (hz : z ≠ 0) : ζ₆ ^ k * z ≠ 0 := by
   apply mul_ne_zero _ hz
@@ -305,29 +305,26 @@ theorem SymNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
   unfold SymNum; ring
 
 /-- Dζ₂ annihilates constants -/
-theorem Dζ₂_const (z : ℂ) (hz : z ≠ 0) : Dζ₂ (fun _ => 1) z = 0 := by
-  simp only [Dζ₂, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → D2 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D2_const 1 w hw
-  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
-  simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
+theorem Dζ₂_const (z : ℂ) : Dζ₂ (fun _ => 1) z = 0 := by
+  simp only [Dζ₂]
+  have hcd : ∀ w : ℂ, D2 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w => D2_const 1 w
+  simp only [AFNum, hcd]
   simp
 
 /-- Dζ₃ annihilates constants -/
-theorem Dζ₃_const (z : ℂ) (hz : z ≠ 0) : Dζ₃ (fun _ => 1) z = 0 := by
-  simp only [Dζ₃, hz, ↓reduceIte]
-  have hcd : ∀ w : ℂ, w ≠ 0 → D3 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D3_const 1 w hw
-  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
-  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
-    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
+theorem Dζ₃_const (z : ℂ) : Dζ₃ (fun _ => 1) z = 0 := by
+  simp only [Dζ₃]
+  have hcd : ∀ w : ℂ, D3 (fun _ => (1 : ℂ)) w = 0 :=
+    fun w => D3_const 1 w
+  simp only [SymNum, hcd]
   simp
 
 /-- Dζ₅ annihilates constants -/
 theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
-  simp only [Dζ₅, hz, ↓reduceIte]
+  simp only [Dζ₅]
   have hcd : ∀ w : ℂ, w ≠ 0 → D5 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D5_const 1 w hw
+    fun w hw => D5_const 1 w
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
     hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
@@ -335,9 +332,9 @@ theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
 
 /-- Dζ₅h annihilates constants -/
 theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := by
-  simp only [Dζ₅h, hz, ↓reduceIte]
+  simp only [Dζ₅h]
   have hcd : ∀ w : ℂ, w ≠ 0 → D5half (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D5half_const 1 w hw
+    fun w hw => D5half_const 1 w
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
     hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
@@ -345,9 +342,9 @@ theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := b
 
 /-- Dζ₆ annihilates constants -/
 theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
-  simp only [Dζ₆, hz, ↓reduceIte]
+  simp only [Dζ₆]
   have hcd : ∀ w : ℂ, w ≠ 0 → D6 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D6_const 1 w hw
+    fun w hw => D6_const 1 w
   have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
   simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
   simp
@@ -355,12 +352,9 @@ theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
 /-- Dζ₅ and Dζ₅h share the same dimension: addable -/
 theorem Dζ₅_add_Dζ₅h (f : ℂ → ℂ) (z : ℂ) :
     Dζ₅ f z + Dζ₅h f z =
-    if z = 0 then 0 else
-      (SymNum (fun w => D5 f w + D5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
-  by_cases hz : z = 0
-  · simp [Dζ₅, Dζ₅h, hz]
-  · simp only [Dζ₅, Dζ₅h, hz, ↓reduceIte]
-    rw [← add_div]; congr 1; unfold SymNum; ring
+    (SymNum (fun w => D5 f w + D5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
+  simp only [Dζ₅, Dζ₅h]
+  rw [← add_div]; congr 1; unfold SymNum; ring
 
 /-! ## Unified Dζ operator
 
@@ -385,7 +379,7 @@ noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
 
 /-- Unified Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
 noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  if z = 0 then 0 else (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
+  (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
 
 private lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
   rw [ne_eq, ← ofReal_ofNat, ← ofReal_add, ofReal_eq_zero]
@@ -403,8 +397,8 @@ theorem Φ_S_const (c : ℂ) (z : ℂ) : Φ_S (fun _ => c) z = 0 := by
   field_simp; ring
 
 /-- Unified Dζ annihilates constants (Φ_A gives const, AFNum kills it) -/
-theorem Dζ_const (z : ℂ) (hz : z ≠ 0) : Dζ (fun _ => 1) z = 0 := by
-  simp only [Dζ, hz, ↓reduceIte]
+theorem Dζ_const (z : ℂ) : Dζ (fun _ => 1) z = 0 := by
+  simp only [Dζ]
   have hA : ∀ w, Φ_A (fun _ => (1 : ℂ)) w = ((↑φ : ℂ) - ↑ψ) * 1 :=
     fun w => Φ_A_const 1 w
   have hS : ∀ w, Φ_S (fun _ => (1 : ℂ)) w = 0 := fun w => Φ_S_const 1 w
@@ -953,7 +947,7 @@ private lemma Φ_S_translate_fun (f : ℂ → ℂ) (c : ℂ) :
 theorem Dζ_gauge_covariance (f : ℂ → ℂ) (c z : ℂ) (hc : c ≠ 0) (hz : z ≠ 0) :
     Dζ (fun t => f (c * t)) z = c * Dζ f (c * z) := by
   have hcz : c * z ≠ 0 := mul_ne_zero hc hz
-  simp only [Dζ, hz, hcz, ↓reduceIte]
+  simp only [Dζ]
   rw [Φ_A_translate_fun f c, Φ_S_translate_fun f c]
   rw [show AFNum (fun w => Φ_A f (c * w)) z = AFNum (Φ_A f) (c * z)
       from AFNum_translate (Φ_A f) c z]

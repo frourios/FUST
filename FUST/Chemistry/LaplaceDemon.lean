@@ -14,12 +14,12 @@ Scale action U: D(x) → D(φx) preserves ℤ[φ]-coefficients.
 -/
 
 import FUST.Chemistry.WaterMolecules
-import FUST.Physics.StateFunctionConstraint
+import FUST.FrourioAlgebra.GoldenIntegerRing
 
 namespace FUST.Chemistry.LaplaceDemon
 
 open FUST FUST.Chemistry FUST.Chemistry.Oxygen
-open FUST.StateFunctionConstraint FrourioAlgebra
+open FrourioAlgebra
 
 /-! ## Section 1: Shifted State Function over ℤ[φ]
 
@@ -626,14 +626,14 @@ noncomputable def subDemonCompute
   D6 (fun z => ↑(demonPos particles z.re)) x
 -- Incomplete cluster (degree ≤ 2) is invisible to D6
 -- D6 annihilates constants, linear, and quadratic functions
-theorem incomplete_invisible_to_D6_const (x : ℂ) (hx : x ≠ 0) :
-    D6 (fun _ => (1:ℂ)) x = 0 := D6_const 1 x hx
+theorem incomplete_invisible_to_D6_const (x : ℂ) :
+    D6 (fun _ => (1:ℂ)) x = 0 := D6_const 1 x
 
-theorem incomplete_invisible_to_D6_linear (x : ℂ) (hx : x ≠ 0) :
-    D6 id x = 0 := D6_linear x hx
+theorem incomplete_invisible_to_D6_linear (x : ℂ) :
+    D6 id x = 0 := D6_linear x
 
-theorem incomplete_invisible_to_D6_quadratic (x : ℂ) (hx : x ≠ 0) :
-    D6 (fun t => t ^ 2) x = 0 := D6_quadratic x hx
+theorem incomplete_invisible_to_D6_quadratic (x : ℂ) :
+    D6 (fun t => t ^ 2) x = 0 := D6_quadratic x
 
 -- Complete cluster (degree 3) is detected by D6
 theorem complete_detected_by_D6 (x : ℂ) (hx : x ≠ 0) :
@@ -976,7 +976,8 @@ theorem D6_threshold_at_rootFamilyCount :
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
     -- D₆ detects x³ (degree = rootFamilyCount)
     (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
-  ⟨D6_const 1, D6_linear, D6_quadratic, D6_detects_cubic⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+   fun x _hx => D6_quadratic x, D6_detects_cubic⟩
 
 /-- Spatial dimension derivation from particle structure:
     (1) Each complete particle has exactly 3 irreducible root families

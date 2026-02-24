@@ -78,7 +78,6 @@ private theorem SymNum_of_Φ_S_int (f : ℂ → ℂ) (z : ℂ) :
 theorem Dζ_int_eq (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
     Dζ_int f z = 5 * z * Dζ f z := by
   unfold Dζ_int Dζ
-  simp only [hz, ↓reduceIte]
   rw [AFNum_smul (Φ_A f) 5 z, SymNum_of_Φ_S_int f z]
   field_simp
 
@@ -87,7 +86,7 @@ theorem Dζ_int_eq (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
 theorem Dζ_int_kernel_const (z : ℂ) : Dζ_int (fun _ => 1) z = 0 := by
   by_cases hz : z = 0
   · subst hz; unfold Dζ_int AFNum SymNum Φ_A Φ_S_int; ring
-  · rw [Dζ_int_eq (fun _ => 1) z hz, Dζ_const z hz]; ring
+  · rw [Dζ_int_eq (fun _ => 1) z hz, Dζ_const z]; ring
 
 private lemma zeta6_pow8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
   have : ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
@@ -1527,5 +1526,7 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
              show (5:ℂ).re = 5 from by simp, show (5:ℂ).im = 0 from by simp,
              show (6:ℂ).re = 6 from by simp, show (6:ℂ).im = 0 from by simp]
   ring
+
+def IsInKerDζ (f : ℂ → ℂ) : Prop := ∀ z, Dζ_int f z = 0
 
 end FUST.IntegralDzeta

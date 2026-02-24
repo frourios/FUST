@@ -30,7 +30,7 @@ abbrev kerDimD5 : ℕ := 2
 theorem kerD5_basis :
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear⟩
+  ⟨fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
 
 /-- x² ∉ ker(D₅): the Higgs DOF separating ν₃ from ν₁,ν₂ -/
 theorem kerD5_boundary :
@@ -110,7 +110,7 @@ theorem neutrino_mass_from_D5_structure :
     (neutrinoMassSqDenom = kerDimD5 * Nat.choose 6 2) ∧
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨rfl, rfl, D5_not_annihilate_quadratic, D6_quadratic⟩
+  ⟨rfl, rfl, D5_not_annihilate_quadratic, fun x _hx => D6_quadratic x⟩
 
 /-! ## Part 4: Laurent Boundary Structure
 

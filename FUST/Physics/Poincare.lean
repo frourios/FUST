@@ -231,6 +231,7 @@ theorem rot2_P1 : Rot5 2 * P5 1 - P5 1 * Rot5 2 = -(P5 2) := by
 theorem rot2_P2 : Rot5 2 * P5 2 - P5 2 * Rot5 2 = P5 1 := by
   ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply]
   fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
+
 /-! ### Summary: semidirect product structure
 
 iso(3,1) = so(3,1) ⋉ ℝ⁴ where:

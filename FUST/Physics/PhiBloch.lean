@@ -51,7 +51,7 @@ theorem D6_phiDilate_quasi_comm (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
     D6 (phiDilate f) z = (↑φ : ℂ) * D6 f ((↑φ : ℂ) * z) := by
   have hφ : (↑φ : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt phi_pos)
   have hφz : (↑φ : ℂ) * z ≠ 0 := mul_ne_zero hφ hz
-  rw [D6_eq_N6_div _ _ hz, D6_eq_N6_div f ((↑φ : ℂ) * z) hφz]
+  rw [D6_eq_N6_div _ z, D6_eq_N6_div f ((↑φ : ℂ) * z)]
   rw [N6_phiDilate_comm]
   simp only [phiDilate]
   field_simp

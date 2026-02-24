@@ -179,27 +179,27 @@ theorem operatorKerDim_2_justified :
     operatorKerDim 2 = 1 ∧
     (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D2 id x ≠ 0) :=
-  ⟨rfl, fun x hx => D2_const 1 x hx, D2_linear_ne_zero⟩
+  ⟨rfl, fun x _hx => D2_const 1 x, D2_linear_ne_zero⟩
 
 theorem operatorKerDim_3_justified :
     operatorKerDim 3 = 1 ∧
     (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D3 id x ≠ 0) :=
-  ⟨rfl, fun x hx => D3_const 1 x hx, D3_linear_ne_zero⟩
+  ⟨rfl, fun x _hx => D3_const 1 x, D3_linear_ne_zero⟩
 
 theorem operatorKerDim_4_justified :
     operatorKerDim 4 = 1 ∧
     (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D4 id x ≠ 0) ∧
     (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) :=
-  ⟨rfl, D4_const_ne_zero, D4_linear_ne_zero, D4_quadratic⟩
+  ⟨rfl, D4_const_ne_zero, D4_linear_ne_zero, fun x _hx => D4_quadratic x⟩
 
 theorem operatorKerDim_5_justified :
     operatorKerDim 5 = 2 ∧
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) ∧
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
-  ⟨rfl, fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+  ⟨rfl, fun x _hx => D5_const 1 x, fun x _hz => D5_linear x, D5_not_annihilate_quadratic⟩
 
 theorem operatorKerDim_6_justified :
     operatorKerDim 6 = 3 ∧
@@ -207,7 +207,8 @@ theorem operatorKerDim_6_justified :
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨rfl, fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
+  ⟨rfl, fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+  fun x _hx => D6_quadratic x, D6_detects_cubic⟩
 
 /-! ### D5half FDim: half-order operator between D₅ and D₆
 
@@ -222,7 +223,7 @@ theorem deriveFDim_D5half_justified :
     (∀ x, x ≠ 0 → D5half id x ≠ 0) ∧
     deriveFDim_D5half.p = -4 ∧
     deriveFDim_D5half.delta = 0 :=
-  ⟨D5half_const, D5half_linear_ne_zero, rfl, rfl⟩
+  ⟨fun c x _hx => D5half_const c x, D5half_linear_ne_zero, rfl, rfl⟩
 
 -- D5half has same (p,δ) as D5 but different kerDim (1 vs 2)
 theorem deriveFDim_D5half_eq_D5 : deriveFDim_D5half = deriveFDim 5 := by decide
@@ -264,41 +265,41 @@ section DimensionedOperators
 /-- D₂ output with derived dimension (-1, 1) -/
 noncomputable def D2_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 2) := ⟨(D2 f z).re⟩
 
-theorem D2_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
-    (D2_dim (fun _ => c) z).val = 0 := by simp [D2_dim, D2_const c z hz]
+theorem D2_dim_const (c : ℂ) (z : ℂ) :
+    (D2_dim (fun _ => c) z).val = 0 := by simp [D2_dim, D2_const c z]
 
 /-- D₃ output with derived dimension (-2, 0) -/
 noncomputable def D3_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 3) := ⟨(D3 f z).re⟩
 
-theorem D3_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
-    (D3_dim (fun _ => c) z).val = 0 := by simp [D3_dim, D3_const c z hz]
+theorem D3_dim_const (c : ℂ) (z : ℂ) :
+    (D3_dim (fun _ => c) z).val = 0 := by simp [D3_dim, D3_const c z]
 
 /-- D₄ output with derived dimension (-3, 1) -/
 noncomputable def D4_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 4) := ⟨(D4 f z).re⟩
 
-theorem D4_dim_quadratic (z : ℂ) (hz : z ≠ 0) :
-    (D4_dim (fun t => t^2) z).val = 0 := by simp [D4_dim, D4_quadratic z hz]
+theorem D4_dim_quadratic (z : ℂ) :
+    (D4_dim (fun t => t^2) z).val = 0 := by simp [D4_dim, D4_quadratic z]
 
 /-- D₅ output with derived dimension (-4, 0) -/
 noncomputable def D5_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 5) := ⟨(D5 f z).re⟩
 
-theorem D5_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
-    (D5_dim (fun _ => c) z).val = 0 := by simp [D5_dim, D5_const c z hz]
+theorem D5_dim_const (c : ℂ) (z : ℂ) :
+    (D5_dim (fun _ => c) z).val = 0 := by simp [D5_dim, D5_const c z]
 
-theorem D5_dim_linear (z : ℂ) (hz : z ≠ 0) :
-    (D5_dim id z).val = 0 := by simp [D5_dim, D5_linear z hz]
+theorem D5_dim_linear (z : ℂ) :
+    (D5_dim id z).val = 0 := by simp [D5_dim, D5_linear z]
 
 /-- D₆ output with derived dimension (-5, 1) -/
 noncomputable def D6_dim (f : ℂ → ℂ) (z : ℂ) : ScaleQ (deriveFDim 6) := ⟨(D6 f z).re⟩
 
-theorem D6_dim_const (c : ℂ) (z : ℂ) (hz : z ≠ 0) :
-    (D6_dim (fun _ => c) z).val = 0 := by simp [D6_dim, D6_const c z hz]
+theorem D6_dim_const (c : ℂ) (z : ℂ) :
+    (D6_dim (fun _ => c) z).val = 0 := by simp [D6_dim, D6_const c z]
 
-theorem D6_dim_linear (z : ℂ) (hz : z ≠ 0) :
-    (D6_dim id z).val = 0 := by simp [D6_dim, D6_linear z hz]
+theorem D6_dim_linear (z : ℂ) :
+    (D6_dim id z).val = 0 := by simp [D6_dim, D6_linear z]
 
-theorem D6_dim_quadratic (z : ℂ) (hz : z ≠ 0) :
-    (D6_dim (fun t => t^2) z).val = 0 := by simp [D6_dim, D6_quadratic z hz]
+theorem D6_dim_quadratic (z : ℂ) :
+    (D6_dim (fun t => t^2) z).val = 0 := by simp [D6_dim, D6_quadratic z]
 
 end DimensionedOperators
 

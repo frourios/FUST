@@ -60,14 +60,12 @@ import FUST.Physics.Nuclear
 import FUST.Physics.MixingAngles
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.PhiBloch
-import FUST.Physics.PhiOrbitInitialValue
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Poincare
 import FUST.Physics.Probability
 import FUST.Physics.QuantumStructure
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.ScaleStructure
-import FUST.Physics.StateFunctionConstraint
 import FUST.Physics.Superconductivity
 import FUST.Physics.Thermodynamics
 import FUST.Physics.VacuumStability

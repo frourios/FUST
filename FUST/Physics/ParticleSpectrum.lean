@@ -100,7 +100,7 @@ theorem D6_kernel_basis :
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x, fun x _hx => D6_quadratic x⟩
 
 /-- x³ is NOT in ker(D₆): D₆ detects cubic -/
 theorem D6_cubic_not_in_kernel :
@@ -110,7 +110,7 @@ theorem D6_cubic_not_in_kernel :
 
 /-- D₃ annihilates constants (gauge invariance) -/
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+  fun x _hx => D3_const 1 x
 
 /-- D₃ does not annihilate linear -/
 theorem D3_not_annihilate_linear : ∃ x : ℝ, x ≠ 0 ∧ D3 id x ≠ 0 :=
@@ -125,7 +125,7 @@ theorem D5_kernel_and_boundary :
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D5 id x = 0) ∧
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
-  ⟨fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+  ⟨fun x _hx => D5_const 1 x, fun x _hx => D5_linear x, D5_not_annihilate_quadratic⟩
 
 /-! ## Part 6: FORBIDDEN - D₆ Ceiling -/
 
@@ -204,7 +204,7 @@ theorem neutrino_kernel_structure :
     (∀ x, x ≠ 0 → D5 id x = 0) ∧
     -- ker(D₆)\ker(D₅) = {x²} (dim 1): atmospheric ν₃
     (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) :=
-  ⟨rfl, fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic⟩
+  ⟨rfl, fun x _hx => D5_const 1 x, fun x _hx => D5_linear x, D5_not_annihilate_quadratic⟩
 
 /-! ## Part 11: Particle Count
 
@@ -548,13 +548,13 @@ theorem fineStructure_sector :
 theorem D6_state_function :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨D6_quadratic, D6_detects_cubic⟩
+  ⟨fun x _hx => D6_quadratic x, D6_detects_cubic⟩
 
 -- D₂ detects x²: D₂(x²)(x₀) = F₂·x₀ = x₀
 theorem D2_state_function :
     (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D2 id x ≠ 0) :=
-  ⟨fun x hx => D2_const 1 x hx, D2_linear_ne_zero⟩
+  ⟨fun x _hx => D2_const 1 x, D2_linear_ne_zero⟩
 
 -- Complete sector summary
 theorem sector_classification :
@@ -633,7 +633,8 @@ theorem three_annihilation_conditions :
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
+  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+   fun x _hx => D6_quadratic x, D6_detects_cubic⟩
 
 /-! ### D₄ Anomaly
 
@@ -644,7 +645,7 @@ D₄ has non-contiguous kernel: ker(D₄) = {x²}, NOT {1}. -/
 theorem D4_anomaly :
     (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) :=
-  ⟨D4_const_ne_zero, D4_quadratic⟩
+  ⟨D4_const_ne_zero, fun x _hx => D4_quadratic x⟩
 
 /-- D₄ is the only operator detecting constants within ker(D₆) -/
 theorem D4_unique_constant_detector :
@@ -653,8 +654,8 @@ theorem D4_unique_constant_detector :
     (∀ x, x ≠ 0 → D4 (fun _ => 1) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) :=
-  ⟨fun x hx => D2_const 1 x hx, fun x hx => D3_const 1 x hx,
-   D4_const_ne_zero, fun x hx => D5_const 1 x hx, fun x hx => D6_const 1 x hx⟩
+  ⟨fun x _hx => D2_const 1 x, fun x _hx => D3_const 1 x,
+   D4_const_ne_zero, fun x _hx => D5_const 1 x, fun x _hx => D6_const 1 x⟩
 
 /-! ### Detection Matrix
 
@@ -683,7 +684,7 @@ theorem detection_d1 :
   refine ⟨⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩,
           ⟨1, one_ne_zero, D3_linear_ne_zero 1 one_ne_zero⟩,
           ⟨1, one_ne_zero, D4_linear_ne_zero 1 one_ne_zero⟩,
-          D5_linear, D6_linear⟩
+          fun x _hx => D5_linear x, fun x _hx => D6_linear x⟩
 
 /-- Detection matrix row d=2: D₂, D₃, D₅ detect; D₄, D₆ annihilate -/
 theorem detection_d2 :
@@ -692,10 +693,10 @@ theorem detection_d2 :
     (∀ x, x ≠ 0 → D4 (fun t => t^2) x = 0) ∧
     (∃ x : ℝ, x ≠ 0 ∧ D5 (fun t => t^2) x ≠ 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) := by
-  refine ⟨⟨1, one_ne_zero, ?_⟩, ⟨1, one_ne_zero, ?_⟩, D4_quadratic,
-          ⟨1, one_ne_zero, D5_not_annihilate_quadratic 1 one_ne_zero⟩, D6_quadratic⟩
+  refine ⟨⟨1, one_ne_zero, ?_⟩, ⟨1, one_ne_zero, ?_⟩, fun x _hx => D4_quadratic x,
+          ⟨1, one_ne_zero, D5_not_annihilate_quadratic 1 one_ne_zero⟩, fun x _hx => D6_quadratic x⟩
   · -- D₂[x²] ≠ 0 at x=1
-    simp only [D2, Complex.ofReal_one, one_ne_zero, ↓reduceIte, ne_eq]
+    simp only [D2, N2, Complex.ofReal_one, ne_eq]
     have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
     have hsum := phi_add_psi_complex
     have hnum : ((↑φ : ℂ) * 1) ^ 2 - ((↑ψ : ℂ) * 1) ^ 2 =
@@ -704,7 +705,7 @@ theorem detection_d2 :
     simp only [mul_one]
     exact div_ne_zero hφψ_ne hφψ_ne
   · -- D₃[x²] ≠ 0 at x=1
-    simp only [D3, Complex.ofReal_one, one_ne_zero, ↓reduceIte, ne_eq]
+    simp only [D3, N3, Complex.ofReal_one, ne_eq]
     have hφ2 := golden_ratio_property_complex
     have hψ2 := psi_sq_complex
     have hsum := phi_add_psi_complex
@@ -737,9 +738,10 @@ theorem kernel_filtration :
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
-  ⟨D5half_const 1, D5half_linear_ne_zero,
-   fun x hx => D5_const 1 x hx, D5_linear, D5_not_annihilate_quadratic,
-   fun x hx => D6_const 1 x hx, D6_linear, D6_quadratic, D6_detects_cubic⟩
+  ⟨fun x _hx => D5half_const 1 x, D5half_linear_ne_zero,
+   fun x _hx => D5_const 1 x, fun x _hx => D5_linear x, D5_not_annihilate_quadratic,
+   fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
+   fun x _hx => D6_quadratic x, D6_detects_cubic⟩
 
 /-! ### Generation Exponents from Pair Counts
 
@@ -817,7 +819,7 @@ theorem generation_structure :
     (Nat.choose 5 2 + Nat.choose 6 2 = 25) ∧
     -- Kernel filtration dimensions
     (Dim.operatorKerDim 5 = 2) := by
-  exact ⟨rfl, D4_const_ne_zero, D4_quadratic, rfl, rfl, rfl, rfl, rfl⟩
+  exact ⟨rfl, D4_const_ne_zero, fun x _hx => D4_quadratic x, rfl, rfl, rfl, rfl, rfl⟩
 
 end GenerationStructure
 

@@ -81,12 +81,12 @@ theorem kernel_hierarchy :
     (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
     (∀ x, x ≠ 0 → D6 id x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x hx => D2_const 1 x hx,
-   fun x hx => D5_const 1 x hx,
-   D5_linear,
-   fun x hx => D6_const 1 x hx,
-   D6_linear,
-   D6_quadratic⟩
+  ⟨fun x _hx => D2_const 1 x,
+   fun x _hx => D5_const 1 x,
+   fun x _hx => D5_linear x,
+   fun x _hx => D6_const 1 x,
+   fun x _hx => D6_linear x,
+   fun x _hx => D6_quadratic x⟩
 
 theorem kernel_dimension_strict_increase :
     (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
@@ -99,15 +99,15 @@ theorem kernel_dimension_strict_increase :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact fun x hx => D2_const 1 x hx
+  · exact fun x _hx => D2_const 1 x
   · use 1, one_ne_zero
     exact D2_linear_ne_zero 1 one_ne_zero
-  · exact fun x hx => D5_const 1 x hx
-  · exact D5_linear
+  · exact fun x _hx => D5_const 1 x
+  · exact fun x _hx => D5_linear x
   · exact D5_not_annihilate_quadratic
-  · exact fun x hx => D6_const 1 x hx
-  · exact D6_linear
-  · exact D6_quadratic
+  · exact fun x _hx => D6_const 1 x
+  · exact fun x _hx => D6_linear x
+  · exact fun x _hx => D6_quadratic x
   · exact D6_not_annihilate_cubic
 
 end KernelDimension
@@ -252,7 +252,7 @@ theorem trivial_channel_U1 :
     (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
     (∃ x, x ≠ 0 ∧ D2 id x ≠ 0) ∧
     (1 ^ 2 - 1 + 1 = 1) := by
-  exact ⟨fun x hx => D2_const 1 x hx,
+  exact ⟨fun x hx => D2_const 1 x,
          ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩,
          by norm_num⟩
 
@@ -281,7 +281,7 @@ theorem standard_gauge_group_unique :
       12 * (3 * a ^ 2 + b ^ 2)) := by
   exact ⟨Φ_S_rank_three, by norm_num,
          ⟨AF_channel_nondegenerate, AF_coeff_re_zero⟩, by norm_num,
-         ⟨fun x hx => D2_const 1 x hx,
+         ⟨fun x hx => D2_const 1 x,
           ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩⟩,
          zeta6_ne_phi_pow,
          Dζ_normSq_decomposition⟩

@@ -179,7 +179,7 @@ D₃ having gauge invariance (annihilates constants).
 -/
 
 theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x hx => D3_const 1 x hx
+  fun x _hx => D3_const 1 x
 
 /-! ## Summary Theorem -/
 

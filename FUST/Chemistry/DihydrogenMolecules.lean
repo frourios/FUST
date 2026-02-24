@@ -138,7 +138,7 @@ theorem H2_cation_is_minimal_dihydrogen :
 -- D6(H₂⁺) ≠ 0: the simplest dihydrogen species is already outside ker(D6)
 theorem H2_cation_not_in_kerD6 (z : ℂ) (hz : z ≠ 0) :
     D6 (fun t => t ^ 2 + (↑ψ : ℂ) * t ^ 3) z ≠ 0 := by
-  simp only [D6, N6, hz, ↓reduceIte]
+  simp only [D6, N6]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hφ3 := phi_cubed_complex

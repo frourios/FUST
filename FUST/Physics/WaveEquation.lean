@@ -32,9 +32,7 @@ theorem D6_coeff_sum_zero : (1 : ℝ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by nor
 theorem D6_linear_combination (f g : ℂ → ℂ) (a b : ℂ) (x : ℂ) :
     D6 (fun t => a * f t + b * g t) x = a * D6 f x + b * D6 g x := by
   simp only [D6, N6]
-  by_cases hx : x = 0
-  · simp [hx]
-  · simp only [hx, ↓reduceIte]; ring
+  ring
 
 /-- D6 is homogeneous -/
 theorem D6_homogeneous (f : ℂ → ℂ) (c x : ℂ) :
@@ -60,7 +58,7 @@ theorem dAlembertian_zero_on_kernel (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     · simp [D6, hy]
     · simp [hy, hD6_zero y hy]
   simp only [hD6f_const, ite_self]
-  exact D6_const 0 x hx
+  exact D6_const 0 x
 
 /-- ker(D6) ⊂ ker(□_φ) -/
 theorem kernel_subset_wave_kernel (f : ℂ → ℂ) (hf : IsInKerD6 f) :
