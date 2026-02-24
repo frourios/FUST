@@ -36,6 +36,7 @@ import FUST.Chemistry.Translation
 import FUST.Chemistry.WaterAnomalies
 import FUST.Chemistry.WaterMolecules
 
+import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 
@@ -82,6 +83,8 @@ import FUST.DimensionalAnalysis
 import FUST.EulerOperator
 import FUST.FibonacciArithmetic
 import FUST.FrourioLogarithm
-import FUST.ScalingLimit
+import FUST.IntegralDzeta
 import FUST.SpectralCoefficients
+import FUST.SpectralGalois
+import FUST.SpectralObstruction
 import FUST.Zeta6

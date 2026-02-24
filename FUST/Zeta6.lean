@@ -284,6 +284,26 @@ theorem AFNum_const (c : ℂ) (z : ℂ) : AFNum (fun _ => c) z = 0 := by
 theorem SymNum_const (c : ℂ) (z : ℂ) : SymNum (fun _ => c) z = 0 := by
   unfold SymNum; ring
 
+/-- AFNum is additive: AFNum(f+g) = AFNum(f) + AFNum(g) -/
+theorem AFNum_add (f g : ℂ → ℂ) (z : ℂ) :
+    AFNum (fun w => f w + g w) z = AFNum f z + AFNum g z := by
+  unfold AFNum; ring
+
+/-- SymNum is additive: SymNum(f+g) = SymNum(f) + SymNum(g) -/
+theorem SymNum_add (f g : ℂ → ℂ) (z : ℂ) :
+    SymNum (fun w => f w + g w) z = SymNum f z + SymNum g z := by
+  unfold SymNum; ring
+
+/-- AFNum is ℂ-homogeneous: AFNum(c·f) = c·AFNum(f) -/
+theorem AFNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    AFNum (fun w => c * f w) z = c * AFNum f z := by
+  unfold AFNum; ring
+
+/-- SymNum is ℂ-homogeneous: SymNum(c·f) = c·SymNum(f) -/
+theorem SymNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    SymNum (fun w => c * f w) z = c * SymNum f z := by
+  unfold SymNum; ring
+
 /-- Dζ₂ annihilates constants -/
 theorem Dζ₂_const (z : ℂ) (hz : z ≠ 0) : Dζ₂ (fun _ => 1) z = 0 := by
   simp only [Dζ₂, hz, ↓reduceIte]
@@ -522,6 +542,166 @@ theorem SymNum_pow_mod6_5 (k : ℕ) (z : ℂ) :
     (2 + ζ₆ ^ 5 - ζ₆ ^ 10 - 2 * ζ₆ ^ 15 - ζ₆ ^ 20 + ζ₆ ^ 25) * z ^ (6 * k + 5) := by ring
   rw [key, SY_coeff_mod5]
 
+/-! ## Mod 6 vanishing: AFNum and SymNum kill w^n for gcd(n,6) > 1
+
+For n ≡ 0,2,3,4 mod 6, the ζ₆-multiplexing sums vanish:
+  AF_n := ζ₆ⁿ + ζ₆²ⁿ - ζ₆⁴ⁿ - ζ₆⁵ⁿ = 0
+  SY_n := 2 + ζ₆ⁿ - ζ₆²ⁿ - 2ζ₆³ⁿ - ζ₆⁴ⁿ + ζ₆⁵ⁿ = 0 -/
+
+private theorem zeta6_pow_6kr (k r : ℕ) : ζ₆ ^ (6 * k + r) = ζ₆ ^ r := by
+  rw [pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul]
+
+private theorem zeta6_pow_pow_6k (j k r : ℕ) :
+    (ζ₆ ^ j) ^ (6 * k + r) = ζ₆ ^ (j * r) := by
+  rw [← pow_mul, show j * (6 * k + r) = 6 * (j * k) + j * r from by ring,
+      pow_add, pow_mul, zeta6_pow_six, one_pow, one_mul]
+
+/-- AFNum on w^{6k} = 0 -/
+theorem AFNum_pow_mod6_0 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k)) z = 0 := by
+  simp only [AFNum, mul_pow]
+  have h1 : ζ₆ ^ (6 * k) = 1 := by rw [pow_mul, zeta6_pow_six, one_pow]
+  have h2 : (ζ₆ ^ 2) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 2*(6*k) = 6*(2*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  have h4 : (ζ₆ ^ 4) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 4*(6*k) = 6*(4*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  have h5 : (ζ₆ ^ 5) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 5*(6*k) = 6*(5*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  rw [h1, h2, h4, h5]; ring
+
+/-- SymNum on w^{6k} = 0 -/
+theorem SymNum_pow_mod6_0 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k)) z = 0 := by
+  simp only [SymNum, mul_pow]
+  have h1 : ζ₆ ^ (6 * k) = 1 := by rw [pow_mul, zeta6_pow_six, one_pow]
+  have h2 : (ζ₆ ^ 2) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 2*(6*k) = 6*(2*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  have h3 : (ζ₆ ^ 3) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 3*(6*k) = 6*(3*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  have h4 : (ζ₆ ^ 4) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 4*(6*k) = 6*(4*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  have h5 : (ζ₆ ^ 5) ^ (6 * k) = 1 := by
+    rw [← pow_mul, show 5*(6*k) = 6*(5*k) from by ring, pow_mul, zeta6_pow_six, one_pow]
+  rw [h1, h2, h3, h4, h5]; ring
+
+private theorem zeta6_pow_red (n r : ℕ) (h : n = 6 * (n / 6) + r) : ζ₆ ^ n = ζ₆ ^ r := by
+  rw [h, zeta6_pow_6kr]
+
+/-- AFNum on w^{6k+2} = 0 (ζ₆²+ζ₆⁴-ζ₆⁸-ζ₆¹⁰ = 0) -/
+theorem AFNum_pow_mod6_2 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k + 2)) z = 0 := by
+  simp only [AFNum, mul_pow]
+  rw [zeta6_pow_6kr k 2,
+      zeta6_pow_pow_6k 2 k 2, show 2 * 2 = 4 from by ring,
+      zeta6_pow_pow_6k 4 k 2, show 4 * 2 = 8 from by ring,
+      zeta6_pow_pow_6k 5 k 2, show 5 * 2 = 10 from by ring]
+  have h8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_mul]
+  have h10 : ζ₆ ^ 10 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 10 = ζ₆ ^ 6 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_mul]
+  rw [h8, h10]; ring
+
+/-- SymNum on w^{6k+2} = 0 -/
+theorem SymNum_pow_mod6_2 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k + 2)) z = 0 := by
+  simp only [SymNum, mul_pow]
+  rw [zeta6_pow_6kr k 2,
+      zeta6_pow_pow_6k 2 k 2, show 2 * 2 = 4 from by ring,
+      zeta6_pow_pow_6k 3 k 2, show 3 * 2 = 6 from by ring,
+      zeta6_pow_pow_6k 4 k 2, show 4 * 2 = 8 from by ring,
+      zeta6_pow_pow_6k 5 k 2, show 5 * 2 = 10 from by ring]
+  have h8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_mul]
+  have h10 : ζ₆ ^ 10 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 10 = ζ₆ ^ 6 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_mul]
+  rw [zeta6_pow_six, h8, h10]; ring
+
+/-- AFNum on w^{6k+3} = 0 (ζ₆³=-1 cancellation) -/
+theorem AFNum_pow_mod6_3 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k + 3)) z = 0 := by
+  simp only [AFNum, mul_pow]
+  rw [zeta6_pow_6kr k 3,
+      zeta6_pow_pow_6k 2 k 3, show 2 * 3 = 6 from by ring,
+      zeta6_pow_pow_6k 4 k 3, show 4 * 3 = 12 from by ring,
+      zeta6_pow_pow_6k 5 k 3, show 5 * 3 = 15 from by ring]
+  have h12 : ζ₆ ^ 12 = 1 := by
+    calc ζ₆ ^ 12 = (ζ₆ ^ 6) ^ 2 := by ring
+    _ = 1 := by rw [zeta6_pow_six, one_pow]
+  have h15 : ζ₆ ^ 15 = -1 := by
+    calc ζ₆ ^ 15 = (ζ₆ ^ 6) ^ 2 * ζ₆ ^ 3 := by ring
+    _ = ζ₆ ^ 3 := by rw [zeta6_pow_six, one_pow, one_mul]
+    _ = -1 := zeta6_cubed
+  rw [zeta6_cubed, zeta6_pow_six, h12, h15]; ring
+
+/-- SymNum on w^{6k+3} = 0 -/
+theorem SymNum_pow_mod6_3 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k + 3)) z = 0 := by
+  simp only [SymNum, mul_pow]
+  rw [zeta6_pow_6kr k 3,
+      zeta6_pow_pow_6k 2 k 3, show 2 * 3 = 6 from by ring,
+      zeta6_pow_pow_6k 3 k 3, show 3 * 3 = 9 from by ring,
+      zeta6_pow_pow_6k 4 k 3, show 4 * 3 = 12 from by ring,
+      zeta6_pow_pow_6k 5 k 3, show 5 * 3 = 15 from by ring]
+  have h9 : ζ₆ ^ 9 = -1 := by
+    calc ζ₆ ^ 9 = ζ₆ ^ 6 * ζ₆ ^ 3 := by ring
+    _ = ζ₆ ^ 3 := by rw [zeta6_pow_six, one_mul]
+    _ = -1 := zeta6_cubed
+  have h12 : ζ₆ ^ 12 = 1 := by
+    calc ζ₆ ^ 12 = (ζ₆ ^ 6) ^ 2 := by ring
+    _ = 1 := by rw [zeta6_pow_six, one_pow]
+  have h15 : ζ₆ ^ 15 = -1 := by
+    calc ζ₆ ^ 15 = (ζ₆ ^ 6) ^ 2 * ζ₆ ^ 3 := by ring
+    _ = ζ₆ ^ 3 := by rw [zeta6_pow_six, one_pow, one_mul]
+    _ = -1 := zeta6_cubed
+  rw [zeta6_cubed, zeta6_pow_six, h9, h12, h15]; ring
+
+/-- AFNum on w^{6k+4} = 0 (ζ₆⁴=-ζ₆ cancellation) -/
+theorem AFNum_pow_mod6_4 (k : ℕ) (z : ℂ) :
+    AFNum (fun w => w ^ (6 * k + 4)) z = 0 := by
+  simp only [AFNum, mul_pow]
+  rw [zeta6_pow_6kr k 4,
+      zeta6_pow_pow_6k 2 k 4, show 2 * 4 = 8 from by ring,
+      zeta6_pow_pow_6k 4 k 4, show 4 * 4 = 16 from by ring,
+      zeta6_pow_pow_6k 5 k 4, show 5 * 4 = 20 from by ring]
+  have h8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_mul]
+  have h16 : ζ₆ ^ 16 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 16 = (ζ₆ ^ 6) ^ 2 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_pow, one_mul]
+  have h20 : ζ₆ ^ 20 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 20 = (ζ₆ ^ 6) ^ 3 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_pow, one_mul]
+  rw [h8, h16, h20]; ring
+
+/-- SymNum on w^{6k+4} = 0 -/
+theorem SymNum_pow_mod6_4 (k : ℕ) (z : ℂ) :
+    SymNum (fun w => w ^ (6 * k + 4)) z = 0 := by
+  simp only [SymNum, mul_pow]
+  rw [zeta6_pow_6kr k 4,
+      zeta6_pow_pow_6k 2 k 4, show 2 * 4 = 8 from by ring,
+      zeta6_pow_pow_6k 3 k 4, show 3 * 4 = 12 from by ring,
+      zeta6_pow_pow_6k 4 k 4, show 4 * 4 = 16 from by ring,
+      zeta6_pow_pow_6k 5 k 4, show 5 * 4 = 20 from by ring]
+  have h8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_mul]
+  have h12 : ζ₆ ^ 12 = 1 := by
+    calc ζ₆ ^ 12 = (ζ₆ ^ 6) ^ 2 := by ring
+    _ = 1 := by rw [zeta6_pow_six, one_pow]
+  have h16 : ζ₆ ^ 16 = ζ₆ ^ 4 := by
+    calc ζ₆ ^ 16 = (ζ₆ ^ 6) ^ 2 * ζ₆ ^ 4 := by ring
+    _ = ζ₆ ^ 4 := by rw [zeta6_pow_six, one_pow, one_mul]
+  have h20 : ζ₆ ^ 20 = ζ₆ ^ 2 := by
+    calc ζ₆ ^ 20 = (ζ₆ ^ 6) ^ 3 * ζ₆ ^ 2 := by ring
+    _ = ζ₆ ^ 2 := by rw [zeta6_pow_six, one_pow, one_mul]
+  rw [h8, h12, h16, h20]
+  simp only [zeta6_pow_four]; ring
+
 /-! ## Norm squared decomposition: |6a + 2i√3·b|² = 12(3a² + b²)
 
 The unified Dζ output for monomial z^s decomposes as:
@@ -728,5 +908,80 @@ theorem Φ_S_rank_three :
   rw [this] at h
   by_contra hc
   exact absurd (mul_ne_zero (by norm_num : (-6952 : ℂ) ≠ 0) hc) (not_not.mpr h)
+
+/-! ## Dζ Gauge Covariance
+
+Dζ(f(c·))(z) = c · Dζ(f)(c·z) for any c ≠ 0.
+"Continuity without limits": every observer at scale φⁿ sees identical
+algebraic structure. A continuous-parameter limit (D_t → θ) would only
+parametrize the φ-direction and cannot extend to full Dζ, because
+the ζ₆-direction is compact-discrete (ℤ/6ℤ, period 6). -/
+
+section GaugeCovariance
+
+private lemma mul_comm_assoc' (c a z : ℂ) : c * (a * z) = a * (c * z) := by ring
+
+/-- Φ_A is translation-equivariant: Φ_A(f(c·))(z) = Φ_A(f)(cz) -/
+theorem Φ_A_translate (f : ℂ → ℂ) (c z : ℂ) :
+    Φ_A (fun t => f (c * t)) z = Φ_A f (c * z) := by
+  simp only [Φ_A, mul_comm_assoc']
+
+/-- Φ_S is translation-equivariant: Φ_S(f(c·))(z) = Φ_S(f)(cz) -/
+theorem Φ_S_translate (f : ℂ → ℂ) (c z : ℂ) :
+    Φ_S (fun t => f (c * t)) z = Φ_S f (c * z) := by
+  simp only [Φ_S, mul_comm_assoc']
+
+/-- AFNum is translation-equivariant: AFNum(g(c·))(z) = AFNum(g)(cz) -/
+theorem AFNum_translate (g : ℂ → ℂ) (c z : ℂ) :
+    AFNum (fun w => g (c * w)) z = AFNum g (c * z) := by
+  simp only [AFNum, mul_comm_assoc']
+
+/-- SymNum is translation-equivariant: SymNum(g(c·))(z) = SymNum(g)(cz) -/
+theorem SymNum_translate (g : ℂ → ℂ) (c z : ℂ) :
+    SymNum (fun w => g (c * w)) z = SymNum g (c * z) := by
+  simp only [SymNum, mul_comm_assoc']
+
+private lemma Φ_A_translate_fun (f : ℂ → ℂ) (c : ℂ) :
+    Φ_A (fun t => f (c * t)) = fun w => Φ_A f (c * w) := by
+  funext z; exact Φ_A_translate f c z
+
+private lemma Φ_S_translate_fun (f : ℂ → ℂ) (c : ℂ) :
+    Φ_S (fun t => f (c * t)) = fun w => Φ_S f (c * w) := by
+  funext z; exact Φ_S_translate f c z
+
+/-- Dζ gauge covariance: Dζ(f(c·))(z) = c · Dζ(f)(cz) -/
+theorem Dζ_gauge_covariance (f : ℂ → ℂ) (c z : ℂ) (hc : c ≠ 0) (hz : z ≠ 0) :
+    Dζ (fun t => f (c * t)) z = c * Dζ f (c * z) := by
+  have hcz : c * z ≠ 0 := mul_ne_zero hc hz
+  simp only [Dζ, hz, hcz, ↓reduceIte]
+  rw [Φ_A_translate_fun f c, Φ_S_translate_fun f c]
+  rw [show AFNum (fun w => Φ_A f (c * w)) z = AFNum (Φ_A f) (c * z)
+      from AFNum_translate (Φ_A f) c z]
+  rw [show SymNum (fun w => Φ_S f (c * w)) z = SymNum (Φ_S f) (c * z)
+      from SymNum_translate (Φ_S f) c z]
+  field_simp
+
+/-- φ-gauge covariance: Dζ(f(φ·))(z) = φ · Dζ(f)(φz) -/
+theorem Dζ_phi_covariance (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
+    Dζ (fun t => f ((↑φ : ℂ) * t)) z =
+    (↑φ : ℂ) * Dζ f ((↑φ : ℂ) * z) :=
+  Dζ_gauge_covariance f _ z (ofReal_ne_zero.mpr (ne_of_gt phi_pos)) hz
+
+/-- Iterated φ-scaling: Dζ(f(φⁿ·))(z) = φⁿ · Dζ(f)(φⁿz) -/
+theorem Dζ_self_similar (f : ℂ → ℂ) (n : ℕ) (z : ℂ) (hz : z ≠ 0) :
+    Dζ (fun t => f ((↑φ : ℂ) ^ n * t)) z =
+    (↑φ : ℂ) ^ n * Dζ f ((↑φ : ℂ) ^ n * z) :=
+  Dζ_gauge_covariance f _ z
+    (pow_ne_zero n (ofReal_ne_zero.mpr (ne_of_gt phi_pos))) hz
+
+/-- Observer scale independence: no internal measurement distinguishes absolute scale -/
+theorem observer_scale_independence (f : ℂ → ℂ) (n : ℤ)
+    (z : ℂ) (hz : z ≠ 0) :
+    Dζ (fun t => f ((↑φ : ℂ) ^ n * t)) z =
+    (↑φ : ℂ) ^ n * Dζ f ((↑φ : ℂ) ^ n * z) :=
+  Dζ_gauge_covariance f _ z
+    (zpow_ne_zero n (ofReal_ne_zero.mpr (ne_of_gt phi_pos))) hz
+
+end GaugeCovariance
 
 end FUST.Zeta6
