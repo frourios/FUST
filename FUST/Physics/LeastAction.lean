@@ -1,6 +1,5 @@
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
-import FUST.FrourioLogarithm
 import FUST.Zeta6
 import Mathlib.Tactic
 
@@ -697,21 +696,6 @@ theorem structuralMinTimeD6_from_D6 :
   rw [h5]; ring
 
 end StructuralMinTime
-
-/-! ## Frourio Time Coordinate -/
-
-section FrourioFormulation
-
-open FUST.FrourioLogarithm
-
-noncomputable def frourioTime (x : ℝ) : ℝ := frourioLog x
-
-theorem phi_scale_is_time_shift (x : ℝ) (hx : 0 < x) :
-    frourioTime (φ * x) = frourioTime x + phiStep := by
-  unfold frourioTime
-  exact phi_scale_is_translation hx
-
-end FrourioFormulation
 
 end FUST.LeastAction
 

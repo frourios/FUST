@@ -23,7 +23,7 @@ import Mathlib.Topology.DiscreteSubset
 
 namespace FUST.MellinSampling
 
-open FUST FUST.SpectralCoefficients FUST.FrourioLogarithm Real Complex Filter
+open FUST FUST.SpectralCoefficients Real Complex Filter
   Topology Asymptotics Bornology
 
 /-! ## D6 Structure Preservation -/

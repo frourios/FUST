@@ -1,5 +1,4 @@
 import FUST.DifferenceOperators
-import FUST.FrourioLogarithm
 import FUST.Physics.LeastAction
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Finset.Basic
@@ -19,7 +18,7 @@ Probability emerges structurally from D6 operator and φ-scale iteration.
 
 namespace FUST.Probability
 
-open FUST FUST.FrourioLogarithm FUST.LeastAction Complex
+open FUST FUST.LeastAction Complex
 
 attribute [local instance] Classical.propDecidable
 

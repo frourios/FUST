@@ -11,13 +11,11 @@ selects the φ-direction (arrow of time), making the choice irreversible.
 import FUST.Chemistry.BondGeometry
 import FUST.Chemistry.GeneticCode
 import FUST.Physics.CouplingConstants
-import FUST.FrourioLogarithm
 
 namespace FUST.Chemistry.Homochirality
 
 open FUST FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode
-open FUST.FrourioLogarithm
 
 /-! ## Section 1: Chirality Requires Three Spatial Dimensions
 
@@ -71,38 +69,6 @@ theorem phi_psi_magnitude_asymmetry : φ > 1 ∧ -ψ < 1 := by
     have hps := phi_mul_psi
     have hφ := φ_gt_one
     nlinarith
-
--- R(φ) = -1/φ = ψ: reflection swaps φ and ψ
-theorem reflect_phi_eq_psi : reflectR φ = ψ := by
-  unfold reflectR
-  have hφ : φ ≠ 0 := ne_of_gt phi_pos
-  field_simp
-  linarith [phi_mul_psi]
-
-theorem reflect_psi_eq_phi : reflectR ψ = φ := by
-  unfold reflectR
-  have hψ : ψ ≠ 0 := ne_of_lt psi_neg
-  field_simp
-  linarith [phi_mul_psi]
-
-/-! ## Section 4: Arrow of Time Breaks Reflection Symmetry
-
-Time evolution U: x ↦ φx with φ > 1 selects the expansion direction.
-R swaps φ ↔ ψ but cannot undo the choice of time direction.
-This is the fundamental origin of chirality preference.
--/
-
--- phiStep > 0: time flows in the φ-direction (arrow of time)
-theorem arrow_of_time : phiStep > 0 := arrow_of_time_positive
-
--- The ψ-direction (past) contracts: log|ψ| < 0
-theorem past_contracts : frourioLog |ψ| < 0 := past_direction_negative
-
--- U ∘ U⁻¹ = sign flip (φψ = -1), NOT identity
--- This shows U and U⁻¹ are NOT symmetric: going forward ≠ going backward
-theorem time_irreversibility : scaleU (scaleUInv 1) = -1 := by
-  have h := @scaleU_scaleUInv_eq 1
-  simp only [] at h; exact h
 
 /-! ## Section 5: State Function Root Asymmetry
 
@@ -227,25 +193,4 @@ theorem expansion_dominates : φ > -ψ := by
 -- The irrational difference prevents exact cancellation
 theorem asymmetry_irreducible : φ - ψ = Real.sqrt 5 := phi_sub_psi
 
-/-! ## Section 10: Structural Constants Summary -/
-
-theorem homochirality_classification :
-    -- Chirality requires spatialDim = 3
-    3 = 3 ∧
-    -- Chiral center = simplex vertices = baseCount = spatialDim + 1
-    baseCount = 3 + 1 ∧
-    -- φ > 0 > ψ (sign asymmetry)
-    φ > 0 ∧ ψ < 0 ∧
-    -- φ > 1 > |ψ| (magnitude asymmetry)
-    φ > 1 ∧
-    -- R swaps φ ↔ ψ but time selects φ
-    reflectR φ = ψ ∧
-    -- Electron root φ ≠ conjugate ψ
-    φ ≠ ψ ∧
-    -- D6 anti-symmetric: φ-side + ψ-side = 0
-    (1 : ℤ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by
-  refine ⟨rfl, rfl, phi_pos, psi_neg, φ_gt_one, reflect_phi_eq_psi, phi_ne_psi, ?_⟩
-  decide
-
 end FUST.Chemistry.Homochirality
-

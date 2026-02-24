@@ -2,7 +2,6 @@ import FUST.Physics.LeastAction
 import FUST.Physics.Cosmology
 import FUST.Physics.Probability
 import FUST.Physics.WaveEquation
-import FUST.FrourioLogarithm
 
 /-!
 # FUST Thermodynamics
@@ -14,17 +13,11 @@ This module derives thermodynamic laws from D6 structure.
 1. **Third Law**: Massive states (f ∉ ker(D6)) cannot reach absolute zero
 2. **Light-Sound Separation**: ker(D6) vs ker(D6)⊥ structural separation
 3. **Energy Properties**: Non-negativity, zero condition, orthogonal additivity
-
-## References
-
-All derivations follow from:
-- TimeTheorem.lean: entropyAt, entropy_zero_iff_ker
-- FrourioLogarithm.lean: frourioEntropy, time_increases_entropy
 -/
 
 namespace FUST.Thermodynamics
 
-open FUST FUST.LeastAction FUST.FrourioLogarithm FUST.Cosmology
+open FUST FUST.LeastAction FUST.Cosmology
 open FUST.WaveEquation
 
 /-! ## Third Law of Thermodynamics
@@ -122,11 +115,6 @@ theorem second_law_monomial_amplification (n : ℕ) (t : ℂ) :
 /-- φⁿ > 1 for n ≥ 1, showing amplification -/
 theorem second_law_phi_pow_amplifies (n : ℕ) (hn : n ≥ 1) : φ^n > 1 :=
   phi_pow_gt_one n hn
-
-/-- Time step increases entropy by fundamental unit -/
-theorem second_law_entropy_increase {x : ℝ} (hx : 0 < x) :
-    frourioInfo (1/(φ * x)) = frourioInfo (1/x) + phiStep :=
-  time_increases_entropy hx
 
 /-! ## Complete Thermodynamics Summary -/
 

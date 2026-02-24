@@ -80,7 +80,6 @@ import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
 import FUST.EulerOperator
 import FUST.FibonacciArithmetic
-import FUST.FrourioLogarithm
 import FUST.IntegralDzeta
 import FUST.SpectralCoefficients
 import FUST.SpectralGalois

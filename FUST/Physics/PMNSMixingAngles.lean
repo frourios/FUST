@@ -28,7 +28,7 @@ The golden partition φ⁻¹ + φ⁻² = 1 constrains Ω_Λ + Ω_m = 1:
 
 namespace FUST.PMNSMixingAngles
 
-open FUST FUST.FrourioLogarithm
+open FUST
 
 /-!
 ## Section 1: PMNS Reactor Angle θ₁₃
