@@ -64,31 +64,6 @@ $\varphi - \psi$ & $\sqrt{5}$ & Difference (normalization factor) \\
 \end{tabular}
 \end{center}
 
-\subsection{Kernel Structure (Lean4 Proven)}
-
-The kernel of $D_6$ is spanned by polynomials of degree 2 or less:
-
-\begin{theorem}[$D_6$ Kernel Structure]
-\label{thm:mat_ker_D6}
-\lean{FUST.D6_kernel_dim_3}
-\leanok
-\[
-\ker(D_6) = \mathrm{span}\{1, x, x^2\}
-\]
-\end{theorem}
-
-\begin{theorem}[$D_6$ Kernel Dimension]
-\label{thm:mat_ker_dim}
-$\dim \ker(D_6) = 3$
-\end{theorem}
-
-\begin{theorem}[Higher Order Reduction]
-\label{thm:mat_higher_reduction}
-\lean{FUST.higher_order_reduction}
-\leanok
-$\ker(D_7) = \ker(D_6)$
-\end{theorem}
-
 $D_7$ and higher do not introduce new structure. $D_6$ determines the ``minimal and complete'' causal structure.
 
 \textbf{Numerical verification}: Coefficient $C_n$ for monomials $t^n$ under $D_6$:

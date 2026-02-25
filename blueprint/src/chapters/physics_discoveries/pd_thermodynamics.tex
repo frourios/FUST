@@ -49,45 +49,6 @@ If $\forall t,\, \mathrm{entropyAt}(f, t) = 0$, then $f \in \ker(D_6)$.
 If $f \in \ker(D_6)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
 \end{theorem}
 
-\section{Light and Sound Structural Separation}
-\label{sec:thermo_light_sound}
-
-Light and sound have fundamentally different structures in FUST:
-\begin{itemize}
-\item \textbf{Light} = $\ker(D_6)$ components (proper time = 0)
-\item \textbf{Sound} = $\ker(D_6)^\perp$ components (proper time $> 0$)
-\end{itemize}
-
-\begin{theorem}[Light States Have Zero Action]
-\label{thm:light_zero_action}
-\lean{FUST.Thermodynamics.light_zero_action}
-\leanok
-For $f \in \ker(D_6)$ and $x_0 > 0$:
-\[
-\mathcal{A}_N[f] = 0
-\]
-\end{theorem}
-
-\begin{theorem}[Sound States Have Nonzero perpProjection]
-\label{thm:sound_positive_perp}
-\lean{FUST.Thermodynamics.sound_positive_perp}
-\leanok
-For $f \notin \ker(D_6)$:
-\[
-\exists t,\, \mathrm{perpProjection}(f, t) \neq 0
-\]
-\end{theorem}
-
-\begin{theorem}[Light-Sound Separation]
-\label{thm:light_sound_separation}
-\lean{FUST.Thermodynamics.light_sound_separation}
-\leanok
-\begin{enumerate}
-\item $f \in \ker(D_6) \Rightarrow \forall x \neq 0,\, D_6[f](x) = 0$
-\item $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{perpProjection}(f, t) \neq 0$
-\end{enumerate}
-\end{theorem}
-
 \section{Stefan-Boltzmann Law}
 \label{sec:thermo_stefan_boltzmann}
 

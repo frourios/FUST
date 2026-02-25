@@ -116,11 +116,6 @@ theorem entropy_time_connection (f : ℂ → ℂ) (t : ℂ) :
     entropyAtD6 (timeEvolution f) t =
       Complex.normSq (perpProjectionD6 (timeEvolution f) t) := rfl
 
-/-- ker(D6) is preserved under time evolution -/
-theorem kernel_preserved_time (f : ℂ → ℂ) (hf : IsInKerD6 f) :
-    IsInKerD6 (timeEvolution f) :=
-  ker_D6_invariant f hf
-
 /-! ## Part 5: Golden Ratio Mathematical Identities
 
 These are properties of φ = (1+√5)/2, not FUST derivations.
@@ -201,27 +196,5 @@ theorem scaleAtLevel_from_inverse_evolution (k : ℕ) :
   have h := phi_mul_abs_psi
   field_simp [ne_of_gt phi_pos] at h ⊢
   linarith
-
-/-- Scale factor at level k: notation for φ^{-k} = |ψ|^k -/
-noncomputable abbrev scaleAtLevel (k : ℕ) : ℝ := φ ^ (-(k : ℤ))
-
-/-! ## Part 8: FUST Cosmology Summary -/
-
-/-- Summary: FUST-derived scale structure -/
-theorem fust_scale_structure :
-    (φ > 1 ∧ |ψ| < 1) ∧
-    (∀ n : ℤ, scaleLattice (n + 1) = φ * scaleLattice n) ∧
-    (∀ n m : ℤ, n < m → scaleLattice n < scaleLattice m) ∧
-    (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) :=
-  ⟨fust_time_asymmetry, scaleLattice_shift, hierarchy_suppression_factor,
-   kernel_preserved_time⟩
-
-/-- Summary: Golden ratio mathematical identities -/
-theorem golden_ratio_identities :
-    (φ⁻¹ + φ⁻¹ ^ 2 = 1) ∧
-    (φ + φ⁻¹ = Real.sqrt 5) ∧
-    (∀ n : ℕ, 0 < φ ^ (-(n : ℤ))) ∧
-    (∀ n : ℕ, φ ^ (-(n + 1 : ℤ)) < φ ^ (-(n : ℤ))) :=
-  ⟨golden_partition, phi_plus_phi_inv, zpow_neg_pos, zpow_neg_decreasing⟩
 
 end FUST.Cosmology

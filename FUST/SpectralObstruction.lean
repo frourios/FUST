@@ -1,5 +1,5 @@
 /-
-Spectral obstruction: algebraic constraints on D̃ζ eigenvalues in ℤ[φ,ζ₆].
+Spectral obstruction: algebraic constraints on Fζ eigenvalues in ℤ[φ,ζ₆].
 Every eigenvalue λ_n is divisible by 10·(1+ζ₆), so the reachable sub-ring
 R = ℤ[{λ_n}] is a proper sub-ring of ℤ[φ,ζ₆]. The gap is controlled by
 primes 2, 3, 5 — encoded in the Euler factors of ζ_K(s).

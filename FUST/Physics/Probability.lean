@@ -1,5 +1,4 @@
 import FUST.DifferenceOperators
-import FUST.Physics.LeastAction
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Finset.Basic
 
@@ -18,7 +17,7 @@ Probability emerges structurally from D6 operator and φ-scale iteration.
 
 namespace FUST.Probability
 
-open FUST FUST.LeastAction Complex
+open FUST Complex
 
 attribute [local instance] Classical.propDecidable
 
@@ -377,52 +376,6 @@ theorem discreteAction_nonneg
     exact sq_nonneg _
   · exact le_of_lt haarWeight_pos
 
-/-- For ker(D6) functions, action is zero -/
-theorem action_zero_for_ker
-    (f : ℂ → ℂ) (hf : IsInKerD6 f) (x₀ : ℝ)
-    (hx₀ : 0 < x₀) (N : ℕ) :
-    discreteAction f x₀ N = 0 := by
-  unfold discreteAction
-  have hsum : (Finset.Icc (-N : ℤ) N).sum
-      (fun k => (observationAt f x₀ k) ^ 2) = 0 := by
-    apply Finset.sum_eq_zero
-    intro k _
-    simp only [observationAt]
-    have hne : (↑(φ ^ k * x₀) : ℂ) ≠ 0 :=
-      observationAt_welldefined f x₀ hx₀ k
-    rw [IsInKerD6_implies_D6_zero f hf _ hne]
-    simp [map_zero]
-  rw [hsum]
-  simp
-
 end BornRule
-
-/-!
-## Complete Probability Theory Summary
--/
-
-/-- FUST probability theory: complete structural derivation -/
-theorem fust_probability_theory :
-    (∀ a b : ℂ, ∀ f : ℂ → ℂ, ∀ x : ℂ,
-      b ≠ 0 → D6 f x ≠ 0 →
-      normSq (D6 (fun t => a * f t) x) /
-        normSq (D6 (fun t => b * f t) x) =
-      normSq a / normSq b) ∧
-    (∀ f : ℂ → ℂ, ∀ x₀ : ℝ, ∀ k : ℤ,
-      observationAt f x₀ k ≥ 0) ∧
-    (∀ f : ℂ → ℂ, ∀ x₀ : ℝ, ∀ N : ℕ,
-      fustProbN f x₀ N {y | y ≥ 0} = 1) ∧
-    (∀ f : ℂ → ℂ, ∀ x₀ : ℝ, ∀ N : ℕ,
-      discreteAction f x₀ N =
-      (2 * N + 1) * haarWeight *
-        discreteExpectation f x₀ N) ∧
-    (∀ f : ℂ → ℂ, IsInKerD6 f →
-      ∀ x₀ : ℝ, 0 < x₀ → ∀ N : ℕ,
-      discreteAction f x₀ N = 0) :=
-  ⟨same_degree_ratio_gauge_invariant,
-   observationAt_nonneg,
-   fustProb_normalization,
-   born_rule_discrete,
-   action_zero_for_ker⟩
 
 end FUST.Probability

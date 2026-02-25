@@ -1,5 +1,5 @@
 /-
-Galois separation of D̃ζ eigenvalues.
+Galois separation of Fζ eigenvalues.
 The eigenvalue λ = 5√5·A_n·AF_coeff + 6·S_n lies in ℚ(√5) ⊕ ℚ(√5)·√(-15),
 missing the √(-3) direction entirely. This Galois separation constrains
 the algebraic structure of zeros in the critical strip.

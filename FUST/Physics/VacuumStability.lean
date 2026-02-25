@@ -8,7 +8,7 @@ import Mathlib.Data.Nat.Choose.Basic
 The FUST vacuum ker(Dζ) is the TRUE vacuum (not a false/metastable vacuum).
 No vacuum decay can occur.
 
-The unique Hamiltonian S[f] = Σ ‖D̃ζ f(φⁿ)‖² is non-negative with kernel
+The unique Hamiltonian S[f] = Σ ‖Fζ f(φⁿ)‖² is non-negative with kernel
 consisting of modes n ≡ 0,2,3,4 mod 6. Active modes (n ≡ 1,5 mod 6) have
 eigenvalue λ(n) ≠ 0. The primordial eigenvalue λ₁ (n=1) gives the mass gap.
 -/
@@ -22,17 +22,17 @@ open FUST FUST.IntegralDzeta FUST.Hamiltonian
 section EffectivePotential
 
 noncomputable def effectivePotential (f : ℂ → ℂ) (z : ℂ) : ℝ :=
-  Complex.normSq (Dζ_int f z)
+  Complex.normSq (Fζ f z)
 
 theorem effectivePotential_nonneg (f : ℂ → ℂ) (z : ℂ) :
     effectivePotential f z ≥ 0 := Complex.normSq_nonneg _
 
-theorem effectivePotential_ker_zero (f : ℂ → ℂ) (hf : IsInKerDζ f) (z : ℂ) :
+theorem effectivePotential_ker_zero (f : ℂ → ℂ) (hf : IsInKerFζ f) (z : ℂ) :
     effectivePotential f z = 0 := by
   simp only [effectivePotential, Complex.normSq_eq_zero, hf z]
 
 theorem effectivePotential_massive_pos (f : ℂ → ℂ) (z : ℂ)
-    (hDζ : Dζ_int f z ≠ 0) : effectivePotential f z > 0 :=
+    (hDζ : Fζ f z ≠ 0) : effectivePotential f z > 0 :=
   Complex.normSq_pos.mpr hDζ
 
 end EffectivePotential
@@ -61,13 +61,13 @@ end SelfCoupling
 section GlobalMinimum
 
 theorem vacuum_is_global_minimum :
-    (∀ f N, partialActionDζ f N ≥ 0) ∧
-    (∀ f, IsInKerDζ f → ∀ N, partialActionDζ f N = 0) :=
-  ⟨partialActionDζ_nonneg, partialActionDζ_ker_zero⟩
+    (∀ f N, partialActionFζ f N ≥ 0) ∧
+    (∀ f, IsInKerFζ f → ∀ N, partialActionFζ f N = 0) :=
+  ⟨partialActionFζ_nonneg, partialActionFζ_ker_zero⟩
 
-theorem vacuum_energy_is_zero (f : ℂ → ℂ) (hf : IsInKerDζ f) (N : ℕ) :
-    partialActionDζ f N = 0 :=
-  partialActionDζ_ker_zero f hf N
+theorem vacuum_energy_is_zero (f : ℂ → ℂ) (hf : IsInKerFζ f) (N : ℕ) :
+    partialActionFζ f N = 0 :=
+  partialActionFζ_ker_zero f hf N
 
 end GlobalMinimum
 
@@ -76,13 +76,13 @@ end GlobalMinimum
 section NoLowerVacuum
 
 theorem no_negative_energy (f : ℂ → ℂ) (n : ℤ) :
-    actionDζ f n ≥ 0 :=
-  actionDζ_nonneg f n
+    actionFζ f n ≥ 0 :=
+  actionFζ_nonneg f n
 
 theorem no_lower_vacuum_exists :
-    ¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionDζ f N < 0 := by
+    ¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionFζ f N < 0 := by
   intro ⟨f, N, h⟩
-  linarith [partialActionDζ_nonneg f N]
+  linarith [partialActionFζ_nonneg f N]
 
 end NoLowerVacuum
 
@@ -106,20 +106,20 @@ ker(Dζ) satisfies both conditions. -/
 section TrueVacuum
 
 def IsTrueVacuum (f : ℂ → ℂ) : Prop :=
-  (∀ N, partialActionDζ f N = 0) ∧
-  (∀ g N, partialActionDζ g N ≥ 0) ∧
-  IsInKerDζ f
+  (∀ N, partialActionFζ f N = 0) ∧
+  (∀ g N, partialActionFζ g N ≥ 0) ∧
+  IsInKerFζ f
 
-theorem vacuum_is_true (f : ℂ → ℂ) (hf : IsInKerDζ f) : IsTrueVacuum f :=
-  ⟨partialActionDζ_ker_zero f hf, partialActionDζ_nonneg, hf⟩
+theorem vacuum_is_true (f : ℂ → ℂ) (hf : IsInKerFζ f) : IsTrueVacuum f :=
+  ⟨partialActionFζ_ker_zero f hf, partialActionFζ_nonneg, hf⟩
 
 def IsFalseVacuum (f : ℂ → ℂ) : Prop :=
-  (∀ N, partialActionDζ f N = 0) ∧
-  (∃ g N, partialActionDζ g N < 0)
+  (∀ N, partialActionFζ f N = 0) ∧
+  (∃ g N, partialActionFζ g N < 0)
 
 theorem no_false_vacuum_exists : ¬∃ f, IsFalseVacuum f := by
   intro ⟨f, _, g, N, hlt⟩
-  linarith [partialActionDζ_nonneg g N]
+  linarith [partialActionFζ_nonneg g N]
 
 end TrueVacuum
 
@@ -128,15 +128,15 @@ end TrueVacuum
 section NoDecay
 
 def CanDecay (f : ℂ → ℂ) : Prop :=
-  ∃ g : ℂ → ℂ, ∃ N : ℕ, partialActionDζ g N < partialActionDζ f N
+  ∃ g : ℂ → ℂ, ∃ N : ℕ, partialActionFζ g N < partialActionFζ f N
 
-theorem vacuum_cannot_decay (f : ℂ → ℂ) (hf : IsInKerDζ f) : ¬CanDecay f := by
+theorem vacuum_cannot_decay (f : ℂ → ℂ) (hf : IsInKerFζ f) : ¬CanDecay f := by
   intro ⟨g, N, h⟩
-  rw [partialActionDζ_ker_zero f hf N] at h
-  linarith [partialActionDζ_nonneg g N]
+  rw [partialActionFζ_ker_zero f hf N] at h
+  linarith [partialActionFζ_nonneg g N]
 
 theorem no_vacuum_decay :
-    ∀ f, IsInKerDζ f → ¬CanDecay f := vacuum_cannot_decay
+    ∀ f, IsInKerFζ f → ¬CanDecay f := vacuum_cannot_decay
 
 end NoDecay
 
@@ -152,8 +152,8 @@ theorem topBottomRatio_pos : 0 < topBottomRatio :=
 theorem top_does_not_destabilize :
     (0 < topBottomRatio) ∧
     (0 < lambda_FUST) ∧
-    (∀ f, IsInKerDζ f → ∀ N, partialActionDζ f N = 0) :=
-  ⟨topBottomRatio_pos, lambda_FUST_pos, partialActionDζ_ker_zero⟩
+    (∀ f, IsInKerFζ f → ∀ N, partialActionFζ f N = 0) :=
+  ⟨topBottomRatio_pos, lambda_FUST_pos, partialActionFζ_ker_zero⟩
 
 end TopQuark
 
@@ -162,21 +162,21 @@ end TopQuark
 section Complete
 
 theorem fust_vacuum_stability :
-    (∀ f N, partialActionDζ f N ≥ 0) ∧
-    (∀ f, IsInKerDζ f → ∀ N, partialActionDζ f N = 0) ∧
+    (∀ f N, partialActionFζ f N ≥ 0) ∧
+    (∀ f, IsInKerFζ f → ∀ N, partialActionFζ f N = 0) ∧
     (0 < massGapΔ ^ 2) ∧
     (0 < lambda_FUST) ∧
-    (¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionDζ f N < 0) :=
-  ⟨partialActionDζ_nonneg,
-   partialActionDζ_ker_zero,
+    (¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionFζ f N < 0) :=
+  ⟨partialActionFζ_nonneg,
+   partialActionFζ_ker_zero,
    massGapΔ_sq_pos,
    lambda_FUST_pos,
    no_lower_vacuum_exists⟩
 
 theorem electroweak_vacuum_is_true :
-    (∀ f, IsInKerDζ f → IsTrueVacuum f) ∧
+    (∀ f, IsInKerFζ f → IsTrueVacuum f) ∧
     (¬∃ f, IsFalseVacuum f) ∧
-    (∀ f, IsInKerDζ f → ¬CanDecay f) :=
+    (∀ f, IsInKerFζ f → ¬CanDecay f) :=
   ⟨vacuum_is_true, no_false_vacuum_exists, vacuum_cannot_decay⟩
 
 end Complete

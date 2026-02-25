@@ -1,5 +1,5 @@
 /-
-D̃ζ = 5z·Dζ: rescaled unified operator closed on ℤ[φ,ζ₆][z].
+Fζ = 5z·Dζ: rescaled unified operator closed on ℤ[φ,ζ₆][z].
 Clearing the 1/5 denominator from Φ_S makes all coefficients integral.
 -/
 import FUST.Zeta6
@@ -31,7 +31,7 @@ private lemma phi_mul_phi_c : (↑φ : ℂ) * ↑φ = ↑φ + 1 := by
 
 /-- Φ_S_int = 5 · Φ_S -/
 theorem Φ_S_int_eq (f : ℂ → ℂ) (z : ℂ) : Φ_S_int f z = 5 * Φ_S f z := by
-  simp only [Φ_S_int, Φ_S]
+  simp only [Φ_S_int, Φ_S, N5, N3, N2]
   have hne := phi_plus_two_ne
   have hP : (↑φ : ℂ) * ↑φ - ↑φ - 1 = 0 := by
     have h := phi_mul_phi_c; linear_combination h
@@ -50,10 +50,10 @@ theorem Φ_S_int_eq (f : ℂ → ℂ) (z : ℂ) : Φ_S_int f z = 5 * Φ_S f z :=
     field_simp; linear_combination (2 : ℂ) * hP
   field_simp; linear_combination (-2 : ℂ) * hP
 
-/-! ## Integral Dζ: D̃ζ = AFNum(5·Φ_A) + SymNum(Φ_S_int) = 5z·Dζ -/
+/-! ## Integral Dζ: Fζ = AFNum(5·Φ_A) + SymNum(Φ_S_int) = 5z·Dζ -/
 
-/-- D̃ζ: integral form, closed on ℤ[φ,ζ₆][z] -/
-noncomputable def Dζ_int (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+/-- Fζ: integral form, closed on ℤ[φ,ζ₆][z] -/
+noncomputable def Fζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   AFNum (fun w => 5 * Φ_A f w) z + SymNum (Φ_S_int f) z
 
 /-- AFNum is linear: AFNum(c·g) = c · AFNum(g) -/
@@ -74,19 +74,19 @@ private theorem SymNum_of_Φ_S_int (f : ℂ → ℂ) (z : ℂ) :
   rw [h]
   exact SymNum_smul (Φ_S f) 5 z
 
-/-- D̃ζ = 5z · Dζ -/
-theorem Dζ_int_eq (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
-    Dζ_int f z = 5 * z * Dζ f z := by
-  unfold Dζ_int Dζ
+/-- Fζ = 5z · Dζ -/
+theorem Fζ_eq (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
+    Fζ f z = 5 * z * Dζ f z := by
+  unfold Fζ Dζ
   rw [AFNum_smul (Φ_A f) 5 z, SymNum_of_Φ_S_int f z]
   field_simp
 
-/-! ## Kernel: D̃ζ annihilates {1, z²} (but NOT z: Dζ(id) ≠ 0) -/
+/-! ## Kernel: Fζ annihilates {1, z²} (but NOT z: Dζ(id) ≠ 0) -/
 
-theorem Dζ_int_kernel_const (z : ℂ) : Dζ_int (fun _ => 1) z = 0 := by
+theorem Fζ_kernel_const (z : ℂ) : Fζ (fun _ => 1) z = 0 := by
   by_cases hz : z = 0
-  · subst hz; unfold Dζ_int AFNum SymNum Φ_A Φ_S_int; ring
-  · rw [Dζ_int_eq (fun _ => 1) z hz, Dζ_const z]; ring
+  · subst hz; unfold Fζ AFNum SymNum Φ_A Φ_S_int; ring
+  · rw [Fζ_eq (fun _ => 1) z hz, Dζ_const z]; ring
 
 private lemma zeta6_pow8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
   have : ζ₆ ^ 8 = ζ₆ ^ 6 * ζ₆ ^ 2 := by ring
@@ -127,9 +127,9 @@ private lemma phiS_int_sq (w : ℂ) :
      (9 + 2 * ↑φ) * (↑ψ : ℂ) ^ 2 + 10 * (↑ψ : ℂ) ^ 4) * w ^ 2 := by
   unfold Φ_S_int; ring
 
-/-- D̃ζ annihilates w² (ζ₆ squared-power cancellation in both channels) -/
-theorem Dζ_int_kernel_quad (z : ℂ) : Dζ_int (fun w => w ^ 2) z = 0 := by
-  unfold Dζ_int
+/-- Fζ annihilates w² (ζ₆ squared-power cancellation in both channels) -/
+theorem Fζ_kernel_quad (z : ℂ) : Fζ (fun w => w ^ 2) z = 0 := by
+  unfold Fζ
   have hAF := AFNum_kills_sq (fun w => 5 * Φ_A (fun t => t ^ 2) w)
     (5 * ((↑φ : ℂ) ^ 6 - 4 * (↑φ : ℂ) ^ 4 + (3 + ↑φ) * (↑φ : ℂ) ^ 2 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 2 + 4 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6))
@@ -140,9 +140,9 @@ theorem Dζ_int_kernel_quad (z : ℂ) : Dζ_int (fun w => w ^ 2) z = 0 := by
     z (fun w => phiS_int_sq w)
   rw [hAF, hSY]; ring
 
-/-! ## Extended kernel: D̃ζ annihilates w³ and w⁴ (mod 6 vanishing)
+/-! ## Extended kernel: Fζ annihilates w³ and w⁴ (mod 6 vanishing)
 
-D̃ζ(wⁿ) = 0 for all n with gcd(n,6) > 1. Both AFNum and SymNum kill
+Fζ(wⁿ) = 0 for all n with gcd(n,6) > 1. Both AFNum and SymNum kill
 w^n when n ≡ 0,2,3,4 mod 6 via ζ₆ root-of-unity cancellation. -/
 
 private lemma AFNum_kills_cube (g : ℂ → ℂ) (c : ℂ) (z : ℂ)
@@ -167,9 +167,9 @@ private lemma phiS_int_cube (w : ℂ) :
      (9 + 2 * ↑φ) * (↑ψ : ℂ) ^ 3 + 10 * (↑ψ : ℂ) ^ 6) * w ^ 3 := by
   unfold Φ_S_int; ring
 
-/-- D̃ζ annihilates w³ (ζ₆³ = -1 cancellation in both channels) -/
-theorem Dζ_int_kernel_cube (z : ℂ) : Dζ_int (fun w => w ^ 3) z = 0 := by
-  unfold Dζ_int
+/-- Fζ annihilates w³ (ζ₆³ = -1 cancellation in both channels) -/
+theorem Fζ_kernel_cube (z : ℂ) : Fζ (fun w => w ^ 3) z = 0 := by
+  unfold Fζ
   have hAF := AFNum_kills_cube (fun w => 5 * Φ_A (fun t => t ^ 3) w)
     (5 * ((↑φ : ℂ) ^ 9 - 4 * (↑φ : ℂ) ^ 6 + (3 + ↑φ) * (↑φ : ℂ) ^ 3 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 3 + 4 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9))
@@ -202,9 +202,9 @@ private lemma phiS_int_fourth (w : ℂ) :
      (9 + 2 * ↑φ) * (↑ψ : ℂ) ^ 4 + 10 * (↑ψ : ℂ) ^ 8) * w ^ 4 := by
   unfold Φ_S_int; ring
 
-/-- D̃ζ annihilates w⁴ (ζ₆⁴ = -ζ₆ cancellation in both channels) -/
-theorem Dζ_int_kernel_fourth (z : ℂ) : Dζ_int (fun w => w ^ 4) z = 0 := by
-  unfold Dζ_int
+/-- Fζ annihilates w⁴ (ζ₆⁴ = -ζ₆ cancellation in both channels) -/
+theorem Fζ_kernel_fourth (z : ℂ) : Fζ (fun w => w ^ 4) z = 0 := by
+  unfold Fζ
   have hAF := AFNum_kills_fourth (fun w => 5 * Φ_A (fun t => t ^ 4) w)
     (5 * ((↑φ : ℂ) ^ 12 - 4 * (↑φ : ℂ) ^ 8 + (3 + ↑φ) * (↑φ : ℂ) ^ 4 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 4 + 4 * (↑ψ : ℂ) ^ 8 - (↑ψ : ℂ) ^ 12))
@@ -215,13 +215,13 @@ theorem Dζ_int_kernel_fourth (z : ℂ) : Dζ_int (fun w => w ^ 4) z = 0 := by
     z (fun w => phiS_int_fourth w)
   rw [hAF, hSY]; ring
 
-/-! ## Translation equivariance: D̃ζ(f(c·))(z) = D̃ζ(f)(cz) -/
+/-! ## Translation equivariance: Fζ(f(c·))(z) = Fζ(f)(cz) -/
 
 private lemma mul_comm_assoc' (c a z : ℂ) : c * (a * z) = a * (c * z) := by ring
 
-theorem Dζ_int_translate (f : ℂ → ℂ) (c z : ℂ) :
-    Dζ_int (fun t => f (c * t)) z = Dζ_int f (c * z) := by
-  unfold Dζ_int
+theorem Fζ_translate (f : ℂ → ℂ) (c z : ℂ) :
+    Fζ (fun t => f (c * t)) z = Fζ f (c * z) := by
+  unfold Fζ
   -- Φ_A and Φ_S_int are translation-equivariant
   have hA : (fun w => 5 * Φ_A (fun t => f (c * t)) w) =
     (fun w => 5 * Φ_A f (c * w)) := by
@@ -232,35 +232,35 @@ theorem Dζ_int_translate (f : ℂ → ℂ) (c z : ℂ) :
   rw [AFNum_translate (fun w => 5 * Φ_A f w) c z]
   rw [SymNum_translate (Φ_S_int f) c z]
 
-/-! ## Spectral scaling: D̃ζ(zⁿ) = 5z · Dζ(zⁿ) -/
+/-! ## Spectral scaling: Fζ(zⁿ) = 5z · Dζ(zⁿ) -/
 
-theorem Dζ_int_spectral (n : ℕ) (z : ℂ) (hz : z ≠ 0) :
-    Dζ_int (fun w => w ^ n) z = 5 * z * Dζ (fun w => w ^ n) z :=
-  Dζ_int_eq (fun w => w ^ n) z hz
+theorem Fζ_spectral (n : ℕ) (z : ℂ) (hz : z ≠ 0) :
+    Fζ (fun w => w ^ n) z = 5 * z * Dζ (fun w => w ^ n) z :=
+  Fζ_eq (fun w => w ^ n) z hz
 
 /-! ## Monomial closure: mod 6 structure
 
-For n ≡ 1 (mod 6): D̃ζ(zⁿ) has coefficient in ℤ[φ,ζ₆]
+For n ≡ 1 (mod 6): Fζ(zⁿ) has coefficient in ℤ[φ,ζ₆]
 The AF channel contributes AF_coeff = 4ζ₆-2 ∈ ℤ[ζ₆]
 The SY channel contributes 6 ∈ ℤ -/
 
 /-- For n = 6k+1, AFNum factor on the Φ_A channel yields AF_coeff · z^n -/
-theorem Dζ_int_monomial_mod6_1 (k : ℕ) (z : ℂ) :
+theorem Fζ_monomial_mod6_1 (k : ℕ) (z : ℂ) :
     AFNum (fun w => w ^ (6 * k + 1)) z = z ^ (6 * k + 1) * AF_coeff :=
   AFNum_pow_mod6_1 k z
 
 /-- For n = 6k+5, AFNum yields -AF_coeff · z^n -/
-theorem Dζ_int_monomial_mod6_5 (k : ℕ) (z : ℂ) :
+theorem Fζ_monomial_mod6_5 (k : ℕ) (z : ℂ) :
     AFNum (fun w => w ^ (6 * k + 5)) z = -(z ^ (6 * k + 5) * AF_coeff) :=
   AFNum_pow_mod6_5 k z
 
 /-- For n = 6k+1, SymNum yields 6 · z^n -/
-theorem Dζ_int_sym_mod6_1 (k : ℕ) (z : ℂ) :
+theorem Fζ_sym_mod6_1 (k : ℕ) (z : ℂ) :
     SymNum (fun w => w ^ (6 * k + 1)) z = 6 * z ^ (6 * k + 1) :=
   SymNum_pow_mod6_1 k z
 
 /-- For n = 6k+5, SymNum yields 6 · z^n -/
-theorem Dζ_int_sym_mod6_5 (k : ℕ) (z : ℂ) :
+theorem Fζ_sym_mod6_5 (k : ℕ) (z : ℂ) :
     SymNum (fun w => w ^ (6 * k + 5)) z = 6 * z ^ (6 * k + 5) :=
   SymNum_pow_mod6_5 k z
 
@@ -329,11 +329,11 @@ theorem phiS_int_fibonacci (n : ℕ) :
 
 /-! ## Eigenvalue formula for n ≡ 1 mod 6
 
-D̃ζ(w^{6k+1})(z) = (5·c_A·AF_coeff + 6·c_S) · z^{6k+1} -/
+Fζ(w^{6k+1})(z) = (5·c_A·AF_coeff + 6·c_S) · z^{6k+1} -/
 
-/-- D̃ζ on w^{6k+1}: explicit eigenvalue formula -/
-theorem Dζ_int_eigenvalue_mod6_1 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k + 1)) z =
+/-- Fζ on w^{6k+1}: explicit eigenvalue formula -/
+theorem Fζ_eigenvalue_mod6_1 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k + 1)) z =
     (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 1)) -
       4 * (↑φ : ℂ) ^ (2 * (6 * k + 1)) +
       (3 + (↑φ : ℂ)) * (↑φ : ℂ) ^ (6 * k + 1) -
@@ -345,7 +345,7 @@ theorem Dζ_int_eigenvalue_mod6_1 (k : ℕ) (z : ℂ) :
       (9 + 2 * (↑φ : ℂ)) * (↑ψ : ℂ) ^ (6 * k + 1) +
       10 * (↑ψ : ℂ) ^ (2 * (6 * k + 1)))) *
     z ^ (6 * k + 1) := by
-  unfold Dζ_int
+  unfold Fζ
   -- Factor out Φ_A and Φ_S_int as monomials
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k + 1)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 1)) -
@@ -366,9 +366,9 @@ theorem Dζ_int_eigenvalue_mod6_1 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_1,
       SymNum_smul, SymNum_pow_mod6_1]; ring
 
-/-- D̃ζ on w^{6k+5}: eigenvalue with negated AF_coeff -/
-theorem Dζ_int_eigenvalue_mod6_5 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k + 5)) z =
+/-- Fζ on w^{6k+5}: eigenvalue with negated AF_coeff -/
+theorem Fζ_eigenvalue_mod6_5 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k + 5)) z =
     (-5 * ((↑φ : ℂ) ^ (3 * (6 * k + 5)) -
       4 * (↑φ : ℂ) ^ (2 * (6 * k + 5)) +
       (3 + (↑φ : ℂ)) * (↑φ : ℂ) ^ (6 * k + 5) -
@@ -380,7 +380,7 @@ theorem Dζ_int_eigenvalue_mod6_5 (k : ℕ) (z : ℂ) :
       (9 + 2 * (↑φ : ℂ)) * (↑ψ : ℂ) ^ (6 * k + 5) +
       10 * (↑ψ : ℂ) ^ (2 * (6 * k + 5)))) *
     z ^ (6 * k + 5) := by
-  unfold Dζ_int
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k + 5)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 5)) -
         4 * (↑φ : ℂ) ^ (2 * (6 * k + 5)) +
@@ -400,11 +400,11 @@ theorem Dζ_int_eigenvalue_mod6_5 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_5,
       SymNum_smul, SymNum_pow_mod6_5]; ring
 
-/-! ## General mod 6 vanishing: D̃ζ(z^n) = 0 when gcd(n,6) > 1 -/
+/-! ## General mod 6 vanishing: Fζ(z^n) = 0 when gcd(n,6) > 1 -/
 
-theorem Dζ_int_vanish_mod6_0 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k)) z = 0 := by
-  unfold Dζ_int
+theorem Fζ_vanish_mod6_0 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k)) z = 0 := by
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k)) -
         4 * (↑φ : ℂ) ^ (2 * (6 * k)) +
@@ -422,9 +422,9 @@ theorem Dζ_int_vanish_mod6_0 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_0, SymNum_smul, SymNum_pow_mod6_0]
   ring
 
-theorem Dζ_int_vanish_mod6_2 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k + 2)) z = 0 := by
-  unfold Dζ_int
+theorem Fζ_vanish_mod6_2 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k + 2)) z = 0 := by
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k + 2)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 2)) -
         4 * (↑φ : ℂ) ^ (2 * (6 * k + 2)) +
@@ -442,9 +442,9 @@ theorem Dζ_int_vanish_mod6_2 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_2, SymNum_smul, SymNum_pow_mod6_2]
   ring
 
-theorem Dζ_int_vanish_mod6_3 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k + 3)) z = 0 := by
-  unfold Dζ_int
+theorem Fζ_vanish_mod6_3 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k + 3)) z = 0 := by
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k + 3)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 3)) -
         4 * (↑φ : ℂ) ^ (2 * (6 * k + 3)) +
@@ -462,9 +462,9 @@ theorem Dζ_int_vanish_mod6_3 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_3, SymNum_smul, SymNum_pow_mod6_3]
   ring
 
-theorem Dζ_int_vanish_mod6_4 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k + 4)) z = 0 := by
-  unfold Dζ_int
+theorem Fζ_vanish_mod6_4 (k : ℕ) (z : ℂ) :
+    Fζ (fun w => w ^ (6 * k + 4)) z = 0 := by
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ (6 * k + 4)) w) =
       fun w => (5 * ((↑φ : ℂ) ^ (3 * (6 * k + 4)) -
         4 * (↑φ : ℂ) ^ (2 * (6 * k + 4)) +
@@ -482,22 +482,22 @@ theorem Dζ_int_vanish_mod6_4 (k : ℕ) (z : ℂ) :
   rw [hA, hS, AFNum_smul, AFNum_pow_mod6_4, SymNum_smul, SymNum_pow_mod6_4]
   ring
 
-/-! ## Derivation defect: D̃ζ(fg) - f·D̃ζ(g) - D̃ζ(f)·g
+/-! ## Derivation defect: Fζ(fg) - f·Fζ(g) - Fζ(f)·g
 
 The derivation defect of any linear operator L is the unique bilinear form
 δ_L(f,g) = L(fg) - f·L(g) - L(f)·g. This is not an arbitrary definition:
 it is the standard obstruction to L being a derivation. -/
 
-/-- Derivation defect of D̃ζ evaluated at z -/
+/-- Derivation defect of Fζ evaluated at z -/
 noncomputable def derivDefect (f g : ℂ → ℂ) (z : ℂ) : ℂ :=
-  Dζ_int (fun w => f w * g w) z - f z * Dζ_int g z - Dζ_int f z * g z
+  Fζ (fun w => f w * g w) z - f z * Fζ g z - Fζ f z * g z
 
-/-- On monomials: δ(zᵃ,zᵇ) = D̃ζ(z^{a+b}) - zᵃ·D̃ζ(zᵇ) - D̃ζ(zᵃ)·zᵇ -/
+/-- On monomials: δ(zᵃ,zᵇ) = Fζ(z^{a+b}) - zᵃ·Fζ(zᵇ) - Fζ(zᵃ)·zᵇ -/
 theorem derivDefect_monomial (a b : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ a) (fun w => w ^ b) z =
-    Dζ_int (fun w => w ^ (a + b)) z -
-    z ^ a * Dζ_int (fun w => w ^ b) z -
-    Dζ_int (fun w => w ^ a) z * z ^ b := by
+    Fζ (fun w => w ^ (a + b)) z -
+    z ^ a * Fζ (fun w => w ^ b) z -
+    Fζ (fun w => w ^ a) z * z ^ b := by
   unfold derivDefect
   have h : (fun w : ℂ => w ^ a * w ^ b) = (fun w => w ^ (a + b)) := by
     funext w; rw [pow_add]
@@ -506,55 +506,55 @@ theorem derivDefect_monomial (a b : ℕ) (z : ℂ) :
 /-! ## Emergence: ker × ker → active
 
 When gcd(a,6)>1 and gcd(b,6)>1 but gcd(a+b,6)=1,
-the defect equals the full eigenvalue: δ(zᵃ,zᵇ) = D̃ζ(z^{a+b}). -/
+the defect equals the full eigenvalue: δ(zᵃ,zᵇ) = Fζ(z^{a+b}). -/
 
 /-- z³·z⁴ → z⁷: both in ker, product is active -/
 theorem emergence_3_4 (z : ℂ) :
     derivDefect (fun w => w ^ 3) (fun w => w ^ 4) z =
-    Dζ_int (fun w => w ^ 7) z := by
+    Fζ (fun w => w ^ 7) z := by
   rw [derivDefect_monomial,
     show (3 + 4 : ℕ) = 7 from by ring,
-    show (3 : ℕ) = 6 * 0 + 3 from by ring, Dζ_int_vanish_mod6_3 0,
-    show (4 : ℕ) = 6 * 0 + 4 from by ring, Dζ_int_vanish_mod6_4 0]
+    show (3 : ℕ) = 6 * 0 + 3 from by ring, Fζ_vanish_mod6_3 0,
+    show (4 : ℕ) = 6 * 0 + 4 from by ring, Fζ_vanish_mod6_4 0]
   ring
 
 /-- z²·z⁵ → z⁷: ker × active = active with shifted eigenvalue -/
 theorem interaction_2_5 (z : ℂ) :
     derivDefect (fun w => w ^ 2) (fun w => w ^ 5) z =
-    Dζ_int (fun w => w ^ 7) z -
-    z ^ 2 * Dζ_int (fun w => w ^ 5) z := by
+    Fζ (fun w => w ^ 7) z -
+    z ^ 2 * Fζ (fun w => w ^ 5) z := by
   rw [derivDefect_monomial,
     show (2 + 5 : ℕ) = 7 from by ring,
-    show (2 : ℕ) = 6 * 0 + 2 from by ring, Dζ_int_vanish_mod6_2 0]
+    show (2 : ℕ) = 6 * 0 + 2 from by ring, Fζ_vanish_mod6_2 0]
   ring
 
 /-! ## Annihilation: active × active → ker
 
-When n≡1 and m≡5 (mod 6), n+m≡0 (mod 6), so δ = -D̃ζ(zⁿ)·zᵐ - zⁿ·D̃ζ(zᵐ). -/
+When n≡1 and m≡5 (mod 6), n+m≡0 (mod 6), so δ = -Fζ(zⁿ)·zᵐ - zⁿ·Fζ(zᵐ). -/
 
 /-- z¹·z⁵ → z⁶: two active modes annihilate into ker -/
 theorem annihilation_1_5 (z : ℂ) :
     derivDefect (fun w => w ^ 1) (fun w => w ^ 5) z =
-    -(z ^ 1 * Dζ_int (fun w => w ^ 5) z +
-      Dζ_int (fun w => w ^ 1) z * z ^ 5) := by
+    -(z ^ 1 * Fζ (fun w => w ^ 5) z +
+      Fζ (fun w => w ^ 1) z * z ^ 5) := by
   rw [derivDefect_monomial,
-    show (1 + 5 : ℕ) = 6 * 1 from by ring, Dζ_int_vanish_mod6_0 1]
+    show (1 + 5 : ℕ) = 6 * 1 from by ring, Fζ_vanish_mod6_0 1]
   ring
 
 /-- z⁷·z⁵ → z¹²: two active modes annihilate into ker -/
 theorem annihilation_7_5 (z : ℂ) :
     derivDefect (fun w => w ^ 7) (fun w => w ^ 5) z =
-    -(z ^ 7 * Dζ_int (fun w => w ^ 5) z +
-      Dζ_int (fun w => w ^ 7) z * z ^ 5) := by
+    -(z ^ 7 * Fζ (fun w => w ^ 5) z +
+      Fζ (fun w => w ^ 7) z * z ^ 5) := by
   rw [derivDefect_monomial,
-    show (7 + 5 : ℕ) = 6 * 2 from by ring, Dζ_int_vanish_mod6_0 2]
+    show (7 + 5 : ℕ) = 6 * 2 from by ring, Fζ_vanish_mod6_0 2]
   ring
 
-/-! ## D̃ζ is ℂ-linear in the function argument -/
+/-! ## Fζ is ℂ-linear in the function argument -/
 
-theorem Dζ_int_const_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
-    Dζ_int (fun w => c * f w) z = c * Dζ_int f z := by
-  unfold Dζ_int
+theorem Fζ_const_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    Fζ (fun w => c * f w) z = c * Fζ f z := by
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => c * f t) w) =
       fun w => c * (5 * Φ_A f w) := by
     funext w; unfold Φ_A; ring
@@ -564,7 +564,7 @@ theorem Dζ_int_const_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
 
 /-! ## Gauge invariance: δ(c·f, c⁻¹·g) = δ(f, g) for constant c ∈ ℂ×
 
-This follows from D̃ζ's ℂ-linearity and c·c⁻¹ = 1. -/
+This follows from Fζ's ℂ-linearity and c·c⁻¹ = 1. -/
 
 theorem derivDefect_const_gauge (c : ℂ) (hc : c ≠ 0) (f g : ℂ → ℂ) (z : ℂ) :
     derivDefect (fun w => c * f w) (fun w => c⁻¹ * g w) z =
@@ -572,15 +572,15 @@ theorem derivDefect_const_gauge (c : ℂ) (hc : c ≠ 0) (f g : ℂ → ℂ) (z 
   unfold derivDefect
   have hfg : (fun w : ℂ => c * f w * (c⁻¹ * g w)) = (fun w => f w * g w) := by
     funext w; field_simp
-  rw [hfg, Dζ_int_const_smul, Dζ_int_const_smul]; ring_nf; field_simp
+  rw [hfg, Fζ_const_smul, Fζ_const_smul]; ring_nf; field_simp
 
-/-! ## Root decomposition: D̃ζ(fg) = D̃ζ(f)·g + f·D̃ζ(g) + δ(f,g)
+/-! ## Root decomposition: Fζ(fg) = Fζ(f)·g + f·Fζ(g) + δ(f,g)
 
 Not an axiom — just the derivation defect definition rearranged. -/
 
 theorem root_decomposition (f g : ℂ → ℂ) (z : ℂ) :
-    Dζ_int (fun w => f w * g w) z =
-    Dζ_int f z * g z + f z * Dζ_int g z + derivDefect f g z := by
+    Fζ (fun w => f w * g w) z =
+    Fζ f z * g z + f z * Fζ g z + derivDefect f g z := by
   unfold derivDefect; ring
 
 /-! ## Selection rule: ker×ker interaction vanishes when root is in ker
@@ -592,27 +592,27 @@ theorem selection_rule_ker_ker_ker (j k : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ (6 * j + 2)) (fun w => w ^ (6 * k + 4)) z = 0 := by
   rw [derivDefect_monomial,
     show (6 * j + 2 + (6 * k + 4)) = 6 * (j + k + 1) from by ring,
-    Dζ_int_vanish_mod6_0, Dζ_int_vanish_mod6_2, Dζ_int_vanish_mod6_4]
+    Fζ_vanish_mod6_0, Fζ_vanish_mod6_2, Fζ_vanish_mod6_4]
   ring
 
 theorem selection_rule_ker3_ker3 (j k : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ (6 * j + 3)) (fun w => w ^ (6 * k + 3)) z = 0 := by
   rw [derivDefect_monomial,
     show (6 * j + 3 + (6 * k + 3)) = 6 * (j + k + 1) from by ring,
-    Dζ_int_vanish_mod6_0, Dζ_int_vanish_mod6_3, Dζ_int_vanish_mod6_3]
+    Fζ_vanish_mod6_0, Fζ_vanish_mod6_3, Fζ_vanish_mod6_3]
   ring
 
 /-! ## Hierarchical mediation: 3-body root decomposition
 
 For R = A·B·C, the root_decomposition applied twice gives:
-D̃ζ(R) = [D̃ζ(A)·B + A·D̃ζ(B) + δ(A,B)]·C + (A·B)·D̃ζ(C) + δ(A·B, C)
+Fζ(R) = [Fζ(A)·B + A·Fζ(B) + δ(A,B)]·C + (A·B)·Fζ(C) + δ(A·B, C)
 
 A and C interact only through δ(A·B, C), mediated by B. -/
 
 theorem hierarchical_mediation (f g h : ℂ → ℂ) (z : ℂ) :
-    Dζ_int (fun w => f w * g w * h w) z =
-    (Dζ_int f z * g z + f z * Dζ_int g z + derivDefect f g z) * h z +
-    f z * g z * Dζ_int h z +
+    Fζ (fun w => f w * g w * h w) z =
+    (Fζ f z * g z + f z * Fζ g z + derivDefect f g z) * h z +
+    f z * g z * Fζ h z +
     derivDefect (fun w => f w * g w) h z := by
   have h1 := root_decomposition (fun w => f w * g w) h z
   rw [root_decomposition f g z] at h1
@@ -627,20 +627,20 @@ But in z^13 = z³·z⁴·z⁶, the z⁴ mediator enables non-trivial dynamics. -
 theorem direct_interaction_trivial (z : ℂ) :
     derivDefect (fun w => w ^ 3) (fun w => w ^ 6) z = 0 := by
   rw [derivDefect_monomial,
-    show (3 + 6 : ℕ) = 6 * 1 + 3 from by ring, Dζ_int_vanish_mod6_3,
-    show (3 : ℕ) = 6 * 0 + 3 from by ring, Dζ_int_vanish_mod6_3,
-    show (6 : ℕ) = 6 * 1 from by ring, Dζ_int_vanish_mod6_0]
+    show (3 + 6 : ℕ) = 6 * 1 + 3 from by ring, Fζ_vanish_mod6_3,
+    show (3 : ℕ) = 6 * 0 + 3 from by ring, Fζ_vanish_mod6_3,
+    show (6 : ℕ) = 6 * 1 from by ring, Fζ_vanish_mod6_0]
   ring
 
 /-- But z³·z⁴ = z⁷ is active (emergence), and z⁷ can interact with z⁶.
-    The mediated defect δ(z⁷,z⁶) = D̃ζ(z¹³) - D̃ζ(z⁷)·z⁶. -/
+    The mediated defect δ(z⁷,z⁶) = Fζ(z¹³) - Fζ(z⁷)·z⁶. -/
 theorem mediated_defect_structure (z : ℂ) :
     derivDefect (fun w => w ^ 7) (fun w => w ^ 6) z =
-    Dζ_int (fun w => w ^ 13) z -
-    Dζ_int (fun w => w ^ 7) z * z ^ 6 := by
+    Fζ (fun w => w ^ 13) z -
+    Fζ (fun w => w ^ 7) z * z ^ 6 := by
   rw [derivDefect_monomial,
     show (7 + 6 : ℕ) = 13 from by ring,
-    show (6 : ℕ) = 6 * 1 from by ring, Dζ_int_vanish_mod6_0]
+    show (6 : ℕ) = 6 * 1 from by ring, Fζ_vanish_mod6_0]
   ring
 
 /-! ## Charge conjugation: AF_coeff sign flip between mod 1 and mod 5
@@ -668,11 +668,11 @@ theorem pair_creation_mod6 (j k : ℕ) :
 /-- Pair annihilation: mod 1 + mod 5 → vacuum (mod 0). Generalized. -/
 theorem pair_annihilation (j k : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ (6 * j + 1)) (fun w => w ^ (6 * k + 5)) z =
-    -(z ^ (6 * j + 1) * Dζ_int (fun w => w ^ (6 * k + 5)) z +
-      Dζ_int (fun w => w ^ (6 * j + 1)) z * z ^ (6 * k + 5)) := by
+    -(z ^ (6 * j + 1) * Fζ (fun w => w ^ (6 * k + 5)) z +
+      Fζ (fun w => w ^ (6 * j + 1)) z * z ^ (6 * k + 5)) := by
   rw [derivDefect_monomial,
     show (6 * j + 1 + (6 * k + 5)) = 6 * (j + k + 1) from by ring,
-    Dζ_int_vanish_mod6_0]
+    Fζ_vanish_mod6_0]
   ring
 
 /-! ## GEI decomposition of eigenvalue
@@ -699,7 +699,7 @@ private theorem eigenvalue_gei_decomp (cA cS_rat cS_irr : ℂ) :
 
 /-! ## Spectral purity: z=1 as the unique spectral evaluation point
 
-At z₀=1, every monomial evaluates to 1, so D̃ζ(zⁿ)(1) = λ(n)·1ⁿ = λ(n).
+At z₀=1, every monomial evaluates to 1, so Fζ(zⁿ)(1) = λ(n)·1ⁿ = λ(n).
 The eigenvalue IS the function value. This property characterizes z₀=1 uniquely
 among nonzero ℂ: if z₀ⁿ = z₀ for all n ≥ 2, then z₀ ∈ {0, 1}. -/
 
@@ -716,7 +716,7 @@ theorem spectral_point_unique (z₀ : ℂ) (h_sq : z₀ ^ 2 = z₀) (h_ne : z₀
 
 /-- Spectral purity: at z₀=1, monomial eigenvalue is recovered without distortion -/
 theorem spectral_purity (n : ℕ) :
-    Dζ_int (fun w => w ^ n) 1 = Dζ_int (fun w => w ^ n) 1 * (1 : ℂ) ^ n := by
+    Fζ (fun w => w ^ n) 1 = Fζ (fun w => w ^ n) 1 * (1 : ℂ) ^ n := by
   simp [one_pow]
 
 /-- At any z₀, the eigenfunction evaluation is λ(n)·z₀ⁿ. At z₀=1 the z₀ⁿ factor is 1. -/
@@ -732,7 +732,7 @@ theorem one_pow_universal_unique (z₀ : ℂ)
 
 /-! ## Primordial mode: z¹ is the unique active mode that cannot emerge
 
-Emergence = ker × ker → active: δ(zᵃ,zᵇ) = D̃ζ(z^{a+b}) when both a,b ∈ ker.
+Emergence = ker × ker → active: δ(zᵃ,zᵇ) = Fζ(z^{a+b}) when both a,b ∈ ker.
 For active n ≥ 5, the pair (3, n-3) always gives emergence since gcd(3,6)>1 and
 n-3 ≡ 2 or 4 mod 6 ∈ ker. But for n=1, no pair (a,b) with a+b=1, a≥1, b≥1 exists. -/
 
@@ -766,15 +766,15 @@ theorem primordial_mode_unique (n : ℕ) (hn_active : n % 6 = 1 ∨ n % 6 = 5)
 
 /-! ## Vacuum state: the constant function is the unique Galois-fixed kernel element
 
-f(z) = 1 = z⁰ is in ker(D̃ζ), has degree 0, and evaluates to 1 at z=1.
+f(z) = 1 = z⁰ is in ker(Fζ), has degree 0, and evaluates to 1 at z=1.
 It is the "vacuum" — zero eigenvalue, maximum symmetry. -/
 
-/-- The constant function is annihilated by D̃ζ -/
+/-- The constant function is annihilated by Fζ -/
 theorem vacuum_state (z : ℂ) :
-    Dζ_int (fun _ => (1 : ℂ)) z = 0 := by
+    Fζ (fun _ => (1 : ℂ)) z = 0 := by
   have : (fun _ : ℂ => (1 : ℂ)) = (fun w => w ^ (6 * 0)) := by
     funext w; simp
-  rw [this, Dζ_int_vanish_mod6_0]
+  rw [this, Fζ_vanish_mod6_0]
 
 /-- At z=1: vacuum evaluates to 1 while primordial mode also evaluates to 1 -/
 theorem vacuum_primordial_degenerate :
@@ -783,15 +783,15 @@ theorem vacuum_primordial_degenerate :
 /-! ## Self-interaction necessity: δ(z¹,z¹) ≠ 0
 
 The primordial mode z¹ has nonzero self-interaction defect
-δ(z¹,z¹) = -2·D̃ζ(z¹)·z. Since D̃ζ(z¹) ≠ 0, the self-interaction
+δ(z¹,z¹) = -2·Fζ(z¹)·z. Since Fζ(z¹) ≠ 0, the self-interaction
 is forced — a static universe with only z¹ is impossible. -/
 
-/-- δ(z¹,z¹) = -2·D̃ζ(z)·z: self-interaction produces ker mode z² -/
+/-- δ(z¹,z¹) = -2·Fζ(z)·z: self-interaction produces ker mode z² -/
 theorem self_interaction_primordial (z : ℂ) :
     derivDefect (fun w => w ^ 1) (fun w => w ^ 1) z =
-    -(2 * Dζ_int (fun w => w ^ 1) z * z) := by
+    -(2 * Fζ (fun w => w ^ 1) z * z) := by
   rw [derivDefect_monomial, show (1 + 1 : ℕ) = 6 * 0 + 2 from by ring,
-    Dζ_int_vanish_mod6_2]
+    Fζ_vanish_mod6_2]
   ring
 
 /-! ## Active+active → ker: particles never directly create particles
@@ -807,21 +807,21 @@ theorem active_sum_mod6 (a b : ℕ)
 /-- Two matter modes annihilate into mod 2 kernel (spatial sector) -/
 theorem matter_matter_annihilation (j k : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ (6 * j + 1)) (fun w => w ^ (6 * k + 1)) z =
-    -(z ^ (6 * j + 1) * Dζ_int (fun w => w ^ (6 * k + 1)) z +
-      Dζ_int (fun w => w ^ (6 * j + 1)) z * z ^ (6 * k + 1)) := by
+    -(z ^ (6 * j + 1) * Fζ (fun w => w ^ (6 * k + 1)) z +
+      Fζ (fun w => w ^ (6 * j + 1)) z * z ^ (6 * k + 1)) := by
   rw [derivDefect_monomial,
     show (6 * j + 1 + (6 * k + 1)) = 6 * (j + k) + 2 from by ring,
-    Dζ_int_vanish_mod6_2]
+    Fζ_vanish_mod6_2]
   ring
 
 /-- Two antimatter modes annihilate into mod 4 kernel (spatial sector) -/
 theorem antimatter_antimatter_annihilation (j k : ℕ) (z : ℂ) :
     derivDefect (fun w => w ^ (6 * j + 5)) (fun w => w ^ (6 * k + 5)) z =
-    -(z ^ (6 * j + 5) * Dζ_int (fun w => w ^ (6 * k + 5)) z +
-      Dζ_int (fun w => w ^ (6 * j + 5)) z * z ^ (6 * k + 5)) := by
+    -(z ^ (6 * j + 5) * Fζ (fun w => w ^ (6 * k + 5)) z +
+      Fζ (fun w => w ^ (6 * j + 5)) z * z ^ (6 * k + 5)) := by
   rw [derivDefect_monomial,
     show (6 * j + 5 + (6 * k + 5)) = 6 * (j + k + 1) + 4 from by ring,
-    Dζ_int_vanish_mod6_4]
+    Fζ_vanish_mod6_4]
   ring
 
 /-! ## Kernel sector classification
@@ -872,17 +872,17 @@ theorem emergence_to_antimatter_requires_mod3 (a b : ℕ)
 /-- Concrete emergence: z³·z⁴ → z⁷ (matter, mod 3 + mod 4 → mod 1) -/
 theorem emergence_mod3_mod4 (z : ℂ) :
     derivDefect (fun w => w ^ 3) (fun w => w ^ 4) z =
-    Dζ_int (fun w => w ^ 7) z :=
+    Fζ (fun w => w ^ 7) z :=
   emergence_3_4 z
 
 /-- Concrete emergence: z²·z³ → z⁵ (antimatter, mod 2 + mod 3 → mod 5) -/
 theorem emergence_mod2_mod3 (z : ℂ) :
     derivDefect (fun w => w ^ 2) (fun w => w ^ 3) z =
-    Dζ_int (fun w => w ^ 5) z := by
+    Fζ (fun w => w ^ 5) z := by
   rw [derivDefect_monomial,
     show (2 + 3 : ℕ) = 6 * 0 + 5 from by ring,
-    show (2 : ℕ) = 6 * 0 + 2 from by ring, Dζ_int_vanish_mod6_2 0,
-    show (3 : ℕ) = 6 * 0 + 3 from by ring, Dζ_int_vanish_mod6_3 0]
+    show (2 : ℕ) = 6 * 0 + 2 from by ring, Fζ_vanish_mod6_2 0,
+    show (3 : ℕ) = 6 * 0 + 3 from by ring, Fζ_vanish_mod6_3 0]
   ring
 
 /-! ## Minimum steps to antimatter
@@ -956,13 +956,13 @@ theorem tau_norm_pos (c_A c_S : ℝ) (h : c_A ≠ 0 ∨ c_S ≠ 0) :
   · have : c_S ^ 2 > 0 := by positivity
     linarith [mul_nonneg (by norm_num : (12 : ℝ) ≥ 0) (sq_nonneg c_A)]
 
-/-- Eigenvalue τ-trace on D̃ζ: mod1 + mod5 eigenvalues cancel AF channel.
+/-- Eigenvalue τ-trace on Fζ: mod1 + mod5 eigenvalues cancel AF channel.
     For any c_A, c_S, the sum of (5c_A·AF + 6c_S) and (-5c_A·AF + 6c_S) = 12c_S. -/
 theorem eigenvalue_tau_trace (c_A c_S : ℂ) :
     (5 * c_A * AF_coeff + 6 * c_S) + (-5 * c_A * AF_coeff + 6 * c_S) =
     12 * c_S := by ring
 
-/-- Eigenvalue τ-norm on D̃ζ: product uses AF²=-12.
+/-- Eigenvalue τ-norm on Fζ: product uses AF²=-12.
     (5c_A·AF + 6c_S)·(-5c_A·AF + 6c_S) = 36c_S² + 300c_A². -/
 theorem eigenvalue_tau_norm (c_A c_S : ℂ) :
     (5 * c_A * AF_coeff + 6 * c_S) * (-5 * c_A * AF_coeff + 6 * c_S) =
@@ -1008,7 +1008,7 @@ This is the FUST analog of the Riemann ξ functional equation:
 - Active eigenvalues always come as complex conjugate pairs
 - No active eigenvalue is real (no "trivial zeros") -/
 
-/-- Summary: τ-symmetry structure of D̃ζ eigenvalues -/
+/-- Summary: τ-symmetry structure of Fζ eigenvalues -/
 theorem tau_symmetry_summary (c_A c_S : ℝ) (hA : c_A ≠ 0) :
     (5 * (↑c_A : ℂ) * AF_coeff + 6 * ↑c_S) +
       (-5 * ↑c_A * AF_coeff + 6 * ↑c_S) = 12 * ↑c_S ∧
@@ -1035,9 +1035,9 @@ theorem tau_symmetric_pow (z : ℂ) (k : ℕ) :
 theorem psi_matter_expand (z : ℂ) :
     z * (1 - z) = z - z ^ 2 := by ring
 
-/-- D̃ζ(z-z²) = D̃ζ(z): z² ∈ ker eliminates the second term -/
-theorem Dζ_int_psi_matter (z : ℂ) :
-    Dζ_int (fun w => w - w ^ 2) z = Dζ_int (fun w => w ^ 1) z := by
+/-- Fζ(z-z²) = Fζ(z): z² ∈ ker eliminates the second term -/
+theorem Fζ_psi_matter (z : ℂ) :
+    Fζ (fun w => w - w ^ 2) z = Fζ (fun w => w ^ 1) z := by
   have h : (fun w : ℂ => w - w ^ 2) = fun w => w ^ 1 + (-1) * w ^ 2 := by
     funext w; ring
   rw [h]
@@ -1046,7 +1046,7 @@ theorem Dζ_int_psi_matter (z : ℂ) :
     funext w; ring
   rw [h2]
   -- Use linearity
-  unfold Dζ_int
+  unfold Fζ
   have hA1 : (fun w => 5 * Φ_A (fun t => (fun w => w ^ 1) t + (-1) * (fun w => w ^ 2) t) w) =
     fun w => (5 * Φ_A (fun t => t ^ 1) w) + (-1) * (5 * Φ_A (fun t => t ^ 2) w) := by
     funext w; unfold Φ_A; ring
@@ -1076,12 +1076,12 @@ theorem Dζ_int_psi_matter (z : ℂ) :
   rw [hAFlin, hSYlin, hAF2, hSY2]; ring
 
 /-- Ψ_0: the vacuum state z²(1-z)² = z²-2z³+z⁴ is in ker -/
-theorem Dζ_int_psi_vacuum (z : ℂ) :
-    Dζ_int (fun w => (w * (1 - w)) ^ 2) z = 0 := by
+theorem Fζ_psi_vacuum (z : ℂ) :
+    Fζ (fun w => (w * (1 - w)) ^ 2) z = 0 := by
   have h : (fun w : ℂ => (w * (1 - w)) ^ 2) =
     fun w => w ^ 2 + (-2) * w ^ 3 + w ^ 4 := by funext w; ring
   rw [h]
-  unfold Dζ_int
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => t ^ 2 + (-2) * t ^ 3 + t ^ 4) w) =
     fun w => 5 * Φ_A (fun t => t ^ 2) w + (-2) * (5 * Φ_A (fun t => t ^ 3) w) +
              5 * Φ_A (fun t => t ^ 4) w := by
@@ -1130,10 +1130,10 @@ theorem Dζ_int_psi_vacuum (z : ℂ) :
     unfold SymNum; ring
   rw [hAFlin, hSYlin, hAF2, hAF3, hAF4, hSY2, hSY3, hSY4]; ring
 
-/-- Ψ_A: the antimatter state z³(1-z)³ = z³-3z⁴+3z⁵-z⁶ gives 3·D̃ζ(z⁵) -/
-theorem Dζ_int_psi_antimatter (z : ℂ) :
-    Dζ_int (fun w => (w * (1 - w)) ^ 3) z =
-    3 * Dζ_int (fun w => w ^ 5) z := by
+/-- Ψ_A: the antimatter state z³(1-z)³ = z³-3z⁴+3z⁵-z⁶ gives 3·Fζ(z⁵) -/
+theorem Fζ_psi_antimatter (z : ℂ) :
+    Fζ (fun w => (w * (1 - w)) ^ 3) z =
+    3 * Fζ (fun w => w ^ 5) z := by
   have h : (fun w : ℂ => (w * (1 - w)) ^ 3) =
     fun w => w ^ 3 + (-3) * w ^ 4 + 3 * w ^ 5 + (-1) * w ^ 6 := by funext w; ring
   rw [h]
@@ -1143,7 +1143,7 @@ theorem Dζ_int_psi_antimatter (z : ℂ) :
              3 * (fun w => w ^ 5) w + (-1) * (fun w => w ^ (6 * 1)) w := by
     funext w; ring
   rw [h5, show (6 * 0 + 3 : ℕ) = 3 from by ring, show (6 * 0 + 4 : ℕ) = 4 from by ring]
-  unfold Dζ_int
+  unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => (fun w => w ^ 3) t + (-3) * (fun w => w ^ 4) t +
     3 * (fun w => w ^ 5) t + (-1) * (fun w => w ^ (6 * 1)) t) w) =
     fun w => 5 * Φ_A (fun t => t ^ 3) w + (-3) * (5 * Φ_A (fun t => t ^ 4) w) +
@@ -1384,7 +1384,7 @@ theorem SymNum_real_pure_re (g : ℂ → ℂ)
   simp [Complex.conj_im] at this
   linarith
 
-/-- AF⊥SY orthogonality: for real s, D̃ζ(f) splits into
+/-- AF⊥SY orthogonality: for real s, Fζ(f) splits into
     pure imaginary AF (space) and pure real SY (time). -/
 theorem spacetime_orthogonality (f : ℂ → ℂ)
     (hA : ∀ z, (fun w => 5 * Φ_A f w) (starRingEnd ℂ z) =
@@ -1527,6 +1527,6 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
              show (6:ℂ).re = 6 from by simp, show (6:ℂ).im = 0 from by simp]
   ring
 
-def IsInKerDζ (f : ℂ → ℂ) : Prop := ∀ z, Dζ_int f z = 0
+def IsInKerFζ (f : ℂ → ℂ) : Prop := ∀ z, Fζ f z = 0
 
 end FUST.IntegralDzeta

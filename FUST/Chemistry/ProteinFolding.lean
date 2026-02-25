@@ -8,7 +8,6 @@ Peptide plane atoms = carbonZ = 6.
 -/
 
 import FUST.Chemistry.Mutation
-import FUST.Physics.LeastAction
 import FUST.Physics.Hamiltonian
 
 namespace FUST.Chemistry.ProteinFolding
@@ -210,37 +209,11 @@ theorem folding_action_zero_iff_ker (f : ℂ → ℂ) (x : ℂ) :
   D6_lagrangian_zero_iff f x
 
 theorem native_state_zero_action (f : ℂ → ℂ)
-    (hf : FUST.IntegralDzeta.IsInKerDζ f) (N : ℕ) :
-    partialActionDζ f N = 0 :=
-  partialActionDζ_ker_zero f hf N
+    (hf : FUST.IntegralDzeta.IsInKerFζ f) (N : ℕ) :
+    partialActionFζ f N = 0 :=
+  partialActionFζ_ker_zero f hf N
 
-/-! ## Section 10: Uniqueness from Interpolation -/
-
-theorem native_state_unique (p q : ℂ → ℂ)
-    (hp : IsInKerD6 p) (hq : IsInKerD6 q)
-    (t₀ t₁ t₂ : ℂ)
-    (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
-    (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) (h2 : p t₂ = q t₂) :
-    ∀ t, p t = q t :=
-  kernel_interpolation_unique_D6 p q hp hq
-    t₀ t₁ t₂ h01 h02 h12 h0 h1 h2
-
-theorem interpolation_points_eq_spatialDim :
-    (3 : ℕ) = 3 := rfl
-
-/-! ## Section 11: Kernel Entropy -/
-
-theorem native_state_zero_entropy (f : ℂ → ℂ)
-    (hf : IsInKerD6 f) :
-    ∀ t, perpProjectionD6 f t = 0 :=
-  kerD6_implies_perp_zero f hf
-
-theorem denatured_state_positive_entropy (f : ℂ → ℂ)
-    (hf : ¬IsInKerD6 f) :
-    ∃ t, entropyAtD6 f t > 0 :=
-  third_law_D6 f hf
-
-/-! ## Section 12: Dimensional Correspondence -/
+/-! ## Section 10: Dimensional Correspondence -/
 
 theorem backbone_dof_eq_kerD5_dim :
     backboneDihedrals = Nuclear.spinDegeneracy := rfl
@@ -254,22 +227,5 @@ theorem kernel_growth_spin_to_spatial :
 theorem interpolation_hierarchy :
     Fintype.card (Fin 2) = Nuclear.spinDegeneracy ∧
     Fintype.card (Fin 3) = 3 := ⟨rfl, rfl⟩
-
-/-! ## Section 13: Levinthal Paradox Resolution Summary -/
-
-theorem levinthal_resolution :
-    rotamersPerResidue = 16 ∧
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 →
-      D6Lagrangian f x = 0) ∧
-    (∀ f, FUST.IntegralDzeta.IsInKerDζ f → ∀ N,
-      partialActionDζ f N = 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
-    Fintype.card (Fin 3) = 3 ∧
-    backboneDihedrals = Nuclear.spinDegeneracy := by
-  refine ⟨rfl, ?_, partialActionDζ_ker_zero,
-    third_law_D6, rfl, rfl⟩
-  intro f hf x hx
-  rw [D6_lagrangian_zero_iff]
-  exact IsInKerD6_implies_D6_zero f hf x hx
 
 end FUST.Chemistry.ProteinFolding

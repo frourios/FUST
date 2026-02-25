@@ -15,7 +15,7 @@ import FUST.Chemistry.CarbonIsotopes
 
 namespace FUST.Physics.FusionReactor
 
-open FUST FUST.Dim FUST.Chemistry FUST.LeastAction FUST.NavierStokes FUST.Thermodynamics
+open FUST FUST.Dim FUST.Chemistry FUST.NavierStokes FUST.Thermodynamics
 open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Carbon
 open FUST.Chemistry.Niobium FUST.Physics.Superconductivity
@@ -70,39 +70,7 @@ theorem tritium_breeding_fdim_conservation :
 theorem effDeg_Li6_atom : (dimAtom 3 3 3).effectiveDegree = 100 := by decide
 theorem effDeg_Li7_atom : (dimAtom 3 4 3).effectiveDegree = 115 := by decide
 
-/-! ## Section 3: Plasma Confinement and MHD Turbulence
-
-Confinement = ker(D6) state. Turbulence = exit from ker(D6).
--/
-
--- Confinement = zero Lagrangian action
-theorem confinement_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
-    D6Lagrangian f x = 0 := by
-  rw [D6_lagrangian_zero_iff]
-  exact IsInKerD6_implies_D6_zero f hf x hx
-
--- Turbulence = positive entropy
-theorem turbulence_positive_entropy (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
-    ∃ t, entropyAtD6 f t > 0 :=
-  third_law_massive_positive_entropy f hf
-
--- Turbulent burst = nonzero perpProjectionD6
-theorem burst_detection (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
-    ∃ t, perpProjectionD6 f t ≠ 0 :=
-  (timeExists_iff_nonzero_perpD6 f).mp hf
-
--- Nonlinear coupling: product of ker(D6) elements exits ker(D6)
-theorem plasma_nonlinear_onset : nonlinearCoeff 1 2 ≠ 0 :=
-  nonlinearCoeff_1_2_ne_zero
-
-theorem plasma_quadratic_coupling : nonlinearCoeff 2 2 ≠ 0 :=
-  nonlinearCoeff_2_2_ne_zero
-
--- φ > 1 amplifies perturbations
-theorem perturbation_growth (n : ℕ) (hn : n ≥ 1) : φ ^ n > 1 :=
-  second_law_phi_pow_amplifies n hn
-
-/-! ## Section 4: Tritium Permeation Structural Barrier
+/-! ## Section 3: Tritium Permeation Structural Barrier
 
 Both D⁺ and T⁺ are massive. The FDim gap reflects
 the extra neutron in tritium, which is the structural origin of
@@ -141,7 +109,7 @@ theorem effDeg_SiC :
     (dimAtom SiC_Z (neutrons_Si28 + neutrons_C12) SiC_Z).effectiveDegree =
     661 := by decide
 
-/-! ## Section 5: Alpha Particle Heating and Entropy Transfer
+/-! ## Section 4: Alpha Particle Heating and Entropy Transfer
 
 He-4 ion (α particle) is outside ker(D6).
 -/
@@ -151,37 +119,13 @@ theorem alpha_effDeg : (dimAtom 2 2 0).effectiveDegree = 63 := by decide
 -- He-4 atom effectiveDegree
 theorem alpha_atom_effDeg : (dimAtom 2 2 2).effectiveDegree = 67 := by decide
 
--- Complex lift of He4Ion: z^2 * (1 + z)^2
-noncomputable def He4IonC : ℂ → ℂ := fun z => z ^ 2 * (1 + z) ^ 2
-
--- He-4 ion is NOT in ker(D6)
-theorem He4Ion_not_in_kerD6 : ¬IsInKerD6 He4IonC := by
-  intro ⟨a₀, a₁, a₂, h⟩
-  have h0 := h 0; simp only [He4IonC] at h0; norm_num at h0
-  have h1 := h 1; simp only [He4IonC] at h1; norm_num at h1
-  have h2 := h 2; simp only [He4IonC] at h2; norm_num at h2
-  have h3 := h 3; simp only [He4IonC] at h3; norm_num at h3
-  subst h0; norm_num at h1 h2 h3
-  exact absurd (by linear_combination h3 - 3 * h2 + 3 * h1 : (48 : ℂ) = 0) (by norm_num)
-
--- Alpha has positive entropy (heating mechanism)
-theorem alpha_positive_entropy :
-    ∃ t, entropyAtD6 He4IonC t > 0 :=
-  third_law_massive_positive_entropy He4IonC He4Ion_not_in_kerD6
-
-theorem alpha_heating_summary :
-    ¬IsInKerD6 He4IonC ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
-    φ > 1 :=
-  ⟨He4Ion_not_in_kerD6, third_law_massive_positive_entropy, φ_gt_one⟩
-
 -- He-4 doubly magic: both Z=2 and N=2 are nuclearMagic(0)
 theorem alpha_doubly_magic :
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2) ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2) :=
   ⟨⟨0, by omega, rfl⟩, ⟨0, by omega, rfl⟩⟩
 
-/-! ## Section 6: Superconducting Magnet — Flux Quantization
+/-! ## Section 5: Superconducting Magnet — Flux Quantization
 
 Flux quantization = uniqueness theorem of ker(D5).
 -/
@@ -202,15 +146,11 @@ theorem flux_quantization_from_uniqueness (p q : ℂ → ℂ)
 theorem field_limit_from_ker_exit :
     ¬IsInKerD5 (fun t => t ^ 2) := quadratic_not_in_kerD5
 
--- ker(D5) ⊂ ker(D6): spin pair embeds in spatial structure
-theorem magnet_pair_embedding :
-    ∀ f, IsInKerD5 f → IsInKerD6 f := spin_pair_embeds_in_spatial
-
 -- Condensate dimension = 1
 theorem magnet_condensate_dim :
     Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 := condensate_dimension
 
-/-! ## Section 7: Magnet Material Stability — Nuclear Magic Numbers -/
+/-! ## Section 6: Magnet Material Stability — Nuclear Magic Numbers -/
 
 -- Nb-93: N = nuclearMagic(4) + spinDeg = 52
 theorem Nb_magnet_stability :
@@ -230,24 +170,5 @@ theorem magnet_coordination :
 theorem vortex_structure :
     cooperPairSize = 2 ∧
     Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 := ⟨rfl, condensate_dimension⟩
-
-/-! ## Section 8: Summary -/
-
-theorem fusion_reactor_classification :
-    -- D⁺ and T⁺ have distinct FDim
-    dimDeuteronIon ≠ dimTritonIon ∧
-    -- Turbulence = nonlinear coupling outside ker(D6)
-    nonlinearCoeff 1 2 ≠ 0 ∧
-    -- Alpha heating: He4IonC ∉ ker(D6) → positive entropy
-    ¬IsInKerD6 He4IonC ∧
-    -- Flux quantization: Cooper pair size = spinDeg
-    cooperPairSize = Nuclear.spinDegeneracy ∧
-    -- ker(D5) ⊂ ker(D6): pair embedding
-    (∀ f, IsInKerD5 f → IsInKerD6 f) ∧
-    -- D-T baryon conservation
-    (1 + 1) + (1 + 2) = (2 + 2) + (0 + 1) := by
-  exact ⟨by decide,
-         nonlinearCoeff_1_2_ne_zero, He4Ion_not_in_kerD6,
-         rfl, spin_pair_embeds_in_spatial, rfl⟩
 
 end FUST.Physics.FusionReactor

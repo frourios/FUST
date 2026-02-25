@@ -9,8 +9,8 @@ The mass gap is derived from the unified operator Dζ acting on 4D spacetime.
 
 ## Structure
 
-1. D̃ζ kernel: n ≡ 0,2,3,4 mod 6 → D̃ζ(zⁿ) = 0
-2. Active modes: n ≡ 1,5 mod 6 → D̃ζ(zⁿ) = λ(n)·zⁿ
+1. Fζ kernel: n ≡ 0,2,3,4 mod 6 → Fζ(zⁿ) = 0
+2. Active modes: n ≡ 1,5 mod 6 → Fζ(zⁿ) = λ(n)·zⁿ
 3. massGapΔ = 12/25: D₆ channel projection coefficient
 -/
 
@@ -18,19 +18,19 @@ namespace FUST
 
 open FUST.LeastAction FUST.IntegralDzeta
 
-/-! ## D̃ζ kernel structure
+/-! ## Fζ kernel structure
 
-4 of every 6 monomial modes are annihilated by D̃ζ. -/
+4 of every 6 monomial modes are annihilated by Fζ. -/
 
 section KernelStructure
 
 theorem kernel_mod6 (k : ℕ) (z : ℂ) :
-    Dζ_int (fun w => w ^ (6 * k)) z = 0 ∧
-    Dζ_int (fun w => w ^ (6 * k + 2)) z = 0 ∧
-    Dζ_int (fun w => w ^ (6 * k + 3)) z = 0 ∧
-    Dζ_int (fun w => w ^ (6 * k + 4)) z = 0 :=
-  ⟨Dζ_int_vanish_mod6_0 k z, Dζ_int_vanish_mod6_2 k z,
-   Dζ_int_vanish_mod6_3 k z, Dζ_int_vanish_mod6_4 k z⟩
+    Fζ (fun w => w ^ (6 * k)) z = 0 ∧
+    Fζ (fun w => w ^ (6 * k + 2)) z = 0 ∧
+    Fζ (fun w => w ^ (6 * k + 3)) z = 0 ∧
+    Fζ (fun w => w ^ (6 * k + 4)) z = 0 :=
+  ⟨Fζ_vanish_mod6_0 k z, Fζ_vanish_mod6_2 k z,
+   Fζ_vanish_mod6_3 k z, Fζ_vanish_mod6_4 k z⟩
 
 end KernelStructure
 

@@ -102,10 +102,10 @@ theorem kernel_dimension :
     (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) :=
   ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
-  fun x _hx => D6_quadratic x, D6_cubic_nonzero⟩
+  fun x _hx => D6_quadratic x, D6_not_annihilate_cubic⟩
 
 theorem info_accessible :
-    ∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0 := D6_cubic_nonzero
+    ∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0 := D6_not_annihilate_cubic
 
 /-! ## Part 5: D₆ Dissipation Rate
 
@@ -294,6 +294,6 @@ theorem all_from_D6_algebra :
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) := by
   exact ⟨no_singularity_from_D6_completeness, phi_psi_duality,
          discreteScale_pos, scaleResolution_pos,
-         expansion_contraction_identity, D6_cubic_nonzero⟩
+         expansion_contraction_identity, D6_not_annihilate_cubic⟩
 
 end FUST.BlackHole

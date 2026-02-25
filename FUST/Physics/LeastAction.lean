@@ -14,15 +14,6 @@ Time evolution f(t) ↦ f(φt) is the Poincaré boost, with φ > 1 giving the ar
 
 namespace FUST.LeastAction
 
-/-! ## D6 Kernel Structure -/
-
-/-- D6 kernel is 3-dimensional: span{1, x, x²} -/
-theorem D6_kernel_dim_3 :
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x, fun x _hx => D6_quadratic x⟩
-
 /-! ## Kernel Membership -/
 
 /-- f ∈ ker(D6) iff f equals some degree-2 polynomial -/

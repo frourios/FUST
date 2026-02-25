@@ -50,34 +50,6 @@ theorem absolute_zero_implies_lightlike (f : ℂ → ℂ) (h : ∀ t, entropyAtD
 theorem lightlike_can_reach_zero (f : ℂ → ℂ) (hf : IsInKerD6 f) :
     ∀ t, entropyAtD6 f t = 0 := (entropy_zero_iff_kerD6 f).mpr hf
 
-/-! ## Light and Sound Structural Separation
-
-Light = ker(D6) components (proper time = 0)
-Sound = ker(D6)⊥ components (proper time > 0)
-
-The separation is structural:
-- Light: action = 0, no medium required
-- Sound: action > 0, medium required
--/
-
-/-- Light states have zero action -/
-theorem light_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x₀ : ℝ) (hx₀ : 0 < x₀) (N : ℕ) :
-    FUST.Probability.discreteAction f x₀ N = 0 :=
-  FUST.Probability.action_zero_for_ker f hf x₀ hx₀ N
-
-/-- Sound (massive) states have nonzero perpProjectionD6 -/
-theorem sound_positive_perp (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
-    ∃ t, perpProjectionD6 f t ≠ 0 :=
-  timeExists_has_proper_timeD6 f hf
-
-/-- Light-sound orthogonality: structural separation via perpProjectionD6 -/
-theorem light_sound_separation :
-    -- Light: ker(D6) components have zero D6
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    -- Sound: non-ker components have nonzero perpProjectionD6 somewhere
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
-  ⟨IsInKerD6_implies_D6_zero, sound_positive_perp⟩
-
 /-! ## Stefan-Boltzmann Law
 
 The Stefan-Boltzmann law L ∝ T⁴ follows from scale hierarchy φ^{-4k}.
@@ -115,28 +87,5 @@ theorem second_law_monomial_amplification (n : ℕ) (t : ℂ) :
 /-- φⁿ > 1 for n ≥ 1, showing amplification -/
 theorem second_law_phi_pow_amplifies (n : ℕ) (hn : n ≥ 1) : φ^n > 1 :=
   phi_pow_gt_one n hn
-
-/-! ## Complete Thermodynamics Summary -/
-
-/-- FUST Thermodynamics: Complete derivation from D6 structure -/
-theorem fust_thermodynamics :
-    -- First Law: Energy conservation (linearity + non-negativity)
-    (∀ (a : ℂ) (f : ℂ → ℂ) (x : ℂ), D6 (fun t => a * f t) x = a * D6 f x) ∧
-    (∀ (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ), FUST.Probability.discreteAction f x₀ N ≥ 0) ∧
-    -- Second Law: Entropy increase (φ > 1 amplification)
-    (φ > 1) ∧
-    (∀ n, n ≥ 1 → φ^n > 1) ∧
-    -- Third Law: Absolute zero unreachable for massive states
-    (∀ (f : ℂ → ℂ), ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
-    -- Light-Sound Separation
-    (∀ (f : ℂ → ℂ), IsInKerD6 f → ∀ x, x ≠ 0 → D6 f x = 0) ∧
-    (∀ (f : ℂ → ℂ), ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) :=
-  ⟨first_law_linearity,
-   first_law_energy_nonneg,
-   second_law_amplification,
-   second_law_phi_pow_amplifies,
-   third_law_massive_positive_entropy,
-   IsInKerD6_implies_D6_zero,
-   sound_positive_perp⟩
 
 end FUST.Thermodynamics

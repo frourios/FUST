@@ -131,35 +131,7 @@ theorem quadratic_not_in_kerD5 :
   have h2 := h 2; norm_num at h2
   subst h0; norm_num at h1 h2; subst h1; norm_num at h2
 
-/-! ## Section 3: Superconducting Gap from Spectral Structure
-
-ker(D6) states: gapless (photon-like, supercurrent).
-ker(D6)⊥ states: gapped by Δ (quasiparticles).
--/
-
--- Supercurrent carriers are in ker(D6): zero action
-theorem supercurrent_zero_action (f : ℂ → ℂ) (hf : IsInKerD6 f) (x : ℂ) (hx : x ≠ 0) :
-    D6Lagrangian f x = 0 := by
-  rw [D6_lagrangian_zero_iff]
-  exact IsInKerD6_implies_D6_zero f hf x hx
-
--- Quasiparticles are NOT in ker(D6): positive action (gapped)
-theorem quasiparticle_positive_entropy (f : ℂ → ℂ) (hf : ¬IsInKerD6 f) :
-    ∃ t, entropyAtD6 f t > 0 :=
-  third_law_D6 f hf
-
--- The gap separates these sectors structurally
-theorem gap_structure :
-    (∀ f, IsInKerD6 f → ∀ x, x ≠ 0 → D6Lagrangian f x = 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, perpProjectionD6 f t ≠ 0) := by
-  constructor
-  · intro f hf x hx
-    rw [D6_lagrangian_zero_iff]
-    exact IsInKerD6_implies_D6_zero f hf x hx
-  · intro f hf
-    exact (timeExists_iff_nonzero_perpD6 f).mp hf
-
-/-! ## Section 4: CuO₂ Plane — Cuprate Structure
+/-! ## Section 3: CuO₂ Plane — Cuprate Structure
 
 In cuprate superconductors, the CuO₂ plane is the active layer.
 Each Cu is coordinated by baseCount = 4 in-plane oxygen atoms.
@@ -338,28 +310,5 @@ theorem bcc_coordination_magic :
 theorem coordination_hierarchy :
     cuprateCoordination < bccCoordination ∧
     bccCoordination < fccCoordination := by decide
-
-/-! ## Section 10: Superconductivity Summary -/
-
-theorem superconductivity_classification :
-    -- Cooper pair = spinDeg = dim ker(D5) = 2 electrons
-    cooperPairSize = Nuclear.spinDegeneracy ∧
-    -- ker(D5) ⊂ ker(D6): spin pair embeds in spatial structure
-    (∀ f, IsInKerD5 f → IsInKerD6 f) ∧
-    -- Condensate dimension = 1
-    Fintype.card (Fin 3) - Fintype.card (Fin 2) = 1 ∧
-    -- CuO₂ coordination = baseCount = 4
-    cuprateCoordination = 4 ∧
-    -- d-wave nodes = baseCount = 4
-    dWaveNodes = 4 ∧
-    -- Cu²⁺ d-vacancy = hydrogenZ = 1
-    cu2plus_d_vacancy = hydrogenZ ∧
-    -- CuO₂ neutrons = nuclearMagic(4) = 50
-    CuO2_N = Nuclear.nuclearMagic 4 ∧
-    -- La neutrons = nuclearMagic(5) = 82
-    neutrons_La139 = Nuclear.nuclearMagic 5 ∧
-    -- Y neutrons = nuclearMagic(4) = 50
-    neutrons_Y89 = Nuclear.nuclearMagic 4 := by
-  refine ⟨rfl, spin_pair_embeds_in_spatial, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.Physics.Superconductivity

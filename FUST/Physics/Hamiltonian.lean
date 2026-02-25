@@ -9,36 +9,36 @@ namespace FUST.Hamiltonian
 
 open FUST FUST.IntegralDzeta Complex
 
-/-! ## Dζ Action Functional -/
+/-! ## Fζ Action Functional -/
 
-section DζAction
+section FζAction
 
-noncomputable def actionDζ (f : ℂ → ℂ) (n : ℤ) : ℝ :=
-  Complex.normSq (Dζ_int f (↑(φ ^ n)))
+noncomputable def actionFζ (f : ℂ → ℂ) (n : ℤ) : ℝ :=
+  Complex.normSq (Fζ f (↑(φ ^ n)))
 
-theorem actionDζ_nonneg (f : ℂ → ℂ) (n : ℤ) :
-    actionDζ f n ≥ 0 := Complex.normSq_nonneg _
+theorem actionFζ_nonneg (f : ℂ → ℂ) (n : ℤ) :
+    actionFζ f n ≥ 0 := Complex.normSq_nonneg _
 
-noncomputable def partialActionDζ (f : ℂ → ℂ) (N : ℕ) : ℝ :=
-  (Finset.Icc (-N : ℤ) N).sum (fun n => actionDζ f n)
+noncomputable def partialActionFζ (f : ℂ → ℂ) (N : ℕ) : ℝ :=
+  (Finset.Icc (-N : ℤ) N).sum (fun n => actionFζ f n)
 
-theorem partialActionDζ_nonneg (f : ℂ → ℂ) (N : ℕ) :
-    partialActionDζ f N ≥ 0 :=
-  Finset.sum_nonneg fun n _ => actionDζ_nonneg f n
+theorem partialActionFζ_nonneg (f : ℂ → ℂ) (N : ℕ) :
+    partialActionFζ f N ≥ 0 :=
+  Finset.sum_nonneg fun n _ => actionFζ_nonneg f n
 
-theorem actionDζ_ker_zero (f : ℂ → ℂ) (hf : IsInKerDζ f) (n : ℤ) :
-    actionDζ f n = 0 := by
-  simp only [actionDζ, hf (↑(φ ^ n)), map_zero]
+theorem actionFζ_ker_zero (f : ℂ → ℂ) (hf : IsInKerFζ f) (n : ℤ) :
+    actionFζ f n = 0 := by
+  simp only [actionFζ, hf (↑(φ ^ n)), map_zero]
 
-theorem partialActionDζ_ker_zero (f : ℂ → ℂ) (hf : IsInKerDζ f) (N : ℕ) :
-    partialActionDζ f N = 0 :=
-  Finset.sum_eq_zero fun n _ => actionDζ_ker_zero f hf n
+theorem partialActionFζ_ker_zero (f : ℂ → ℂ) (hf : IsInKerFζ f) (N : ℕ) :
+    partialActionFζ f N = 0 :=
+  Finset.sum_eq_zero fun n _ => actionFζ_ker_zero f hf n
 
-theorem actionDζ_zero_iff (f : ℂ → ℂ) (n : ℤ) :
-    actionDζ f n = 0 ↔ Dζ_int f (↑(φ ^ n)) = 0 := by
-  simp only [actionDζ, Complex.normSq_eq_zero]
+theorem actionFζ_zero_iff (f : ℂ → ℂ) (n : ℤ) :
+    actionFζ f n = 0 ↔ Fζ f (↑(φ ^ n)) = 0 := by
+  simp only [actionFζ, Complex.normSq_eq_zero]
 
-end DζAction
+end FζAction
 
 /-! ## Poincaré Mass Connection
 
@@ -110,17 +110,17 @@ end FUST.Hamiltonian
 
 namespace FUST.Dim
 
-noncomputable def actionDζ_dim (f : ℂ → ℂ) (n : ℤ) :
+noncomputable def actionFζ_dim (f : ℂ → ℂ) (n : ℤ) :
     ScaleQ dimLagrangian :=
-  ⟨FUST.Hamiltonian.actionDζ f n⟩
+  ⟨FUST.Hamiltonian.actionFζ f n⟩
 
-theorem actionDζ_dim_nonneg (f : ℂ → ℂ) (n : ℤ) :
-    (actionDζ_dim f n).val ≥ 0 :=
-  FUST.Hamiltonian.actionDζ_nonneg f n
+theorem actionFζ_dim_nonneg (f : ℂ → ℂ) (n : ℤ) :
+    (actionFζ_dim f n).val ≥ 0 :=
+  FUST.Hamiltonian.actionFζ_nonneg f n
 
-theorem actionDζ_ker_zero (f : ℂ → ℂ)
-    (hf : FUST.IntegralDzeta.IsInKerDζ f) (n : ℤ) :
-    (actionDζ_dim f n).val = 0 :=
-  FUST.Hamiltonian.actionDζ_ker_zero f hf n
+theorem actionFζ_ker_zero (f : ℂ → ℂ)
+    (hf : FUST.IntegralDzeta.IsInKerFζ f) (n : ℤ) :
+    (actionFζ_dim f n).val = 0 :=
+  FUST.Hamiltonian.actionFζ_ker_zero f hf n
 
 end FUST.Dim

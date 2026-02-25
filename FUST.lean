@@ -63,7 +63,6 @@ import FUST.Physics.PhiBloch
 import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Poincare
 import FUST.Physics.Probability
-import FUST.Physics.QuantumStructure
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.ScaleStructure
 import FUST.Physics.Superconductivity
@@ -78,6 +77,7 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
+import FUST.DzetaDim
 import FUST.EulerOperator
 import FUST.FibonacciArithmetic
 import FUST.IntegralDzeta

@@ -567,6 +567,23 @@ lemma D6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
       hfg _ (mul_ne_zero (pow_ne_zero 2 hψ) hz),
       hfg _ (mul_ne_zero (pow_ne_zero 3 hψ) hz)]
 
+/-- FUST d'Alembertian: D6 composed with itself -/
+noncomputable def FUSTDAlembertian (f : ℂ → ℂ) : ℂ → ℂ := D6 (D6 f)
+
+/-- D'Alembertian is zero on ker(D6) -/
+theorem dAlembertian_zero_on_kernel (f : ℂ → ℂ) (hf : IsInKerD6 f) :
+    ∀ x, x ≠ 0 → FUSTDAlembertian f x = 0 := by
+  intro x hx
+  simp only [FUSTDAlembertian]
+  have hD6_zero : ∀ y, y ≠ 0 → D6 f y = 0 := IsInKerD6_implies_D6_zero f hf
+  have hD6f_const : D6 f = fun y => if y = 0 then 0 else 0 := by
+    ext y
+    by_cases hy : y = 0
+    · simp [D6, hy]
+    · simp [hy, hD6_zero y hy]
+  simp only [hD6f_const, ite_self]
+  exact D6_const 0 x
+
 /-- The 1/r potential is harmonic under the FUST d'Alembertian:
     □_φ(t⁻¹) = D₆(D₆(t⁻¹)) = 0. -/
 theorem dAlembertian_inv_zero (z : ℂ) (hz : z ≠ 0) :
@@ -639,16 +656,8 @@ The monomial eigenvalue Λ(n) = C(n)/(φ-ψ)⁵ vanishes for n ∈ {0,1,2}:
 Since D₆ annihilates Δ=1, mass ratios m_e/m_Pl are boundary data, not eigenvalue data.
 Physical exponents thus form a three-layer structure:
   Layer 1: D₆ eigenvalues → σ=26, F∝1/r²
-  Layer 2: D-hierarchy combinatorics → 107, 45 (boundary conditions)
-  Layer 3: Physical assembly with dimensional intermediates → 152, 582
+  Layer 2: Physical assembly with dimensional intermediates → 152, 582
 -/
-
-/-- D₆ annihilates Δ=0 (constants), Δ=1 (mass), Δ=2 (kinetic energy) -/
-theorem D6_kernel_dimensions :
-    (∀ z : ℂ, z ≠ 0 → D6 (fun _ => 1) z = 0) ∧
-    (∀ z : ℂ, z ≠ 0 → D6 id z = 0) ∧
-    (∀ z : ℂ, z ≠ 0 → D6 (fun t => t ^ 2) z = 0) :=
-  FUST.LeastAction.D6_kernel_dim_3
 
 /-- D₆ does NOT annihilate Δ=-1: the force operator is outside the kernel -/
 theorem D6_force_dimension_active (z : ℂ) (hz : z ≠ 0) :
@@ -666,7 +675,7 @@ theorem derivation_layer1_eigenvalues :
       D6 (fun t => t⁻¹) z = 6 / (((↑φ : ℂ) - ↑ψ) ^ 4 * z ^ 2)) := by
   exact ⟨rfl, D6_inv_one⟩
 
-/-- Layer 3: physical assembly with dimensional intermediates. -/
+/-- Layer 2: physical assembly with dimensional intermediates. -/
 theorem derivation_layer3_assembly :
     cmbTemperatureExponent = leptonExponent + cmbDecouplingFactor ∧
     cosmologicalExponent = 4 * cmbTemperatureExponent - sectorTraceSq ∧

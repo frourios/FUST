@@ -365,17 +365,16 @@ C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
   μ = 2/(φ+2)
 Half-period: C(a, k+3) = -C(a, k) from AF/SY anti-periodicity. -/
 
-/-- Φ_A: φ-numerator = (N6 + D2 - D4)_num, all 6 ops AF channel -/
+/-- Φ_A: φ-numerator = N6 + N2 - N4, all 6 ops AF channel -/
 noncomputable def Φ_A (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f ((↑φ : ℂ) ^ 3 * z) - 4 * f ((↑φ : ℂ) ^ 2 * z) +
   (3 + (↑φ : ℂ)) * f (↑φ * z) - (3 + (↑ψ : ℂ)) * f (↑ψ * z) +
   4 * f ((↑ψ : ℂ) ^ 2 * z) - f ((↑ψ : ℂ) ^ 3 * z)
 
-/-- Φ_S: φ-numerator = (2·D5 + D3 + μ·D2)_num, all 6 ops SY channel -/
+/-- Φ_S: φ-numerator = 2·N5 + N3 + μ·N2, all 6 ops SY channel -/
 noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
-  2 * f ((↑φ : ℂ) ^ 2 * z) + (3 + μ) * f (↑φ * z) - 10 * f z +
-  (3 - μ) * f (↑ψ * z) + 2 * f ((↑ψ : ℂ) ^ 2 * z)
+  2 * N5 f z + N3 f z + μ * N2 f z
 
 /-- Unified Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
 noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
@@ -392,7 +391,7 @@ theorem Φ_A_const (c : ℂ) (z : ℂ) :
 
 /-- Φ_S annihilates constants: 2+(3+μ)-10+(3-μ)+2 = 0 -/
 theorem Φ_S_const (c : ℂ) (z : ℂ) : Φ_S (fun _ => c) z = 0 := by
-  simp only [Φ_S]
+  simp only [Φ_S, N5, N3, N2]
   have hφ2 : (↑φ : ℂ) + 2 ≠ 0 := phi_plus_two_ne
   field_simp; ring
 
@@ -405,20 +404,12 @@ theorem Dζ_const (z : ℂ) : Dζ (fun _ => 1) z = 0 := by
   simp only [AFNum, hA, SymNum, hS, mul_one]
   simp [sub_self]
 
-/-- Decomposition: Φ_A = N6_num + D2_num - D4_num -/
+/-- Decomposition: Φ_A = N6 + N2 - N4 -/
 theorem Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
-    Φ_A f z = N6 f z + (f (↑φ * z) - f (↑ψ * z)) -
-    (f ((↑φ : ℂ) ^ 2 * z) - (↑φ : ℂ) ^ 2 * f (↑φ * z) +
-     (↑ψ : ℂ) ^ 2 * f (↑ψ * z) - f ((↑ψ : ℂ) ^ 2 * z)) := by
-  unfold Φ_A N6
-  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := by
-    have h := golden_ratio_property
-    have : (↑(φ ^ 2) : ℂ) = ↑(φ + 1) := congrArg _ h
-    simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
-  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := by
-    have h := psi_sq
-    have : (↑(ψ ^ 2) : ℂ) = ↑(ψ + 1) := congrArg _ h
-    simp only [ofReal_pow, ofReal_add, ofReal_one] at this; exact this
+    Φ_A f z = N6 f z + N2 f z - N4 f z := by
+  unfold Φ_A N6 N2 N4
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
   rw [hφ2, hψ2]; ring
 
 /-! ## Fourier coefficients: AF = 2i√3, SY = 6
@@ -751,7 +742,7 @@ theorem Φ_S_pow_via_sub (s : ℕ) (z : ℂ) :
     (2 * ((↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)) +
      ((↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s) +
      (2 / ((↑φ : ℂ) + 2)) * ((↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s)) * z ^ s := by
-  unfold Φ_S; simp only [mul_pow, ← pow_mul]; ring
+  unfold Φ_S FUST.N5 FUST.N3 FUST.N2; simp only [mul_pow, ← pow_mul]; ring
 
 /-! ### Golden ratio powers as F_n·φ + F_{n-1} -/
 
@@ -923,7 +914,7 @@ theorem Φ_A_translate (f : ℂ → ℂ) (c z : ℂ) :
 /-- Φ_S is translation-equivariant: Φ_S(f(c·))(z) = Φ_S(f)(cz) -/
 theorem Φ_S_translate (f : ℂ → ℂ) (c z : ℂ) :
     Φ_S (fun t => f (c * t)) z = Φ_S f (c * z) := by
-  simp only [Φ_S, mul_comm_assoc']
+  simp only [Φ_S, N5, N3, N2, mul_comm_assoc']
 
 /-- AFNum is translation-equivariant: AFNum(g(c·))(z) = AFNum(g)(cz) -/
 theorem AFNum_translate (g : ℂ → ℂ) (c z : ℂ) :

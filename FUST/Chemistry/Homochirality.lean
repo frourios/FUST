@@ -147,29 +147,7 @@ theorem sugar_types_eq_spinDeg :
 theorem nucleic_acid_types_eq_spinDeg :
     nucleicAcidSugarTypes = Nuclear.spinDegeneracy := rfl
 
-/-! ## Section 8: Asymmetric Catalysis from Kernel Uniqueness
-
-An asymmetric catalyst selects one enantiomer because the minimum-action
-path through the transition state is UNIQUE (kernel_interpolation_unique_D6).
-The kernel projection is determined by 3 boundary conditions (= spatialDim).
--/
-
-open FUST.LeastAction in
--- The minimum-action path is unique in ker(D6)
--- Two paths matching at 3 points must be identical everywhere
-theorem catalytic_path_unique (p q : ℂ → ℂ)
-    (hp : IsInKerD6 p) (hq : IsInKerD6 q)
-    (t₀ t₁ t₂ : ℂ) (h01 : t₀ ≠ t₁) (h02 : t₀ ≠ t₂) (h12 : t₁ ≠ t₂)
-    (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) (h2 : p t₂ = q t₂) :
-    ∀ t, p t = q t :=
-  kernel_interpolation_unique_D6 p q hp hq t₀ t₁ t₂ h01 h02 h12 h0 h1 h2
-
--- Number of constraints for uniqueness = spatialDim = 3
--- (matching substrate, transition state, product)
-theorem catalytic_constraints_eq_spatialDim :
-    (3 : ℕ) = 3 := rfl
-
-/-! ## Section 9: Why L and Not D
+/-! ## Section 8: Why L and Not D
 
 The choice of L-amino acids over D corresponds to the choice of
 φ over ψ as the time direction. Both are mathematically valid,

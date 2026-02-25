@@ -57,7 +57,7 @@ theorem D_max_from_kernel :
   constructor
   · intro x hx
     exact ⟨D6_const 1 x, D6_linear x, D6_quadratic x⟩
-  · exact WaveEquation.D6_cubic_nonzero
+  · exact D6_not_annihilate_cubic
 
 /-- Number of active D-levels derived from D_min and D_max -/
 theorem active_level_count_derivation :
@@ -67,7 +67,7 @@ theorem active_level_count_derivation :
     (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
     -- Active levels = D_max - D_min + 1 = 5
     (6 - 2 + 1 = 5) :=
-  ⟨⟨rfl, by norm_num⟩, WaveEquation.D6_cubic_nonzero, rfl⟩
+  ⟨⟨rfl, by norm_num⟩, D6_not_annihilate_cubic, rfl⟩
 
 /-! ## Strong Coupling Constant
 
