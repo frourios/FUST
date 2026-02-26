@@ -151,6 +151,27 @@ theorem Dζ_bianchi (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ ν ρ : I4) :
     ⁅ω μ, ⁅ω ν, ω ρ⁆⁆ + ⁅ω ν, ⁅ω ρ, ω μ⁆⁆ + ⁅ω ρ, ⁅ω μ, ω ν⁆⁆ = 0 :=
   bianchi_identity ω μ ν ρ
 
+/-! ## Real 4-momentum from Dζ -/
+
+/-- Real 4-momentum: p^μ = Re(Dζ_components(s))_μ -/
+noncomputable def Dζ_momentum (s : ℕ) : I4 → ℝ :=
+  fun idx => (Dζ_components s idx).re
+
+theorem Dζ_momentum_one_inl0 : Dζ_momentum 1 (Sum.inl 0) = 0 := by
+  simp only [Dζ_momentum, Dζ_components, σ_N5_one, zero_re]
+
+theorem Dζ_momentum_one_inl1 : Dζ_momentum 1 (Sum.inl 1) = -1 := by
+  simp only [Dζ_momentum, Dζ_components, σ_N3_one]
+  simp [Complex.neg_re, Complex.one_re]
+
+theorem Dζ_momentum_one_inl2 : Dζ_momentum 1 (Sum.inl 2) = φ - ψ := by
+  simp only [Dζ_momentum, Dζ_components, σ_N2_one]
+  simp [Complex.ofReal_re, Complex.sub_re]
+
+theorem Dζ_momentum_one_inr0 : Dζ_momentum 1 (Sum.inr 0) = 2 * (φ - ψ) := by
+  simp only [Dζ_momentum, Dζ_components, Φ_A_coeff_one]
+  simp [Complex.ofReal_re, Complex.mul_re, Complex.sub_re]
+
 end DzetaConnection
 
 section EinsteinEquations

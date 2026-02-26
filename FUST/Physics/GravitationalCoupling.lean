@@ -26,7 +26,7 @@ Gravity emerges from the complete D-hierarchy through:
 
 namespace FUST.GravitationalCoupling
 
-open FUST.WaveEquation FUST.LeastAction
+open FUST.WaveEquation FUST.TimeStructure
 
 /-! ## Triangular Numbers and Binomial Coefficients
 
@@ -570,19 +570,24 @@ lemma D6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
 /-- FUST d'Alembertian: D6 composed with itself -/
 noncomputable def FUSTDAlembertian (f : ℂ → ℂ) : ℂ → ℂ := D6 (D6 f)
 
-/-- D'Alembertian is zero on ker(D6) -/
-theorem dAlembertian_zero_on_kernel (f : ℂ → ℂ) (hf : IsInKerD6 f) :
+/-- D'Alembertian is zero when D6 annihilates f -/
+theorem dAlembertian_zero_on_kernel (f : ℂ → ℂ) (hf : ∀ x, x ≠ 0 → D6 f x = 0) :
     ∀ x, x ≠ 0 → FUSTDAlembertian f x = 0 := by
   intro x hx
   simp only [FUSTDAlembertian]
-  have hD6_zero : ∀ y, y ≠ 0 → D6 f y = 0 := IsInKerD6_implies_D6_zero f hf
   have hD6f_const : D6 f = fun y => if y = 0 then 0 else 0 := by
     ext y
     by_cases hy : y = 0
     · simp [D6, hy]
-    · simp [hy, hD6_zero y hy]
+    · simp [hy, hf y hy]
   simp only [hD6f_const, ite_self]
   exact D6_const 0 x
+
+theorem D6_homogeneous (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    D6 (fun t => c * f t) z = c * D6 f z := by
+  unfold D6
+  have hN : N6 (fun t => c * f t) z = c * N6 f z := by simp only [N6]; ring
+  rw [hN, mul_div_assoc]
 
 /-- The 1/r potential is harmonic under the FUST d'Alembertian:
     □_φ(t⁻¹) = D₆(D₆(t⁻¹)) = 0. -/
@@ -639,12 +644,9 @@ theorem dAlembertian_extended_kernel :
     (∀ z : ℂ, z ≠ 0 → FUSTDAlembertian (fun t => t ^ 3) z = 0) ∧
     (∀ z : ℂ, z ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) z = 0) := by
   refine ⟨?_, ?_, ?_, dAlembertian_cubic_zero, dAlembertian_inv_zero⟩
-  · intro z hz
-    exact dAlembertian_zero_on_kernel _ ⟨1, 0, 0, fun t => by ring⟩ z hz
-  · intro z hz
-    exact dAlembertian_zero_on_kernel _ ⟨0, 1, 0, fun t => by ring⟩ z hz
-  · intro z hz
-    exact dAlembertian_zero_on_kernel _ ⟨0, 0, 1, fun t => by ring⟩ z hz
+  · exact fun z hz => dAlembertian_zero_on_kernel _ (fun x hx => D6_const 1 x) z hz
+  · exact fun z hz => dAlembertian_zero_on_kernel _ (fun x _ => D6_linear x) z hz
+  · exact fun z hz => dAlembertian_zero_on_kernel _ (fun x _ => D6_quadratic x) z hz
 
 end InverseSquareLaw
 

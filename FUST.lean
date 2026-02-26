@@ -47,7 +47,6 @@ import FUST.Physics.FusionReactor
 import FUST.Physics.GaugeGroups
 import FUST.Physics.GravitationalCoupling
 import FUST.Physics.Gravity
-import FUST.Physics.Hamiltonian
 import FUST.Physics.LeastAction
 import FUST.Physics.Lorentz
 import FUST.Physics.MassGap
@@ -67,6 +66,7 @@ import FUST.Physics.QuarkMassRatios
 import FUST.Physics.ScaleStructure
 import FUST.Physics.Superconductivity
 import FUST.Physics.Thermodynamics
+import FUST.Physics.TimeStructure
 import FUST.Physics.VacuumStability
 import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
@@ -77,10 +77,10 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
-import FUST.DzetaDim
 import FUST.EulerOperator
 import FUST.FibonacciArithmetic
-import FUST.IntegralDzeta
+import FUST.FζDim
+import FUST.FζOperator
 import FUST.SpectralCoefficients
 import FUST.SpectralGalois
 import FUST.SpectralObstruction

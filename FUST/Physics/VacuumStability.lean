@@ -1,4 +1,4 @@
-import FUST.Physics.Hamiltonian
+import FUST.Physics.MassGap
 import FUST.Physics.MassRatios
 import Mathlib.Data.Nat.Choose.Basic
 
@@ -15,7 +15,7 @@ eigenvalue λ(n) ≠ 0. The primordial eigenvalue λ₁ (n=1) gives the mass gap
 
 namespace FUST.VacuumStability
 
-open FUST FUST.IntegralDzeta FUST.Hamiltonian
+open FUST FUST.FζOperator FUST.TimeStructure
 
 /-! ## Effective Potential from Dζ -/
 
@@ -43,10 +43,10 @@ end EffectivePotential
 
 section SelfCoupling
 
-noncomputable def lambda_FUST : ℝ := massGapΔ ^ 2 / (2 * Nat.choose 6 3)
+noncomputable def lambda_FUST : ℝ := D6MinEigenvalue ^ 2 / (2 * Nat.choose 6 3)
 
 theorem lambda_FUST_eq : lambda_FUST = 144 / 25000 := by
-  simp only [lambda_FUST, massGapΔ, Nat.choose]; norm_num
+  simp only [lambda_FUST, D6MinEigenvalue, Nat.choose]; norm_num
 
 theorem lambda_FUST_pos : 0 < lambda_FUST := by
   rw [lambda_FUST_eq]; norm_num
@@ -85,18 +85,6 @@ theorem no_lower_vacuum_exists :
   linarith [partialActionFζ_nonneg f N]
 
 end NoLowerVacuum
-
-/-! ## Spectral Gap from Dζ Primordial Eigenvalue
-
-λ₁ ≠ 0 (from MassGap.lean / BSD.lean) gives the mass gap. -/
-
-section SpectralGap
-
-theorem spectral_gap_positive : 0 < massGapΔ ^ 2 := massGapΔ_sq_pos
-
-theorem spectral_gap_value : massGapΔ ^ 2 = 144 / 625 := massGapΔ_sq
-
-end SpectralGap
 
 /-! ## True Vacuum (not False Vacuum)
 
@@ -164,12 +152,12 @@ section Complete
 theorem fust_vacuum_stability :
     (∀ f N, partialActionFζ f N ≥ 0) ∧
     (∀ f, IsInKerFζ f → ∀ N, partialActionFζ f N = 0) ∧
-    (0 < massGapΔ ^ 2) ∧
+    (0 < D6MinEigenvalue ^ 2) ∧
     (0 < lambda_FUST) ∧
     (¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionFζ f N < 0) :=
   ⟨partialActionFζ_nonneg,
    partialActionFζ_ker_zero,
-   massGapΔ_sq_pos,
+   D6MinEigenvalue_sq_pos,
    lambda_FUST_pos,
    no_lower_vacuum_exists⟩
 
@@ -187,7 +175,7 @@ end FUST.VacuumStability
 
 namespace FUST.Dim
 
-open FUST.VacuumStability FUST.Hamiltonian
+open FUST.VacuumStability
 
 noncomputable def lambdaFUST : RatioQ := ⟨144 / 25000⟩
 

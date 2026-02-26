@@ -1,5 +1,5 @@
 /-
-DζDim: Dimension system for Dζ output values on physically manifest state functions.
+FζDim: Dimension system for Fζ output values on physically manifest state functions.
 
 Fζ eigenvalue = α(n)·AF_coeff + β(n) where α,β ∈ ℤ[φ], AF_coeff = -2+4ζ₆.
 This lives in ℤ[φ,ζ₆] = GoldenEisensteinInt (CommRing).
@@ -10,11 +10,11 @@ Factorization non-uniqueness connects to LaplaceDemon's partition_choice_invisib
 -/
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FrourioAlgebra.GoldenIntegerRing
-import FUST.IntegralDzeta
+import FUST.FζOperator
 
-namespace FUST.DzetaDim
+namespace FUST.FζDim
 
-open FUST FUST.Zeta6 FUST.FrourioAlgebra FUST.IntegralDzeta
+open FUST FUST.Zeta6 FUST.FrourioAlgebra FUST.FζOperator
 
 /-! ## Channel decomposition: eigenvalue = α·AF_coeff + β
 
@@ -188,4 +188,4 @@ theorem tau_parity (x : GoldenEisensteinInt) :
     GoldenEisensteinInt.tau x = x ↔ x.c = 0 ∧ x.d = 0 :=
   GoldenEisensteinInt.tau_fixed_iff x
 
-end FUST.DzetaDim
+end FUST.FζDim

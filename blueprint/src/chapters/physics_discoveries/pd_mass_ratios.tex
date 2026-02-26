@@ -134,9 +134,9 @@ All $\mathbb{R}$-valued mass ratios are invariant under FDim relabeling.
 \lean{FUST.Dim.electronMass_eq_massGap}
 \leanok
 \[
-m_e = \Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimElectron} = (-5,1,-1)]
+m_e = \lambda_{\min} = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimElectron} = (-5,1,-1)]
 \]
-The electron, as the lightest \emph{charged} fermion, is identified with the mass gap. Neutrinos acquire mass via $\ker(D_5) \subset \ker(D_6)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\Delta$.
+The electron, as the lightest \emph{charged} fermion, is identified with the $D_6$ minimum eigenvalue. Neutrinos acquire mass via $\ker(D_5) \subset \ker(D_6)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\lambda_{\min}$.
 \end{theorem}
 
 \begin{theorem}[Proton Mass]
@@ -378,7 +378,7 @@ determines the neutrino mass hierarchy:
 \end{enumerate}
 \end{theorem}
 
-Neutrino masses are not bounded by $\Delta$: neutrinos acquire mass via $D_5$-level perturbation from $\ker(D_6)$. The mass gap $\Delta$ applies only to charged fermions that couple directly to $D_6$ output.
+Neutrino masses are not bounded by $\lambda_{\min}$: neutrinos acquire mass via $D_5$-level perturbation from $\ker(D_6)$. The $D_6$ minimum eigenvalue $\lambda_{\min}$ applies only to charged fermions that couple directly to $D_6$ output.
 
 \section{Baryon Asymmetry}
 \label{sec:mass_baryon}
@@ -438,5 +438,5 @@ $\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(D_5) \times C(6,2)) = 1/30$ & Rat
 
 The exponents are CountQuantity: $T(3) = C(4,2) = 6$ (\texttt{msMdExponent}), $7 = C(4,2)+C(2,2)$ (\texttt{mtMbExpHigh}), $5 = C(4,2)-C(2,2)$ (\texttt{mtMbExpLow}). All exponents trace to D-structure pair counts, never hardcoded numerals.
 
-$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\Delta = 12/25$ (ScaleQuantity at dimElectron $= (-5,1,-1)$, mass gap from $D_6$ gauge-invariant output).
+$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\lambda_{\min} = 12/25$ (ScaleQuantity at dimTime$^{-1}$, $D_6$ minimum eigenvalue from gauge-invariant output).
 

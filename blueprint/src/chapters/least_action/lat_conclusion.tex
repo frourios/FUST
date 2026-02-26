@@ -12,7 +12,7 @@
 \hline
 Quantity & Lean4 theorem name & Description \\
 \hline
-$f \in \ker(D_6)$ & IsInKerD6\_implies\_D6\_zero & Non-existence of time (light-like state) \\
+$f \in \ker(D_6)$ & D6\_const, D6\_linear, D6\_quadratic & Non-existence of time (light-like state) \\
 $f \notin \ker(D_6)$ & D6\_nonzero\_implies\_time & Existence of time (massive state) \\
 Time delay ratio within same degree & same\_degree\_ratio\_gauge\_invariant & Causally comparable quantity \\
 D6TimeDifferential = 0 & time\_differential\_zero\_gauge\_invariant & Membership in $\ker(D_6)$ \\
@@ -44,6 +44,7 @@ Item & Content & Status \\
 \hline
 Action functional & $\mathcal{A}[f] = \int_0^\infty \|D_6 f\|^2 \frac{dx}{x}$ & Derived \\
 $\varphi$-invariant measure & $dx/x$ (Haar measure) & Uniqueness proven \\
+Variational structure & $F_\zeta$ linearity, perturbation, critical point & Lean4 proven \\
 Euler-Lagrange & $\ker(D_6^\dagger D_6) = \ker(D_6)$ & Derived \\
 Time existence equivalence & $\mathcal{A}[f] > 0 \iff \mathrm{TimeExists}\, f$ & Consistency confirmed \\
 Numerical verification & $A \approx 0$ in $\ker(D_6)$, $A > 0$ outside & Verified \\
@@ -55,14 +56,15 @@ Numerical verification & $A \approx 0$ in $\ker(D_6)$, $A > 0$ outside & Verifie
 \label{sec:mat_theorems}
 
 \begin{enumerate}
-\item \textbf{Time Existence Theorem} (time\_existence\_theorem): $f \notin \ker(D_6) \iff$ Time exists
+\item \textbf{Time--Mass--Lagrangian Unification}: $f \notin \ker(D_6) \iff$ time exists $\iff$ $L[f] > 0$ $\iff$ $m^2 > 0$
 \item \textbf{Higher Order Reduction Theorem} (higher\_order\_reduction): $\ker(D_7) = \ker(D_6)$
 \item \textbf{Homogeneous Decomposition Theorem} (same\_degree\_ratio\_gauge\_invariant): Time delay ratio is gauge-invariant only within same degree
 \item \textbf{Causal Boundary Theorem} (causal\_boundary\_theorem): $\ker(D_6) =$ Light cone
-\item \textbf{Gauge Transformation Rule} (D6\_gauge\_scaling): $D_6[f(c\cdot)](x) = c \cdot D_6[f](cx)$
+\item \textbf{Gauge Transformation Rule} (D6\_gauge\_scaling): $D_6[f(c\cdot)](x) = c \cdot D_6[f](cx)$. $\varphi$-scaling is time evolution via Poincar\'{e} $I_4$ temporal channel (Gravity.lean: $\Phi$\_A\_coeff\_one, $\eta$\_temporal, temporal\_nonzero)
 \item \textbf{Interpolation Uniqueness Theorem} (kernel\_interpolation\_unique): Projection to $\ker(D_6)$ is unique at 3 points
 \item \textbf{Time Differential Gauge Invariance} (time\_differential\_zero\_gauge\_invariant): D6TimeDifferential = 0 is equivalent to $\ker(D_6)$
-\item \textbf{Mass Gap Theorem} (yangMills\_massGap): $\Delta = C_3/(\sqrt{5})^5 = 12/25 > 0$ for SU(3) via $D_6$; SU(2) mass gap via $D_5(x^2) \neq 0$; algebraic confinement from $\ker(D_6)$ not being a subalgebra
+\item \textbf{Mass Gap Theorem} (yangMills\_massGap): $D_6$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$; Casimir mass gap $m^2 = 14$ from $D_\zeta$ 4-momentum; SU(2) mass gap via $D_5(x^2) \neq 0$; algebraic confinement from $\ker(F_\zeta)$ not being a subalgebra
+\item \textbf{Variational Structure} (lagrangian\_perturbation, critical\_point\_of\_witness): $F_\zeta$ linearity $\Rightarrow$ first variation $\Rightarrow$ $\delta L = 0$ iff $f \in \ker(F_\zeta)$
 \end{enumerate}
 
 \section{Derived Concepts (Theorems, Not Definitions)}
@@ -76,7 +78,7 @@ Concept & Derivation \\
 Photon state & $\ker(D_6) \cap$ Non-constant functions (has energy, no mass) \\
 Mass state & $\ker(D_6)^\perp$ (has components of degree 3 or higher) \\
 Existence of time & Deviation from $\ker(D_6)$ \\
-Mass gap & $D_6$ gauge-invariant output $\Delta = C_3/(\sqrt{5})^5 = 12/25 = 1/t_{\mathrm{FUST}}$ \\
+Mass gap & Casimir $m^2 = -P^\mu P_\mu = 14$ from $D_\zeta$ 4-momentum at $s=1$ \\
 \hline
 \end{tabular}
 \end{center}

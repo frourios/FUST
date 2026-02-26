@@ -1,51 +1,18 @@
+import FUST.Physics.TimeStructure
 import FUST.Physics.WaveEquation
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # FUST Cosmological Scale Structure
 
-This module derives scale hierarchy from FUST Least Action Theorem and Time Theorem.
-
-## Logical Structure
-
-1. **From LeastAction.lean**: Haar measure dx/x is φ-scale invariant
-2. **From TimeTheorem.lean**: Time evolution f ↦ f(φ·) with φ > 1, |ψ| < 1
-3. **From WaveEquation.lean**: spacetimeDim = 4 (from ker(D6) = 3 + time = 1)
-4. **Derived here**: Scale lattice {φⁿ} and hierarchical suppression φ^{-4k}
-
-## Key Results (FUST Derivations)
-
-1. Scale lattice {φⁿ : n ∈ ℤ} is the unique φ-invariant discrete structure
-2. Hierarchical suppression: φⁿ increases monotonically, φ⁻ⁿ decreases
-3. Time asymmetry: future amplification (φⁿ), past decay (|ψ|ⁿ)
-4. Energy density scaling: φ^{-spacetimeDim × k} = φ^{-4k}
-
-## Golden Ratio Identities (Mathematical Properties)
-
-These are properties of φ itself, not FUST derivations:
-- φ⁻¹ + φ⁻² = 1 (golden partition)
-- φ + φ⁻¹ = √5
-- φⁿ is strictly increasing
+Scale lattice {φⁿ} and hierarchical suppression from time evolution (TimeStructure.lean).
 -/
 
 namespace FUST.Cosmology
 
-open FUST.LeastAction FUST.WaveEquation
+open FUST.TimeStructure FUST.WaveEquation
 
-/-! ## Part 1: FUST Time Structure (from TimeTheorem) -/
-
-/-- Time asymmetry from FUST: φ > 1 for expansion, |ψ| < 1 for contraction -/
-theorem fust_time_asymmetry : φ > 1 ∧ |ψ| < 1 := ⟨φ_gt_one, abs_psi_lt_one⟩
-
-/-- Scale transformation in FUST: time evolution is f ↦ f(φ·) -/
-theorem fust_scale_evolution (f : ℂ → ℂ) :
-    timeEvolution f = fun t => f ((↑φ : ℂ) * t) := rfl
-
-/-- FUST time direction: φ is unique expansion factor -/
-theorem fust_expansion_unique : φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  ⟨φ_gt_one, abs_psi_lt_one, phi_mul_abs_psi⟩
-
-/-! ## Part 2: Scale Lattice from φ-Invariance
+/-! ## Scale Lattice from φ-Invariance
 
 The scale lattice {φⁿ : n ∈ ℤ} is derived from FUST time evolution:
 - Time evolution: f ↦ f(φ·) with φ > 1 unique (from TimeTheorem)
@@ -109,12 +76,11 @@ theorem adjacent_level_ratio (n : ℤ) :
   rw [zpow_add_one₀ (ne_of_gt phi_pos)]
   field_simp [ne_of_gt (zpow_pos phi_pos n)]
 
-/-! ## Part 4: Time Evolution and Entropy (from TimeTheorem) -/
+/-! ## Part 4: Time Evolution and Entropy -/
 
-/-- Entropy increases under time evolution -/
+/-- Entropy of time-evolved state equals Lagrangian -/
 theorem entropy_time_connection (f : ℂ → ℂ) (t : ℂ) :
-    entropyAtD6 (timeEvolution f) t =
-      Complex.normSq (perpProjectionD6 (timeEvolution f) t) := rfl
+    entropyAtFζ (timeEvolution f) t = FζLagrangian (timeEvolution f) t := rfl
 
 /-! ## Part 5: Golden Ratio Mathematical Identities
 

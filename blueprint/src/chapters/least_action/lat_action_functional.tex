@@ -68,22 +68,62 @@ $f = 1 + x^3$ & $\approx 576$ & Mixed state (kernel component does not contribut
 \end{tabular}
 \end{center}
 
+\section{Variational Structure (Lean4 Proven)}
+\label{sec:mat_variational}
+
+The Lagrangian $L[f](z) = |F_\zeta f(z)|^2$ admits a rigorous variational calculus because $F_\zeta$ is linear.
+
+\subsection{Linearity of \texorpdfstring{$F_\zeta$}{Fζ}}
+
+\begin{theorem}[$F_\zeta$ Linearity]
+\label{thm:mat_Fzeta_linear}
+\lean{FUST.LeastAction.Fζ_linear_combination}
+\leanok
+\[
+F_\zeta(af + bg)(z) = a \cdot F_\zeta f(z) + b \cdot F_\zeta g(z)
+\]
+\end{theorem}
+
+\subsection{First Variation}
+
+\begin{theorem}[Lagrangian Perturbation]
+\label{thm:mat_lagrangian_perturbation}
+\lean{FUST.LeastAction.lagrangian_perturbation}
+\leanok
+For perturbation $f \mapsto f + \varepsilon\eta$:
+\[
+L[f + \varepsilon\eta](z) = |F_\zeta f(z)|^2 + 2\,\mathrm{Re}(\varepsilon \cdot F_\zeta\eta(z) \cdot \overline{F_\zeta f(z)}) + |\varepsilon|^2 |F_\zeta\eta(z)|^2
+\]
+The first-order term is $2\,\mathrm{Re}(\varepsilon \cdot F_\zeta\eta \cdot \overline{F_\zeta f})$.
+\end{theorem}
+
+\subsection{Critical Point Condition}
+
+\begin{theorem}[Critical Point of Witness]
+\label{thm:mat_critical_point}
+\lean{FUST.LeastAction.critical_point_of_witness}
+\leanok
+If a nontrivial test variation exists ($\exists \eta: F_\zeta\eta(z) \neq 0$), then:
+\[
+(\forall \eta,\; F_\zeta f(z) \cdot F_\zeta\eta(z) = 0) \;\Longrightarrow\; F_\zeta f(z) = 0
+\]
+\end{theorem}
+
+The concrete witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ for $z \neq 0$
+(Lean: \texttt{FUST.WaveEquation.Fζ\_detects\_active}), completing the chain:
+\[
+\delta L = 0 \;\Longrightarrow\; F_\zeta f = 0 \;\Longleftrightarrow\; f \in \ker(F_\zeta)
+\]
+
 \section{Euler-Lagrange Equation}
 \label{sec:mat_euler_lagrange}
 
-\subsection{Computation of the Variation}
+\subsection{Integral Form}
 
-Compute the variation of $\mathcal{A}[f] = \int |D_6 f|^2 d\mu$:
+For the action functional $\mathcal{A}[f] = \int |D_6 f|^2 d\mu$, the integral variation gives:
 \[
-\delta\mathcal{A} = 2 \int D_6 f \cdot D_6(\delta f) \, d\mu
+\delta\mathcal{A} = 2 \int D_6 f \cdot D_6(\delta f) \, d\mu = 2 \int \delta f \cdot D_6^\dagger(D_6 f) \, d\mu
 \]
-
-Integration by parts (using the adjoint operator $D_6^\dagger$ of $D_6$):
-\[
-\delta\mathcal{A} = 2 \int \delta f \cdot D_6^\dagger(D_6 f) \, d\mu
-\]
-
-\subsection{Euler-Lagrange Equation}
 
 \begin{theorem}[Euler-Lagrange Equation]
 \label{thm:mat_euler_lagrange}

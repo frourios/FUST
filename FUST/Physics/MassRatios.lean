@@ -103,31 +103,31 @@ Each particle has a unique dimension deriveFDim(6)^a × dimTimeD2^n.
 The electron (n=0) is the D₆ mass gap Δ = 12/25. -/
 
 /-- Electron mass: m_e = Δ (lightest charged fermion = D₆ mass gap) -/
-noncomputable def electronMass : ScaleQ dimElectron := massGapΔ
+noncomputable def electronMass : ScaleQ dimElectron := D6MinEigenvalue
 
 theorem electronMass_val : electronMass.val = 12 / 25 := rfl
 
 /-- Muon mass: m_μ = Δ × φ¹¹ -/
 noncomputable def muonMass : ScaleQ dimMuon :=
-  ⟨FUST.massGapΔ * φ ^ (11 : ℤ)⟩
+  ⟨FUST.D6MinEigenvalue * φ ^ (11 : ℤ)⟩
 
 theorem muonMass_val : muonMass.val = 12 / 25 * φ ^ (11 : ℤ) := rfl
 
 /-- Tau mass: m_τ = Δ × φ¹⁷ -/
 noncomputable def tauMass : ScaleQ dimTau :=
-  ⟨FUST.massGapΔ * φ ^ (17 : ℤ)⟩
+  ⟨FUST.D6MinEigenvalue * φ ^ (17 : ℤ)⟩
 
 theorem tauMass_val : tauMass.val = 12 / 25 * φ ^ (17 : ℤ) := rfl
 
 /-- Proton mass: m_p = Δ × φ¹¹ × C(6,3)×C(4,2)/(C(3,2)+C(5,2)) -/
 noncomputable def protonMass : ScaleQ dimProton :=
-  ⟨FUST.massGapΔ * φ ^ (11 : ℤ) *
+  ⟨FUST.D6MinEigenvalue * φ ^ (11 : ℤ) *
     (Nat.choose 6 3 * Nat.choose 4 2 : ℝ) /
     (Nat.choose 3 2 + Nat.choose 5 2 : ℝ)⟩
 
 theorem protonMass_val :
     protonMass.val = 12 / 25 * φ ^ (11 : ℤ) * 120 / 13 := by
-  unfold protonMass FUST.massGapΔ
+  unfold protonMass FUST.D6MinEigenvalue
   simp only [Nat.choose]
   norm_num
 
@@ -202,7 +202,7 @@ theorem beta_decay_possible :
   nlinarith
 
 /-- m_e = Δ: lightest charged fermion is the D₆ mass gap -/
-theorem electronMass_eq_massGap : electronMass = massGapΔ := rfl
+theorem electronMass_eq_massGap : electronMass = D6MinEigenvalue := rfl
 
 /-- m_p / m_e = φ¹¹ × 120/13 -/
 theorem protonElectronRatio_from_masses :
@@ -231,11 +231,11 @@ Higgs: DimSum2 with φ vacuum + D₅ correction. -/
 
 /-- W boson mass: m_W = Δ × φ^25 × 15/16. D₆ sector. -/
 noncomputable def wBosonMass : ScaleQ dimWBoson :=
-  ⟨FUST.massGapΔ * FUST.MassRatioPredictions.WElectronRatio⟩
+  ⟨FUST.D6MinEigenvalue * FUST.MassRatioPredictions.WElectronRatio⟩
 
 theorem wBosonMass_val :
     wBosonMass.val = 12 / 25 * (φ ^ 25 * (15 / 16)) := by
-  simp only [wBosonMass, FUST.MassRatioPredictions.WElectronRatio_eq, FUST.massGapΔ]
+  simp only [wBosonMass, FUST.MassRatioPredictions.WElectronRatio_eq, FUST.D6MinEigenvalue]
 
 theorem wBoson_electron_ratio :
     wBosonMass.val / electronMass.val =

@@ -1,10 +1,10 @@
 /-
-Fusion Reactor Bottleneck Analysis from D-operator Kernel Structure
+Fusion Reactor Bottleneck Analysis from Fζ Kernel Structure
 
 Four fundamental obstacles in fusion reactor engineering, formalized:
-1. Plasma turbulence = exit from ker(D6), detected by perpProjectionD6
+1. Plasma turbulence = exit from ker(Fζ), detected by Fζ operator
 2. Tritium permeation = FDim gap between D⁺ and T⁺ structural barrier
-3. Alpha heating = He4Ion ∉ ker(D6) → positive entropy (second law)
+3. Alpha heating = He4Ion ∉ ker(Fζ) → positive entropy (second law)
 4. Superconducting magnet = flux quantization from ker(D5) uniqueness
 -/
 
@@ -125,26 +125,11 @@ theorem alpha_doubly_magic :
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2) :=
   ⟨⟨0, by omega, rfl⟩, ⟨0, by omega, rfl⟩⟩
 
-/-! ## Section 5: Superconducting Magnet — Flux Quantization
-
-Flux quantization = uniqueness theorem of ker(D5).
--/
+/-! ## Section 5: Superconducting Magnet — Flux Quantization -/
 
 -- Flux quantum denominator = cooperPairSize = spinDeg = 2
 theorem flux_quantum_structure :
     cooperPairSize = Nuclear.spinDegeneracy := rfl
-
--- Uniqueness: ker(D5) functions determined by 2 points → single-valued wavefunction
-theorem flux_quantization_from_uniqueness (p q : ℂ → ℂ)
-    (hp : IsInKerD5 p) (hq : IsInKerD5 q)
-    (t₀ t₁ : ℂ) (h01 : t₀ ≠ t₁)
-    (h0 : p t₀ = q t₀) (h1 : p t₁ = q t₁) :
-    ∀ t, p t = q t :=
-  cooperPair_uniqueness p q hp hq t₀ t₁ h01 h0 h1
-
--- Cooper pair breaks when perturbation exits ker(D5)
-theorem field_limit_from_ker_exit :
-    ¬IsInKerD5 (fun t => t ^ 2) := quadratic_not_in_kerD5
 
 -- Condensate dimension = 1
 theorem magnet_condensate_dim :

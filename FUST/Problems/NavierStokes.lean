@@ -1,4 +1,4 @@
-import FUST.Physics.LeastAction
+import FUST.Physics.TimeStructure
 import FUST.Physics.GaugeGroups
 import FUST.Physics.Thermodynamics
 
@@ -28,7 +28,7 @@ cascade across scales.
 
 namespace FUST.NavierStokes
 
-open FUST.LeastAction
+open FUST.TimeStructure
 
 section ScaleTransfer
 
@@ -816,7 +816,7 @@ end EnergyDecay
 Dζ determines 4D spacetime via I4 = Fin 3 ⊕ Fin 1 (weight ratio 3:1).
 The AF-channel projection D6 provides the dissipation structure.
 
-At structuralMinTimeD6 = 25/12, D6 sampling falls below resolution,
+At planckSecond = 1/(20√15), D6 sampling falls below resolution,
 making the mode system finite-dimensional and guaranteeing global existence:
 
 1. Dζ determines spacetimeDim = 4 = dim ker(D6) + 1 = 3 + 1
@@ -831,27 +831,27 @@ open FUST.Thermodynamics Filter
 
 section PlanckResolutionLimit
 
-/-- Cutoff scale: minimum x where Dζ AF-channel's outermost point φ³x reaches structuralMinTimeD6 -/
-noncomputable def planckCutoffScale : ℝ := structuralMinTimeD6 / φ^3
+/-- Cutoff scale: minimum x where Dζ AF-channel's outermost point φ³x reaches planckSecond -/
+noncomputable def planckCutoffScale : ℝ := planckSecond / φ^3
 
 theorem planckCutoffScale_pos : planckCutoffScale > 0 := by
   simp only [planckCutoffScale]
-  exact div_pos structuralMinTimeD6_positive (pow_pos (by linarith [φ_gt_one]) 3)
+  exact div_pos planckSecond_pos (pow_pos (by linarith [φ_gt_one]) 3)
 
 /-- Below cutoff, Dζ AF-channel sampling points fall below structural minimum -/
 theorem D6_below_planck_unresolvable (x : ℝ) (_hx : 0 < x)
-    (hlt : x < planckCutoffScale) : φ^3 * x < structuralMinTimeD6 := by
+    (hlt : x < planckCutoffScale) : φ^3 * x < planckSecond := by
   simp only [planckCutoffScale] at hlt
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
-  calc φ^3 * x < φ^3 * (structuralMinTimeD6 / φ^3) := by nlinarith
-    _ = structuralMinTimeD6 := mul_div_cancel₀ _ (ne_of_gt hφ3_pos)
+  calc φ^3 * x < φ^3 * (planckSecond / φ^3) := by nlinarith
+    _ = planckSecond := mul_div_cancel₀ _ (ne_of_gt hφ3_pos)
 
 /-- At or above Planck cutoff, Dζ resolves the structure -/
 theorem D6_above_planck_resolvable (x : ℝ) (hx : x ≥ planckCutoffScale) :
-    φ^3 * x ≥ structuralMinTimeD6 := by
+    φ^3 * x ≥ planckSecond := by
   simp only [planckCutoffScale] at hx
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
-  calc structuralMinTimeD6 = φ^3 * (structuralMinTimeD6 / φ^3) := by
+  calc planckSecond = φ^3 * (planckSecond / φ^3) := by
         rw [mul_div_cancel₀ _ (ne_of_gt hφ3_pos)]
     _ ≤ φ^3 * x := by nlinarith
 
@@ -866,14 +866,14 @@ theorem phi_pow_unbounded (M : ℝ) : ∃ N : ℕ, M < φ^N := by
 
 /-- For system size L, modes above some N have scale below structural minimum -/
 theorem planck_mode_cutoff (L : ℝ) (_hL : L > 0) :
-    ∃ N : ℕ, ∀ n, n ≥ N → L / φ^n < structuralMinTimeD6 := by
-  have hsml := structuralMinTimeD6_positive
-  obtain ⟨N, hN⟩ := phi_pow_unbounded (L / structuralMinTimeD6)
+    ∃ N : ℕ, ∀ n, n ≥ N → L / φ^n < planckSecond := by
+  have hsml := planckSecond_pos
+  obtain ⟨N, hN⟩ := phi_pow_unbounded (L / planckSecond)
   refine ⟨N, fun n hn => ?_⟩
   have hφn_pos : φ^n > 0 := pow_pos (by linarith [φ_gt_one]) n
   rw [div_lt_iff₀ hφn_pos]
   have hφN_le : φ^N ≤ φ^n := pow_le_pow_right₀ (le_of_lt φ_gt_one) hn
-  have h2 : L / structuralMinTimeD6 * structuralMinTimeD6 = L :=
+  have h2 : L / planckSecond * planckSecond = L :=
     div_mul_cancel₀ L (ne_of_gt hsml)
   nlinarith
 
@@ -883,10 +883,10 @@ section ThermalDissipationArgument
 
 /-- Thermodynamic justification: Dζ Planck scale is where thermal dissipation dominates -/
 theorem sub_planck_thermal_dissipation :
-    (structuralMinTimeD6 > 0) ∧
-    (∀ f, ¬IsInKerD6 f → ∃ t, entropyAtD6 f t > 0) ∧
+    (planckSecond > 0) ∧
+    (∀ f, ¬IsInKerFζ f → ∃ t, entropyAtFζ f t > 0) ∧
     (∀ n ≥ 3, (dissipationCoeff n)^2 > 0) :=
-  ⟨structuralMinTimeD6_positive,
+  ⟨planckSecond_pos,
    third_law_massive_positive_entropy,
    dissipation_positive_outside_kernel⟩
 
@@ -1013,7 +1013,7 @@ noncomputable def ClayNSProblem.nMax (prob : ClayNSProblem) : ℕ :=
 
 open Classical in
 theorem ClayNSProblem.nMax_spec (prob : ClayNSProblem) :
-    ∀ n, n ≥ prob.nMax → prob.systemSize / φ^n < structuralMinTimeD6 :=
+    ∀ n, n ≥ prob.nMax → prob.systemSize / φ^n < planckSecond :=
   Nat.find_spec (planck_mode_cutoff prob.systemSize prob.systemSize_pos)
 
 /-- Clay NS Solution via Dζ Planck-scale finite-dimensional truncation -/
@@ -1031,7 +1031,7 @@ structure ClayNSSolution (prob : ClayNSProblem) where
   dissipationActive : ∀ t, t ≥ 0 → ∀ N, N ≥ 3 →
     highModeEnergy (evolvedModes t) N > 0 →
     highModeDissipation (evolvedModes t) N > 0
-  kerD6Invariant : ∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)
+  kerFζInvariant : ∀ f, IsInKerFζ f → IsInKerFζ (timeEvolution f)
 
 def ClayNSStatement : Prop :=
   ∀ prob : ClayNSProblem, Nonempty (ClayNSSolution prob)
@@ -1057,7 +1057,7 @@ theorem clay_ns_from_planck_cutoff : ClayNSStatement := by
       truncatedEvolution_totalEnergy_noninc prob.initialData.modes Nmax t ht N
     dissipationActive := fun _t _ht N hN hE =>
       dissipation_strictly_positive _ N hN hE
-    kerD6Invariant := ker_D6_invariant
+    kerFζInvariant := ker_Fζ_invariant
   }⟩
 
 end MainProof
@@ -1076,9 +1076,9 @@ theorem clay_conditions_verified :
     (∀ m n, |nonlinearCoeff m n| ≤ 30 * φ^(3*(m+n))) ∧
     (∀ n ≥ 4, dissipationCoeff n ≥ (1/3) * φ^(3*n)) ∧
     (∀ û N, N ≥ 3 → highModeEnergy û N > 0 → highModeDissipation û N > 0) ∧
-    (∀ f, IsInKerD6 f → IsInKerD6 (timeEvolution f)) ∧
-    (structuralMinTimeD6 > 0) ∧
-    (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < structuralMinTimeD6) ∧
+    (∀ f, IsInKerFζ f → IsInKerFζ (timeEvolution f)) ∧
+    (planckSecond > 0) ∧
+    (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < planckSecond) ∧
     ClayNSStatement :=
   ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
    fun x _hx => D6_quadratic x, D6_not_annihilate_cubic,
@@ -1088,8 +1088,8 @@ theorem clay_conditions_verified :
    nonlinear_coeff_growth,
    dissipation_lower_bound,
    dissipation_strictly_positive,
-   ker_D6_invariant,
-   structuralMinTimeD6_positive,
+   ker_Fζ_invariant,
+   planckSecond_pos,
    planck_mode_cutoff,
    clay_ns_from_planck_cutoff⟩
 

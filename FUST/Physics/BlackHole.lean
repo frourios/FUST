@@ -19,7 +19,7 @@ No continuous theory (GR, QFT, Bekenstein-Hawking) is assumed.
 
 namespace FUST.BlackHole
 
-open FUST.WaveEquation FUST.LeastAction FUST
+open FUST.WaveEquation FUST.TimeStructure FUST
 
 /-! ## Part 1: D₆ Completeness (No Singularity)
 
@@ -228,12 +228,6 @@ theorem abs_psi_eq_inv_phi : |ψ| = φ⁻¹ := by
   field_simp at h ⊢
   linarith
 
-/-- Mass × structuralMinTimeD6 = x₀² -/
-theorem mass_time_identity (x₀ : ℝ) :
-    massGapΔ * x₀ ^ 2 * structuralMinTimeD6 = x₀ ^ 2 := by
-  have h := massGapΔ_mul_structuralMinTimeD6
-  nlinarith
-
 /-- Critical scale: x₀·|ψ| (proper time stalls beyond this coordinate) -/
 noncomputable def criticalScale (x₀ : ℝ) : ℝ := x₀ * |ψ|
 
@@ -244,7 +238,7 @@ theorem criticalScale_pos (x₀ : ℝ) (hx₀ : x₀ > 0) :
 theorem criticalScale_lt (x₀ : ℝ) (hx₀ : x₀ > 0) :
     criticalScale x₀ < x₀ := by
   simp only [criticalScale]
-  have h1 : |ψ| < 1 := TimeTheorem.abs_psi_lt_one
+  have h1 : |ψ| < 1 := abs_psi_lt_one
   have h2 : |ψ| > 0 := abs_pos.mpr (ne_of_lt psi_neg)
   nlinarith
 

@@ -147,18 +147,18 @@ theorem neutrinoMassSqRatio_dimQ_val :
 
 /-- m_ν₃ = Δ × Δ × φ^(-32) = Δ² × φ^(-2⁵) -/
 noncomputable def nu3Mass : ScaleQ dimNu3 :=
-  ⟨FUST.massGapΔ * nu3ElectronRatio⟩
+  ⟨FUST.D6MinEigenvalue * nu3ElectronRatio⟩
 
 theorem nu3Mass_val :
     nu3Mass.val = (12 / 25) * ((12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) := by
-  simp only [nu3Mass, nu3ElectronRatio_eq, FUST.massGapΔ]
+  simp only [nu3Mass, nu3ElectronRatio_eq, FUST.D6MinEigenvalue]
 
-/-- m_ν₃ / m_e = Δ × φ^(-32) (where m_e = Δ = massGapΔ) -/
+/-- m_ν₃ / m_e = Δ × φ^(-32) (where m_e = Δ = D6MinEigenvalue) -/
 theorem nu3_electron_ratio :
-    nu3Mass.val / FUST.massGapΔ =
+    nu3Mass.val / FUST.D6MinEigenvalue =
     (12 : ℝ) / 25 * φ ^ (-(32 : ℤ)) := by
   simp only [nu3Mass_val]
-  unfold FUST.massGapΔ
+  unfold FUST.D6MinEigenvalue
   field_simp
 
 /-- m_ν₂ = m_ν₃ × √(1/30) -/
@@ -183,7 +183,7 @@ theorem nu3Mass_pos : 0 < nu3Mass.val := by
   exact zpow_pos phi_pos _
 
 /-- m_ν₃ < m_e: neutrinos are lighter than electron -/
-theorem nu3_lt_electron : nu3Mass.val < FUST.massGapΔ := by
+theorem nu3_lt_electron : nu3Mass.val < FUST.D6MinEigenvalue := by
   rw [nu3Mass_val]
   change (12 : ℝ) / 25 * (12 / 25 * φ ^ (-(32 : ℤ))) < 12 / 25
   have hΔ : (12 : ℝ) / 25 < 1 := by norm_num
@@ -196,10 +196,10 @@ theorem nu3_lt_electron : nu3Mass.val < FUST.massGapΔ := by
 
 /-- Complete neutrino mass chain -/
 theorem neutrino_mass_chain :
-    (nu3Mass.val / FUST.massGapΔ = (12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) ∧
+    (nu3Mass.val / FUST.D6MinEigenvalue = (12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) ∧
     (nu2Mass.val / nu3Mass.val = Real.sqrt (1 / 30)) ∧
     (0 < nu3Mass.val) ∧
-    (nu3Mass.val < FUST.massGapΔ) :=
+    (nu3Mass.val < FUST.D6MinEigenvalue) :=
   ⟨nu3_electron_ratio, nu2_nu3_ratio, nu3Mass_pos, nu3_lt_electron⟩
 
 end FUST.NeutrinoMass

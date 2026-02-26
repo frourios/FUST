@@ -6,7 +6,7 @@ import FUST.Zeta6
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FibonacciArithmetic
 
-namespace FUST.IntegralDzeta
+namespace FUST.FζOperator
 
 open Complex FUST FUST.Zeta6 FUST.FibonacciArithmetic FUST.SpectralCoefficients
 
@@ -1527,6 +1527,4 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
              show (6:ℂ).re = 6 from by simp, show (6:ℂ).im = 0 from by simp]
   ring
 
-def IsInKerFζ (f : ℂ → ℂ) : Prop := ∀ z, Fζ f z = 0
-
-end FUST.IntegralDzeta
+end FUST.FζOperator

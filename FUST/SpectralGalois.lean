@@ -4,12 +4,12 @@ The eigenvalue λ = 5√5·A_n·AF_coeff + 6·S_n lies in ℚ(√5) ⊕ ℚ(√5
 missing the √(-3) direction entirely. This Galois separation constrains
 the algebraic structure of zeros in the critical strip.
 -/
-import FUST.IntegralDzeta
+import FUST.FζOperator
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 
 namespace FUST.SpectralGalois
 
-open Complex FUST FUST.Zeta6 FUST.IntegralDzeta FUST.FrourioAlgebra
+open Complex FUST FUST.Zeta6 FUST.FζOperator FUST.FrourioAlgebra
 open FUST.FibonacciArithmetic FUST.SpectralCoefficients
 
 /-! ## SY channel integrality: Re(λ) ∈ ℤ[φ]

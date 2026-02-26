@@ -10,13 +10,12 @@ with the electron component reduced by the electromagnetic binding energy.
 -/
 
 import FUST.Chemistry.HydrogenIsotopes
-import FUST.Physics.Hamiltonian
 import FUST.Physics.Nuclear
 import FUST.SpectralCoefficients
 
 namespace FUST.Chemistry.HydrogenOrbital
 
-open FUST FUST.Dim FUST.Chemistry FUST.LeastAction FUST.Hamiltonian
+open FUST FUST.Dim FUST.Chemistry FUST.TimeStructure
 
 /-! ## Section 1: Shell Structure from D-operator Kernel Dimensions -/
 
@@ -38,9 +37,6 @@ theorem shell_capacity_derivation (n : ℕ) :
 theorem hydrogen_shell_capacity : Nuclear.shellCapacity 1 = 2 := rfl
 
 /-! ## Section 2: Spectral Gap -/
-
--- Spectral gap = 12/25
-theorem spectral_gap_value : FUST.massGapΔ = 12 / 25 := rfl
 
 -- D6 spectral coefficient: first non-zero at k=3
 theorem D6_spectrum_kernel :
@@ -83,10 +79,9 @@ theorem bound_lower_than_free :
 /-! ## Section 5: Summary -/
 
 theorem hydrogen_orbital_classification :
-    FUST.massGapΔ = 12 / 25 ∧
     Nuclear.spinDegeneracy = 2 ∧
     Nuclear.shellCapacity 1 = 2 ∧
     dimHydrogenAtom ≠ dimProton * dimElectron := by
-  exact ⟨rfl, rfl, rfl, by decide⟩
+  exact ⟨rfl, rfl, by decide⟩
 
 end FUST.Chemistry.HydrogenOrbital

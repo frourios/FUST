@@ -23,7 +23,7 @@ This module derives mass ratios for particles from FUST D-structure principles.
 
 namespace FUST.MassRatioPredictions
 
-open FUST.WaveEquation FUST.TimeTheorem
+open FUST.WaveEquation
 
 /-! ## Triangular Numbers -/
 

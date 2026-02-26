@@ -72,9 +72,8 @@ theorem old_theta13_prediction : (1 : ℝ) / 15 = 1 / (Nat.choose 6 2) := by
 /-- φ > 3/2 (used for numeric bounds) -/
 theorem phi_gt_three_halves : φ > 3/2 := by
   unfold φ
-  have h : Real.sqrt 5 > 2 := by
-    rw [show (2 : ℝ) = Real.sqrt 4 by norm_num]
-    exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+  have h : Real.sqrt 5 > 2 :=
+    (Real.lt_sqrt (by norm_num : (0 : ℝ) ≤ 2)).mpr (by norm_num : (2 : ℝ) ^ 2 < 5)
   linarith
 
 /-- φ⁻⁸ < 1/15 (new prediction is closer to experiment) -/

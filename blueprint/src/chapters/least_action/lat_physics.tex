@@ -105,7 +105,7 @@ Spacetime dimension is not an arbitrary assumption but derived from $D_6$ struct
 
 \begin{theorem}[Spacetime Dimension]
 \label{thm:mat_spacetime_dim}
-\lean{FUST.WaveEquation.spacetime_dim_eq_four}
+\lean{FUST.Physics.Lorentz.spacetime_dim}
 \leanok
 \[
 \text{Spatial dimension} + \text{Time dimension} = 3 + 1 = 4
@@ -156,9 +156,14 @@ Kernel structure:
 \item Minimum massive degree is $d = 3$
 \end{itemize}
 
-Mass gap from $D_6$ gauge-invariant output at $d = 3$:
+$D_6$ minimum eigenvalue from gauge-invariant output at $d = 3$:
 \[
-\Delta = \frac{C_3}{(\sqrt{5})^5} = \frac{12\sqrt{5}}{(\sqrt{5})^5} = \frac{12}{25} = \frac{1}{t_{\mathrm{FUST}}}
+\lambda_{\min} = \frac{C_3}{(\sqrt{5})^5} = \frac{12\sqrt{5}}{(\sqrt{5})^5} = \frac{12}{25}
+\]
+
+The true mass gap is derived from the Poincar\'{e} Casimir invariant of $D_\zeta$ 4-momentum at the minimum active mode $s=1$:
+\[
+m^2 = -P^\mu P_\mu = -(0^2 + (-1)^2 + (\sqrt{5})^2 - (2\sqrt{5})^2) = 14
 \]
 \end{theorem}
 
@@ -221,8 +226,8 @@ FUST answer:
 \begin{enumerate}
 \item $\checkmark$ \textbf{Gauge group exclusion}: Only SU(2) and SU(3) arise from FUST kernel structure.
 All other compact simple groups have minimal representation dimension $> \dim\ker(D_6) = 3$.
-\item $\checkmark$ \textbf{SU(3) mass gap}: $\Delta = 12/25 > 0$ from $D_6$ gauge-invariant output $C_3/(\sqrt{5})^5$.
-$\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (vacuum), $D_6(x^3) = \Delta \cdot x_0^2$ (first massive mode).
+\item $\checkmark$ \textbf{SU(3) mass gap}: $D_6$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$ from $C_3/(\sqrt{5})^5$.
+Casimir mass squared $m^2 = -P^\mu P_\mu = 14 > 0$ from $D_\zeta$ 4-momentum at $s=1$.
 \item $\checkmark$ \textbf{SU(2) mass gap}: $D_5(x^2) \neq 0$ (first mode outside $\ker(D_5) = \mathrm{span}\{1, x\}$).
 \item $\checkmark$ \textbf{Confinement}: $\ker(D_6)$ is NOT a subalgebra --- gluon interactions produce mass.
 \item $\checkmark$ \textbf{4-dimensional spacetime}: $3 + 1 = 4$ (derived from kernel dimensions and Time Theorem).
@@ -239,7 +244,8 @@ No arbitrary selection is involved in deriving the mass gap:
 \begin{itemize}
 \item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ is uniquely determined from $D_6$ annihilation structure
 \item $C_3 = 12\sqrt{5}$ is the unique value of $D_6$ applied to $x^3$
-\item $\Delta = C_3/(\sqrt{5})^5 = 12/25$ is uniquely derived as a gauge-invariant quantity
+\item $\lambda_{\min} = C_3/(\sqrt{5})^5 = 12/25$ is uniquely derived as a gauge-invariant quantity
+\item $m^2 = -P^\mu P_\mu = 14$ from Casimir invariant of $D_\zeta$ 4-momentum
 \item 4 dimensions are uniquely derived from kernel structure
 \end{itemize}
 \end{theorem}
@@ -255,14 +261,15 @@ The dimensional type system classifies the quantities in this chapter:
 Quantity & Type & Dimension / Value \\
 \hline
 $L_{\mathrm{FUST}} = \|D_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
-$\Delta = m_e = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ = dimElectron \\
+$\lambda_{\min} = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ = dimTime$^{-1}$ \\
+$m^2 = 14$ (Casimir mass gap) & ScaleQuantity & from $D_\zeta$ 4-momentum \\
 Spacetime dimension & CountQuantity & $4$ \\
 $f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
 \hline
 \end{tabular}
 \end{center}
 
-$\Delta = 12/25$ (ScaleQuantity from $D_6$ gauge-invariant output) has dimension $(-5, 1, -1) = \mathrm{dimElectron}$, the electron baseline. Other particles acquire distinct FDim via $\varphi$-scaling (see Chapter~\ref{chap:pd_mass_ratios}).
-
-Lean: \texttt{FUST.massGap}$\Delta$ (ScaleQ dimElectron), \texttt{FUST.Dim.electronMass}.
+$\lambda_{\min} = 12/25$ is the $D_6$ minimum eigenvalue (Lean: \texttt{FUST.D6MinEigenvalue}).
+The Casimir mass gap $m^2 = 14$ is derived from $D_\zeta$ 4-momentum (Lean: \texttt{FUST.massGapSq}).
+Other particles acquire distinct FDim via $\varphi$-scaling (see Chapter~\ref{chap:pd_mass_ratios}).
 

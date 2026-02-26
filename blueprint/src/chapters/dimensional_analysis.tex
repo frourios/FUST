@@ -5,9 +5,9 @@
 \section{Motivation}
 \label{sec:dim_motivation}
 
-In FUST, quantities such as $t_{\mathrm{FUST}} = 25/12$ and $\Delta = 12/25$ are defined as $\mathbb{R}$-valued (real part of $\mathbb{C}$) in the Lean implementation.
-This allows type-checked operations like $t_{\mathrm{FUST}} + \Delta$ that are physically meaningless.
-A time and a mass gap may share the same numerical value yet represent fundamentally different physical quantities.
+In FUST, quantities such as $t_P = 1/(20\sqrt{15})$ and $\lambda_{\min} = 12/25$ are defined as $\mathbb{R}$-valued (real part of $\mathbb{C}$) in the Lean implementation.
+This allows type-checked operations like $t_P + \lambda_{\min}$ that are physically meaningless.
+A time and an eigenvalue may share the same base type yet represent fundamentally different physical quantities.
 
 This chapter introduces a \textbf{structural type system} $(p, \delta)$ derived from FUST's internal algebraic structure,
 classifying all quantities into three disjoint types: \textbf{ScaleQuantity}, \textbf{CountQuantity}, and \textbf{RatioQuantity}.
@@ -129,7 +129,7 @@ For $i \neq j$, $\dim(D_i f) \neq \dim(D_j f)$, so $D_i f(x) + D_j f(x)$ is a ty
 \lean{FUST.Dim.D6_output_is_inverse_time}
 \leanok
 \[
-\dim(D_6 f) = (-5, 1) = \dim(t_{\mathrm{FUST}})^{-1}
+\dim(D_6 f) = (-5, 1) = \dim(t_P)^{-1}
 \]
 \end{theorem}
 
@@ -141,7 +141,7 @@ For $i \neq j$, $\dim(D_i f) \neq \dim(D_j f)$, so $D_i f(x) + D_j f(x)$ is a ty
 \lean{FUST.Dim.dimTime}
 \leanok
 \[
-\dim(t_{\mathrm{FUST}}) := (\dim(D_6 f))^{-1} = (5, -1)
+\dim(t_P) := (\dim(D_6 f))^{-1} = (5, -1)
 \]
 \end{definition}
 
@@ -190,7 +190,7 @@ $a$ is the sector exponent and $n$ is the $\varphi$-scaling index.
 \hline
 Quantity & $(p, \delta)$ & Sector & Lean reference \\
 \hline
-$t_{\mathrm{FUST}} = 25/12$ & $(5, -1)$ & --- & \texttt{structuralMinTime\_dim} \\
+$t_P = 1/(20\sqrt{15})$ & $(5, -1)$ & --- & \texttt{planckSecond} \\
 $D_6 f(x)$ & $(-5, 1)$ & $D_6$ & \texttt{D6\_dim} \\
 $(D_6 f)^2$ & $(-10, 2)$ & $D_6^2$ & \texttt{dimLagrangian} \\
 $\Delta = m_e$ & $(-5, 1)$ & $D_6$ & \texttt{dimElectron} \\
@@ -260,8 +260,8 @@ The dimensional type system is consistent with all blueprint theorems:
 \hline
 Blueprint theorem & Dimensional verification \\
 \hline
-$t_{\mathrm{FUST}} = 25/12$ & Scale$(5,-1)$ $\checkmark$ \\
-$\Delta = 12/25 = 1/t_{\mathrm{FUST}}$ & Scale$(-5,1)$ $\checkmark$ \\
+$t_P = 1/(20\sqrt{15})$ & Scale$(5,-1)$ $\checkmark$ \\
+$\lambda_{\min} = 12/25$ & Scale$(-5,1)$ $\checkmark$ \\
 $\sin^2\theta_W = 3/13$ & Ratio (Count/Count) $\checkmark$ \\
 $(D_6 f)^2$ Hamiltonian & Scale$(-10,2)$ $\checkmark$ \\
 $D_6[\mathrm{timeEvolution}(f)] = \varphi \cdot D_6[f](\varphi \cdot)$ & Both sides: $(-5,1)$ $\checkmark$ \\
@@ -300,7 +300,7 @@ $E_{\mathrm{conserved}}$ & $\nabla_\mu T^{\mu\nu} = 0$ \\
 
 \begin{theorem}[Spectral Gap Dimensional Interpretation]
 \label{thm:dim_spectral_gap}
-\lean{FUST.Hamiltonian.spectral_gap_squared}
+\lean{FUST.D6MinEigenvalue_sq}
 \leanok
 $\Delta = C_3/(\sqrt{5})^5 = 12/25$ is ScaleQuantity$(-5, 1)$, and $\Delta^2 = 144/625$ is ScaleQuantity$(-10, 2)$.
 The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2)$,

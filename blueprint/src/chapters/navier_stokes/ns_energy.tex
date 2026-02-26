@@ -10,7 +10,7 @@
 \lean{FUST.NavierStokes.PlanckCutoff.planckCutoffScale}
 \leanok
 \[
-z_P = \frac{\ell_P}{\varphi^3}, \qquad \ell_P = \texttt{structuralMinTimeD6} = \frac{25}{12}
+z_P = \frac{t_P}{\varphi^3}, \qquad t_P = \texttt{planckSecond} = \frac{1}{20\sqrt{15}}
 \]
 \end{definition}
 
@@ -19,7 +19,7 @@ z_P = \frac{\ell_P}{\varphi^3}, \qquad \ell_P = \texttt{structuralMinTimeD6} = \
 \lean{FUST.NavierStokes.PlanckCutoff.D6_below_planck_unresolvable}
 \leanok
 \[
-0 < z < z_P \Rightarrow \varphi^3 z < \ell_P
+0 < z < z_P \Rightarrow \varphi^3 z < t_P
 \]
 \end{theorem}
 
@@ -28,7 +28,7 @@ z_P = \frac{\ell_P}{\varphi^3}, \qquad \ell_P = \texttt{structuralMinTimeD6} = \
 \lean{FUST.NavierStokes.PlanckCutoff.D6_above_planck_resolvable}
 \leanok
 \[
-z \geq z_P \Rightarrow \varphi^3 z \geq \ell_P
+z \geq z_P \Rightarrow \varphi^3 z \geq t_P
 \]
 \end{theorem}
 
@@ -49,7 +49,7 @@ z \geq z_P \Rightarrow \varphi^3 z \geq \ell_P
 \lean{FUST.NavierStokes.PlanckCutoff.planck_mode_cutoff}
 \leanok
 \[
-\forall L > 0,\; \exists N \in \mathbb{N},\; \forall n \geq N: L / \varphi^n < \ell_P
+\forall L > 0,\; \exists N \in \mathbb{N},\; \forall n \geq N: L / \varphi^n < t_P
 \]
 \end{theorem}
 
@@ -64,7 +64,7 @@ Since $\varphi > 1$, $\varphi^n \to \infty$ and the scale $L/\varphi^n$ eventual
 \leanok
 Three facts justify setting sub-Planck modes to zero:
 \begin{enumerate}
-\item $\ell_P > 0$ (structural minimum length from $D_\zeta$ is positive)
+\item $t_P > 0$ (structural minimum length from $D_\zeta$ is positive)
 \item Third law: $f \notin \ker(D_6) \Rightarrow \exists t,\; S(f,t) > 0$ (massive states have positive entropy)
 \item $\forall n \geq 3: C_n^2 > 0$ (dissipation is active outside $\ker(D_6)$, the spatial DOF)
 \end{enumerate}

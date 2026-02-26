@@ -1,17 +1,17 @@
-% FUST Least Action Theorem - Minimum Time Gap
-\chapter{Minimum Time Gap (FUST Planck Time)}
+% FUST Least Action Theorem - Planck Second from Poincaré Temporal Channel
+\chapter{Planck Second from Poincar\'{e} Temporal Channel}
 \label{chap:mat_minimum_time}
 
-\section{Structural Derivation}
-\label{sec:mat_min_time_derivation}
+\section{Derivation from \texorpdfstring{$D_\zeta$}{Dζ} 4-Momentum}
+\label{sec:mat_planck_derivation}
 
-The minimum time is not derived from numerical fitting, but necessarily from the $D_6$ structure.
+The Planck second is derived from the Poincar\'{e} $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ decomposition of the $D_\zeta$ operator, not from numerical fitting.
 
 \textbf{Core facts}:
 \begin{itemize}
-\item In $\ker(D_6) = \{1, x, x^2\}$, time is not defined ($D_6 = 0$)
-\item $n = 3$ is the minimum degree at which ``time begins to exist''
-\item $C_3$ is the minimum non-zero dissipation coefficient
+\item $D_\zeta$ decomposes into 3 spatial channels ($\Phi_S$) + 1 temporal channel ($\Phi_A$)
+\item The temporal channel coefficient at minimum active mode $s=1$: $\Phi_A(1) = 2\sqrt{5}$
+\item $F_\zeta$ temporal eigenvalue $= 5 \cdot \Phi_A(1) \cdot \mathrm{AF} = 10\sqrt{5} \cdot 2i\sqrt{3} = 20i\sqrt{15}$
 \end{itemize}
 
 \begin{theorem}[$C_3$ Value]
@@ -23,61 +23,65 @@ C_3 = \varphi^9 - 3\varphi^6 + \varphi^3 - \psi^3 + 3\psi^6 - \psi^9 = 12\sqrt{5
 \]
 \end{theorem}
 
-\section{Definition of Structural Minimum Time}
-\label{sec:mat_structural_min_time}
+\section{Planck Second Definition}
+\label{sec:mat_planck_second}
 
-The minimum scale at which $D_6$ begins to detect temporal change:
-
-\begin{definition}[Structural Minimum Time for $D_6$]
-\label{def:mat_min_time}
-\lean{FUST.LeastAction.structuralMinTimeD6}
+\begin{definition}[Planck Second]
+\label{def:mat_planck_second}
+\lean{FUST.TimeStructure.planckSecond}
 \leanok
 \[
-t_{\mathrm{FUST}} = \frac{(\sqrt{5})^4}{12} = \frac{25}{12}
+t_P = \frac{1}{20\sqrt{15}}
 \]
-This is derived from the spectral formula $t_{\min}^{D_m} = (\sqrt{5})^{m-1} / |C_{d_{\min}}|$ at $m=6$, $d_{\min}=3$, $C_3 = 12\sqrt{5}$.
+Derived as the inverse of the temporal $F_\zeta$ eigenvalue norm at the minimum active mode $s=1$.
 \end{definition}
 
-\begin{theorem}[Structural Minimum Time Value]
-\label{thm:mat_min_time_value}
-\lean{FUST.LeastAction.structuralMinTimeD6_eq}
+\begin{theorem}[Planck Second Positivity]
+\label{thm:mat_planck_second_pos}
+\lean{FUST.TimeStructure.planckSecond_pos}
 \leanok
-$t_{\mathrm{FUST}} = 25/12$
+$t_P > 0$
 \end{theorem}
 
-\begin{theorem}[Structural Minimum Time Positivity]
-\label{thm:mat_min_time_pos}
-\lean{FUST.LeastAction.structuralMinTimeD6_positive}
+\begin{theorem}[Planck Second Squared]
+\label{thm:mat_planck_second_sq}
+\lean{FUST.TimeStructure.planckSecond_sq}
 \leanok
-$t_{\mathrm{FUST}} > 0$
+$t_P^2 = 1/6000$
 \end{theorem}
 
-\subsection{Per-Operator Structural Minimum Times}
+\section{Temporal Eigenvalue Decomposition}
+\label{sec:mat_temporal_decomposition}
 
-Each operator $D_m$ has its own structural minimum time $t_{\min}^{D_m} = (\sqrt{5})^{m-1} / |C_{d_{\min}}|$:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-Operator & $\ker$ & $d_{\min}$ & $|C_{d_{\min}}|$ & Definition & $t_{\min}$ \\
-\hline
-$D_2$ & $\{1\}$ & 1 & $\sqrt{5}$ & $\sqrt{5}/\sqrt{5}$ & 1 \\
-$D_3$ & $\{1\}$ & 1 & 1 & $(\sqrt{5})^2/1$ & 5 \\
-$D_4$ & $\{x^2\}$ & 0 & $\sqrt{5}$ & $(\sqrt{5})^3/\sqrt{5}$ & 5 \\
-$D_5$ & $\{1,x\}$ & 2 & 6 & $(\sqrt{5})^4/6$ & 25/6 \\
-$D_6$ & $\{1,x,x^2\}$ & 3 & $12\sqrt{5}$ & $(\sqrt{5})^4/12$ & 25/12 \\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{theorem}[Structural Minimum Time Hierarchy]
-\label{thm:mat_min_time_hierarchy}
-$t_{\min}^{D_2} < t_{\min}^{D_6} < t_{\min}^{D_5} < t_{\min}^{D_3} = t_{\min}^{D_4}$, i.e.,
+\begin{theorem}[Temporal Eigenvalue Norm]
+\label{thm:mat_temporal_norm}
+\lean{FUST.TimeStructure.temporalEigenNormSq_from_channels}
+\leanok
 \[
-1 < \frac{25}{12} < \frac{25}{6} < 5
+|\text{temporal eigenvalue}|^2 = (20\sqrt{15})^2 = 6000
 \]
-(Individual $D_m$ structural minimum times are historical context; the D$\zeta$-unified theory uses only $t_{\mathrm{FUST}} = 25/12$ from D6.)
 \end{theorem}
+
+\begin{theorem}[Mass Formula Decomposition]
+\label{thm:mat_mass_formula}
+\lean{FUST.TimeStructure.temporalEigenNormSq_mass_formula}
+\leanok
+\[
+6000 = 12 \cdot (10\sqrt{5})^2
+\]
+where $12 = |\mathrm{AF}|^2$ from $\zeta_6$ arithmetic and $10\sqrt{5} = 5 \cdot \Phi_A(1)$.
+\end{theorem}
+
+\section{Derivation Chain}
+\label{sec:mat_derivation_chain}
+
+\begin{enumerate}
+\item $D_\zeta$ components at $\mathrm{Sum.inr}\;0$ = $\Phi_A(s)$ (temporal channel, Gravity.lean)
+\item $\Phi_A(1) = 2(\varphi - \psi) = 2\sqrt{5}$ (minimum active mode)
+\item $F_\zeta$ temporal eigenvalue $= 5 \cdot \Phi_A(1) \cdot \mathrm{AF} = 10\sqrt{5} \cdot 2i\sqrt{3} = 20i\sqrt{15}$
+\item $t_P^2 = 1/|\text{temporal eigenvalue}|^2 = 1/6000$
+\item $t_P = 1/(20\sqrt{15})$
+\end{enumerate}
 
 \section{Why It Cannot Be Further Divided}
 \label{sec:mat_indivisible}
@@ -86,8 +90,8 @@ The structural reason for the minimum time is:
 \begin{enumerate}
 \item $\ker(D_6) = \{1, x, x^2\}$ is not detected by $D_6$
 \item Functions with $n \leq 2$ ``do not experience time''
-\item $n = 3$ is the minimum degree for temporal change
-\item $t_{\mathrm{FUST}} = 25/12$ is derived from this boundary via the spectral formula
+\item $s = 1$ ($n \equiv 1 \pmod{6}$) is the minimum active mode of $F_\zeta$
+\item $t_P = 1/(20\sqrt{15})$ is derived from this mode's temporal eigenvalue
 \end{enumerate}
 
 \section{Physical Interpretation}
@@ -96,30 +100,18 @@ The structural reason for the minimum time is:
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-Scale & $D_6$ behavior & Physical meaning \\
+Scale & $D_\zeta$ behavior & Physical meaning \\
 \hline
-$\ker(D_6)$ & $D_6 = 0$ & No time (light-like) \\
-$n = 3$ & $C_3 = 12\sqrt{5}$ & Minimum temporal change \\
-$n \geq 4$ & $C_n > C_3$ & Stronger dissipation \\
+$\ker(F_\zeta)$ & $F_\zeta = 0$ & No time (vacuum) \\
+$s = 1$ & temporal eigenvalue $= 20i\sqrt{15}$ & Minimum temporal change \\
+$s \geq 5$ & larger eigenvalues & Stronger dissipation \\
 \hline
 \end{tabular}
 \end{center}
 
-$t_{\mathrm{FUST}} = 25/12$ is:
+$t_P = 1/(20\sqrt{15})$ is:
 \begin{itemize}
-\item The minimum time interval that $D_6$ can ``resolve''
-\item A structural consequence from the $\ker(D_6)$ boundary
+\item The minimum time interval derived from Poincar\'{e} temporal channel
+\item A structural consequence from the $D_\zeta \to I_4$ decomposition
 \item A purely algebraic derivation, not numerical fitting
 \end{itemize}
-
-\section{Dimensional Analysis}
-\label{sec:mat_min_time_dim}
-
-The derivation $t_{\mathrm{FUST}} = (\sqrt{5})^4 / 12$ has dimension:
-\[
-\dim(t_{\mathrm{FUST}}) = (5, -1)
-\]
-where $p = 5$ is the $\sqrt{5}$-power and $\delta = -1$ is the dissipation component (inverse of $D_6$ output dimension).
-
-Lean: \texttt{FUST.Dim.structuralMinTime\_dim}.
-

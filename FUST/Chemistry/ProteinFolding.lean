@@ -8,7 +8,6 @@ Peptide plane atoms = carbonZ = 6.
 -/
 
 import FUST.Chemistry.Mutation
-import FUST.Physics.Hamiltonian
 
 namespace FUST.Chemistry.ProteinFolding
 
@@ -196,24 +195,7 @@ theorem levinthal_exponential (n : ℕ) (hn : n ≠ 0) :
 theorem insulin_levinthal :
     levinthalSpace 51 = rotamersPerResidue ^ 51 := rfl
 
-/-! ## Section 9: Least Action Resolution -/
-
-open FUST.LeastAction FUST.Hamiltonian
-
-theorem folding_action_nonneg (f : ℂ → ℂ) (x : ℂ) :
-    D6Lagrangian f x ≥ 0 :=
-  D6_lagrangian_nonneg f x
-
-theorem folding_action_zero_iff_ker (f : ℂ → ℂ) (x : ℂ) :
-    D6Lagrangian f x = 0 ↔ D6 f x = 0 :=
-  D6_lagrangian_zero_iff f x
-
-theorem native_state_zero_action (f : ℂ → ℂ)
-    (hf : FUST.IntegralDzeta.IsInKerFζ f) (N : ℕ) :
-    partialActionFζ f N = 0 :=
-  partialActionFζ_ker_zero f hf N
-
-/-! ## Section 10: Dimensional Correspondence -/
+/-! ## Section 9: Dimensional Correspondence -/
 
 theorem backbone_dof_eq_kerD5_dim :
     backboneDihedrals = Nuclear.spinDegeneracy := rfl
