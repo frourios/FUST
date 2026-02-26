@@ -126,7 +126,7 @@ theorem neon_is_closed_shell : isClosedShell 10 :=
 theorem helium_closed_shell_eq :
     closedShellElectronCount 1 = Nuclear.shellCapacity 1 := by decide
 
--- shellCapacity(1) = spinDegeneracy = dim(ker(D5)) = 2
+-- shellCapacity(1) = spinDegeneracy = 2
 theorem shell1_eq_spinDeg : Nuclear.shellCapacity 1 = Nuclear.spinDegeneracy := by
   unfold Nuclear.shellCapacity; ring
 

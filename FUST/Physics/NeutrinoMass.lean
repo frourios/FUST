@@ -1,55 +1,35 @@
-import FUST.SpectralCoefficients
 import FUST.Physics.MassGap
+import FUST.Physics.WeinbergAngle
 import FUST.DimensionalAnalysis
 
 /-!
-# Neutrino Mass Structure from D₅ ⊂ D₆ Kernel Filtration
+# Neutrino Mass Structure from Fζ Channel Dimensions
 
-All neutrino mass predictions from FUST D-structure:
-- 3 flavors from dim ker(D₆) = 3
-- Mass hierarchy from ker(D₅) ⊂ ker(D₆), dim = 2, 3
-- Δm²₂₁/Δm²₃₁ = 1/30 from kerDimD5 × C(6,2)
-- m_ν₃/m_e = Δ × φ^(-32) where 32 = kerDimD5^5
-- Laurent boundary: D₆ annihilates t⁻², t² but D₅ detects both with coefficient 6
+All neutrino mass predictions from Fζ structure:
+- 3 flavors from syWeight = 3
+- Mass hierarchy from spinDegeneracy = 2 (SU(2) doublet)
+- Δm²₂₁/Δm²₃₁ = 1/30 from spinDegeneracy × C(6,2)
+- m_ν₃/m_e = Δ × φ^(-32) where 32 = spinDegeneracy^5
 -/
 
 namespace FUST.NeutrinoMass
 
-open FUST.Dim FUST.SpectralCoefficients
+open FUST.Dim FUST.WeinbergAngle
 
-/-! ## Part 1: D₅ Kernel Structure
+/-! ## Part 1: Neutrino Mass Squared Ratio
 
-ker(D₅) = {1, x} (dim = 2), ker(D₆) = {1, x, x²} (dim = 3).
-The filtration ker(D₂) ⊂ ker(D₅) ⊂ ker(D₆) with dim = 1, 2, 3
-determines the neutrino mass hierarchy. -/
+Δm²₂₁/Δm²₃₁ = 1/(spinDegeneracy × C(6,2)) = 1/30
+where spinDegeneracy = 2 (SU(2) doublet) and C(6,2) = 15. -/
 
-/-- dim ker(D₅) = 2: D₅ annihilates {1, x} but not x² -/
-abbrev kerDimD5 : ℕ := 2
-
-/-- ker(D₅) contains 1 and x (proof: D5_const, D5_linear) -/
-theorem kerD5_basis :
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
-
-/-- x² ∉ ker(D₅): the Higgs DOF separating ν₃ from ν₁,ν₂ -/
-theorem kerD5_boundary :
-    ∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0 := D5_not_annihilate_quadratic
-
-/-! ## Part 2: Neutrino Mass Squared Ratio
-
-Δm²₂₁/Δm²₃₁ = 1/(kerDimD5 × C(6,2)) = 1/30
-where kerDimD5 = 2 (dim of solar pair) and C(6,2) = 15 (D₆ pair count). -/
-
-/-- Neutrino mass squared denominator: kerDimD5 × C(6,2) = 2 × 15 = 30 -/
-abbrev neutrinoMassSqDenom : ℕ := kerDimD5 * Nat.choose 6 2
+/-- Neutrino mass squared denominator: spinDegeneracy × C(6,2) = 2 × 15 = 30 -/
+abbrev neutrinoMassSqDenom : ℕ := spinDegeneracy * Nat.choose 6 2
 
 theorem neutrinoMassSqDenom_eq : neutrinoMassSqDenom = 30 := rfl
 
-/-- Structural decomposition: 30 = dim(ker D₅) × pairs(D₆) -/
+/-- Structural decomposition: 30 = spinDegeneracy × C(6,2) -/
 theorem neutrinoMassSqDenom_structural :
-    neutrinoMassSqDenom = kerDimD5 * Nat.choose 6 2 ∧
-    kerDimD5 = 2 ∧ Nat.choose 6 2 = 15 := ⟨rfl, rfl, rfl⟩
+    neutrinoMassSqDenom = spinDegeneracy * Nat.choose 6 2 ∧
+    spinDegeneracy = 2 ∧ Nat.choose 6 2 = 15 := ⟨rfl, rfl, rfl⟩
 
 /-- Neutrino mass squared ratio: Δm²₂₁/Δm²₃₁ = 1/30 -/
 noncomputable abbrev neutrinoMassSqRatio : ℚ := 1 / neutrinoMassSqDenom
@@ -59,30 +39,22 @@ theorem neutrinoMassSqRatio_eq : neutrinoMassSqRatio = 1 / 30 := rfl
 /-- Neutrino mass ratio m₂/m₃ = √(1/30) -/
 noncomputable abbrev neutrinoMassRatio : ℝ := Real.sqrt (1 / 30)
 
-/-- Neutrino mass hierarchy from kernel filtration -/
-theorem neutrino_hierarchy_from_kernel :
-    kerDimD5 = 2 ∧
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    neutrinoMassSqDenom = 30 :=
-  ⟨rfl, D5_not_annihilate_quadratic, rfl⟩
-
-/-! ## Part 3: Absolute Mass Scale from D₅ Structure
+/-! ## Part 2: Absolute Mass Scale
 
 m_ν₃/m_e = Δ × φ^(-32) where:
-- Δ = 12/25 (D₆ mass gap)
-- 32 = 2⁵ = (dim ker D₅)^(D₅ order) = kerDimD5^5
+- Δ = 12/25 (mass gap)
+- 32 = 2⁵ = spinDegeneracy^5
 
-This gives m_ν₃ = Δ² × φ^(-32) in FUST units: the neutrino mass
-acquires an extra Δ suppression factor (seesaw-like) from D₅ perturbation. -/
+The neutrino mass acquires a Δ suppression factor (seesaw-like). -/
 
-/-- Neutrino mass suppression exponent: 2⁵ = (dim ker D₅)^(D₅ order) -/
-abbrev neutrinoMassExponent : ℕ := kerDimD5 ^ 5
+/-- Neutrino mass suppression exponent: 2⁵ = spinDegeneracy^5 -/
+abbrev neutrinoMassExponent : ℕ := spinDegeneracy ^ 5
 
 theorem neutrinoMassExponent_eq : neutrinoMassExponent = 32 := rfl
 
 theorem neutrinoMassExponent_structural :
-    neutrinoMassExponent = kerDimD5 ^ 5 ∧
-    kerDimD5 = 2 ∧ (5 : ℕ) = 5 := ⟨rfl, rfl, rfl⟩
+    neutrinoMassExponent = spinDegeneracy ^ 5 ∧
+    spinDegeneracy = 2 := ⟨rfl, rfl⟩
 
 /-- m_ν₃/m_e = Δ × φ^(-32): heaviest neutrino mass ratio -/
 noncomputable abbrev nu3ElectronRatio : ℝ :=
@@ -100,35 +72,11 @@ theorem nu2ElectronRatio_eq :
 
 /-- m_ν₃/m_e is positive -/
 theorem nu3ElectronRatio_pos : nu3ElectronRatio > 0 := by
-  unfold nu3ElectronRatio neutrinoMassExponent kerDimD5
+  unfold nu3ElectronRatio neutrinoMassExponent spinDegeneracy afWeight
   apply mul_pos (by norm_num : (0 : ℝ) < 12 / 25)
   exact zpow_pos phi_pos _
 
-/-- Complete neutrino mass derivation from D₅ structure -/
-theorem neutrino_mass_from_D5_structure :
-    (neutrinoMassExponent = kerDimD5 ^ 5) ∧
-    (neutrinoMassSqDenom = kerDimD5 * Nat.choose 6 2) ∧
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨rfl, rfl, D5_not_annihilate_quadratic, fun x _hx => D6_quadratic x⟩
-
-/-! ## Part 4: Laurent Boundary Structure
-
-Laurent ker(D₆) = {t⁻², 1, t, t²} (dim 4).
-D₅ detects both t⁻² and t² with equal coefficient 6 (D₅ duality).
-This boundary structure connects the spectral theory to the mass formula. -/
-
-/-- Laurent boundary: D₅ detects both t² and t⁻² in ker(D₆) with equal coefficient -/
-theorem neutrino_Laurent_boundary :
-    D6CoeffZ (-2) = 0 ∧ D6CoeffZ 2 = 0 ∧
-    D5CoeffZ (-2) = 6 ∧ D5CoeffZ 2 = 6 :=
-  ⟨D6CoeffZ_neg_two, D6CoeffZ_two, D5CoeffZ_neg_two, D5CoeffZ_two⟩
-
-/-- D₅ coefficient at d=2 equals C(4,2) = 6 (pair count of D₃) -/
-theorem D5Coeff_two_eq_choose : D5CoeffZ 2 = Nat.choose 4 2 := by
-  rw [D5CoeffZ_two]; simp [Nat.choose]
-
-/-! ## Part 5: Dimensioned Neutrino Masses
+/-! ## Part 3: Dimensioned Neutrino Masses
 
 Neutrinos have unique FDim in the D₆² sector:
 m_ν₃ = Δ² × φ^(-32), m_ν₂ = m_ν₃ × √(1/30). -/
@@ -139,26 +87,25 @@ def dimNu2 : FDim := dimNu3 * deriveFDim 2
 
 /-- Neutrino mass squared ratio as RatioQ -/
 def neutrinoMassSqRatio_dimQ : RatioQ :=
-  ⟨1 / (kerDimD5 * Nat.choose 6 2 : ℚ)⟩
+  ⟨1 / (spinDegeneracy * Nat.choose 6 2 : ℚ)⟩
 
 theorem neutrinoMassSqRatio_dimQ_val :
     neutrinoMassSqRatio_dimQ.val = 1 / 30 := by
-  simp only [neutrinoMassSqRatio_dimQ, kerDimD5, Nat.choose]; norm_num
+  simp only [neutrinoMassSqRatio_dimQ, spinDegeneracy, afWeight, Nat.choose]; norm_num
 
 /-- m_ν₃ = Δ × Δ × φ^(-32) = Δ² × φ^(-2⁵) -/
 noncomputable def nu3Mass : ScaleQ dimNu3 :=
-  ⟨FUST.D6MinEigenvalue * nu3ElectronRatio⟩
+  ⟨FUST.massScale * nu3ElectronRatio⟩
 
 theorem nu3Mass_val :
     nu3Mass.val = (12 / 25) * ((12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) := by
-  simp only [nu3Mass, nu3ElectronRatio_eq, FUST.D6MinEigenvalue]
+  simp only [nu3Mass, nu3ElectronRatio_eq, FUST.massScale_eq]
 
-/-- m_ν₃ / m_e = Δ × φ^(-32) (where m_e = Δ = D6MinEigenvalue) -/
+/-- m_ν₃ / m_e = Δ × φ^(-32) (where m_e = Δ = massScale) -/
 theorem nu3_electron_ratio :
-    nu3Mass.val / FUST.D6MinEigenvalue =
+    nu3Mass.val / FUST.massScale =
     (12 : ℝ) / 25 * φ ^ (-(32 : ℤ)) := by
-  simp only [nu3Mass_val]
-  unfold FUST.D6MinEigenvalue
+  simp only [nu3Mass_val, FUST.massScale_eq]
   field_simp
 
 /-- m_ν₂ = m_ν₃ × √(1/30) -/
@@ -183,9 +130,8 @@ theorem nu3Mass_pos : 0 < nu3Mass.val := by
   exact zpow_pos phi_pos _
 
 /-- m_ν₃ < m_e: neutrinos are lighter than electron -/
-theorem nu3_lt_electron : nu3Mass.val < FUST.D6MinEigenvalue := by
-  rw [nu3Mass_val]
-  change (12 : ℝ) / 25 * (12 / 25 * φ ^ (-(32 : ℤ))) < 12 / 25
+theorem nu3_lt_electron : nu3Mass.val < FUST.massScale := by
+  rw [nu3Mass_val, FUST.massScale_eq]
   have hΔ : (12 : ℝ) / 25 < 1 := by norm_num
   have hΔ_pos : (0 : ℝ) < 12 / 25 := by norm_num
   have hφ32 : φ ^ (-(32 : ℤ)) < 1 :=
@@ -196,10 +142,10 @@ theorem nu3_lt_electron : nu3Mass.val < FUST.D6MinEigenvalue := by
 
 /-- Complete neutrino mass chain -/
 theorem neutrino_mass_chain :
-    (nu3Mass.val / FUST.D6MinEigenvalue = (12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) ∧
+    (nu3Mass.val / FUST.massScale = (12 : ℝ) / 25 * φ ^ (-(32 : ℤ))) ∧
     (nu2Mass.val / nu3Mass.val = Real.sqrt (1 / 30)) ∧
     (0 < nu3Mass.val) ∧
-    (nu3Mass.val < FUST.D6MinEigenvalue) :=
+    (nu3Mass.val < FUST.massScale) :=
   ⟨nu3_electron_ratio, nu2_nu3_ratio, nu3Mass_pos, nu3_lt_electron⟩
 
 end FUST.NeutrinoMass

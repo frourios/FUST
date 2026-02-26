@@ -1527,4 +1527,24 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
              show (6:ℂ).re = 6 from by simp, show (6:ℂ).im = 0 from by simp]
   ring
 
+/-! ## Fζ Channel Decomposition
+
+Fζ = 5z·Dζ decomposes via Φ_A = N6+N2-N4, Φ_S = 2N5+N3+μN2.
+The AF channel carries odd-rank operators (D6, D4, D2)
+and the SY channel carries even-rank operators (D5, D3). -/
+
+/-- Fζ decomposes into AF and SY channels through Nn -/
+theorem Fζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :
+    Fζ f z =
+    AFNum (fun w => 5 * (N6 f w + N2 f w - N4 f w)) z +
+    SymNum (fun w => 5 * (2 * N5 f w + N3 f w +
+      (2 / ((↑φ : ℂ) + 2)) * N2 f w)) z := by
+  unfold Fζ
+  have hA : (fun w => 5 * Φ_A f w) = fun w => 5 * (N6 f w + N2 f w - N4 f w) :=
+    funext (fun w => by rw [Φ_A_decompose])
+  have hS : Φ_S_int f = fun w => 5 * (2 * N5 f w + N3 f w +
+      (2 / ((↑φ : ℂ) + 2)) * N2 f w) :=
+    funext (fun w => by rw [Φ_S_int_eq]; unfold Φ_S; ring)
+  rw [hA, hS]
+
 end FUST.FζOperator

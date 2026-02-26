@@ -10,7 +10,7 @@ namespace FUST.Dim
 Mass ratios are φ^n where n comes from D-structure pair counts.
 The exponents n are CountQ (structure-derived integers). -/
 
-def msMdExponent : CountQ := ⟨FUST.QuarkMassRatios.triangular 3⟩
+def msMdExponent : CountQ := ⟨Nat.choose 4 2⟩
 def mcMsValue : CountQ :=
   ⟨FUST.QuarkMassRatios.mc_ms_D5_component +
    FUST.QuarkMassRatios.mc_ms_isospin_component⟩
@@ -46,13 +46,11 @@ theorem muMdRatio_val : muMdRatio.val = 1 / 2 := by
 
 /-! ## Mass Ratio Correction Exponents as CountQ -/
 
-def tauMuExponent : CountQ :=
-  ⟨FUST.MassRatioDerivation.triangular 3⟩
-def muEExponent : CountQ :=
-  ⟨(FUST.MassRatioDerivation.massExponent 4 3).toNat⟩
+def tauMuExponent : CountQ := ⟨Nat.choose 4 2⟩
+def muEExponent : CountQ := ⟨Nat.choose 5 2 + Nat.choose 2 2⟩
 
 theorem tauMuExponent_val : tauMuExponent.val = 6 := rfl
-theorem muEExponent_val : muEExponent.val = 11 := by decide
+theorem muEExponent_val : muEExponent.val = 11 := rfl
 
 /-! ## Dark Matter Exponent as CountQ -/
 
@@ -102,33 +100,34 @@ def dimWBoson : FDim := dimTime⁻¹ * dimTimeD2 ^ (25 : ℤ)
 Each particle has a unique dimension deriveFDim(6)^a × dimTimeD2^n.
 The electron (n=0) is the D₆ mass gap Δ = 12/25. -/
 
-/-- Electron mass: m_e = Δ (lightest charged fermion = D₆ mass gap) -/
-noncomputable def electronMass : ScaleQ dimElectron := D6MinEigenvalue
+/-- Electron mass: m_e = Δ (lightest charged fermion = mass scale) -/
+noncomputable def electronMass : ScaleQ dimElectron := massScale
 
-theorem electronMass_val : electronMass.val = 12 / 25 := rfl
+theorem electronMass_val : electronMass.val = 12 / 25 := massScale_val
 
 /-- Muon mass: m_μ = Δ × φ¹¹ -/
 noncomputable def muonMass : ScaleQ dimMuon :=
-  ⟨FUST.D6MinEigenvalue * φ ^ (11 : ℤ)⟩
+  ⟨FUST.massScale * φ ^ (11 : ℤ)⟩
 
-theorem muonMass_val : muonMass.val = 12 / 25 * φ ^ (11 : ℤ) := rfl
+theorem muonMass_val : muonMass.val = 12 / 25 * φ ^ (11 : ℤ) := by
+  simp only [muonMass, FUST.massScale_eq]
 
 /-- Tau mass: m_τ = Δ × φ¹⁷ -/
 noncomputable def tauMass : ScaleQ dimTau :=
-  ⟨FUST.D6MinEigenvalue * φ ^ (17 : ℤ)⟩
+  ⟨FUST.massScale * φ ^ (17 : ℤ)⟩
 
-theorem tauMass_val : tauMass.val = 12 / 25 * φ ^ (17 : ℤ) := rfl
+theorem tauMass_val : tauMass.val = 12 / 25 * φ ^ (17 : ℤ) := by
+  simp only [tauMass, FUST.massScale_eq]
 
 /-- Proton mass: m_p = Δ × φ¹¹ × C(6,3)×C(4,2)/(C(3,2)+C(5,2)) -/
 noncomputable def protonMass : ScaleQ dimProton :=
-  ⟨FUST.D6MinEigenvalue * φ ^ (11 : ℤ) *
+  ⟨FUST.massScale * φ ^ (11 : ℤ) *
     (Nat.choose 6 3 * Nat.choose 4 2 : ℝ) /
     (Nat.choose 3 2 + Nat.choose 5 2 : ℝ)⟩
 
 theorem protonMass_val :
     protonMass.val = 12 / 25 * φ ^ (11 : ℤ) * 120 / 13 := by
-  unfold protonMass FUST.D6MinEigenvalue
-  simp only [Nat.choose]
+  simp only [protonMass, FUST.massScale_eq, Nat.choose]
   norm_num
 
 /-- Neutron-proton ratio: multiplicative isospin correction.
@@ -202,7 +201,7 @@ theorem beta_decay_possible :
   nlinarith
 
 /-- m_e = Δ: lightest charged fermion is the D₆ mass gap -/
-theorem electronMass_eq_massGap : electronMass = D6MinEigenvalue := rfl
+theorem electronMass_eq_massScale : electronMass = massScale := rfl
 
 /-- m_p / m_e = φ¹¹ × 120/13 -/
 theorem protonElectronRatio_from_masses :
@@ -231,11 +230,11 @@ Higgs: DimSum2 with φ vacuum + D₅ correction. -/
 
 /-- W boson mass: m_W = Δ × φ^25 × 15/16. D₆ sector. -/
 noncomputable def wBosonMass : ScaleQ dimWBoson :=
-  ⟨FUST.D6MinEigenvalue * FUST.MassRatioPredictions.WElectronRatio⟩
+  ⟨FUST.massScale * FUST.MassRatioPredictions.WElectronRatio⟩
 
 theorem wBosonMass_val :
     wBosonMass.val = 12 / 25 * (φ ^ 25 * (15 / 16)) := by
-  simp only [wBosonMass, FUST.MassRatioPredictions.WElectronRatio_eq, FUST.D6MinEigenvalue]
+  simp only [wBosonMass, FUST.MassRatioPredictions.WElectronRatio_eq, FUST.massScale_eq]
 
 theorem wBoson_electron_ratio :
     wBosonMass.val / electronMass.val =
@@ -268,13 +267,14 @@ def dimZSqComp2 : FDim :=
 theorem dimZSqComp1_eq : dimZSqComp1 = ⟨40, -48⟩ := by decide
 theorem dimZSqComp2_eq : dimZSqComp2 = ⟨42, -46⟩ := by decide
 
-/-- Z boson mass squared as DimSum2: m_Z² = m_W² + m_W² × 3/10.
+/-- Z boson mass squared as DimSum2: m_Z² = m_W² + m_W² × 1/3.
+cos²θ_W = 3/4 from Fζ channel weights, so m_Z² = m_W²/cos²θ_W = m_W² × 4/3.
 comp1 dim = dimZSqComp1 = dimWBoson², comp2 dim = dimZSqComp2. -/
 noncomputable def zBosonMassSq : DimSum2 dimZSqComp1 dimZSqComp2 :=
-  ⟨wBosonMass.sq, ⟨wBosonMass.val ^ 2 * (3 / 10)⟩⟩
+  ⟨wBosonMass.sq, ⟨wBosonMass.val ^ 2 * (1 / 3)⟩⟩
 
 theorem zBosonMassSq_eval :
-    zBosonMassSq.eval = wBosonMass.val ^ 2 * (13 / 10) := by
+    zBosonMassSq.eval = wBosonMass.val ^ 2 * (4 / 3) := by
   simp [zBosonMassSq, DimSum2.eval, ScaleQ.sq_val]
   ring
 
@@ -314,7 +314,7 @@ theorem boson_dims_all_distinct :
 /-- W/Z/H mass chain: ℝ projections match experimental ratios. -/
 theorem gauge_boson_chain :
     (wBosonMass.val / electronMass.val = φ ^ 25 * (15 / 16)) ∧
-    (zBosonMassSq.eval = wBosonMass.val ^ 2 * (13 / 10)) ∧
+    (zBosonMassSq.eval = wBosonMass.val ^ 2 * (4 / 3)) ∧
     (higgsMass.eval = wBosonMass.val * (φ - 1 / 10)) :=
   ⟨wBoson_electron_ratio, zBosonMassSq_eval, higgsMass_eval⟩
 

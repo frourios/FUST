@@ -1,13 +1,12 @@
 import FUST.Physics.TimeStructure
 import FUST.Physics.Gravity
-import FUST.SpectralCoefficients
 
 /-!
 # Mass Gap and Poincaré Mass Structure
 
 1. Fζ kernel: n ≡ 0,2,3,4 mod 6 → Fζ(zⁿ) = 0
 2. Active modes: n ≡ 1,5 mod 6 → Fζ(zⁿ) = λ(n)·zⁿ
-3. D6MinEigenvalue = 12/25 = D6Coeff(3)/(√5)⁵
+3. massScale = |AF_coeff|²/5² = 12/25 (from Fζ = 5z·Dζ and AF_coeff = 2i√3)
 4. Fζ action on scale lattice: S[f] = Σ ‖Fζ f(φⁿ)‖²
 5. Casimir mass gap: m²(1) = -P^μP_μ = 14
 -/
@@ -32,27 +31,29 @@ theorem kernel_mod6 (k : ℕ) (z : ℂ) :
 
 end KernelStructure
 
-/-! ## D₆ minimum eigenvalue
+/-! ## Mass Scale from Fζ Structure
 
-D6MinEigenvalue = D6Coeff(3)/(√5)⁵ = 12/25.
-This is the minimum nonzero D₆ spectral eigenvalue, not a mass gap. -/
+massScale = |AF_coeff|²/5² = 12/25.
+- 12 = |AF_coeff|² = |−2 + 4ζ₆|² (gauge channel norm, proved in Zeta6.AF_coeff_normSq)
+- 25 = 5² from Fζ = 5z·Dζ (operator rescaling, proved in FζOperator.Fζ_eq) -/
 
-section D6MinEigenvalueSection
+section MassScaleSection
 
-noncomputable def D6MinEigenvalue : ℝ := 12 / 25
+open FUST.Zeta6
 
-theorem D6MinEigenvalue_eq : D6MinEigenvalue = 12 / 25 := rfl
+/-- Mass scale Δ = |AF_coeff|²/5² derived from Fζ/Dζ structural constants -/
+noncomputable def massScale : ℝ := Complex.normSq AF_coeff / 5 ^ 2
 
-theorem D6MinEigenvalue_pos : 0 < D6MinEigenvalue := by
-  simp only [D6MinEigenvalue]; norm_num
+theorem massScale_eq : massScale = 12 / 25 := by
+  simp only [massScale, AF_coeff_normSq]; norm_num
 
-theorem D6MinEigenvalue_sq : D6MinEigenvalue ^ 2 = 144 / 625 := by
-  simp only [D6MinEigenvalue]; norm_num
+theorem massScale_pos : 0 < massScale := by rw [massScale_eq]; norm_num
 
-theorem D6MinEigenvalue_sq_pos : 0 < D6MinEigenvalue ^ 2 := by
-  simp only [D6MinEigenvalue]; norm_num
+theorem massScale_sq : massScale ^ 2 = 144 / 625 := by rw [massScale_eq]; norm_num
 
-end D6MinEigenvalueSection
+theorem massScale_sq_pos : 0 < massScale ^ 2 := by rw [massScale_eq]; norm_num
+
+end MassScaleSection
 
 /-! ## Fζ Action on Scale Lattice
 
@@ -148,12 +149,11 @@ end FUST
 
 namespace FUST.Dim
 
-/-- D₆ minimum eigenvalue with scaling dimension -/
-noncomputable def D6MinEigenvalue : ScaleQ dimTime⁻¹ := ⟨FUST.D6MinEigenvalue⟩
+noncomputable def massScale : ScaleQ dimTime⁻¹ := ⟨FUST.massScale⟩
 
-theorem D6MinEigenvalue_val : D6MinEigenvalue.val = 12 / 25 := rfl
+theorem massScale_val : massScale.val = 12 / 25 := by
+  simp only [massScale, FUST.massScale_eq]
 
-theorem D6MinEigenvalue_pos : 0 < D6MinEigenvalue.val := by
-  simp only [D6MinEigenvalue, FUST.D6MinEigenvalue]; norm_num
+theorem massScale_pos : 0 < massScale.val := by rw [massScale_val]; norm_num
 
 end FUST.Dim

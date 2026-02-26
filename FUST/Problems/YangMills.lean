@@ -287,10 +287,10 @@ theorem D6_cubic_value (z : ℂ) (hz : z ≠ 0) :
 
 /-- D₆(x³)(x₀) = Δ · x₀² for x₀ ∈ ℝ -/
 theorem D6_cubic_eq_massGap_mul_sq (x₀ : ℝ) (hx₀ : x₀ ≠ 0) :
-    D6 (fun t => t^3) x₀ = FUST.D6MinEigenvalue * x₀^2 := by
+    D6 (fun t => t^3) x₀ = FUST.massScale * x₀^2 := by
   have hx₀' : (↑x₀ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hx₀
   rw [show (x₀ : ℂ) = ↑x₀ from rfl, D6_cubic_value (↑x₀) hx₀']
-  simp only [FUST.D6MinEigenvalue]; push_cast; ring
+  simp only [FUST.massScale_eq]; push_cast; ring
 
 end D6Cubic
 
@@ -304,12 +304,12 @@ open FUST FUST.TimeStructure
 theorem yangMills_massGap_SU3 :
     (∀ x : ℂ, x ≠ 0 →
       D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t ^ 2) x = 0) ∧
-    (0 < FUST.D6MinEigenvalue ∧ FUST.D6MinEigenvalue = 12 / 25) ∧
+    (0 < FUST.massScale ∧ FUST.massScale = 12 / 25) ∧
     (∀ x₀ : ℝ, x₀ ≠ 0 →
-      D6 (fun t => t ^ 3) (x₀ : ℂ) = (FUST.D6MinEigenvalue : ℂ) * (x₀ : ℂ) ^ 2) ∧
+      D6 (fun t => t ^ 3) (x₀ : ℂ) = (FUST.massScale : ℂ) * (x₀ : ℂ) ^ 2) ∧
     (∃ f g, IsInKerFζ f ∧ IsInKerFζ g ∧ ¬IsInKerFζ (fun t => f t * g t)) :=
   ⟨fun x _hx => ⟨D6_const 1 x, D6_linear x, D6_quadratic x⟩,
-   ⟨FUST.D6MinEigenvalue_pos, rfl⟩,
+   ⟨FUST.massScale_pos, FUST.massScale_eq⟩,
    D6_cubic_eq_massGap_mul_sq,
    ker_Fζ_not_subalgebra⟩
 
@@ -322,15 +322,15 @@ theorem yangMills_massGap_SU2 :
 
 /-- Yang-Mills mass gap: SU(3) has Δ = 12/25 > 0, SU(2) has D₅(x²) ≠ 0 -/
 theorem yangMills_massGap :
-    (0 < FUST.D6MinEigenvalue ∧ FUST.D6MinEigenvalue = 12 / 25 ∧
+    (0 < FUST.massScale ∧ FUST.massScale = 12 / 25 ∧
      (∀ x : ℂ, x ≠ 0 →
        D6 (fun _ => 1) x = 0 ∧ D6 id x = 0 ∧ D6 (fun t => t ^ 2) x = 0) ∧
      (∀ x₀ : ℝ, x₀ ≠ 0 →
-       D6 (fun t => t ^ 3) (x₀ : ℂ) = (FUST.D6MinEigenvalue : ℂ) * (x₀ : ℂ) ^ 2)) ∧
+       D6 (fun t => t ^ 3) (x₀ : ℂ) = (FUST.massScale : ℂ) * (x₀ : ℂ) ^ 2)) ∧
     ((∀ x : ℂ, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) ∧
      (∀ x : ℂ, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0)) ∧
     (∃ f g, IsInKerFζ f ∧ IsInKerFζ g ∧ ¬IsInKerFζ (fun t => f t * g t)) :=
-  ⟨⟨FUST.D6MinEigenvalue_pos, rfl,
+  ⟨⟨FUST.massScale_pos, FUST.massScale_eq,
     fun x _hx => ⟨D6_const 1 x, D6_linear x, D6_quadratic x⟩,
     D6_cubic_eq_massGap_mul_sq⟩,
    ⟨fun x _hx => ⟨D5_const 1 x, D5_linear x⟩,

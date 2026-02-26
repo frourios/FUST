@@ -75,14 +75,11 @@ theorem unitarity (n : ℤ) :
 
 theorem leptonExponent_derivation :
     leptonExponent.val =
-    FUST.GravitationalCoupling.triangular 4 *
-    (FUST.GravitationalCoupling.triangular 4 + 1) - Nat.choose 3 2 := by
-  decide
+    Nat.choose 5 2 * (Nat.choose 5 2 + 1) - Nat.choose 3 2 := by decide
 
 theorem cosmologicalExponent_derivation :
     cosmologicalExponent.val =
     4 * leptonExponent.val +
-    FUST.GravitationalCoupling.triangular 5 * FUST.GravitationalCoupling.triangular 4 + 4 := by
-  decide
+    Nat.choose 6 2 * Nat.choose 5 2 + 4 := by decide
 
 end FUST.Dim

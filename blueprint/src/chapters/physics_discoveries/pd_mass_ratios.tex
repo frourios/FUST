@@ -20,9 +20,9 @@ from $D_2$ isospin structure. Experimental: 0.47 (error 6.4\%).
 \lean{FUST.QuarkMassRatios.ms_md_structural_eq}
 \leanok
 \[
-\frac{m_s}{m_d} = \varphi^{T(3)} = \varphi^6 \approx 17.94
+\frac{m_s}{m_d} = \varphi^{C(4,2)} = \varphi^6 \approx 17.94
 \]
-where $T(3) = C(4,2) = 6$. Experimental: 19.5 (error $\sim 8\%$).
+where $C(4,2) = 6$ is the $D_4$ pair count. Experimental: 19.5 (error $\sim 8\%$).
 \end{theorem}
 
 \begin{theorem}[Charm/Strange Ratio]
@@ -58,15 +58,15 @@ where $7 = C(4,2) + C(2,2)$ and $5 = C(4,2) - C(2,2)$. Experimental: 40.8 (error
 \section{Lepton Mass Ratios from D-Operator Pair Counts}
 \label{sec:mass_lepton}
 
-Each $\ker(D_6)$ basis element $t^n$ maps to a $D$-operator index $k$, with mass exponent $T(k) + \delta$:
+Each lepton mass exponent is a sum of D-operator pair counts $C(m,2)$:
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-$\ker(D_6)$ basis & Lepton & $D$-index & Exponent & Reason \\
+Lepton & Exponent & Pair count sum & Reason \\
 \hline
-$x^0 = 1$ & $e$ (lightest) & $D_4$ & $T(4)+1=11$ & $1 \in \ker(D_3)$, descent $D_4 \to D_3$ \\
-$x^1$ & $\mu$ (middle) & $D_3$ & $T(3)+0=6$ & $D_3(x) \neq 0$ \\
-$x^2$ & $\tau$ (heaviest) & $D_3$ & $T(3)+0=6$ & $D_5(x^2) \neq 0$ \\
+$e$ (lightest) & 0 & base & $D_6$ mass gap \\
+$\mu$ (middle) & 11 & $C(5,2)+C(2,2)$ & $D_5 + D_2$ pairs \\
+$\tau$ (heaviest) & 17 & $C(4,2)+C(5,2)+C(2,2)$ & $D_4 + D_5 + D_2$ pairs \\
 \hline
 \end{tabular}
 \end{center}
@@ -76,9 +76,9 @@ $x^2$ & $\tau$ (heaviest) & $D_3$ & $T(3)+0=6$ & $D_5(x^2) \neq 0$ \\
 \lean{FUST.MassRatioDerivation.tau_mu_ratio}
 \leanok
 \[
-\frac{m_\tau}{m_\mu} = \varphi^{T(3)+0} = \varphi^6
+\frac{m_\tau}{m_\mu} = \varphi^{C(4,2)} = \varphi^6
 \]
-Both $\tau$ and $\mu$ use $D_3$ pair count; correction $\delta = 0$ for same-level.
+The exponent $6 = C(4,2)$ is the $D_4$ pair count.
 \end{theorem}
 
 \begin{theorem}[Mu/Electron Ratio]
@@ -86,9 +86,9 @@ Both $\tau$ and $\mu$ use $D_3$ pair count; correction $\delta = 0$ for same-lev
 \lean{FUST.MassRatioDerivation.mu_e_ratio}
 \leanok
 \[
-\frac{m_\mu}{m_e} = \varphi^{T(4)+1} = \varphi^{11}
+\frac{m_\mu}{m_e} = \varphi^{C(5,2)+C(2,2)} = \varphi^{11}
 \]
-Electron uses $D_4$ (since $1 \in \ker(D_3)$, requiring higher pair count); $\delta = 1$ for $D_4 \to D_3$ descent.
+The exponent $11 = C(5,2) + C(2,2) = 10 + 1$ combines $D_5$ and $D_2$ pair counts.
 \end{theorem}
 
 \begin{theorem}[Tau/Electron Ratio]
@@ -232,10 +232,10 @@ m_W = \Delta \times \varphi^{25} \times \frac{15}{16} \quad [\mathrm{dimWBoson} 
 $m_Z^2$ is a \texttt{DimSum2} with two components of different FDim:
 \[
 m_Z^2 = \underbrace{m_W^2}_{\mathrm{dimZSqComp1} = (40,-48,-52)}
-+ \underbrace{m_W^2 \times \frac{3}{10}}_{\mathrm{dimZSqComp2} = (42,-46,-52)}
++ \underbrace{m_W^2 \times \frac{1}{3}}_{\mathrm{dimZSqComp2} = (42,-46,-52)}
 \]
-where $3/10 = C(3,2)/C(5,2) = \sin^2\theta_W / \cos^2\theta_W$.
-The $\mathbb{R}$-evaluation gives $m_Z^2.\mathrm{eval} = m_W^2 \times 13/10$, recovering $m_Z = m_W / \sqrt{10/13}$.
+where $1/3 = \mathrm{AF\_weight}/\mathrm{SY\_weight} = \sin^2\theta_W / \cos^2\theta_W$.
+The $\mathbb{R}$-evaluation gives $m_Z^2.\mathrm{eval} = m_W^2 \times 4/3$, recovering $m_Z = m_W / \sqrt{3/4}$.
 \end{theorem}
 
 \begin{theorem}[W/Z Ratio]
@@ -243,9 +243,9 @@ The $\mathbb{R}$-evaluation gives $m_Z^2.\mathrm{eval} = m_W^2 \times 13/10$, re
 \lean{FUST.MassRatioPredictions.WZRatio_from_kernel_structure}
 \leanok
 \[
-\frac{m_W}{m_Z} = \sqrt{\frac{C(5,2)}{C(3,2)+C(5,2)}} = \sqrt{\frac{10}{13}} \approx 0.877
+\frac{m_W}{m_Z} = \sqrt{\frac{\mathrm{SY\_weight}}{\mathrm{total\_weight}}} = \sqrt{\frac{3}{4}} = \frac{\sqrt{3}}{2} \approx 0.866
 \]
-Experimental: 0.881 (error 0.5\%).
+Experimental: 0.881 (error 1.7\%).
 \end{theorem}
 
 \subsection{Higgs Mass}
@@ -300,7 +300,7 @@ $H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & DimSum2 & $(21,...) \oplus (
 \leanok
 \begin{enumerate}
 \item $m_W / m_e = \varphi^{25} \times 15/16$
-\item $m_Z = m_W / \sqrt{10/13}$
+\item $m_Z = m_W / \sqrt{3/4}$
 \item $m_H = m_W \times (\varphi - 1/10)$
 \end{enumerate}
 All gauge boson masses are determined by $\Delta$, $\varphi$, and pair counts $C(m,2)$.
@@ -315,7 +315,7 @@ Numerical predictions use $\mathbb{R}$-evaluation of each mass (\texttt{.val} or
 Particle & Mass formula & Predicted (GeV) & Experimental (GeV) & Error \\
 \hline
 $W^\pm$ & $m_e \times \varphi^{25} \times 15/16$ & 80.37 & 80.37 & 0.002\% \\
-$Z$ & $m_Z^2.\mathrm{eval} = m_W^2 \times 13/10$ & 91.66 & 91.19 & 0.5\% \\
+$Z$ & $m_Z^2.\mathrm{eval} = m_W^2 \times 4/3$ & 92.82 & 91.19 & 1.8\% \\
 $H$ & $m_H.\mathrm{eval} = m_W(\varphi - 1/10)$ & 121.99 & 125.25 & 2.6\% \\
 gluon & 0 (in $\ker D_6$) & 0 & 0 & exact \\
 $\gamma$ & 0 (grading symmetry) & 0 & 0 & exact \\
@@ -390,7 +390,7 @@ Neutrino masses are not bounded by $\lambda_{\min}$: neutrinos acquire mass via 
 \[
 \eta = \varphi^{-44} \times \sin\left(\frac{2\pi}{5}\right) \approx 6 \times 10^{-10}
 \]
-where $44 = T(4) \times 4 + 4$ and $5$ = active D-levels.
+where $44 = C(10,2) - 1$ and $5$ = active D-levels.
 Experimental: $\sim 6 \times 10^{-10}$ (error $\sim 1\%$).
 \end{theorem}
 
@@ -407,7 +407,7 @@ All mass ratio exponents are derived from D-structure pair counts:
 \hline
 Ratio & Formula & D-structure origin \\
 \hline
-$m_s/m_d$ & $\varphi^6$ & $T(3) = C(4,2)$ \\
+$m_s/m_d$ & $\varphi^6$ & $C(4,2)$ \\
 $m_c/m_s$ & 12 & $C(5,2) + 2$ \\
 $m_b/m_c$ & 3 & $C(3,2)$ \\
 $m_t/m_b$ & $\varphi^7 + \varphi^5$ & $C(4,2) \pm C(2,2)$ \\
@@ -436,7 +436,7 @@ $\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(D_5) \times C(6,2)) = 1/30$ & Rat
 \end{tabular}
 \end{center}
 
-The exponents are CountQuantity: $T(3) = C(4,2) = 6$ (\texttt{msMdExponent}), $7 = C(4,2)+C(2,2)$ (\texttt{mtMbExpHigh}), $5 = C(4,2)-C(2,2)$ (\texttt{mtMbExpLow}). All exponents trace to D-structure pair counts, never hardcoded numerals.
+The exponents are CountQuantity: $C(4,2) = 6$ (\texttt{msMdExponent}), $C(4,2)+C(2,2) = 7$ (\texttt{mtMbExpHigh}), $C(4,2)-C(2,2) = 5$ (\texttt{mtMbExpLow}). All exponents trace to D-structure pair counts, never hardcoded numerals.
 
 $m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\lambda_{\min} = 12/25$ (ScaleQuantity at dimTime$^{-1}$, $D_6$ minimum eigenvalue from gauge-invariant output).
 

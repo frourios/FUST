@@ -43,10 +43,10 @@ end EffectivePotential
 
 section SelfCoupling
 
-noncomputable def lambda_FUST : ℝ := D6MinEigenvalue ^ 2 / (2 * Nat.choose 6 3)
+noncomputable def lambda_FUST : ℝ := massScale ^ 2 / (2 * Nat.choose 6 3)
 
 theorem lambda_FUST_eq : lambda_FUST = 144 / 25000 := by
-  simp only [lambda_FUST, D6MinEigenvalue, Nat.choose]; norm_num
+  simp only [lambda_FUST, massScale_eq, Nat.choose]; norm_num
 
 theorem lambda_FUST_pos : 0 < lambda_FUST := by
   rw [lambda_FUST_eq]; norm_num
@@ -152,12 +152,12 @@ section Complete
 theorem fust_vacuum_stability :
     (∀ f N, partialActionFζ f N ≥ 0) ∧
     (∀ f, IsInKerFζ f → ∀ N, partialActionFζ f N = 0) ∧
-    (0 < D6MinEigenvalue ^ 2) ∧
+    (0 < massScale ^ 2) ∧
     (0 < lambda_FUST) ∧
     (¬∃ (f : ℂ → ℂ) (N : ℕ), partialActionFζ f N < 0) :=
   ⟨partialActionFζ_nonneg,
    partialActionFζ_ker_zero,
-   D6MinEigenvalue_sq_pos,
+   massScale_sq_pos,
    lambda_FUST_pos,
    no_lower_vacuum_exists⟩
 

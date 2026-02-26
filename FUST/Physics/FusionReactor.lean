@@ -87,10 +87,6 @@ theorem differential_permeation :
 theorem tritium_effDeg_excess :
     (dimAtom 1 2 0).effectiveDegree - (dimAtom 1 1 0).effectiveDegree = 15 := by decide
 
--- Tritium atom effDeg > 3
-theorem tritium_exceeds_kerD6_dim :
-    (dimAtom 1 2 1).effectiveDegree > 3 := by decide
-
 -- SiC permeation barrier: Z_total = nuclearMagic(2) = 20
 abbrev siliconZ : ℕ := 14
 abbrev SiC_Z : ℕ := siliconZ + carbonZ

@@ -21,18 +21,6 @@ using kernel structure of difference operators and binomial coefficients.
 
 namespace FUST.QuarkMassRatios
 
-/-- Triangular number: T(n) = n(n+1)/2 = C(n+1, 2) -/
-abbrev triangular (n : ℕ) : ℕ := n * (n + 1) / 2
-
-/-- T(n) = C(n+1, 2): triangular numbers are pair counts -/
-theorem triangular_eq_choose (n : ℕ) : triangular n = Nat.choose (n + 1) 2 := by
-  simp only [triangular, Nat.choose_two_right, Nat.add_sub_cancel]
-  ring_nf
-
-theorem triangular_three : triangular 3 = 6 := rfl
-theorem triangular_four : triangular 4 = 10 := rfl
-theorem triangular_five : triangular 5 = 15 := rfl
-
 /-! ## Part 1: m_u/m_d = 1/2 (Isospin Symmetry) -/
 
 /-- Up/down quark mass ratio from D₂ isospin structure -/
@@ -47,14 +35,8 @@ The exponent 6 = T(3) = C(4,2) comes from D₄ pair count.
 This matches the lepton τ/μ ratio (same D-structure origin).
 -/
 
-/-- Strange/down quark mass ratio exponent = triangular(3) = C(4,2) = 6 -/
-theorem ms_md_exponent : triangular 3 = 6 := rfl
-
-/-- Exponent 6 = C(4,2) from D₄ pair count -/
-theorem ms_md_exponent_as_pairs : triangular 3 = Nat.choose 4 2 := rfl
-
 /-- The ratio φ^6 matches the lepton τ/μ pattern -/
-noncomputable abbrev ms_md_structural : ℝ := φ ^ triangular 3
+noncomputable abbrev ms_md_structural : ℝ := φ ^ Nat.choose 4 2
 
 theorem ms_md_structural_eq : ms_md_structural = φ ^ 6 := rfl
 
@@ -172,22 +154,13 @@ Neutrino mass squared ratio Δm²₂₁/Δm²₃₁ = 1/30
 
 theorem neutrino_ratio_decomposition : 2 * Nat.choose 6 2 = 30 := rfl
 
-/-! ## Connection to Kernel Structure
-
-The D₃ pair count (3) giving exact m_b/m_c prediction is connected to
-D₃ having gauge invariance (annihilates constants).
--/
-
-theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x _hx => D3_const 1 x
-
 /-! ## Summary Theorem -/
 
 theorem quark_mass_ratios_from_d_structure :
     -- m_u/m_d = 1/2
     ((1 : ℚ) / 2 = 1/2) ∧
-    -- m_s/m_d exponent = T(3) = C(4,2) = 6
-    (triangular 3 = Nat.choose 4 2) ∧
+    -- m_s/m_d exponent = C(4,2) = 6
+    (Nat.choose 4 2 = 6) ∧
     -- m_c/m_s = C(5,2) + 2 = 12
     (mc_ms_D5_component + mc_ms_isospin_component = 12) ∧
     -- m_b/m_c = C(3,2) = 3
@@ -196,15 +169,13 @@ theorem quark_mass_ratios_from_d_structure :
     (mt_mb_exp_high = Nat.choose 4 2 + Nat.choose 2 2) ∧
     (mt_mb_exp_low = Nat.choose 4 2 - Nat.choose 2 2) ∧
     -- Neutrino ratio denominator = 2 × C(6,2) = 30
-    (2 * Nat.choose 6 2 = 30) ∧
-    -- D₃ has gauge invariance
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) := by
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, D3_gauge_invariance⟩
+    (2 * Nat.choose 6 2 = 30) := by
+  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-- All exponents derived from D-structure pair counts -/
 theorem all_exponents_from_pair_counts :
-    -- m_s/m_d: T(3) = C(4,2)
-    (triangular 3 = Nat.choose 4 2) ∧
+    -- m_s/m_d: C(4,2) = 6
+    (Nat.choose 4 2 = 6) ∧
     -- m_c/m_s: C(5,2) + 2
     (mc_ms_D5_component = Nat.choose 5 2) ∧
     -- m_b/m_c: C(3,2)

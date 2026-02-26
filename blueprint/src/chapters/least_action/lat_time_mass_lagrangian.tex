@@ -147,22 +147,23 @@ $p = 0 \Rightarrow -C(p) = 0$
 \section{\texorpdfstring{$D_6$}{D6} Minimum Eigenvalue}
 \label{sec:mat_D6_eigenvalue}
 
-The $D_6$ spectral eigenvalue provides the mass scale.
+The mass scale $\Delta$ is derived from $F_\zeta/D_\zeta$ structural constants.
 
-\begin{definition}[$D_6$ Minimum Eigenvalue]
-\label{def:mat_D6_min_eigenvalue}
-\lean{FUST.D6MinEigenvalue}
+\begin{definition}[Mass Scale]
+\label{def:mat_mass_scale}
+\lean{FUST.massScale}
 \leanok
 \[
-\lambda_{\min} = \frac{C_3}{(\sqrt{5})^5} = \frac{12\sqrt{5}}{(\sqrt{5})^5} = \frac{12}{25}
+\Delta = \frac{|\mathrm{AF\_coeff}|^2}{5^2} = \frac{12}{25}
 \]
+where $|\mathrm{AF\_coeff}|^2 = |-2+4\zeta_6|^2 = 12$ and $5^2 = 25$ from $F_\zeta = 5z \cdot D_\zeta$.
 \end{definition}
 
-\begin{theorem}[$\lambda_{\min} > 0$]
-\label{thm:mat_eigenvalue_pos}
-\lean{FUST.D6MinEigenvalue_pos}
+\begin{theorem}[$\Delta > 0$]
+\label{thm:mat_mass_scale_pos}
+\lean{FUST.massScale_pos}
 \leanok
-$\lambda_{\min} = 12/25 > 0$
+$\Delta = 12/25 > 0$
 \end{theorem}
 
 \section{Entropy as Departure from Kernel}
@@ -207,7 +208,7 @@ Time evolution & $f \mapsto f(\varphi \cdot)$ & \texttt{FUST.TimeStructure.timeE
 Lagrangian & $L = |F_\zeta f|^2$ & \texttt{FUST.TimeStructure.FζLagrangian} \\
 Least action & $\delta L = 0 \Rightarrow f \in \ker(F_\zeta)$ & \texttt{FUST.LeastAction.critical\_point\_of\_witness} \\
 Mass ($m^2 = 14$) & $-P^\mu P_\mu$ from $D_\zeta$ 4-momentum & \texttt{FUST.casimirMassSq\_one} \\
-$\lambda_{\min} = 12/25$ & $C_3/(\sqrt{5})^5$ & \texttt{FUST.D6MinEigenvalue} \\
+$\Delta = 12/25$ & $|\mathrm{AF\_coeff}|^2/5^2$ & \texttt{FUST.massScale} \\
 Entropy & $S = |F_\zeta f|^2$ & \texttt{FUST.TimeStructure.entropyAtFζ} \\
 \hline
 \end{tabular}

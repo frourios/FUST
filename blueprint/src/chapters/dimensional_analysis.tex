@@ -77,20 +77,6 @@ Addition across types is prohibited:
 \end{itemize}
 \end{theorem}
 
-\section{Algebra of Dimensions}
-\label{sec:dim_algebra}
-
-\begin{theorem}[Multiplicative Group]
-\label{thm:dim_comm_group}
-\lean{FUST.Dim.instCommGroupFDim}
-\leanok
-$(p, \delta)$ forms a commutative group under componentwise addition:
-\begin{align}
-\dim(Q_1 \cdot Q_2) &= (p_1 + p_2,\; \delta_1 + \delta_2) \\
-\dim(Q_1 / Q_2) &= (p_1 - p_2,\; \delta_1 - \delta_2)
-\end{align}
-\end{theorem}
-
 \section{Difference Operator Output Dimensions}
 \label{sec:dim_operator_output}
 
@@ -122,15 +108,6 @@ $D_6$ & antisymmetric (Fibonacci) & 1 & $(-5, 1)$ \\
 \begin{theorem}[Operators Have Distinct Dimensions]
 \label{thm:dim_operators_distinct}
 For $i \neq j$, $\dim(D_i f) \neq \dim(D_j f)$, so $D_i f(x) + D_j f(x)$ is a type error.
-\end{theorem}
-
-\begin{theorem}[$D_6$ Output Is Inverse Time]
-\label{thm:dim_D6_inverse_time}
-\lean{FUST.Dim.D6_output_is_inverse_time}
-\leanok
-\[
-\dim(D_6 f) = (-5, 1) = \dim(t_P)^{-1}
-\]
 \end{theorem}
 
 \section{Structural Constants}
@@ -240,10 +217,10 @@ SM particle count & 37 & \texttt{smParticleCount} \\
 \hline
 Quantity & Value & Lean reference \\
 \hline
-$\sin^2\theta_W$ & $C(3,2)/(C(3,2)+C(5,2)) = 3/13$ & \texttt{weinbergAngle} \\
+$\sin^2\theta_W$ & $\mathrm{AF\_weight}/(\mathrm{SY\_weight}+\mathrm{AF\_weight}) = 1/4$ & \texttt{weinbergAngle} \\
 $\alpha_s$ & $C(3,2)/(C(5,2)+C(6,2)) = 3/25$ & \texttt{strongCoupling} \\
 $m_u/m_d$ & $C(2,2)/2 = 1/2$ & \texttt{muMdRatio} \\
-$m_W^2/m_Z^2$ & $C(5,2)/(C(3,2)+C(5,2)) = 10/13$ & \texttt{wzRatioSq} \\
+$m_W^2/m_Z^2$ & $\mathrm{SY\_weight}/(\mathrm{SY\_weight}+\mathrm{AF\_weight}) = 3/4$ & \texttt{wzRatioSq} \\
 $\sin^2\theta_{12}$ & $1/C(3,2) = 1/3$ & \texttt{solarMixing} \\
 \hline
 \end{tabular}
@@ -262,7 +239,7 @@ Blueprint theorem & Dimensional verification \\
 \hline
 $t_P = 1/(20\sqrt{15})$ & Scale$(5,-1)$ $\checkmark$ \\
 $\lambda_{\min} = 12/25$ & Scale$(-5,1)$ $\checkmark$ \\
-$\sin^2\theta_W = 3/13$ & Ratio (Count/Count) $\checkmark$ \\
+$\sin^2\theta_W = 1/4$ & Ratio (Weight/Weight) $\checkmark$ \\
 $(D_6 f)^2$ Hamiltonian & Scale$(-10,2)$ $\checkmark$ \\
 $D_6[\mathrm{timeEvolution}(f)] = \varphi \cdot D_6[f](\varphi \cdot)$ & Both sides: $(-5,1)$ $\checkmark$ \\
 \hline
@@ -300,9 +277,9 @@ $E_{\mathrm{conserved}}$ & $\nabla_\mu T^{\mu\nu} = 0$ \\
 
 \begin{theorem}[Spectral Gap Dimensional Interpretation]
 \label{thm:dim_spectral_gap}
-\lean{FUST.D6MinEigenvalue_sq}
+\lean{FUST.massScale_sq}
 \leanok
-$\Delta = C_3/(\sqrt{5})^5 = 12/25$ is ScaleQuantity$(-5, 1)$, and $\Delta^2 = 144/625$ is ScaleQuantity$(-10, 2)$.
+$\Delta = |\mathrm{AF\_coeff}|^2/5^2 = 12/25$ is ScaleQuantity$(-5, 1)$, and $\Delta^2 = 144/625$ is ScaleQuantity$(-10, 2)$.
 The comparison $\Delta^2 \leq E$ in \texttt{EnergyInSpectrum} compares quantities of the same dimension $(-10, 2)$,
 which is dimensionally consistent.
 \end{theorem}

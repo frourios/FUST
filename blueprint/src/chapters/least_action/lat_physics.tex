@@ -97,19 +97,18 @@ Spacetime dimension is not an arbitrary assumption but derived from $D_6$ struct
 \item $d \neq 2$ (minimal coupling degeneracy)
 \end{itemize}
 
-\textbf{Time dimension = 1}: By the Time Theorem:
-\begin{itemize}
-\item $\mathrm{TimeExists}\, f \leftrightarrow f \notin \ker(D_6)$ (binary nature of time existence)
-\item $\varphi > 1$ uniquely defines the future direction (time is 1-dimensional)
-\end{itemize}
+\textbf{Time dimension = 1}: The AF channel weight in $|D_\zeta|^2 = 12(3a^2 + b^2)$ is 1, encoding a single temporal degree of freedom. Physically, $\mathrm{TimeExists}\, f \leftrightarrow f \notin \ker(D_6)$ (binary nature), and $\varphi > 1$ uniquely defines the future direction.
 
-\begin{theorem}[Spacetime Dimension]
+\begin{theorem}[Spacetime Dimension from $F_\zeta$ Channel Weights]
 \label{thm:mat_spacetime_dim}
-\lean{FUST.Physics.Lorentz.spacetime_dim}
+\lean{FUST.WeinbergAngle.totalWeight_eq}
 \leanok
+From $|D_\zeta|^2 = 12(3a^2 + b^2)$:
 \[
-\text{Spatial dimension} + \text{Time dimension} = 3 + 1 = 4
+\mathrm{SY\_weight} + \mathrm{AF\_weight} = 3 + 1 = 4
 \]
+where $\mathrm{SY\_weight} = \dim\ker(D_6) = 3$ (spatial) and $\mathrm{AF\_weight} = 1$ (temporal).
+The 3:1 weight ratio encodes $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$.
 \end{theorem}
 
 \subsection{Derivation of Gauge Group}
@@ -269,7 +268,7 @@ $f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
 \end{tabular}
 \end{center}
 
-$\lambda_{\min} = 12/25$ is the $D_6$ minimum eigenvalue (Lean: \texttt{FUST.D6MinEigenvalue}).
+$\Delta = 12/25$ is the mass scale $|\mathrm{AF\_coeff}|^2/5^2$ (Lean: \texttt{FUST.massScale}).
 The Casimir mass gap $m^2 = 14$ is derived from $D_\zeta$ 4-momentum (Lean: \texttt{FUST.massGapSq}).
 Other particles acquire distinct FDim via $\varphi$-scaling (see Chapter~\ref{chap:pd_mass_ratios}).
 

@@ -2,35 +2,20 @@
 \chapter{Particle Spectrum from \texorpdfstring{$D_\zeta$}{Dζ} Structure}
 \label{chap:pd_particle}
 
-\section{$\ker(D_6)$ Structure}
-\label{sec:particle_ker_d6}
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Channel Structure}
+\label{sec:particle_channel_structure}
 
-\begin{theorem}[$\ker(D_6)$ Basis]
-\label{thm:particle_D6_kernel_basis}
-\lean{FUST.ParticleSpectrum.D6_kernel_basis}
-\leanok
-$\ker(D_6) = \{1, x, x^2\}$: all three basis elements are annihilated by $D_6$.
-\end{theorem}
-
-\begin{theorem}[$D_6$ Ceiling]
-\label{thm:particle_D6_ceiling}
-\lean{FUST.ParticleSpectrum.D6_ceiling}
-\leanok
-$x^3 \notin \ker(D_6)$: $D_6$ detects cubic ($D_6[t^3](x) \neq 0$ for all $x \neq 0$).
-Additionally, $D_7$ projects to $D_6$ via Fibonacci recurrence.
-\end{theorem}
-
-\section{D-Operator Detection Boundaries}
-\label{sec:particle_detection}
-
-The $\ker(D_6)$ basis $\{1, x, x^2\}$ is separated by the responses of lower $D$-operators:
+The $F_\zeta$ normSq decomposition $|D_\zeta|^2 = 12(3a^2 + b^2)$ yields two channel weights:
 \begin{itemize}
-\item $1 \in \ker(D_3) \cap \ker(D_5) \cap \ker(D_6)$
-\item $x \in \ker(D_6) \setminus \ker(D_3)$: $D_3$ detects linear
-\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: $D_5$ detects quadratic
+\item SY channel: weight 3 (carries SU(3) color, rank 3)
+\item AF channel: weight 1 (carries SU(2) weak, rank 1)
+\item Total weight = $3 + 1 = 4$ = spacetimeDim
 \end{itemize}
-Mass exponents derive from $D$-operator pair counts:
-$x^0 \to D_4$: $T(4)+1 = 11$, \quad $x^1 \to D_3$: $T(3) = 6$, \quad $x^2 \to D_3$: $T(3) = 6$.
+
+The SY channel weight $= 3$ determines the fermion generation count.
+
+Mass exponents derive from pair counts $C(m,2)$:
+$e \to \mu$: $C(5,2)+C(2,2) = 11$, \quad $\mu \to \tau$: $C(4,2) = 6$, \quad $e \to \tau$: $11+6 = 17$.
 
 \section{Charge Constraint}
 \label{sec:particle_charges}
@@ -58,11 +43,10 @@ Charge $Q = 1/5$ is not representable as $n/3$ and is therefore forbidden.
 
 \begin{theorem}[Maximum Spin]
 \label{thm:particle_max_spin}
-\lean{FUST.ParticleSpectrum.spin_ceiling}
+\lean{FUST.ParticleSpectrum.max_spin}
 \leanok
-Spin count = spacetime dimension = 4. Allowed spins: $0, 1/2, 1, 2$.
-
-Spin $> 2$ would require $D_7$+, which projects to $D_6$.
+Spin count = totalWeight = 4. Allowed spins: $0, 1/2, 1, 2$.
+Maximum spin $= 2$ from the allowed spin list.
 \end{theorem}
 
 \section{Colored Leptons Forbidden}
@@ -82,7 +66,7 @@ Colored lepton (hypercharge $Y = -1$, color = triplet) is forbidden by $D_3$-$D_
 \label{thm:particle_fermion_count}
 \lean{FUST.ParticleSpectrum.SM_fermion_count_eq}
 \leanok
-Fermion flavor count $= \dim\ker(D_6) = 3$.
+Fermion flavor count $= \mathrm{syWeight} = 3$ (from $|D_\zeta|^2 = 12(3a^2 + b^2)$).
 \begin{align}
 \text{Leptons} &= 2 \times 3 = 6 \\
 \text{Quarks} &= 2 \times 3 \times C(3,2) = 18 \\
@@ -137,16 +121,10 @@ See Chapter~\ref{chap:pd_gravitational}, \S\ref{sec:grav_graviton} for the full 
 
 \subsection{Neutrino Mass Structure at \texorpdfstring{$D_5$}{D5}}
 
-\begin{theorem}[Neutrino Kernel Structure]
+\begin{theorem}[Neutrino Flavor Count]
 \label{thm:neutrino_kernel}
-\lean{FUST.ParticleSpectrum.neutrino_kernel_structure}
-\leanok
-3 neutrino flavors from $\dim\ker(D_6) = 3$ (SU(2) doublet with charged leptons).
-Mass states split by $\ker(D_5) \subset \ker(D_6)$:
-\begin{itemize}
-\item $\ker(D_5) = \{1, x\}$: solar pair $\nu_1, \nu_2$ (2 nearly-degenerate states)
-\item $x^2 \in \ker(D_6) \setminus \ker(D_5)$: atmospheric $\nu_3$ (separated)
-\end{itemize}
+3 neutrino flavors from $\mathrm{syWeight} = 3$ (SU(2) doublet with charged leptons).
+The SY channel weight determines the number of neutrino mass eigenstates.
 Right-handed neutrinos predicted at $D_5$ level (spin-1/2).
 \end{theorem}
 
@@ -265,98 +243,31 @@ This follows from the injectivity of the map $(a, n) \mapsto \mathrm{deriveFDim}
 \section{Generation Structure}
 \label{sec:generation_structure}
 
-The number of fermion generations is not a free parameter but is determined
+The number of fermion generations is not a free parameter but equals
+the $F_\zeta$ SY channel weight $= 3$, which in turn is determined
 by the minimal polynomial of $\varphi$.
 
 \subsection{Why 3 Generations}
 
-\begin{theorem}[Three Annihilation Conditions]
+\begin{theorem}[Three Generations from $F_\zeta$ SY Channel]
 \label{thm:three_annihilation}
-\lean{FUST.Dim.three_annihilation_conditions}
-\leanok
-$\ker(D_6) = \{1, x, x^2\}$ has dimension 3 because $D_6$'s coefficients
-$(1, -3, 1, -1, 3, -1)$ satisfy exactly 3 polynomial identities:
-\begin{align}
-d=0: &\quad 1 - 3 + 1 - 1 + 3 - 1 = 0 & \text{(coefficient sum)} \\
-d=1: &\quad \sum c_i s_i = 0 & \text{(uses } \varphi + \psi = 1\text{)} \\
-d=2: &\quad \sum c_i s_i^2 = 0 & \text{(uses } \varphi^2 + \psi^2 = 3, \; \varphi\psi = -1\text{)}
-\end{align}
-$d=3$ fails: $D_6[t^3](x) \neq 0$ for all $x \neq 0$.
+The number of fermion generations equals the SY channel weight from
+$|D_\zeta|^2 = 12(\underbrace{3}_{\mathrm{syWeight}} a^2 + b^2)$.
 
 The golden ratio satisfies $x^2 - x - 1 = 0$ (degree 2), providing
 2 symmetric-function identities $(\sigma_1 = 1, \sigma_2 = -1)$
 plus the coefficient-sum constraint, giving exactly 3 annihilation conditions:
 \[
-\boxed{3 \text{ generations} = \deg(x^2 - x - 1) + 1 = 2 + 1 = 3}
+\boxed{3 \text{ generations} = \mathrm{syWeight} = \deg(x^2 - x - 1) + 1 = 2 + 1 = 3}
 \]
 \end{theorem}
 
-\subsection{The \texorpdfstring{$D_4$}{D4} Anomaly}
+\subsection{Pair Count Origin}
 
-\begin{theorem}[$D_4$ Anomaly]
-\label{thm:D4_anomaly}
-\lean{FUST.Dim.D4_anomaly}
-\leanok
-$D_4$ has non-contiguous kernel: $\ker(D_4) = \{x^2\}$, not $\{1\}$.
-\begin{itemize}
-\item $D_4[1](x) \neq 0$: $D_4$ detects constants
-\item $D_4[x^2](x) = 0$: $D_4$ annihilates quadratics
-\end{itemize}
-The cancellation at $d=2$ arises because $D_4[x^2] = ((\varphi^2)^2 - \varphi^2 \cdot \varphi^2 + \psi^2 \cdot \psi^2 - (\psi^2)^2)x^2 = (\varphi^4 - \varphi^4 + \psi^4 - \psi^4)x^2 = 0$.
-\end{theorem}
-
-\begin{theorem}[$D_4$ Unique Constant Detector]
-\label{thm:D4_unique}
-\lean{FUST.Dim.D4_unique_constant_detector}
-\leanok
-$D_4$ is the only operator that detects constants within $\ker(D_6)$:
-\[
-D_2[1] = 0, \quad D_3[1] = 0, \quad D_4[1] \neq 0, \quad D_5[1] = 0, \quad D_6[1] = 0.
-\]
-\end{theorem}
-
-\subsection{Detection Matrix}
-
-The following table shows which $D_m$ detects which $x^d$ within $\ker(D_6)$:
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-$d$ & $D_2$ & $D_3$ & $D_4$ & $D_5$ & $D_6$ \\
-\hline
-0 & $= 0$ & $= 0$ & $\neq 0$ & $= 0$ & $= 0$ \\
-1 & $\neq 0$ & $\neq 0$ & $\neq 0$ & $= 0$ & $= 0$ \\
-2 & $\neq 0$ & $\neq 0$ & $= 0$ & $\neq 0$ & $= 0$ \\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{theorem}[Detection Matrix]
-\label{thm:detection_matrix}
-\lean{FUST.Dim.detection_d0}
-\lean{FUST.Dim.detection_d1}
-\lean{FUST.Dim.detection_d2}
-\leanok
-Each row is formally verified:
-\begin{itemize}
-\item $d=0$: only $D_4$ detects (the $D_4$ anomaly)
-\item $d=1$: $D_2, D_3, D_4$ detect; $D_5, D_6$ annihilate
-\item $d=2$: $D_2, D_3, D_5$ detect; $D_4, D_6$ annihilate
-\end{itemize}
-\end{theorem}
-
-\subsection{Kernel Filtration}
-
-\begin{theorem}[Kernel Filtration]
-\label{thm:kernel_filtration}
-\lean{FUST.Dim.kernel_filtration}
-\leanok
-The 3-layer kernel filtration creates 3 generations:
-\[
-\ker(D_{5\frac{1}{2}}) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3.
-\]
-Each dimension increase corresponds to one fermion generation.
-\end{theorem}
+The generation exponents arise from pair counts $C(m,2)$ of the active operators.
+The $D_4$ anomaly ($D_4[1] \neq 0$ but $D_4[x^2] = 0$) explains why the
+$\tau/\mu$ exponent equals $C(4,2) = 6$: the non-contiguous kernel of $D_4$
+forces a specific pair-count contribution to the mass hierarchy.
 
 \subsection{Generation Exponents from Pair Counts}
 
@@ -369,7 +280,7 @@ All mass exponents are sums of pair counts $C(m,2)$ of the 5 active $D$-operator
 \[
 C(2,2) = 1, \quad C(3,2) = 3, \quad C(4,2) = 6, \quad C(5,2) = 10, \quad C(6,2) = 15.
 \]
-These are the first 5 triangular numbers $T(1), \ldots, T(5)$.
+These are the pair counts $C(m,2)$ of the 5 active D-operators $D_2, \ldots, D_6$.
 \end{theorem}
 
 \begin{theorem}[Lepton Generation Exponents]
@@ -403,15 +314,12 @@ The W boson exponent is the total pair count of $D_5 + D_6$.
 \label{thm:generation_summary}
 \lean{FUST.Dim.generation_structure}
 \leanok
-The complete generation structure follows from 3 algebraic facts:
+The complete generation structure follows from pair count sums:
 \begin{enumerate}
-\item $\varphi^2 = \varphi + 1$ (minimal polynomial degree 2)
-  $\Rightarrow$ 3 annihilation conditions $\Rightarrow$ $\dim\ker(D_6) = 3$ $\Rightarrow$ 3 generations.
-\item $D_4[x^2] = 0$ but $D_4[1] \neq 0$ (anomalous kernel)
-  $\Rightarrow$ $\tau/\mu$ and $s/d$ exponent $C(4,2) = 6$.
-\item $\ker(D_5) \subsetneq \ker(D_6)$ (kernel inclusion chain)
-  $\Rightarrow$ $\mu/e$ exponent $C(5,2) + C(2,2) = 11$;
-  W exponent $C(5,2) + C(6,2) = 25$.
+\item $\mathrm{syWeight} = 3$ from $|D_\zeta|^2 = 12(3a^2 + b^2)$ $\Rightarrow$ 3 generations.
+\item Lepton exponents: $C(5,2) + C(2,2) = 11$, $C(4,2) = 6$.
+\item Proton exponent: $C(5,2) + C(3,2) + C(2,2) = 14$.
+\item W exponent: $C(5,2) + C(6,2) = 25$.
 \end{enumerate}
 No free parameters. Every mass exponent is built from $\{1, 3, 6, 10, 15\}$.
 \end{theorem}
@@ -424,11 +332,10 @@ No free parameters. Every mass exponent is built from $\{1, 3, 6, 10, 15\}$.
 \lean{FUST.ParticleSpectrum.particle_spectrum_summary}
 \leanok
 \begin{enumerate}
-\item SM particle count = 37 (derived from D-structure)
-\item Fermion flavor count $= \dim\ker(D_6) = 3$
-\item $x^3 \notin \ker(D_6)$: $D_6$ ceiling; $D_7$ projects to $D_6$ prevents spin $> 2$
-\item Allowed spins = spacetime dimension = 4
-\item Allowed charges from $D_3$ structure
+\item SM particle count = 37 (derived from $F_\zeta$ structure)
+\item Fermion flavor count $= \mathrm{syWeight} = 3$
+\item Allowed spins = totalWeight = 4
+\item Allowed charges from pair count structure
 \item Graviton: spin-2, massless, $D$-level 6 (structurally derived)
 \end{enumerate}
 \end{theorem}
@@ -438,19 +345,19 @@ No free parameters. Every mass exponent is built from $\{1, 3, 6, 10, 15\}$.
 
 Particle spectrum quantities split into two categories:
 
-\textbf{CountQuantity} ($\mathbb{N}$): derived from kernel dimensions and pair counts.
+\textbf{CountQuantity} ($\mathbb{N}$): derived from $F_\zeta$ channel weights and pair counts.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
 Quantity & Value & Lean \\
 \hline
-Fermion flavors & $\dim\ker(D_6) = 3$ & \texttt{fermionFlavorCount} \\
+Fermion flavors & $\mathrm{syWeight} = 3$ & \texttt{fermionFlavorCount} \\
 SM fermions & $24$ & \texttt{smFermionCount} \\
 SM bosons & $13$ & \texttt{smBosonCount} \\
 SM total & $37$ & \texttt{smParticleCount} \\
 Allowed charges & $2 \times C(3,2) + 1 = 7$ & \texttt{allowedChargeCount} \\
-Allowed spins & spacetimeDim $= 4$ & \texttt{allowedSpinCount} \\
+Allowed spins & totalWeight $= 4$ & \texttt{allowedSpinCount} \\
 \hline
 \end{tabular}
 \end{center}

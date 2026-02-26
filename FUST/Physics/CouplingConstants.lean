@@ -1,4 +1,5 @@
 import FUST.Physics.WaveEquation
+import FUST.Physics.WeinbergAngle
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
@@ -152,21 +153,6 @@ theorem fine_structure_exponent_derivation :
     (6 : ℕ) - 2 = 4 ∧ Nat.choose 6 3 = 20 :=
   ⟨rfl, rfl⟩
 
-/-! ## Connection to Kernel Structure
-
-The D₃/D₅ selection is justified by kernel dimension:
-- D₃ has minimal kernel (gauge invariance only)
-- D₅ has extended kernel (dimension ≥ 2)
--/
-
-theorem D3_minimal_kernel : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x _hx => D3_const 1 x
-
-theorem D5_extended_kernel :
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
-
 /-! ## CKM Decay Structure
 
 CKM matrix elements decay as φ^(-3n) where n is the D-structure step distance.
@@ -207,14 +193,8 @@ theorem coupling_constants_from_kernel_structure :
     -- Strong coupling: C(3,2) / (C(3,2) + C(5,2) + C(6,2) - C(3,2)) = 3/25
     ((Nat.choose 3 2 : ℚ) / 25 = 3/25) ∧
     -- Active levels = D_max - D_min + 1 = 5
-    (activeDLevels = 5) ∧
-    -- D₃ gauge invariance
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) ∧
-    -- D₅ extended kernel
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0 ∧ D5 id x = 0) := by
-  refine ⟨by norm_num [Nat.choose], rfl, D3_minimal_kernel, ?_⟩
-  intro x hx
-  exact ⟨D5_const 1 x, D5_linear x⟩
+    (activeDLevels = 5) := by
+  refine ⟨by norm_num [Nat.choose], rfl⟩
 
 end FUST.CouplingConstants
 
@@ -229,14 +209,18 @@ def strongCoupling : RatioQ :=
 theorem strongCoupling_val : strongCoupling.val = 3 / 25 := by
   simp only [strongCoupling, Nat.choose]; norm_num
 
-/-! ## Weinberg Angle: sin²θ_W = C(3,2)/(C(3,2)+C(5,2)) as RatioQ -/
+/-! ## Weinberg Angle: sin²θ_W = 1/4 from Fζ channel weight ratio
+
+|Dζ|² = 12(3a² + b²): SY weight 3 + AF weight 1 = 4.
+sin²θ_W = AF_weight / total_weight = 1/4. -/
 
 def weinbergAngle : RatioQ :=
-  ⟨(Nat.choose 3 2 : ℚ) /
-   (Nat.choose 3 2 + Nat.choose 5 2)⟩
+  ⟨(FUST.WeinbergAngle.afWeight : ℚ) /
+   FUST.WeinbergAngle.totalWeight⟩
 
-theorem weinbergAngle_val : weinbergAngle.val = 3 / 13 := by
-  simp only [weinbergAngle, Nat.choose]; norm_num
+theorem weinbergAngle_val : weinbergAngle.val = 1 / 4 := by
+  simp only [weinbergAngle, FUST.WeinbergAngle.afWeight,
+    FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.syWeight]; norm_num
 
 /-! ## Active D-Levels as CountQ -/
 
@@ -299,14 +283,15 @@ def solarMixing : RatioQ :=
 theorem solarMixing_val : solarMixing.val = 1 / 3 := by
   simp only [solarMixing, Nat.choose]; norm_num
 
-/-! ## W/Z Ratio as RatioQ -/
+/-! ## W/Z Ratio as RatioQ: cos²θ_W = 3/4 -/
 
 def wzRatioSq : RatioQ :=
-  ⟨(Nat.choose 5 2 : ℚ) /
-   (Nat.choose 3 2 + Nat.choose 5 2)⟩
+  ⟨(FUST.WeinbergAngle.syWeight : ℚ) /
+   FUST.WeinbergAngle.totalWeight⟩
 
-theorem wzRatioSq_val : wzRatioSq.val = 10 / 13 := by
-  simp only [wzRatioSq, Nat.choose]; norm_num
+theorem wzRatioSq_val : wzRatioSq.val = 3 / 4 := by
+  simp only [wzRatioSq, FUST.WeinbergAngle.syWeight,
+    FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.afWeight]; norm_num
 
 /-! ## Cabibbo Angle as ScaleQ (involves arctan) -/
 
@@ -316,9 +301,9 @@ noncomputable def cabibboAngle : ScaleQ 1 := ⟨FUST.CouplingConstants.cabibbo_a
 
 theorem coupling_type_hierarchy :
     (strongCoupling.val = 3 / 25) ∧
-    (weinbergAngle.val = 3 / 13) ∧
+    (weinbergAngle.val = 1 / 4) ∧
     (solarMixing.val = 1 / 3) ∧
-    (wzRatioSq.val = 10 / 13) ∧
+    (wzRatioSq.val = 3 / 4) ∧
     (activeDLevels.val = 5) := by
   exact ⟨strongCoupling_val, weinbergAngle_val, solarMixing_val, wzRatioSq_val, rfl⟩
 

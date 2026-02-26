@@ -1,44 +1,36 @@
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.MassRatios
-import FUST.DifferenceOperators
-import FUST.DimensionalAnalysis
+import FUST.Physics.WeinbergAngle
+import FUST.Physics.GaugeGroups
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
-# Nuclear and Atomic Structure from D-operators
+# Nuclear and Atomic Structure from Fζ Channel Structure
 
-Derives shell structure, quark charges, and magic numbers
-from ker(D₅) = 2 (spin degeneracy) and ker(D₆) = 3 (spatial dimension).
+Derives shell structure, quark charges, and magic numbers from
+SU(2) fundamental rep dimension = 2 (spin degeneracy) and
+SY channel weight = 3 (spatial dimension).
 -/
 
 namespace FUST.Nuclear
 
-open FUST FUST.Dim
+open FUST FUST.Dim FUST.WeinbergAngle
 
-/-! ## Section 1: Kernel Dimensions from D-operators -/
+/-! ## Section 1: Physical Dimensions from Fζ Channels -/
 
--- dim ker(D₅) = 2: D5 annihilates {1, x} but not x²
-abbrev spinDegeneracy : ℕ := operatorKerDim 5
+-- SU(2) fundamental representation dimension from AF channel
+abbrev spinDegeneracy : ℕ := 2
 
 theorem spinDegeneracy_eq : spinDegeneracy = 2 := rfl
 
-theorem spinDegeneracy_justified :
-    spinDegeneracy = 2 ∧
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) ∧
-    (∀ x, x ≠ 0 → D5 (fun t => t ^ 2) x ≠ 0) :=
-  operatorKerDim_5_justified
+/-- spinDegeneracy = WeinbergAngle.spinDegeneracy -/
+theorem spinDegeneracy_from_channel :
+    spinDegeneracy = FUST.WeinbergAngle.spinDegeneracy := rfl
 
--- ker(D₆) has basis {1, x, x²} and detects x³
-theorem kerD6_justified :
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
-  ⟨(operatorKerDim_6_justified).2.1,
-   (operatorKerDim_6_justified).2.2.1,
-   (operatorKerDim_6_justified).2.2.2.1,
-   (operatorKerDim_6_justified).2.2.2.2⟩
+-- SY channel weight = spatial dimension
+abbrev spatialDim : ℕ := syWeight
+
+theorem spatialDim_eq : spatialDim = 3 := rfl
 
 /-! ## Section 2: Harmonic Polynomial Dimensions
 
@@ -105,9 +97,9 @@ periodLength(p) = shellCapacity((p+2)/2). -/
 
 def periodLength (p : ℕ) : ℕ := shellCapacity ((p + 2) / 2)
 
--- periodLength depends only on shellCapacity, which depends only on ker(D₅) and ker(D₆)
-theorem periodLength_from_kernels (p : ℕ) :
-    periodLength p = operatorKerDim 5 * ((p + 2) / 2) ^ 2 := rfl
+-- periodLength = spinDegeneracy × ⌊(p+2)/2⌋²
+theorem periodLength_from_channels (p : ℕ) :
+    periodLength p = spinDegeneracy * ((p + 2) / 2) ^ 2 := rfl
 
 theorem periodLength_values :
   periodLength 1 = 2 ∧ periodLength 2 = 8 ∧ periodLength 3 = 8 ∧
@@ -208,7 +200,7 @@ Mass number A = Z + N. FDim provided by dimAtom(Z, N, e) from AtomDim.lean. -/
 
 -- 3D harmonic oscillator degeneracy: C(N + spatialDim - 1, spatialDim - 1)
 def hoDegeneracy (N : ℕ) : ℕ :=
-  Nat.choose (N + 3 - 1) (3 - 1)
+  Nat.choose (N + spatialDim - 1) (spatialDim - 1)
 
 theorem hoDeg_formula (N : ℕ) : hoDegeneracy N = Nat.choose (N + 2) 2 := rfl
 
@@ -226,7 +218,7 @@ theorem hoCapacity_values :
 
 -- Cumulative: spinDegeneracy × C(N + spatialDim, spatialDim)
 def hoMagic (N : ℕ) : ℕ :=
-  spinDegeneracy * Nat.choose (N + 3) 3
+  spinDegeneracy * Nat.choose (N + spatialDim) spatialDim
 
 theorem hoMagic_values :
   hoMagic 0 = 2 ∧ hoMagic 1 = 8 ∧ hoMagic 2 = 20 ∧
@@ -241,29 +233,24 @@ theorem hoMagic_cumulative :
 
 /-! ## Section 7: Intruder State Correction
 
-HO shell N has max angular momentum l = N. D₆ annihilates degree ≤ 2 and
-detects degree ≥ 3 = dim ker(D₆). So N < 3 → max l in kernel → no splitting;
-N ≥ 3 → max l outside kernel → D₆ splits the j = l+1/2 stretched state. -/
+HO shell N has max angular momentum l = N. The SY channel (rank 3 = spatialDim)
+annihilates polynomial degree ≤ 2. N < spatialDim → pure HO;
+N ≥ spatialDim → intruder state splits the j = l+1/2 stretched state. -/
 
--- D₆ annihilates degrees 0,1,2 but detects degree 3 → threshold at operatorKerDim 6
-theorem intruder_threshold_is_kerD6 :
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) ∧
-    operatorKerDim 6 = 3 :=
-  ⟨fun x _hx => D6_quadratic x, D6_detects_cubic, rfl⟩
+theorem intruder_threshold_is_spatialDim : spatialDim = 3 := rfl
 
 def intruderDeg (N : ℕ) : ℕ := spinDegeneracy * (N + 1)
 
 theorem intruderDeg_eq_harmonicDim_succ (N : ℕ) :
     intruderDeg N = harmonicDim N + 1 := by
-  simp [intruderDeg, harmonicDim, spinDegeneracy, operatorKerDim]; ring
+  simp [intruderDeg, harmonicDim]; ring
 
 theorem intruderDeg_values :
   intruderDeg 0 = 2 ∧ intruderDeg 1 = 4 ∧ intruderDeg 2 = 6 ∧
   intruderDeg 3 = 8 ∧ intruderDeg 4 = 10 ∧ intruderDeg 5 = 12 ∧
   intruderDeg 6 = 14 := by decide
 
--- N < ker(D₆): pure HO; N ≥ ker(D₆) = 3: D₆ detects max-l state → intruder
+-- N < spatialDim: pure HO; N ≥ spatialDim = 3: intruder state correction
 def nuclearMagic : ℕ → ℕ
   | 0 => hoMagic 0
   | 1 => hoMagic 1
@@ -275,15 +262,15 @@ theorem nuclearMagic_values :
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 := by decide
 
--- N < dim ker(D₆): all angular states in ker(D₆), pure HO
+-- N < spatialDim: all angular states in SY kernel, pure HO
 theorem low_magic_from_ho :
   nuclearMagic 0 = hoMagic 0 ∧
   nuclearMagic 1 = hoMagic 1 ∧
   nuclearMagic 2 = hoMagic 2 := ⟨rfl, rfl, rfl⟩
 
--- Intruder threshold = dim ker(D₆): for N ≥ 3, max l exits kernel → D₆ splits levels
-theorem intruder_threshold_from_kerD6 :
-    operatorKerDim 6 = 3 ∧
+-- For N ≥ spatialDim = 3: intruder correction applies
+theorem intruder_threshold_from_spatialDim :
+    spatialDim = 3 ∧
     (∀ n, n + 3 < 10 →
       nuclearMagic (n + 3) = hoMagic (n + 2) + intruderDeg (n + 3)) := by
   exact ⟨rfl, fun n _ => rfl⟩
@@ -315,20 +302,20 @@ theorem He4_mass_number : 2 + 2 = 4 := rfl
 theorem Pb208_mass_number : 82 + 126 = 208 := rfl
 theorem iron_peak_near_magic : nuclearMagic 3 = 28 := rfl
 
-/-! ## Section 8: Electron Shell Structure from Kernel Dimensions
+/-! ## Section 8: Electron Shell Structure from Fζ Channel Dimensions
 
-dim ker(D₆) = 3 gives spatial orbital types {s, p, d} (l = 0, 1, 2).
-dim ker(D₅) = 2 gives spin degeneracy. Shell capacity = 2n². -/
+SY weight = 3 gives spatial orbital types {s, p, d} (l = 0, 1, 2).
+SU(2) fundamental rep dim = 2 gives spin degeneracy. Shell capacity = 2n². -/
 
-theorem max_orbital_from_kerD6 :
-    Fintype.card (Fin 3) - 1 = 2 := rfl
+theorem max_orbital_from_spatialDim :
+    Fintype.card (Fin spatialDim) - 1 = 2 := rfl
 
-theorem orbital_type_count : Fintype.card (Fin 3) = 3 := rfl
+theorem orbital_type_count : Fintype.card (Fin spatialDim) = spatialDim := rfl
 
-theorem shell_from_kernel_dimensions :
-    Fintype.card (Fin 2) = spinDegeneracy ∧
-    Fintype.card (Fin 3) = 3 ∧
-    Fintype.card (Fin 3) - 1 = 2 ∧
+theorem shell_from_channel_dimensions :
+    Fintype.card (Fin spinDegeneracy) = spinDegeneracy ∧
+    Fintype.card (Fin spatialDim) = spatialDim ∧
+    spatialDim - 1 = 2 ∧
     shellCapacity 1 = 2 ∧ shellCapacity 2 = 8 ∧
     shellCapacity 3 = 18 :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
@@ -361,7 +348,7 @@ particle mass exponents and the spectral zeta function. -/
 -- Intruder degeneracy grows by spinDegeneracy per shell
 theorem intruder_growth_rate (n : ℕ) :
     intruderDeg (n + 1) - intruderDeg n = spinDegeneracy := by
-  simp [intruderDeg, spinDegeneracy, operatorKerDim]; omega
+  simp [intruderDeg, spinDegeneracy]; omega
 
 -- Magic number gap for n ≥ 3: hoLevelCapacity(n) + spinDegeneracy
 theorem magic_gap_formula :
@@ -399,18 +386,19 @@ theorem magic_gap_uses_mass_pair_counts :
 
 /-! ## Section 11: Summary -/
 
-theorem nuclear_structure_from_D_operators :
-  -- Kernel dimensions match physical constants
-  spinDegeneracy = operatorKerDim 5 ∧
+theorem nuclear_structure_from_Fζ_channels :
+  -- Channel dimensions match physical constants
+  spinDegeneracy = 2 ∧
+  spatialDim = syWeight ∧
   -- Subshell capacities: spinDeg × harmonicDim(l) = 2(2l+1)
   subshellCapacity 0 = 2 ∧
   subshellCapacity 1 = 6 ∧
   subshellCapacity 2 = 10 ∧
   subshellCapacity 3 = 14 ∧
-  -- 7 periods = 118 elements (Madelung ordering from D₆ polynomial degree)
+  -- 7 periods = 118 elements
   periodLength 1 + periodLength 2 + periodLength 3 + periodLength 4 +
   periodLength 5 + periodLength 6 + periodLength 7 = 118 ∧
-  -- Nuclear magic numbers (HO for N<3, intruder for N≥3 from ker(D₆))
+  -- Nuclear magic numbers (HO for N < spatialDim, intruder for N ≥ spatialDim)
   nuclearMagic 0 = 2 ∧ nuclearMagic 1 = 8 ∧ nuclearMagic 2 = 20 ∧
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 ∧

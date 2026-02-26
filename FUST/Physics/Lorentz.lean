@@ -9,7 +9,6 @@ import FUST.Zeta6
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.Data.Finset.Card
 
 namespace FUST.Physics.Lorentz
 
@@ -304,49 +303,6 @@ theorem finrank_so31 :
     Module.finrank ℝ
       (so' (Fin 3) (Fin 1) ℝ).toSubmodule = 6 := by
   rw [so31EquivR6.finrank_eq]; simp
-
-/-! ## Golden ratio root analysis → temporal dimension -/
-
-attribute [local instance] Classical.propDecidable
-
-/-- φ satisfies t²-t-1=0 -/
-theorem phi_is_root : φ ^ 2 - φ - 1 = 0 := by linarith [golden_ratio_property]
-
-/-- ψ satisfies t²-t-1=0 -/
-theorem psi_is_root : ψ ^ 2 - ψ - 1 = 0 := by linarith [psi_sq]
-
-/-- t²-t-1=0 has exactly two roots: φ and ψ -/
-theorem golden_poly_roots (x : ℝ) (hx : x ^ 2 - x - 1 = 0) :
-    x = φ ∨ x = ψ := by
-  have : (x - φ) * (x - ψ) = 0 := by nlinarith [phi_add_psi, phi_mul_psi]
-  rcases mul_eq_zero.mp this with h | h <;> [left; right] <;> linarith
-
-/-- φ ≠ ψ -/
-theorem phi_ne_psi : φ ≠ ψ := by
-  intro h; have : φ - ψ = 0 := by linarith
-  rw [phi_sub_psi] at this; linarith [Real.sqrt_pos.mpr (show (5 : ℝ) > 0 by norm_num)]
-
-noncomputable def goldenRoots : Finset ℝ := {φ, ψ}
-
-/-- Positive roots of t²-t-1: {φ} (one temporal dimension) -/
-theorem positive_roots_eq :
-    goldenRoots.filter (· > 0) = {φ} := by
-  ext x; simp only [goldenRoots, Finset.mem_filter, Finset.mem_insert, Finset.mem_singleton]
-  constructor
-  · rintro ⟨h_mem, h_pos⟩; rcases h_mem with rfl | rfl
-    · rfl
-    · linarith [psi_neg]
-  · rintro rfl; exact ⟨Or.inl rfl, phi_pos⟩
-
-/-- Temporal dimension = 1 -/
-theorem temporal_dim_eq_one :
-    (goldenRoots.filter (· > 0)).card = 1 := by
-  rw [positive_roots_eq, Finset.card_singleton]
-
-/-- Spacetime dim = ker dim + temporal dim = 3 + 1 = 4 -/
-theorem spacetime_dim :
-    ζ₆_kerDim + (goldenRoots.filter (· > 0)).card = 4 := by
-  rw [temporal_dim_eq_one]; rfl
 
 /-! ## Lie brackets of so(3,1)
 

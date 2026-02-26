@@ -210,23 +210,4 @@ $\mathrm{AFNum} / (\zeta_6 - \bar{\zeta}_6)^5$ & $D_{\zeta,2}$ & AF (odd) & $r =
 The only coefficients satisfying the kernel conditions are $a=-1, b=-4$ ($D_5$) and $A=3, B=1$ ($D_6$).
 \end{theorem}
 
-\section{Output Dimensions}
-\label{sec:diff_op_dim}
-
-Each $D_m$ operator has a structurally determined output dimension (see Chapter~\ref{chap:dimensional_analysis}):
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Operator & Channel in $D_\zeta$ & Output dimension $(\sqrt{5}, \delta, \tau)$ & Lean \\
-\hline
-$D_2$ & AF (odd) & $(-1, 1, 0)$ & \texttt{deriveFDim 2} \\
-$D_3$ & SY (even) & $(-2, 0, 0)$ & \texttt{deriveFDim 3} \\
-$D_4$ & AF (odd) & $(-3, 1, 0)$ & \texttt{deriveFDim 4} \\
-$D_5$ & SY (even) & $(-4, 0, 0)$ & \texttt{deriveFDim 5} \\
-$D_6$ & AF (odd) & $(-5, 1, -1)$ & \texttt{deriveFDim 6} \\
-\hline
-\end{tabular}
-\end{center}
-
 Since all five operators have distinct dimensions, $D_i f(z) + D_j f(z)$ ($i \neq j$) is a type error.

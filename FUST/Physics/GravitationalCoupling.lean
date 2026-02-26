@@ -12,75 +12,54 @@ The electron-to-Planck mass ratio:
   m_e / m_Pl = φ^(-107 - 5/63)
 
 Where:
-- 107 = T(4) × (T(4)+1) - C(3,2) = 10 × 11 - 3
-- 5/63 = α_exponent / (C(3,2) × T(6))
+- 107 = C(5,2) × (C(5,2)+1) - C(3,2) = 10 × 11 - 3
+- 5/63 = activeDLevels / (C(3,2) × C(7,2))
 
 ## Physical Interpretation
 
 Gravity emerges from the complete D-hierarchy through:
 - Lepton mass structure (107)
-- Electromagnetic structure (5 = α exponent)
+- Electromagnetic structure (5 = active D-levels)
 - Weak structure (3 = C(3,2))
-- Full D₆ hierarchy (21 = T(6))
+- Full D₆ hierarchy (21 = C(7,2))
 -/
 
 namespace FUST.GravitationalCoupling
 
 open FUST.WaveEquation FUST.TimeStructure
 
-/-! ## Triangular Numbers and Binomial Coefficients
-
-Triangular numbers T(n) = n(n+1)/2 = C(n+1, 2) count pairs in D_{n+1}.
--/
-
-/-- Triangular number: T(n) = n(n+1)/2 = C(n+1, 2) -/
-abbrev triangular (n : ℕ) : ℕ := n * (n + 1) / 2
-
-/-- T(n) = C(n+1, 2): triangular numbers are pair counts -/
-theorem triangular_eq_choose (n : ℕ) : triangular n = Nat.choose (n + 1) 2 := by
-  simp only [triangular, Nat.choose_two_right, Nat.add_sub_cancel]
-  ring_nf
-
-theorem T3_eq : triangular 3 = 6 := rfl
-theorem T4_eq : triangular 4 = 10 := rfl
-theorem T5_eq : triangular 5 = 15 := rfl
-theorem T6_eq : triangular 6 = 21 := rfl
-theorem T9_eq : triangular 9 = 45 := rfl
-
-/-- T(4) = C(5,2): D₅ pair count -/
-theorem T4_as_D5_pairs : triangular 4 = Nat.choose 5 2 := rfl
-
-/-- T(6) = C(7,2): extended hierarchy pair count -/
-theorem T6_as_pairs : triangular 6 = Nat.choose 7 2 := rfl
+/-! ## Pair Counts C(m,2) -/
 
 theorem C32_eq : Nat.choose 3 2 = 3 := rfl
+theorem C52_eq : Nat.choose 5 2 = 10 := rfl
 theorem C62_eq : Nat.choose 6 2 = 15 := rfl
+theorem C72_eq : Nat.choose 7 2 = 21 := rfl
 
 /-! ## Lepton Mass Exponent: 107
 
 107 = p₃ + e₃ + d = Σ L(k)³ + Π L(k) + kerDim(D₆) = 92 + 12 + 3.
 -/
 
-/-- 107 from triangular numbers (equivalent to sector-invariant form) -/
-theorem leptonMassExponent_eq : triangular 4 * (triangular 4 + 1) - Nat.choose 3 2 = 107 := by
+/-- 107 = C(5,2) × (C(5,2)+1) - C(3,2) = 10 × 11 - 3 -/
+theorem leptonMassExponent_eq : Nat.choose 5 2 * (Nat.choose 5 2 + 1) - Nat.choose 3 2 = 107 := by
   decide
 
 /-! ## Fractional Correction: 5/63 -/
 
 /-- Denominator 63 = C(3,2) × T(6) = 3 × 21 -/
-theorem gravityCorrectionDenom_eq : Nat.choose 3 2 * triangular 6 = 63 := by decide
+theorem gravityCorrectionDenom_eq : Nat.choose 3 2 * Nat.choose 7 2 = 63 := by decide
 
 /-- Numerator 5 = active D-levels = 6 - 2 + 1 -/
 theorem alpha_exponent_eq : 6 - 2 + 1 = 5 := rfl
 
-/-- Lepton exponent from D-structure: T(4) × (T(4)+1) - C(3,2) -/
-abbrev leptonExponent : ℕ := triangular 4 * (triangular 4 + 1) - Nat.choose 3 2
+/-- Lepton exponent: C(5,2) × (C(5,2)+1) - C(3,2) = 10 × 11 - 3 = 107 -/
+abbrev leptonExponent : ℕ := Nat.choose 5 2 * (Nat.choose 5 2 + 1) - Nat.choose 3 2
 
 /-- Active D-levels = 6 - 2 + 1 = 5 -/
 abbrev activeDLevels : ℕ := 6 - 2 + 1
 
-/-- Correction denominator = C(3,2) × T(6) = 3 × 21 -/
-abbrev correctionDenom : ℕ := Nat.choose 3 2 * triangular 6
+/-- Correction denominator = C(3,2) × C(7,2) = 3 × 21 = 63 -/
+abbrev correctionDenom : ℕ := Nat.choose 3 2 * Nat.choose 7 2
 
 /-- Full gravitational exponent: -(leptonExponent + activeDLevels/correctionDenom) -/
 noncomputable abbrev gravitationalExponent : ℝ :=
@@ -108,7 +87,7 @@ theorem gravitationalCoupling_exponent :
   unfold gravitationalCoupling electronPlanckRatio gravitationalExponent
   rw [← Real.rpow_natCast, ← Real.rpow_mul (le_of_lt phi_pos)]
   congr 1
-  simp only [leptonExponent, activeDLevels, correctionDenom, triangular, Nat.choose]
+  simp only [leptonExponent, activeDLevels, correctionDenom, Nat.choose]
   norm_num
 
 /-! ## D-Hierarchy Pair Counts -/
@@ -125,15 +104,6 @@ theorem D_structure_pairs :
     Nat.choose 6 2 = 15 := by
   refine ⟨rfl, rfl, rfl, rfl, rfl⟩
 
-/-! ## Connection to Kernel Structure
-
-The gravitational coupling derives from D-structure hierarchy,
-where D₃ through D₆ contribute via their pair counts and kernel dimensions.
--/
-
-theorem D3_gauge_invariance : ∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0 :=
-  fun x _hx => D3_const 1 x
-
 /-! ## CMB Temperature: 152
 
 T_CMB/T_Pl = φ^(-152). Decomposition: 152 = 107 + 45.
@@ -141,11 +111,11 @@ T_CMB/T_Pl = φ^(-152). Decomposition: 152 = 107 + 45.
 Both terms are dimensionless exponents. 152 = 2 × L(9).
 -/
 
-/-- CMB decoupling factor = C(3,2) × T(5) -/
-abbrev cmbDecouplingFactor : ℕ := Nat.choose 3 2 * triangular 5
+/-- CMB decoupling factor = C(3,2) × C(6,2) = 3 × 15 = 45 -/
+abbrev cmbDecouplingFactor : ℕ := Nat.choose 3 2 * Nat.choose 6 2
 
-/-- CMB decoupling: C(3,2)×T(5) = 45 -/
-theorem cmbDecouplingFactor_eq : Nat.choose 3 2 * triangular 5 = 45 := by decide
+/-- CMB decoupling: C(3,2)×C(6,2) = 45 -/
+theorem cmbDecouplingFactor_eq : Nat.choose 3 2 * Nat.choose 6 2 = 45 := by decide
 
 /-- CMB temperature exponent = leptonExponent + cmbDecouplingFactor -/
 abbrev cmbTemperatureExponent : ℕ := leptonExponent + cmbDecouplingFactor
@@ -182,17 +152,15 @@ noncomputable abbrev cosmologicalDensityRatio : ℝ := φ ^ (-(cosmologicalExpon
 
 theorem gravitational_coupling_summary :
     -- Exponent 107 decomposition
-    (triangular 4 * (triangular 4 + 1) - Nat.choose 3 2 = 107) ∧
+    (Nat.choose 5 2 * (Nat.choose 5 2 + 1) - Nat.choose 3 2 = 107) ∧
     -- Fractional correction structure
     (6 - 2 + 1 = 5) ∧
-    (Nat.choose 3 2 * triangular 6 = 63) ∧
+    (Nat.choose 3 2 * Nat.choose 7 2 = 63) ∧
     -- D-structure pairs
     (Nat.choose 2 2 + Nat.choose 3 2 + Nat.choose 4 2 +
-     Nat.choose 5 2 + Nat.choose 6 2 = 35) ∧
-    -- D₃ gauge invariance
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) := by
+     Nat.choose 5 2 + Nat.choose 6 2 = 35) := by
   refine ⟨leptonMassExponent_eq, rfl, gravityCorrectionDenom_eq,
-         totalDHierarchyPairs_eq, D3_gauge_invariance⟩
+         totalDHierarchyPairs_eq⟩
 
 theorem cosmological_summary :
     (cmbTemperatureExponent = 152) ∧

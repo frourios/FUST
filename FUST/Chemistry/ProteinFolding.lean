@@ -197,12 +197,6 @@ theorem insulin_levinthal :
 
 /-! ## Section 9: Dimensional Correspondence -/
 
-theorem backbone_dof_eq_kerD5_dim :
-    backboneDihedrals = Nuclear.spinDegeneracy := rfl
-
-theorem spatialDim_eq_kerD6_dim :
-    3 = Fintype.card (Fin 3) := rfl
-
 theorem kernel_growth_spin_to_spatial :
     Fintype.card (Fin 3) = Fintype.card (Fin 2) + 1 := rfl
 

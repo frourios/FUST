@@ -964,9 +964,6 @@ theorem three_roots_distinct (q : GoldenInt) :
 theorem min_complete_degree_eq_rootFamilyCount :
     1 + 1 + 1 = rootFamilyCount := by decide
 
-/-- rootFamilyCount equals ker(D₆) dimension -/
-theorem rootFamilyCount_eq_kerDim :
-    rootFamilyCount = FUST.Dim.operatorKerDim 6 := by decide
 /-- D₆ annihilates degree < rootFamilyCount but detects degree = rootFamilyCount.
     ker(D₆) = {degree ≤ rootFamilyCount - 1} = {degree ≤ 2}. -/
 theorem D6_threshold_at_rootFamilyCount :

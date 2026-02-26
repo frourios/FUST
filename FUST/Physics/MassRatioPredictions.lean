@@ -17,22 +17,13 @@ This module derives mass ratios for particles from FUST D-structure principles.
 | m_H/m_W | φ - 1/C(5,2) | 1.518 | 1.559 | 2.6% |
 | m_DM/m_e | φ^(C(5,2)+C(6,2)) | 1.68×10⁵ | WIMP | - |
 | Δm²₂₁/Δm²₃₁ | 1/(2×C(6,2)) | 1/30 | 1/33 | 10% |
-| m_W/m_Z | √(10/13) | 0.877 | 0.881 | 0.5% |
+| m_W/m_Z | √(3/4) | 0.866 | 0.881 | 1.7% |
 | η (baryon) | φ^(-44)×sin(2π/5) | 6×10⁻¹⁰ | 6×10⁻¹⁰ | ~1% |
 -/
 
 namespace FUST.MassRatioPredictions
 
 open FUST.WaveEquation
-
-/-! ## Triangular Numbers -/
-
-abbrev triangular (n : ℕ) : ℕ := n * (n + 1) / 2
-
-theorem T3_eq : triangular 3 = 6 := rfl
-theorem T4_eq : triangular 4 = 10 := rfl
-theorem T5_eq : triangular 5 = 15 := rfl
-theorem T9_eq : triangular 9 = 45 := rfl
 
 /-! ## Part 1: Higgs/W Mass Ratio
 
@@ -100,37 +91,40 @@ theorem darkMatterElectronRatio_pos : darkMatterElectronRatio > 0 :=
 
 /-! ## Part 3: W/Z Mass Ratio
 
-m_W/m_Z = cos(θ_W) = √(10/13) from Weinberg angle
+m_W/m_Z = cos(θ_W) = √(3/4) from Fζ channel weight ratio
 
 Derivation:
-- sin²θ_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13
-- cos²θ_W = C(5,2)/(C(3,2)+C(5,2)) = 10/13
-- m_W/m_Z = cos(θ_W) = √(10/13)
+- sin²θ_W = AF_weight/total_weight = 1/4 (from |Dζ|² = 12(3a² + b²))
+- cos²θ_W = SY_weight/total_weight = 3/4
+- m_W/m_Z = cos(θ_W) = √(3/4) = √3/2
 -/
 
-/-- W/Z mass ratio squared from Weinberg angle -/
-noncomputable abbrev WZRatioSq : ℚ := Nat.choose 5 2 / (Nat.choose 3 2 + Nat.choose 5 2)
+/-- W/Z mass ratio squared = cos²θ_W = 3/4 -/
+noncomputable abbrev WZRatioSq : ℚ :=
+  (FUST.WeinbergAngle.syWeight : ℚ) / FUST.WeinbergAngle.totalWeight
 
-theorem WZRatioSq_eq : WZRatioSq = 10 / 13 := by
-  simp only [WZRatioSq, Nat.choose]; norm_num
+theorem WZRatioSq_eq : WZRatioSq = 3 / 4 := by
+  simp only [WZRatioSq, FUST.WeinbergAngle.syWeight,
+    FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.afWeight]; norm_num
 
-/-- W/Z mass ratio: √(10/13) -/
-noncomputable abbrev WZRatio : ℝ := Real.sqrt (10 / 13)
+/-- W/Z mass ratio: √(3/4) = √3/2 -/
+noncomputable abbrev WZRatio : ℝ := Real.sqrt (3 / 4)
 
-/-- W/Z ratio from D-structure -/
-theorem WZRatio_from_kernel_structure :
-    -- cos²θ_W = C(5,2)/(C(3,2)+C(5,2))
-    (Nat.choose 5 2 : ℚ) / (Nat.choose 3 2 + Nat.choose 5 2) = 10/13 ∧
-    -- sin²θ_W = C(3,2)/(C(3,2)+C(5,2))
-    (Nat.choose 3 2 : ℚ) / (Nat.choose 3 2 + Nat.choose 5 2) = 3/13 := by
-  constructor <;> norm_num [Nat.choose]
+/-- W/Z ratio from Fζ channel weights -/
+theorem WZRatio_from_channel_weights :
+    -- cos²θ_W = SY_weight/total_weight = 3/4
+    ((FUST.WeinbergAngle.syWeight : ℚ) / FUST.WeinbergAngle.totalWeight = 3/4) ∧
+    -- sin²θ_W = AF_weight/total_weight = 1/4
+    ((FUST.WeinbergAngle.afWeight : ℚ) / FUST.WeinbergAngle.totalWeight = 1/4) := by
+  constructor <;> simp [FUST.WeinbergAngle.syWeight, FUST.WeinbergAngle.totalWeight,
+    FUST.WeinbergAngle.afWeight]
 
 /-- W/Z ratio is in (0,1) as expected -/
 theorem WZRatio_bounds : 0 < WZRatio ∧ WZRatio < 1 := by
   constructor
-  · exact Real.sqrt_pos.mpr (by norm_num : (10:ℝ)/13 > 0)
-  · have h : (10:ℝ)/13 < 1 := by norm_num
-    calc WZRatio = Real.sqrt (10/13) := rfl
+  · exact Real.sqrt_pos.mpr (by norm_num : (3:ℝ)/4 > 0)
+  · have h : (3:ℝ)/4 < 1 := by norm_num
+    calc WZRatio = Real.sqrt (3/4) := rfl
       _ < Real.sqrt 1 := Real.sqrt_lt_sqrt (by norm_num) h
       _ = 1 := Real.sqrt_one
 
@@ -140,15 +134,14 @@ theorem WZRatio_bounds : 0 < WZRatio ∧ WZRatio < 1 := by
 
 Derivation:
 - CP phase δ = 2π/5 from 5 active D-levels
-- Suppression exponent 44 = T(9) - 1
+- Suppression exponent 44 = C(10,2) - 1
 - Result: η ≈ 6×10⁻¹⁰
 -/
 
-/-- Baryon asymmetry exponent: T(9) - 1 = 44 -/
-abbrev baryonExponent : ℕ := triangular 9 - 1
+/-- Baryon asymmetry exponent: C(10,2) - 1 = 45 - 1 = 44 -/
+abbrev baryonExponent : ℕ := Nat.choose 10 2 - 1
 
-theorem baryonExponent_eq : baryonExponent = 44 := by
-  simp only [baryonExponent, triangular]
+theorem baryonExponent_eq : baryonExponent = 44 := rfl
 
 /-- Active D-levels for CP phase -/
 abbrev activeDLevels : ℕ := 6 - 2 + 1
@@ -241,11 +234,12 @@ theorem WElectronRatio_from_kernel :
 
 /-- Z/electron mass ratio derived from W and Weinberg angle -/
 noncomputable abbrev ZElectronRatio : ℝ :=
-  WElectronRatio / Real.sqrt ((Nat.choose 5 2 : ℝ) / (Nat.choose 3 2 + Nat.choose 5 2))
+  WElectronRatio / Real.sqrt ((FUST.WeinbergAngle.syWeight : ℝ) / FUST.WeinbergAngle.totalWeight)
 
 theorem ZElectronRatio_eq :
-    ZElectronRatio = φ ^ 25 * (15 / 16) / Real.sqrt (10 / 13) := by
-  simp only [ZElectronRatio, WElectronRatio_eq, Nat.choose]; norm_num
+    ZElectronRatio = φ ^ 25 * (15 / 16) / Real.sqrt (3 / 4) := by
+  simp only [ZElectronRatio, WElectronRatio_eq, FUST.WeinbergAngle.syWeight,
+    FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.afWeight]; norm_num
 
 /-- Higgs/electron mass ratio derived from W and Higgs/W ratio -/
 noncomputable abbrev HiggsElectronRatio : ℝ :=
@@ -278,8 +272,8 @@ theorem mass_ratio_predictions_summary :
     (darkMatterExponent = 25) ∧
     -- 3. Neutrino mass squared: 1/30
     (FUST.NeutrinoMass.neutrinoMassSqDenom = 30) ∧
-    -- 4. W/Z: √(10/13)
-    (WZRatioSq = 10/13) ∧
+    -- 4. W/Z: √(3/4) from Fζ channel weight ratio
+    (WZRatioSq = 3/4) ∧
     -- 5. Baryon asymmetry exponent: 44
     (baryonExponent = 44) ∧
     -- 6. W/electron: φ^25 × 15/16
@@ -295,10 +289,10 @@ theorem all_from_D_structure :
     (Nat.choose 5 2 + Nat.choose 6 2 = 25) ∧
     -- Neutrino uses 2 × C(6,2)
     (2 * Nat.choose 6 2 = 30) ∧
-    -- W/Z uses C(3,2), C(5,2)
-    (Nat.choose 3 2 = 3 ∧ Nat.choose 5 2 = 10) ∧
-    -- Baryon uses T(9) - 1 = 44
-    (triangular 9 - 1 = 44) ∧
+    -- W/Z uses Fζ channel weight ratio 3:1
+    (FUST.WeinbergAngle.syWeight = 3 ∧ FUST.WeinbergAngle.afWeight = 1) ∧
+    -- Baryon uses C(10,2) - 1 = 44
+    (Nat.choose 10 2 - 1 = 44) ∧
     -- W/electron uses C(5,2), C(6,2), C(2,2)
     (Nat.choose 2 2 = 1 ∧ Nat.choose 5 2 + Nat.choose 6 2 = 25 ∧
      Nat.choose 6 2 + Nat.choose 2 2 = 16) := by

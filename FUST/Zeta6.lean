@@ -164,17 +164,6 @@ theorem ζ₆_N6_kernel :
     (∀ z, ζ₆_N6 (fun w => w ^ 2) z = 0) :=
   ⟨ζ₆_N6_const, ζ₆_N6_linear, ζ₆_N6_quadratic⟩
 
-/-- Kernel dimension = 3 (same as FUST D₆) -/
-def ζ₆_kerDim : Nat := 3
-
-theorem ζ₆_kerDim_justified :
-    ζ₆_kerDim = 3 ∧
-    (∀ c z, ζ₆_N6 (fun _ => c) z = 0) ∧
-    (∀ z, ζ₆_N6 id z = 0) ∧
-    (∀ z, ζ₆_N6 (fun w => w ^ 2) z = 0) ∧
-    (∀ z, z ≠ 0 → ζ₆_D6 (fun w => w ^ 3) z ≠ 0) :=
-  ⟨rfl, ζ₆_N6_const, ζ₆_N6_linear, ζ₆_N6_quadratic, ζ₆_D6_detects_cubic⟩
-
 /-! ## ζ₆ - ζ₆' properties -/
 
 /-- ζ₆ - ζ₆' = i√3 -/
@@ -218,23 +207,17 @@ theorem zeta6_minimal_poly : ζ₆ ^ 2 - ζ₆ + 1 = 0 := by
   have : ζ₆ ^ 2 - ζ₆ + 1 = (ζ₆ - 1) - ζ₆ + 1 := by rw [h]
   rw [this]; ring
 
-/-! ## Per-operator ζ₆ composition via anti-Fibonacci convolution C^{(r)}
+/-! ## ζ₆ convolution filters: AFNum and SymNum
 
 Anti-Fibonacci sequence: C_n = C_{n-1} - C_{n-2}, C_0=0, C_1=1.
 Period 6: [0, 1, 1, 0, -1, -1]. Recurrence mirrors ζ₆²=ζ₆-1.
 
-C^{(r)}_k = r-th cyclic convolution of C_k (mod 6).
-Odd r:  coefficients ∝ Im(ζ₆^k) = sin(kπ/3) — antisymmetric (δ=1)
-Even r: coefficients ∝ Re(ζ₆^k) = cos(kπ/3) — symmetric (δ=0)
+AFNum: antisymmetric filter with coefficients C_k = [0,1,1,0,-1,-1]
+SymNum: symmetric filter with coefficients 2Re(ζ₆^k) = [2,1,-1,-2,-1,1]
 
-Spectral symbol: Dζn(z^s) ∝ σ̂n(s) · τ(s)^r where τ(s) = sin((s-1)π/3)/sin(π/3).
-
-Conservation law: |p| + r = 6.
-  Dζ₂ (r=5): C^{(5)} = [0,1,1,0,-1,-1], odd, δ=1 ✓
-  Dζ₃ (r=4): C^{(4)} ∝ [2,1,-1,-2,-1,1], even, δ=0 ✓
-  Dζ₄ (r=3): C^{(3)} = [0,-1,-1,0,1,1], odd, δ=1 ✓
-  Dζ₅ (r=2): C^{(2)} ∝ [-2,-1,1,2,1,-1], even, δ=0 ✓
-  Dζ₆ (r=1): C^{(1)} = [0,1,1,0,-1,-1], odd, δ=1 ✓ -/
+For s ≡ 1 mod 6: AFNum selects AF_coeff = 2i√3, SymNum selects 6.
+For s ≡ 5 mod 6: AFNum selects -AF_coeff, SymNum selects 6.
+For s ≡ 0,2,3,4 mod 6: both filters annihilate. -/
 
 /-- Anti-Fibonacci numerator: Σ C_k · g(ζ₆^k · z) for C_k = [0,1,1,0,-1,-1] -/
 noncomputable def AFNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
@@ -244,30 +227,6 @@ noncomputable def AFNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
 noncomputable def SymNum (g : ℂ → ℂ) (z : ℂ) : ℂ :=
   2 * g z + g (ζ₆ * z) - g (ζ₆ ^ 2 * z) - 2 * g (ζ₆ ^ 3 * z) -
   g (ζ₆ ^ 4 * z) + g (ζ₆ ^ 5 * z)
-
-/-- Dζ₆: r=1, C^{(1)} antisymmetric, dim = (-5, 1, 1) -/
-noncomputable def Dζ₆ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  AFNum (D6 f) z / ((ζ₆ - ζ₆') * z)
-
-/-- Dζ₅: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
-noncomputable def Dζ₅ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  SymNum (D5 f) z / ((ζ₆ - ζ₆') ^ 2 * z)
-
-/-- Dζ₅h: r=2, C^{(2)} symmetric, dim = (-4, 0, 2) -/
-noncomputable def Dζ₅h (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  SymNum (D5half f) z / ((ζ₆ - ζ₆') ^ 2 * z)
-
-/-- Dζ₄: r=3, C^{(3)} = -C^{(1)} antisymmetric, dim = (-3, 1, 3) -/
-noncomputable def Dζ₄ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  AFNum (D4 f) z / ((ζ₆ - ζ₆') ^ 3 * z)
-
-/-- Dζ₃: r=4, C^{(4)} symmetric, dim = (-2, 0, 4) -/
-noncomputable def Dζ₃ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  SymNum (D3 f) z / ((ζ₆ - ζ₆') ^ 4 * z)
-
-/-- Dζ₂: r=5, C^{(5)} = C^{(1)} antisymmetric, dim = (-1, 1, 5) -/
-noncomputable def Dζ₂ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  AFNum (D2 f) z / ((ζ₆ - ζ₆') ^ 5 * z)
 
 private lemma zeta6k_mul_ne (k : ℕ) (z : ℂ) (hz : z ≠ 0) : ζ₆ ^ k * z ≠ 0 := by
   apply mul_ne_zero _ hz
@@ -304,65 +263,12 @@ theorem SymNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
     SymNum (fun w => c * f w) z = c * SymNum f z := by
   unfold SymNum; ring
 
-/-- Dζ₂ annihilates constants -/
-theorem Dζ₂_const (z : ℂ) : Dζ₂ (fun _ => 1) z = 0 := by
-  simp only [Dζ₂]
-  have hcd : ∀ w : ℂ, D2 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w => D2_const 1 w
-  simp only [AFNum, hcd]
-  simp
-
-/-- Dζ₃ annihilates constants -/
-theorem Dζ₃_const (z : ℂ) : Dζ₃ (fun _ => 1) z = 0 := by
-  simp only [Dζ₃]
-  have hcd : ∀ w : ℂ, D3 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w => D3_const 1 w
-  simp only [SymNum, hcd]
-  simp
-
-/-- Dζ₅ annihilates constants -/
-theorem Dζ₅_const (z : ℂ) (hz : z ≠ 0) : Dζ₅ (fun _ => 1) z = 0 := by
-  simp only [Dζ₅]
-  have hcd : ∀ w : ℂ, w ≠ 0 → D5 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D5_const 1 w
-  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
-  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
-    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
-  simp
-
-/-- Dζ₅h annihilates constants -/
-theorem Dζ₅h_const (z : ℂ) (hz : z ≠ 0) : Dζ₅h (fun _ => 1) z = 0 := by
-  simp only [Dζ₅h]
-  have hcd : ∀ w : ℂ, w ≠ 0 → D5half (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D5half_const 1 w
-  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
-  simp only [SymNum, hcd z hz, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2),
-    hcd _ (hk 3), hcd _ (hk 4), hcd _ (hk 5)]
-  simp
-
-/-- Dζ₆ annihilates constants -/
-theorem Dζ₆_const (z : ℂ) (hz : z ≠ 0) : Dζ₆ (fun _ => 1) z = 0 := by
-  simp only [Dζ₆]
-  have hcd : ∀ w : ℂ, w ≠ 0 → D6 (fun _ => (1 : ℂ)) w = 0 :=
-    fun w hw => D6_const 1 w
-  have hk : ∀ k : ℕ, ζ₆ ^ k * z ≠ 0 := fun k => zeta6k_mul_ne k z hz
-  simp only [AFNum, hcd _ (zeta6_mul_ne z hz), hcd _ (hk 2), hcd _ (hk 4), hcd _ (hk 5)]
-  simp
-
-/-- Dζ₅ and Dζ₅h share the same dimension: addable -/
-theorem Dζ₅_add_Dζ₅h (f : ℂ → ℂ) (z : ℂ) :
-    Dζ₅ f z + Dζ₅h f z =
-    (SymNum (fun w => D5 f w + D5half f w) z) / ((ζ₆ - ζ₆') ^ 2 * z) := by
-  simp only [Dζ₅, Dζ₅h]
-  rw [← add_div]; congr 1; unfold SymNum; ring
-
 /-! ## Unified Dζ operator
 
-All 6 operators Dζ₂,Dζ₃,Dζ₄,Dζ₅,Dζ₅h,Dζ₆ collapse to rank-2 on ⟨φ,ζ₆⟩ ≅ ℤ × ℤ/6ℤ.
+Rank-2 operator on ⟨φ,ζ₆⟩ ≅ ℤ × ℤ/6ℤ.
 C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
-  Φ_A = (N6 + D2 - D4)_num: coefficients [1, -4, 3+φ, 0, -(3+ψ), 4, -1]
-  Φ_S = (2·D5 + D3 + μ·D2)_num: coefficients [0, 2, 3+μ, -10, 3-μ, 2, 0]
-  μ = 2/(φ+2)
+  Φ_A = N6 + N2 - N4: antisymmetric channel
+  Φ_S = 2·N5 + N3 + μ·N2: symmetric channel, μ = 2/(φ+2)
 Half-period: C(a, k+3) = -C(a, k) from AF/SY anti-periodicity. -/
 
 /-- Φ_A: φ-numerator = N6 + N2 - N4, all 6 ops AF channel -/
@@ -968,5 +874,55 @@ theorem observer_scale_independence (f : ℂ → ℂ) (n : ℤ)
     (zpow_ne_zero n (ofReal_ne_zero.mpr (ne_of_gt phi_pos))) hz
 
 end GaugeCovariance
+
+/-! ## Channel Decomposition Theorem
+
+Dζ decomposes into AF (antisymmetric) and SY (symmetric) channels:
+  Dζ = (AFNum(Φ_A) + SymNum(Φ_S)) / z
+where Φ_A = N6 + N2 - N4 and Φ_S = 2N5 + N3 + μN2 with μ = 2/(φ+2).
+
+The AF channel carries N6, N4, N2 (odd-rank) and the SY channel carries N5, N3 (even-rank). -/
+
+section ChannelDecomposition
+
+/-- AF channel linearity: AFNum distributes over Φ_A = N6 + N2 - N4 -/
+theorem AFNum_Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
+    AFNum (Φ_A f) z = AFNum (N6 f) z + AFNum (N2 f) z - AFNum (N4 f) z := by
+  conv_lhs => rw [show Φ_A f = fun w => N6 f w + N2 f w - N4 f w from funext (Φ_A_decompose f)]
+  simp only [AFNum]; ring
+
+/-- SY channel linearity: SymNum distributes over Φ_S = 2N5 + N3 + μN2 -/
+theorem SymNum_Φ_S_decompose (f : ℂ → ℂ) (z : ℂ) :
+    SymNum (Φ_S f) z =
+    2 * SymNum (N5 f) z + SymNum (N3 f) z +
+    (2 / ((↑φ : ℂ) + 2)) * SymNum (N2 f) z := by
+  conv_lhs =>
+    rw [show Φ_S f = fun w => 2 * N5 f w + N3 f w + (2 / ((↑φ : ℂ) + 2)) * N2 f w
+        from funext (fun w => by simp only [Φ_S])]
+  simp only [SymNum]; ring
+
+/-- Dζ channel decomposition: Dζ splits into Nn components via Φ_A and Φ_S -/
+theorem Dζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :
+    Dζ f z =
+    (AFNum (fun w => N6 f w + N2 f w - N4 f w) z +
+     SymNum (fun w => 2 * N5 f w + N3 f w + (2 / ((↑φ : ℂ) + 2)) * N2 f w) z) / z := by
+  simp only [Dζ, show Φ_A f = fun w => N6 f w + N2 f w - N4 f w
+    from funext (Φ_A_decompose f), show Φ_S f = fun w => 2 * N5 f w + N3 f w +
+    (2 / ((↑φ : ℂ) + 2)) * N2 f w from funext (fun w => by simp only [Φ_S])]
+
+/-- AF channel of Dζ: carries N6, N2, N4 (odd-rank operators D6, D4, D2) -/
+theorem Dζ_AF_channel (f : ℂ → ℂ) (z : ℂ) :
+    AFNum (Φ_A f) z / z =
+    (AFNum (N6 f) z + AFNum (N2 f) z - AFNum (N4 f) z) / z := by
+  rw [AFNum_Φ_A_decompose]
+
+/-- SY channel of Dζ: carries N5, N3, N2 (even-rank operators D5, D3) -/
+theorem Dζ_SY_channel (f : ℂ → ℂ) (z : ℂ) :
+    SymNum (Φ_S f) z / z =
+    (2 * SymNum (N5 f) z + SymNum (N3 f) z +
+     (2 / ((↑φ : ℂ) + 2)) * SymNum (N2 f) z) / z := by
+  rw [SymNum_Φ_S_decompose]
+
+end ChannelDecomposition
 
 end FUST.Zeta6

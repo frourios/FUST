@@ -936,10 +936,6 @@ theorem D5MassScale_eq : D5MassScale = 6 / 25 := by
 theorem D5MassScale_half_D6 : D5MassScale = (12 / 25 : ℝ) / 2 := by
   rw [D5MassScale_eq]; norm_num
 
-/-- Δ₅/Δ₆ = 1/kerDimD5 = 1/2 -/
-theorem D5_D6_mass_ratio : D5MassScale / (12 / 25 : ℝ) = 1 / 2 := by
-  rw [D5MassScale_eq]; norm_num
-
 end D5Spectral
 
 end FUST.SpectralCoefficients

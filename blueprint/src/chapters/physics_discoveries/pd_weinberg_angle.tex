@@ -1,117 +1,84 @@
 % FUST Physics Discoveries - Weinberg Angle
-\chapter{Weinberg Angle from \texorpdfstring{$D_\zeta$}{Dζ} Channel Structure}
+\chapter{Weinberg Angle from \texorpdfstring{$F_\zeta$}{Fζ} Channel Weight Ratio}
 \label{chap:pd_weinberg}
 
-\section{Kernel Dimension Transition}
-\label{sec:weinberg_kernel_transition}
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Channel Decomposition}
+\label{sec:weinberg_channel}
 
-The Weinberg mixing angle is derived from the kernel hierarchy of $D_\zeta$'s component operators.
-
-\begin{theorem}[$D_3$ Gauge Invariance]
-\label{thm:weinberg_d3_gauge}
-\lean{FUST.WeinbergAngle.D3_gauge}
-\leanok
-$D_3$ annihilates constants (kernel dimension 1):
+The unified $D_\zeta$ operator output decomposes into two orthogonal channels
+via the $\mathbb{Z}/6\mathbb{Z}$ Fourier structure:
 \[
-\forall x \neq 0: D_3[1](x) = 0
+D_\zeta[f](z) = \frac{\mathrm{AFNum}(\Phi_A f)(z) + \mathrm{SymNum}(\Phi_S f)(z)}{z}
 \]
-\end{theorem}
+where $\Phi_A$ (antisymmetric, rank 1) carries $\mathrm{SU}(2)$ and
+$\Phi_S$ (symmetric, rank 3) carries $\mathrm{SU}(3)$.
 
-\begin{theorem}[$D_5$ Extended Kernel]
-\label{thm:weinberg_d5_extended}
-\lean{FUST.WeinbergAngle.D5_extended_kernel}
+\section{Norm-Squared Weight Ratio}
+\label{sec:weinberg_normSq}
+
+\begin{theorem}[$D_\zeta$ Norm-Squared Decomposition]
+\label{thm:weinberg_normSq}
+\lean{FUST.WeinbergAngle.normSq_weight_decomposition}
 \leanok
-$D_5$ has extended kernel (dimension $\geq 2$):
+For real $a$ (SY channel output) and $b$ (AF channel output):
 \[
-\forall x \neq 0: D_5[1](x) = 0 \text{ and } D_5[x](x) = 0
+|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
 \]
+where $\mathrm{AF\_coeff} = 2i\sqrt{3}$ and $|\mathrm{AF\_coeff}|^2 = 12$.
 \end{theorem}
 
-\begin{theorem}[Kernel Dimension Transition]
-\label{thm:weinberg_kernel_transition}
-\lean{FUST.WeinbergAngle.kernel_dim_transition}
-\leanok
-$D_3 \to D_5$ is the unique transition where kernel dimension increases from 1 to $\geq 2$:
-\begin{itemize}
-\item $D_3$: kernel dim = 1 (annihilates only constants)
-\item $D_3$ does NOT annihilate linear: $\exists x \neq 0: D_3[x](x) \neq 0$
-\item $D_5$: kernel dim $\geq 2$ (annihilates constants AND linear)
-\end{itemize}
-\end{theorem}
-
-\section{Pair Count Formula}
-\label{sec:weinberg_pair_count}
-
-\begin{theorem}[$D_3$ Pair Count]
-\label{thm:weinberg_d3_pairs}
-\lean{FUST.WeinbergAngle.D3_pair_count}
-\leanok
-$D_3$ uses 3 evaluation points ($\varphi x$, $x$, $\psi x$):
-\[
-C(3,2) = 3 \text{ pairs}
-\]
-\end{theorem}
-
-\begin{theorem}[$D_5$ Pair Count]
-\label{thm:weinberg_d5_pairs}
-\lean{FUST.WeinbergAngle.D5_pair_count}
-\leanok
-$D_5$ uses 5 evaluation points ($\varphi^2 x$, $\varphi x$, $x$, $\psi x$, $\psi^2 x$):
-\[
-C(5,2) = 10 \text{ pairs}
-\]
-\end{theorem}
+The coefficients $3$ and $1$ in $3a^2 + b^2$ are the channel weights:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Channel & Operator & Weight & Gauge group \\
+\hline
+SY ($\Phi_S$) & $\mathrm{SymNum}$ & 3 & $\mathrm{SU}(3)$ color \\
+AF ($\Phi_A$) & $\mathrm{AFNum}$ & 1 & $\mathrm{SU}(2)$ weak \\
+\hline
+Total & & 4 & spacetimeDim \\
+\hline
+\end{tabular}
+\end{center}
 
 \section{Weinberg Angle Formula}
 \label{sec:weinberg_formula}
 
-\begin{theorem}[Weinberg Angle]
+\begin{theorem}[Weinberg Angle from Channel Weights]
 \label{thm:weinberg_formula}
 \lean{FUST.WeinbergAngle.weinberg_angle_formula}
 \leanok
 \[
-\sin^2\theta_W = \frac{C(3,2)}{C(3,2) + C(5,2)} = \frac{3}{13} \approx 0.2308
+\sin^2\theta_W = \frac{\text{AF weight}}{\text{SY weight} + \text{AF weight}}
+= \frac{1}{3 + 1} = \frac{1}{4} = 0.25
 \]
-Experimental value: $0.231$ (error $< 1\%$).
 \end{theorem}
 
-\section{Physical Interpretation}
-\label{sec:weinberg_interpretation}
+This is the unification-scale value, matching the $\mathrm{SU}(5)$ GUT tree-level prediction.
+The experimental value $\sin^2\theta_W(M_Z) \approx 0.231$ is the low-energy value
+after renormalization group running.
 
-The electroweak mixing arises from the interplay between:
-\begin{itemize}
-\item $D_3$: $\mathrm{SU}(2)_L$ weak isospin (minimal gauge structure)
-\item $D_5$: First structure with extended kernel (unified structure)
-\end{itemize}
-
-The ratio of pair counts determines the mixing strength.
+\begin{theorem}[Cosine-Squared Weinberg]
+\label{thm:weinberg_cos2}
+\lean{FUST.WeinbergAngle.cos2_weinberg}
+\leanok
+\[
+\cos^2\theta_W = \frac{\text{SY weight}}{\text{total weight}} = \frac{3}{4}
+\]
+\end{theorem}
 
 \section{Derivation Chain}
 \label{sec:weinberg_derivation}
 
-\begin{theorem}[Complete Derivation Chain]
-\label{thm:weinberg_derivation_chain}
-\lean{FUST.WeinbergAngle.weinberg_derivation_chain}
+\begin{theorem}[Weinberg from Channel Weights]
+\label{thm:weinberg_from_channels}
+\lean{FUST.WeinbergAngle.weinberg_from_channel_weights}
 \leanok
 \begin{enumerate}
-\item $D_3$ has kernel dim 1 (gauge invariance only)
-\item $D_5$ has kernel dim $\geq 2$ (first extended)
-\item Pair counts from evaluation points: $C(3,2) = 3$, $C(5,2) = 10$
-\item Mixing ratio: $3/13$
+\item $|D_\zeta|^2 = 12(3a^2 + b^2)$ (norm-squared decomposition)
+\item Total weight $= 3 + 1 = 4 =$ spacetimeDim
+\item $\sin^2\theta_W = 1/4$
 \end{enumerate}
-\end{theorem}
-
-\section{\texorpdfstring{$D_5$}{D5} Coefficient Uniqueness}
-\label{sec:weinberg_d5_uniqueness}
-
-\begin{theorem}[$D_5$ Coefficient Uniqueness]
-\label{thm:weinberg_d5_coefficients}
-\lean{FUST.WeinbergAngle.D5_coefficient_uniqueness_needs_two_conditions}
-\leanok
-$D_5$ coefficients are uniquely determined by requiring both $D_5[1] = 0$ and $D_5[x] = 0$:
-\[
-a = -1, \quad b = -4
-\]
 \end{theorem}
 
 \section{Connection to Gauge Boson Masses}
@@ -119,22 +86,20 @@ a = -1, \quad b = -4
 
 The Weinberg angle directly determines the W/Z mass ratio:
 \[
-\frac{m_W}{m_Z} = \cos\theta_W = \sqrt{\frac{C(5,2)}{C(3,2)+C(5,2)}} = \sqrt{\frac{10}{13}} \approx 0.877.
+\frac{m_W}{m_Z} = \cos\theta_W = \sqrt{\frac{3}{4}} = \frac{\sqrt{3}}{2} \approx 0.866.
 \]
 
 Combined with $m_W/m_e = \varphi^{25} \times 15/16$ (Chapter~\ref{chap:pd_mass_ratios}):
 \[
 \frac{m_Z}{m_e} = \frac{m_W}{m_e} \times \frac{1}{\cos\theta_W}
-= \varphi^{25} \times \frac{15}{16} \times \sqrt{\frac{13}{10}}.
+= \varphi^{25} \times \frac{15}{16} \times \frac{2}{\sqrt{3}}.
 \]
-The Z boson mass is fully determined by $\varphi$ and pair counts,
+The Z boson mass is fully determined by $\varphi$ and $F_\zeta$ channel weights,
 with no free parameters.
 
 \textbf{Note on dimensional type}: In Lean, $m_Z^2$ is represented as \texttt{DimSum2 dimZSqComp1 dimZSqComp2},
-a formal sum of two ScaleQ with different FDim $(40,-48,-52)$ and $(42,-46,-52)$.
-The $\mathbb{R}$-evaluation recovers the physical $m_Z^2 = m_W^2 \times 13/10$.
-This dimensional splitting reflects the distinct origins of the two contributions
-($m_W^2$ from the $D_6^2$ sector, $m_W^2 \sin^2\theta_W / \cos^2\theta_W$ from the mixed sector).
+a formal sum of two ScaleQ with different FDim.
+The $\mathbb{R}$-evaluation recovers the physical $m_Z^2 = m_W^2 \times 4/3$.
 
 \section{Summary}
 \label{sec:weinberg_summary}
@@ -144,17 +109,16 @@ This dimensional splitting reflects the distinct origins of the two contribution
 \lean{FUST.WeinbergAngle.weinberg_summary}
 \leanok
 \begin{enumerate}
-\item $D_3$ gauge invariant (kernel dim 1)
-\item $D_5$ has extended kernel (kernel dim $\geq 2$)
-\item $D_3 \to D_5$ is kernel dimension transition
-\item $\sin^2\theta_W = C(3,2)/(C(3,2)+C(5,2)) = 3/13$
+\item AF channel is non-degenerate ($\mathrm{AF\_coeff} \neq 0$)
+\item AF channel is pure imaginary ($\mathrm{Re}(\mathrm{AF\_coeff}) = 0$)
+\item $|D_\zeta|^2$ gives weight ratio $3:1$ (SY:AF)
+\item $\sin^2\theta_W = 1/(3+1) = 1/4$
 \end{enumerate}
 \end{theorem}
 
 \section{Dimensional Type}
 \label{sec:weinberg_dim}
 
-$\sin^2\theta_W = 3/13$ is a \textbf{RatioQuantity}: a ratio of pair counts $C(3,2)/(C(3,2)+C(5,2))$, inherently dimensionless.
+$\sin^2\theta_W = 1/4$ is a \textbf{RatioQuantity}: the AF channel weight fraction of the total $F_\zeta$ norm-squared weight, inherently dimensionless.
 
-Lean: \texttt{FUST\_dim.CouplingConstants.weinbergAngle} with type \texttt{RatioQ}. The value theorem \texttt{weinbergAngle\_val} is proven by \texttt{simp only [weinbergAngle, Nat.choose]; norm\_num}, verifying the structural derivation.
-
+Lean: \texttt{FUST.Dim.weinbergAngle} with type \texttt{RatioQ}. The value theorem \texttt{weinbergAngle\_val} verifies the structural derivation from $F_\zeta$ channel weights.
