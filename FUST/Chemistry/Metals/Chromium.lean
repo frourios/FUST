@@ -1,6 +1,4 @@
 /-
-Chromium from D-operator Kernel Structure
-
 Chromium Z = 24 = nuclearMagic(2) + 2·spinDegeneracy = 20 + 4.
 Configuration: [Ar] 3d⁵ 4s¹ (anomalous — half-filled d-shell).
 Cr-52 (Z=24, N=28): most abundant isotope.
@@ -67,10 +65,6 @@ theorem chromium52Atom_eq (x : ℝ) :
 
 theorem effDeg_chromium52Ion : (dimAtom 24 28 0).effectiveDegree = 805 := by decide
 theorem effDeg_chromium52Atom : (dimAtom 24 28 24).effectiveDegree = 853 := by decide
-
-theorem chromium_effDeg_exceeds_kerD6 :
-    (dimAtom 24 28 0).effectiveDegree > 2 ∧
-    (dimAtom 24 28 24).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

@@ -1,7 +1,7 @@
 /-
 Genetic Code from Particle Root Structure
 
-Codon length 3 = spatialDim (= particle root family count = dim ker(D₆)).
+Codon length 3 = spatialDim.
 Total codons 64 = 4³ = baseCount^spatialDim.
 Standard amino acids 20 = nuclearMagic(2).
 Stop codons 3 = spatialDim.

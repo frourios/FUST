@@ -1,6 +1,4 @@
 /-
-Nickel from D-operator Kernel Structure
-
 Nickel Z = 28 = nuclearMagic(3) — proton number itself is a magic number.
 Configuration: [Ar] 3d⁸ 4s².
 Ni-58 (Z=28, N=30): most abundant isotope. N=30 = Fe-56.N.
@@ -62,10 +60,6 @@ theorem nickel58Atom_eq (x : ℝ) :
 
 theorem effDeg_nickel58Ion : (dimAtom 28 30 0).effectiveDegree = 899 := by decide
 theorem effDeg_nickel58Atom : (dimAtom 28 30 28).effectiveDegree = 955 := by decide
-
-theorem nickel_effDeg_exceeds_kerD6 :
-    (dimAtom 28 30 0).effectiveDegree > 2 ∧
-    (dimAtom 28 30 28).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

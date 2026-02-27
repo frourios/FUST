@@ -85,8 +85,6 @@ theorem H2_eq (x : ℝ) : H2 x = x ^ 2 * (1 + ψ * x) ^ 2 := by
 theorem HD_eq (x : ℝ) : HD x = x ^ 2 * (1 + x) * (1 + ψ * x) ^ 2 := by
   unfold HD atomStateFn; ring
 
-theorem D2_eq (x : ℝ) : D2 x = x ^ 2 * (1 + x) ^ 2 * (1 + ψ * x) ^ 2 := rfl
-
 theorem H2_cation_eq (x : ℝ) : H2_cation x = x ^ 2 * (1 + ψ * x) := by
   unfold H2_cation atomStateFn; simp [pow_zero, mul_one, pow_one]
 
@@ -119,73 +117,7 @@ theorem degree_H2_anion : (dimAtom 2 0 3).effectiveDegree = 39 := by decide
 theorem degree_D2_cation : (dimAtom 2 2 1).effectiveDegree = 65 := by decide
 theorem degree_H3_cation : (dimAtom 3 0 2).effectiveDegree = 53 := by decide
 
--- All dihydrogen species exceed ker(D6) threshold
-theorem dihydrogen_degree_exceeds_kerD6 :
-    (dimAtom 2 0 2).effectiveDegree > 2 ∧
-    (dimAtom 2 2 2).effectiveDegree > 2 ∧
-    (dimAtom 2 4 2).effectiveDegree > 2 := by decide
-
-/-! ## Section 7: D6 Non-Kernel Classification
-
-All dihydrogen molecules have degree ≥ 3, hence none are in ker(D6).
-The minimum-degree species is H₂⁺ with deg=3.
--/
-
-theorem H2_cation_is_minimal_dihydrogen :
-    (dimAtom 2 0 1).effectiveDegree = 35 := by decide
-
-
--- D6(H₂⁺) ≠ 0: the simplest dihydrogen species is already outside ker(D6)
-theorem H2_cation_not_in_kerD6 (z : ℂ) (hz : z ≠ 0) :
-    D6 (fun t => t ^ 2 + (↑ψ : ℂ) * t ^ 3) z ≠ 0 := by
-  simp only [D6, N6]
-  have hφ2 := golden_ratio_property_complex
-  have hψ2 := psi_sq_complex
-  have hφ3 := phi_cubed_complex
-  have hψ3 := psi_cubed_complex
-  have hφ4 := phi_pow4_complex
-  have hψ4 := psi_pow4_complex
-  have hφ6 := phi_pow6_complex
-  have hψ6 := psi_pow6_complex
-  have hφ9 := phi_pow9_complex
-  have hψ9 := psi_pow9_complex
-  have hcoef3 : (↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
-      (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9 =
-      12 * ((↑φ : ℂ) - ↑ψ) := by
-    rw [hφ9, hφ6, hφ3, hψ3, hψ6, hψ9]; ring
-  have hc_sq : (↑φ : ℂ) ^ 6 - 3 * (↑φ : ℂ) ^ 4 + (↑φ : ℂ) ^ 2 -
-      (↑ψ : ℂ) ^ 2 + 3 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6 = 0 := by
-    rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]; ring
-  have hnum : ((↑φ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 3 * z) ^ 3 -
-      3 * (((↑φ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 2 * z) ^ 3) +
-      (((↑φ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) * z) ^ 3) -
-      (((↑ψ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) * z) ^ 3) +
-      3 * (((↑ψ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 2 * z) ^ 3) -
-      (((↑ψ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 3 * z) ^ 3) =
-      12 * (↑ψ : ℂ) * ((↑φ : ℂ) - ↑ψ) * z ^ 3 := by
-    have := calc ((↑φ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 3 * z) ^ 3 -
-        3 * (((↑φ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) ^ 2 * z) ^ 3) +
-        (((↑φ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑φ : ℂ) * z) ^ 3) -
-        (((↑ψ : ℂ) * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) * z) ^ 3) +
-        3 * (((↑ψ : ℂ) ^ 2 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 2 * z) ^ 3) -
-        (((↑ψ : ℂ) ^ 3 * z) ^ 2 + (↑ψ : ℂ) * ((↑ψ : ℂ) ^ 3 * z) ^ 3)
-        = ((↑φ : ℂ) ^ 6 - 3 * (↑φ : ℂ) ^ 4 + (↑φ : ℂ) ^ 2 -
-            (↑ψ : ℂ) ^ 2 + 3 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6) * z ^ 2 +
-          (↑ψ : ℂ) * ((↑φ : ℂ) ^ 9 - 3 * (↑φ : ℂ) ^ 6 + (↑φ : ℂ) ^ 3 -
-            (↑ψ : ℂ) ^ 3 + 3 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9) * z ^ 3 := by ring
-      _ = 0 * z ^ 2 + (↑ψ : ℂ) * (12 * ((↑φ : ℂ) - ↑ψ)) * z ^ 3 := by
-            rw [hc_sq, hcoef3]
-      _ = 12 * (↑ψ : ℂ) * ((↑φ : ℂ) - ↑ψ) * z ^ 3 := by ring
-    exact this
-  rw [hnum]
-  have hφψ_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
-  have hψ_ne : (↑ψ : ℂ) ≠ 0 := by exact_mod_cast psi_ne_zero
-  apply div_ne_zero
-  · exact mul_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num) hψ_ne) hφψ_ne) (pow_ne_zero 3 hz)
-  · unfold D6Denom
-    exact mul_ne_zero (pow_ne_zero 5 hφψ_ne) hz
-
-/-! ## Section 8: Isotopologue Degeneracy
+/-! ## Section 7: Isotopologue Degeneracy
 
 HT and D₂ share the same (Z, N, e) = (2, 2, 2), hence the same state function.
 This is the simplest example of isotopologue degeneracy.
@@ -195,7 +127,7 @@ This is the simplest example of isotopologue degeneracy.
 theorem isotopologue_degeneracy_HT_D2 :
     dimAtom 2 2 2 = dimAtom 2 2 2 := rfl
 
-/-! ## Section 9: Summary -/
+/-! ## Section 8: Summary -/
 
 theorem dihydrogen_classification :
     -- H₂⁺ effectiveDegree
@@ -205,9 +137,6 @@ theorem dihydrogen_classification :
     (dimAtom 2 1 2).effectiveDegree = 52 ∧  -- HD
     (dimAtom 2 2 2).effectiveDegree = 67 ∧  -- D₂ = HT
     (dimAtom 2 3 2).effectiveDegree = 82 ∧  -- DT
-    (dimAtom 2 4 2).effectiveDegree = 97 ∧  -- T₂
-    -- All exceed ker(D6) threshold
-    (dimAtom 2 0 1).effectiveDegree > 2 := by decide
+    (dimAtom 2 4 2).effectiveDegree = 97 := by decide  -- T₂
 
 end FUST.Chemistry.Dihydrogen
-

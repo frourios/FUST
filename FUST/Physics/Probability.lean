@@ -1,23 +1,23 @@
-import FUST.DifferenceOperators
+import FUST.FζOperator
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Finset.Basic
 
 /-!
 # FUST Probability Theory
 
-Probability emerges structurally from D6 operator and φ-scale iteration.
+Probability emerges structurally from the Fζ = 5z·Dζ operator and φ-scale iteration.
 
 ## Key Results
 
 1. **Theorem 3.1**: Same-degree ratio is gauge-invariant
 2. **φ-scale iteration**: Generates observation sequences
 3. **Empirical distribution**: Frequency-based probability
-4. **Born rule**: Structural consequence of D6 action
+4. **Born rule**: Structural consequence of Fζ action
 -/
 
 namespace FUST.Probability
 
-open FUST Complex
+open FUST Complex FUST.FζOperator
 
 attribute [local instance] Classical.propDecidable
 
@@ -25,42 +25,41 @@ attribute [local instance] Classical.propDecidable
 ## Theorem 3.1: Same-Degree Ratio Gauge Invariance
 
 For same-degree monomials f_A = a·x^n and f_B = b·x^n:
-  normSq(D6[f_A](x)) / normSq(D6[f_B](x)) = normSq(a) / normSq(b)
+  normSq(Fζ[f_A](x)) / normSq(Fζ[f_B](x)) = normSq(a) / normSq(b)
 
 This is independent of x (gauge-invariant).
 -/
 
 section SameDegreeRatio
 
-/-- D6 is linear: D6[a·f] = a·D6[f] -/
-theorem D6_linear_scalar (a : ℂ) (f : ℂ → ℂ) (x : ℂ) :
-    D6 (fun t => a * f t) x = a * D6 f x := by
-  simp only [D6, N6]
-  ring
+/-- Fζ is linear: Fζ[a·f] = a·Fζ[f] -/
+theorem Fζ_linear_scalar (a : ℂ) (f : ℂ → ℂ) (x : ℂ) :
+    Fζ (fun t => a * f t) x = a * Fζ f x :=
+  Fζ_const_smul a f x
 
 /-- Same-degree ratio is gauge-invariant -/
 theorem same_degree_ratio_gauge_invariant
     (a b : ℂ) (f : ℂ → ℂ) (x : ℂ)
-    (_hb : b ≠ 0) (hfx : D6 f x ≠ 0) :
-    normSq (D6 (fun t => a * f t) x) /
-      normSq (D6 (fun t => b * f t) x) =
+    (_hb : b ≠ 0) (hfx : Fζ f x ≠ 0) :
+    normSq (Fζ (fun t => a * f t) x) /
+      normSq (Fζ (fun t => b * f t) x) =
     normSq a / normSq b := by
-  rw [D6_linear_scalar, D6_linear_scalar]
+  rw [Fζ_linear_scalar, Fζ_linear_scalar]
   rw [normSq_mul, normSq_mul]
-  have hD6 : normSq (D6 f x) ≠ 0 :=
+  have hFζ : normSq (Fζ f x) ≠ 0 :=
     normSq_pos.mpr hfx |>.ne'
-  rw [mul_div_mul_right _ _ hD6]
+  rw [mul_div_mul_right _ _ hFζ]
 
 /-- For monomials: ratio is independent of evaluation point -/
 theorem monomial_ratio_invariant
     (a b : ℂ) (n : ℕ) (x y : ℂ)
     (hb : b ≠ 0) (_hx : x ≠ 0) (_hy : y ≠ 0) (_hn : n ≥ 3)
-    (hfx : D6 (fun t => t ^ n) x ≠ 0)
-    (hfy : D6 (fun t => t ^ n) y ≠ 0) :
-    normSq (D6 (fun t => a * t ^ n) x) /
-      normSq (D6 (fun t => b * t ^ n) x) =
-    normSq (D6 (fun t => a * t ^ n) y) /
-      normSq (D6 (fun t => b * t ^ n) y) := by
+    (hfx : Fζ (fun t => t ^ n) x ≠ 0)
+    (hfy : Fζ (fun t => t ^ n) y ≠ 0) :
+    normSq (Fζ (fun t => a * t ^ n) x) /
+      normSq (Fζ (fun t => b * t ^ n) x) =
+    normSq (Fζ (fun t => a * t ^ n) y) /
+      normSq (Fζ (fun t => b * t ^ n) y) := by
   rw [same_degree_ratio_gauge_invariant a b _ x hb hfx]
   rw [same_degree_ratio_gauge_invariant a b _ y hb hfy]
 
@@ -70,7 +69,7 @@ end SameDegreeRatio
 ## φ-Scale Iteration and Observation Sequences
 
 The φ-scale transformation x ↦ φ^k · x generates observation sequences:
-  A_f(k) := normSq(D6[f](φ^k · x))
+  A_f(k) := normSq(Fζ[f](φ^k · x))
 
 This corresponds to "trials" in probability theory.
 -/
@@ -80,7 +79,7 @@ section PhiScaleIteration
 /-- Observation value at scale k -/
 noncomputable def observationAt
     (f : ℂ → ℂ) (x₀ : ℝ) (k : ℤ) : ℝ :=
-  normSq (D6 f ↑(φ ^ k * x₀))
+  normSq (Fζ f ↑(φ ^ k * x₀))
 
 /-- Observation sequence is well-defined for x₀ > 0 -/
 theorem observationAt_welldefined
@@ -333,21 +332,21 @@ end FUSTProbability
 /-!
 ## Born Rule as Structural Consequence
 
-The FUST action: A[f] = ∫ normSq(D6[f](x)) dx/x
+The FUST action: A[f] = ∫ normSq(Fζ[f](x)) dx/x
 
 equals the probability expectation:
-  A[f] = E_{P_f}[normSq(D6[f])]
+  A[f] = E_{P_f}[normSq(Fζ[f])]
 -/
 
 section BornRule
 
-/-- Discrete FUST action: sum of normSq(D6[f]) with Haar weight -/
+/-- Discrete FUST action: sum of normSq(Fζ[f]) with Haar weight -/
 noncomputable def discreteAction
     (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) : ℝ :=
   (Finset.Icc (-N : ℤ) N).sum
     (fun k => (observationAt f x₀ k) ^ 2) * haarWeight
 
-/-- Discrete expectation: average of normSq(D6[f]) -/
+/-- Discrete expectation: average of normSq(Fζ[f]) -/
 noncomputable def discreteExpectation
     (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) : ℝ :=
   (Finset.Icc (-N : ℤ) N).sum

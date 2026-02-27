@@ -2,20 +2,6 @@
 \chapter{Coupling Constants from \texorpdfstring{$D_\zeta$}{Dζ} Structure}
 \label{chap:pd_coupling}
 
-\section{\texorpdfstring{$D_\zeta$}{Dζ} Projection Bounds}
-\label{sec:coupling_d_levels}
-
-\begin{theorem}[D-Level Bounds]
-\label{thm:coupling_d_levels}
-\lean{FUST.CouplingConstants.active_level_count_derivation}
-\leanok
-\begin{itemize}
-\item $D_{\min} = 2$: minimum for pairwise interaction ($C(1,2) = 0$, $C(2,2) = 1$)
-\item $D_{\max} = 6$: from $D_6$ completeness ($\ker(D_6)$ has dimension 3)
-\item Active D-levels: $6 - 2 + 1 = 5$ ($D_2$ through $D_6$)
-\end{itemize}
-\end{theorem}
-
 \section{Strong Coupling Constant}
 \label{sec:coupling_strong}
 
@@ -26,7 +12,7 @@
 \[
 \alpha_s = \frac{C(3,2)}{C(5,2) + C(6,2)} = \frac{3}{25} = 0.12
 \]
-This uses $D_3$ (weak sector) vs $D_5$+$D_6$ (unified sector).
+This uses $N_3$ (weak sector) vs $N_5$+$N_6$ (unified sector).
 \end{theorem}
 
 \section{Cabibbo Angle}
@@ -39,7 +25,7 @@ This uses $D_3$ (weak sector) vs $D_5$+$D_6$ (unified sector).
 \[
 \theta_C = \arctan(1/\varphi^3) \approx 13.28°
 \]
-The exponent 3 = $C(3,2)$ from $D_3$ pair count.
+The exponent 3 = $C(3,2)$ from $N_3$ pair count.
 \end{theorem}
 
 \section{PMNS Mixing Angles}
@@ -47,12 +33,12 @@ The exponent 3 = $C(3,2)$ from $D_3$ pair count.
 
 \begin{theorem}[Solar Angle]
 \label{thm:coupling_pmns_solar}
-\lean{FUST.CouplingConstants.pmns_solar_from_D3_symmetry}
+\lean{FUST.CouplingConstants.pmns_solar_from_N3_symmetry}
 \leanok
 \[
 \sin^2\theta_{12} = \frac{1}{3}
 \]
-from $D_3$ three-fold symmetry.
+from $N_3$ three-fold symmetry.
 \end{theorem}
 
 \begin{theorem}[Reactor Angle]
@@ -74,7 +60,7 @@ from $D_3$ three-fold symmetry.
 \[
 \delta_{CKM} = \frac{2\pi}{5}
 \]
-where 5 = number of active D-levels ($D_2$ through $D_6$).
+where 5 = number of active numerator operator levels ($N_2$ through $N_6$).
 \end{theorem}
 
 \section{Fine Structure Constant}
@@ -85,22 +71,22 @@ where 5 = number of active D-levels ($D_2$ through $D_6$).
 \lean{FUST.CouplingConstants.spatial_normalization}
 \leanok
 \[
-C(D_{\max}, \dim\ker(D_6)) = C(6,3) = 20
+C(D_{\max}, \dim\ker(F_\zeta)) = C(6,3) = 20
 \]
 This equals the sum of pair counts: $C(2,2)+C(3,2)+C(4,2)+C(5,2) = 1+3+6+10 = 20$.
 \end{theorem}
 
 \begin{theorem}[Fine Structure Constant]
 \label{thm:coupling_fine_structure}
-\lean{FUST.CouplingConstants.fine_structure_from_D_structure}
+\lean{FUST.CouplingConstants.fine_structure_from_Fζ_structure}
 \leanok
 \[
-\alpha_0 = \frac{\varphi^{-(D_{\max}-D_{\min})}}{C(D_{\max},\,\dim\ker(D_6))} = \frac{\varphi^{-4}}{C(6,3)}
+\alpha_0 = \frac{\varphi^{-(D_{\max}-D_{\min})}}{C(D_{\max},\,\dim\ker(F_\zeta))} = \frac{\varphi^{-4}}{C(6,3)}
 \]
 where:
 \begin{itemize}
 \item $\varphi^{-4} = \varphi^{-(D_{\max}-D_{\min})}$: D-level propagator across the range $6-2=4$
-\item $C(6,3) = 20 = C(D_{\max},\,\dim\ker(D_6))$: spatial configuration count
+\item $C(6,3) = 20 = C(D_{\max},\,\dim\ker(F_\zeta))$: spatial configuration count
 \end{itemize}
 Algebraic form: $\alpha_0 = (7-3\sqrt{5})/40$, giving $1/\alpha_0 = 70+30\sqrt{5} \approx 137.082$ (tree-level, error 0.034\%).
 \end{theorem}
@@ -112,13 +98,13 @@ Algebraic form: $\alpha_0 = (7-3\sqrt{5})/40$, giving $1/\alpha_0 = 70+30\sqrt{5
 \label{thm:coupling_ckm_decay}
 \lean{FUST.CouplingConstants.ckm_geometric_decay}
 \leanok
-CKM matrix elements decay as $\varphi^{-3n}$ where $n$ is the D-structure step distance:
+CKM matrix elements decay as $\varphi^{-3n}$ where $n$ is the numerator operator step distance:
 \begin{align}
 |V_{us}| &\propto \varphi^{-3} \\
 |V_{cb}| &\propto \varphi^{-6} \\
 |V_{ub}| &\propto \varphi^{-9}
 \end{align}
-The exponent 3 = $C(3,2)$ comes from $D_3$ pair count.
+The exponent 3 = $C(3,2)$ comes from $N_3$ pair count.
 \end{theorem}
 
 \section{Connection to Gauge Boson Masses}
@@ -127,12 +113,12 @@ The exponent 3 = $C(3,2)$ comes from $D_3$ pair count.
 The coupling constants connect directly to gauge boson masses:
 \begin{itemize}
 \item \textbf{W mass exponent}: $C(5,2) + C(6,2) = 25$ (same pair counts as $\alpha_s$ denominator)
-\item \textbf{W mass factor}: $C(6,2)/(C(6,2)+C(2,2)) = 15/16$ (D-level boundary normalization)
+\item \textbf{W mass factor}: $C(6,2)/(C(6,2)+C(2,2)) = 15/16$ (operator-level boundary normalization)
 \item \textbf{Z mass}: $m_Z = m_W / \cos\theta_W$ using $\sin^2\theta_W = 1/4$
 \end{itemize}
 
 The relation $\alpha_s = C(3,2)/(C(5,2)+C(6,2)) = 3/25$ and the W exponent $C(5,2)+C(6,2) = 25$
-share the \emph{same denominator}: the strong coupling constant is the ratio of $D_3$ pairs to the
+share the \emph{same denominator}: the strong coupling constant is the ratio of $N_3$ pairs to the
 total pairs appearing in the W mass exponent.
 
 \section{Summary}
@@ -146,8 +132,8 @@ total pairs appearing in the W mass exponent.
 \item Strong coupling: $\alpha_s = C(3,2)/25 = 3/25$
 \item PMNS reactor angle: $\sin^2\theta_{13} = C(2,2)/C(6,2) = 1/15$
 \item Active levels = 5
-\item $D_3$ gauge invariance: $D_3[1] = 0$
-\item $D_5$ extended kernel: $D_5[1] = D_5[x] = 0$
+\item $N_3$ gauge invariance: $N_3[1] = 0$
+\item $N_5$ extended kernel: $N_5[1] = N_5[x] = 0$
 \end{enumerate}
 \end{theorem}
 

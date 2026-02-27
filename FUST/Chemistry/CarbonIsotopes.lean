@@ -1,6 +1,4 @@
 /-
-Carbon Isotopes from D-operator Kernel Structure
-
 State function g(x) = x^Z · (1+x)^N · (1+ψx)^e.
 Carbon Z = spinDegeneracy × spatialDim = 6.
 ¹²C (Z=N=6) is a symmetric nucleus with g = unitCell^6.
@@ -84,12 +82,6 @@ theorem degree_carbon13Atom : (dimAtom 6 7 6).effectiveDegree = 214 := by decide
 theorem degree_carbon14Atom : (dimAtom 6 8 6).effectiveDegree = 229 := by decide
 theorem degree_carbonCation : (dimAtom 6 6 5).effectiveDegree = 197 := by decide
 theorem degree_carbideAnion : (dimAtom 6 6 10).effectiveDegree = 207 := by decide
-
--- All carbon species exceed ker(D6) threshold
-theorem carbon_degree_exceeds_kerD6 :
-    (dimAtom 6 6 0).effectiveDegree > 2 ∧
-    (dimAtom 6 6 6).effectiveDegree > 2 ∧
-    (dimAtom 6 6 10).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Electron Shell Structure
 
@@ -195,11 +187,8 @@ theorem carbon_isotope_classification :
     -- Carbon valence = 4
     closedShellElectronCount 2 - carbonZ = 4 ∧
     -- Carbon is not closed shell, carbide is
-    ¬ isClosedShell 6 ∧ isClosedShell 10 ∧
-    -- Key carbon species exceed ker(D6)
-    (dimAtom 6 6 6).effectiveDegree > 2 := by
+    ¬ isClosedShell 6 ∧ isClosedShell 10 := by
   refine ⟨rfl, rfl, ⟨1, by omega, rfl⟩, carbon12Atom_eq_unitCell_pow,
-    by decide, carbon_not_closed_shell, neon_is_closed_shell, by decide⟩
+    by decide, carbon_not_closed_shell, neon_is_closed_shell⟩
 
 end FUST.Chemistry.Carbon
-

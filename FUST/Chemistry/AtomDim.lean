@@ -445,7 +445,6 @@ theorem root_triple_unique :
 /-! ## Section 14: Polynomial Necessity
 
 Finite Observability: a particle's state has finitely many nonzero detectable coefficients.
-D₆ eigenvalues λₙ = 0 for n ≤ 2, λₙ ≠ 0 for n ≥ 3 (from D6_detects_cubic etc).
 So finite observability forces the state function to be polynomial. -/
 
 -- Finite support implies polynomial (bounded degree)
@@ -470,7 +469,7 @@ theorem finite_observable_implies_finite_support
   intro n ⟨hgn, hn3⟩
   exact mul_ne_zero (hdet n hn3) hgn
 
--- Combined: finite D₆-observability forces polynomial state
+-- Combined: finite observability forces polynomial state
 theorem polynomial_necessity (g eigval : ℕ → ℝ)
     (hdet : ∀ n : ℕ, n ≥ 3 → eigval n ≠ 0)
     (hfin : Set.Finite {n : ℕ | eigval n * g n ≠ 0}) :

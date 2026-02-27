@@ -7,11 +7,11 @@
 
 The standard NS blowup question asks: can $\int|\nabla u|^2 \to \infty$ in finite time?
 
-$D_\zeta$'s unified structure, through its AF-channel projection $D_6$ and the Planck-scale thermal cutoff, resolves this with a finite-dimensional algebraic framework:
+$D_\zeta$'s unified structure, through its AF-channel projection $N_6$ and the Planck-scale thermal cutoff, resolves this with a finite-dimensional algebraic framework:
 \begin{enumerate}
 \item \textbf{4D spacetime}: $D_\zeta$ determines $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ from $|D_\zeta|^2 = 12(3a^2 + b^2)$, giving 3 spatial + 1 temporal dimension
-\item \textbf{Spatial kernel}: $\ker(D_6) = \{1, z, z^2\}$ (dim 3 = spatial DOF), requiring no dissipation
-\item \textbf{$D_\zeta$ Planck resolution}: $D_6$ samples at $\{\varphi^3 z, \ldots, \psi^3 z\}$. When $z < \ell_P / \varphi^3$, sampling falls below the structural minimum $\ell_P = 25/12$
+\item \textbf{Spatial kernel}: $\ker(F_\zeta) = \{1, z, z^2\}$ (dim 3 = spatial DOF), requiring no dissipation
+\item \textbf{$D_\zeta$ Planck resolution}: $N_6$ samples at $\{\varphi^3 z, \ldots, \psi^3 z\}$. When $z < \ell_P / \varphi^3$, sampling falls below the structural minimum $\ell_P = 25/12$
 \item \textbf{Finite mode cutoff}: $\varphi^n \to \infty$ ensures only finitely many modes are above $\ell_P$
 \item \textbf{Thermal dissipation}: Third law guarantees sub-Planck energy has dissipated
 \item \textbf{Exponential dissipation}: $C_n \geq \tfrac{1}{3}\varphi^{3n}$ for $n \geq 4$ (from AF-channel structure)
@@ -36,7 +36,7 @@ FUST-NS operates in $D_\zeta$'s 4D spacetime rather than on continuous $\mathbb{
 The Planck-scale thermal cutoff argument relies on $D_\zeta$'s unique structure:
 \begin{enumerate}
 \item \textbf{Structural minimum $\ell_P = 25/12$}: Derived from $D_\zeta$'s AF-channel, not postulated. Standard physics has the Planck length as an empirical scale with no mathematical proof
-\item \textbf{Third law from $D_\zeta$}: The theorem $f \notin \ker(D_6) \Rightarrow \exists t,\; S(f,t) > 0$ follows from $\varphi > 1$, $|\psi| < 1$ (hyperbolic asymmetry in $D_\zeta$)
+\item \textbf{Third law from $D_\zeta$}: The theorem $f \notin \ker(F_\zeta) \Rightarrow \exists t,\; S(f,t) > 0$ follows from $\varphi > 1$, $|\psi| < 1$ (hyperbolic asymmetry in $D_\zeta$)
 \item \textbf{4D spacetime from algebra}: $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ is determined by $D_\zeta$'s norm-squared decomposition, not assumed
 \end{enumerate}
 
@@ -68,7 +68,7 @@ All theorems formally proven in Lean4 with 0 \texttt{sorry}:
 \hline
 Theorem & Lean4 name & File \\
 \hline
-$\ker(D_6)$ basis & \texttt{D6\_const, D6\_linear, D6\_quadratic} & DifferenceOperators.lean \\
+$\ker(F_\zeta)$ basis & \texttt{D6\_const, D6\_linear, D6\_quadratic} & DifferenceOperators.lean \\
 Dimension exactly 3 & \texttt{D6\_not\_annihilate\_cubic} & GaugeGroups.lean \\
 $C_0=C_1=C_2=0$ & \texttt{dissipationCoeff\_zero/one/two} & NavierStokes.lean \\
 $C_n^2>0$ for $n\geq 3$ & \texttt{dissipation\_positive\_outside\_kernel} & NavierStokes.lean \\
@@ -76,7 +76,7 @@ $|C_n|\leq 10\varphi^{3n}$ & \texttt{polynomial\_growth} & NavierStokes.lean \\
 $|N_{m,n}|\leq 30\varphi^{3(m+n)}$ & \texttt{nonlinear\_coeff\_growth} & NavierStokes.lean \\
 $C_n\geq\frac{1}{3}\varphi^{3n}$ & \texttt{dissipation\_lower\_bound} & NavierStokes.lean \\
 $E_\mathrm{high}>0 \Rightarrow D_\mathrm{high}>0$ & \texttt{dissipation\_strictly\_positive} & NavierStokes.lean \\
-$\ker(D_6)$ invariance & \texttt{ker\_D6\_invariant} & LeastAction.lean \\
+$\ker(F_\zeta)$ invariance & \texttt{ker\_D6\_invariant} & LeastAction.lean \\
 $D_\zeta$ normSq decomposition & \texttt{Dζ\_normSq\_decomposition} & Zeta6.lean \\
 \hline
 $D_\zeta$ Planck cutoff $z_P$ & \texttt{planckCutoffScale} & NavierStokes.lean \\

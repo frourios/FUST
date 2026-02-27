@@ -105,11 +105,11 @@ theorem phi_ne_psi : φ ≠ ψ := by
   have : (5 : ℝ) ≤ 0 := by nlinarith [Real.sq_sqrt (show (5 : ℝ) ≥ 0 by norm_num)]
   linarith
 
-/-! ## Section 6: D6 Operator Anti-Symmetry
+/-! ## Section 6: N6 Operator Anti-Symmetry
 
 N6 f x = f(φ³x) - 3f(φ²x) + f(φx) - f(ψx) + 3f(ψ²x) - f(ψ³x).
 The φ-side coefficients [+1, -3, +1] and ψ-side [-1, +3, -1]
-have opposite signs: the D6 operator is intrinsically chiral.
+have opposite signs: the N6 operator is intrinsically chiral.
 -/
 
 -- N6 coefficients sum to zero: 1 - 3 + 1 - 1 + 3 - 1 = 0

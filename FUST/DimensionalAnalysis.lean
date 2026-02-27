@@ -159,12 +159,10 @@ end DeriveFDim
 
 section DerivedDimConstants
 
-/-- Time dimension derived from D₆: dimTime = (D₆ output)⁻¹ -/
 def dimTime : FDim := (deriveFDim 6)⁻¹
 
 theorem dimTime_eq : dimTime = ⟨5, -1⟩ := by decide
 
-/-- Lagrangian/Hamiltonian dimension: (D₆ output)² -/
 def dimLagrangian : FDim := deriveFDim 6 * deriveFDim 6
 
 end DerivedDimConstants
@@ -180,20 +178,14 @@ end DerivedDimPerOperator
 
 section StateClassDecomposition
 
-/-! ## FDim ↔ State Function Class correspondence
-
-Every FDim decomposes as deriveFDim(6)^a × dimTimeD2^n with (a,n) ∈ ℤ²:
-- sectorPower a = (-p - δ) / 4: which D₆^a detects it
-- effectiveDegree d = -p - 2δ: polynomial degree of state function representative
-- detectionLevel n = d - 3a: D₂ iterations beyond D₆^a baseline -/
+/-! ## FDim ↔ State Function Class correspondence -/
 
 /-- Effective polynomial degree: d = -p - 2δ -/
 def FDim.effectiveDegree (dim : FDim) : ℤ := -dim.p - 2 * dim.delta
 
-/-- Sector power: a = (-p - δ) / 4 (D₆ exponent) -/
+/-- Sector power: a = (-p - δ) / 4 -/
 def FDim.sectorPower (dim : FDim) : ℤ := (-dim.p - dim.delta) / 4
 
-/-- Detection level beyond D₆^a baseline -/
 def FDim.detectionLevel (dim : FDim) : ℤ :=
   dim.effectiveDegree - 3 * dim.sectorPower
 

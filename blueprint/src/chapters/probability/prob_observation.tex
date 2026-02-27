@@ -17,7 +17,7 @@ generates observation sequences that correspond to ``trials'' in probability the
 \leanok
 For state $f$ and base point $x_0$:
 \[
-A_f(k) := |D_6[f](\varphi^k \cdot x_0)|
+A_f(k) := |F_\zeta[f](\varphi^k \cdot x_0)|
 \]
 \end{definition}
 
@@ -81,5 +81,5 @@ w := \log\varphi
 \label{thm:action_zero_ker}
 \lean{FUST.Probability.action_zero_for_ker}
 \leanok
-If $f \in \ker(D_6)$, then $\mathcal{A}_N[f] = 0$ for all $N$.
+If $f \in \ker(F_\zeta)$, then $\mathcal{A}_N[f] = 0$ for all $N$.
 \end{theorem}

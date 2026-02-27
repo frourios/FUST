@@ -1,6 +1,4 @@
 /-
-Titanium from D-operator Kernel Structure
-
 Titanium Z = 22 = nuclearMagic(2) + spinDegeneracy = 20 + 2.
 Configuration: [Ar] 3d² 4s².
 Ti-48 (Z=22, N=26): most abundant isotope.
@@ -64,10 +62,6 @@ theorem effDeg_titanium48Atom : (dimAtom 22 26 22).effectiveDegree = 787 := by d
 
 -- Ti-48 neutral atom particle count = hoMagic(4) = 70
 theorem titanium48_particleCount_eq_hoMagic : 22 + 26 + 22 = Nuclear.hoMagic 4 := rfl
-
-theorem titanium_effDeg_exceeds_kerD6 :
-    (dimAtom 22 26 0).effectiveDegree > 2 ∧
-    (dimAtom 22 26 22).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

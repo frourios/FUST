@@ -1,6 +1,4 @@
 /-
-Iron from D-operator Kernel Structure
-
 Iron Z = 26 = nuclearMagic(3) - spinDegeneracy = 28 - 2.
 Configuration: [Ar] 3d⁶ 4s² (period 4, Group VIII transition metal).
 Fe-56 (Z=26, N=30): most abundant isotope.
@@ -81,10 +79,6 @@ theorem effDeg_iron56Atom : (dimAtom 26 30 26).effectiveDegree = 919 := by decid
 -- Fe-56 neutral atom particle count = nuclearMagic(5) = 82
 theorem iron56_particleCount_is_magic : 26 + 30 + 26 = Nuclear.nuclearMagic 5 := rfl
 
-theorem iron_effDeg_exceeds_kerD6 :
-    (dimAtom 26 30 0).effectiveDegree > 2 ∧
-    (dimAtom 26 30 26).effectiveDegree > 2 := by decide
-
 /-! ## Section 5: Mass Numbers -/
 
 theorem Fe54_mass_number : ironZ + neutrons_Fe54 = 54 := rfl
@@ -104,4 +98,3 @@ theorem iron_classification :
   exact ⟨rfl, rfl, ⟨3, by omega, rfl⟩, rfl, by decide, by decide⟩
 
 end FUST.Chemistry.Iron
-

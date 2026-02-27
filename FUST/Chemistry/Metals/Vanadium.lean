@@ -1,6 +1,4 @@
 /-
-Vanadium from D-operator Kernel Structure
-
 Vanadium Z = 23 = nuclearMagic(2) + spatialDim = 20 + 3.
 Configuration: [Ar] 3d³ 4s².
 V-51 (Z=23, N=28): most abundant isotope.
@@ -67,10 +65,6 @@ theorem vanadium51Atom_eq (x : ℝ) :
 
 theorem effDeg_vanadium51Ion : (dimAtom 23 28 0).effectiveDegree = 789 := by decide
 theorem effDeg_vanadium51Atom : (dimAtom 23 28 23).effectiveDegree = 835 := by decide
-
-theorem vanadium_effDeg_exceeds_kerD6 :
-    (dimAtom 23 28 0).effectiveDegree > 2 ∧
-    (dimAtom 23 28 23).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

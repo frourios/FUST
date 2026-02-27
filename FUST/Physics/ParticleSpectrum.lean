@@ -16,22 +16,21 @@ open FUST.WeinbergAngle
 
 /-! ## Quantum Number Types -/
 
-/-- Weak isospin T₃ from D₃ structure -/
+/-- Weak isospin T₃ from N3 structure -/
 inductive WeakIsospin where
   | minus_half | zero | plus_half
   deriving DecidableEq, Repr
 
-/-- Hypercharge Y from D₃-D₄ embedding -/
+/-- Hypercharge Y from N3-N4 embedding -/
 inductive Hypercharge where
   | minus_one | minus_one_third | plus_one_third | plus_two_thirds | plus_one
   deriving DecidableEq, Repr
 
-/-- Color charge from D₄ structure -/
+/-- Color charge from N4 structure -/
 inductive ColorCharge where
   | singlet | triplet | octet
   deriving DecidableEq, Repr
 
-/-- Spin from D-structure representations -/
 inductive Spin where
   | zero | half | one | two
   deriving DecidableEq, Repr
@@ -64,12 +63,12 @@ def higgs : ParticleQuantumNumbers :=
 
 /-! ## FORBIDDEN - Exotic Charges -/
 
-/-- Allowed charge count = 2 × C(3,2) + 1 = 7 from D₃ structure -/
+/-- Allowed charge count = 2 × C(3,2) + 1 = 7 -/
 abbrev allowedChargeCount : ℕ := 2 * Nat.choose 3 2 + 1
 
 theorem allowedChargeCount_eq : allowedChargeCount = 7 := rfl
 
-/-- Allowed charges from D₃ structure: Q = n/3 for n ∈ {-3,...,3} -/
+/-- Allowed charges: Q = n/3 for n ∈ {-3,...,3} -/
 abbrev allowedChargeNumerators : List ℤ := [-3, -2, -1, 0, 1, 2, 3]
 
 theorem allowedChargeNumerators_length : allowedChargeNumerators.length = allowedChargeCount := rfl
@@ -102,7 +101,7 @@ theorem max_spin : Spin.two ∈ allowedSpins := by decide
 
 /-! ## FORBIDDEN - Colored Leptons -/
 
-/-- Valid quantum number combinations from D₃-D₄ embedding -/
+/-- Valid quantum number combinations -/
 inductive ValidParticle : Hypercharge → ColorCharge → Prop where
   | lepton_singlet : ValidParticle .minus_one .singlet
   | quark_triplet_1 : ValidParticle .plus_one_third .triplet
@@ -123,7 +122,7 @@ Fermion count from Fζ channel structure:
 - Total fermions: 6 + 18 = 24
 
 Boson count from Fζ channel structure:
-- Photon: 1 (U(1) from D₃ singlet)
+- Photon: 1 (U(1) from N3 singlet)
 - W±, Z: 3 (SU(2) from C(3,2) = 3)
 - Gluons: C(3,2)² - 1 = 8 (SU(3) adjoint)
 - Higgs: 1
@@ -206,7 +205,7 @@ theorem all_constants_derived :
     (fermionFlavorCount = syWeight) ∧
     -- Spin count
     (allowedSpinCount = 4) ∧
-    -- Charges from D₃ pair count
+    -- Charges from N3 pair count
     (allowedChargeCount = 2 * Nat.choose 3 2 + 1) ∧
     -- Fermions from flavor count × color
     (SM_fermion_count = 2 * fermionFlavorCount + 2 * fermionFlavorCount * Nat.choose 3 2) ∧
@@ -383,29 +382,22 @@ theorem particleDim_from_phi_power :
 Every particle FDim decomposes as deriveFDim(m)^a × dimTimeD2^n.
 The state function g(x) = x^d is detected by D_m if d > kerDim(D_m).
 
-Three fundamental sectors:
-1. D₆ sector (a=1): g(x) = x³, mass ∝ Δ × φ^n
-2. D₆² sector (a=2): mass ∝ Δ², e.g. neutrinos
-3. Ratio sector (a=0): pure dimTimeD2^n, mass ratios ∝ φ^n
-
-Mixed sectors involve D₂ corrections: neutron, ν₂, Z² comp2. -/
+Mixed sectors involve N2 corrections: neutron, ν₂, Z² comp2. -/
 
 section SectorClassification
 
--- D₆ sector: dim = deriveFDim(6) × dimTimeD2^n, state function g(x)=x³
-theorem electron_D6_sector : dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) := by decide
-theorem muon_D6_sector : dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) := by decide
-theorem tau_D6_sector : dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) := by decide
-theorem proton_D6_sector : dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) := by decide
-theorem wBoson_D6_sector : dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) := by decide
-theorem higgsVac_D6_sector : dimHiggsVacuum = deriveFDim 6 * dimTimeD2 ^ (26 : ℤ) := by decide
-theorem higgsCorr_D6_sector :
+theorem electron_sector : dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) := by decide
+theorem muon_sector : dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) := by decide
+theorem tau_sector : dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) := by decide
+theorem proton_sector : dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) := by decide
+theorem wBoson_sector : dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) := by decide
+theorem higgsVac_sector : dimHiggsVacuum = deriveFDim 6 * dimTimeD2 ^ (26 : ℤ) := by decide
+theorem higgsCorr_sector :
     dimHiggsCorrection = deriveFDim 6 * dimTimeD2 ^ (23 : ℤ) := by decide
 
--- D₆² sector: dim = deriveFDim(6)² × dimTimeD2^n, mass ∝ Δ²
-theorem nu3_D6sq_sector :
+theorem nu3_sector :
     FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) := by decide
-theorem zSqComp1_D6sq_sector :
+theorem zSqComp1_sector :
     dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) := by decide
 
 -- Ratio sector: dim = dimTimeD2^n (no D operator dimension)
@@ -415,7 +407,6 @@ theorem strangeDown_ratio_sector : dimStrangeDown = dimTimeD2 ^ (6 : ℤ) := by 
 theorem bottomCharm_ratio_sector : dimBottomCharm = dimTimeD2 ^ (2 : ℤ) := by decide
 theorem baryonAsym_ratio_sector : dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) := by decide
 
--- Mixed: D₆ × D₂ corrections
 theorem neutron_mixed_sector :
     dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) := by decide
 theorem nu2_mixed_sector :
@@ -434,20 +425,16 @@ theorem fineStructure_sector :
 
 -- Complete sector summary
 theorem sector_classification :
-    -- D₆ sector: electron, muon, tau, proton, W, Higgs
     dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) ∧
     dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) ∧
     dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) ∧
     dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) ∧
     dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) ∧
-    -- D₆² sector: ν₃, Z²
     FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) ∧
     dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) ∧
-    -- Ratio sector: quark ratios, baryon asymmetry
     dimTopBottomHigh = dimTimeD2 ^ (7 : ℤ) ∧
     dimStrangeDown = dimTimeD2 ^ (6 : ℤ) ∧
     dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) ∧
-    -- Mixed: neutron (D₆ × D₂), ν₂ (D₆² × D₂)
     dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) ∧
     FUST.NeutrinoMass.dimNu2 = deriveFDim 6 * deriveFDim 6 * deriveFDim 2 *
              dimTimeD2 ^ (-(32 : ℤ)) := by decide
@@ -515,7 +502,7 @@ theorem lepton_generation_exponents :
     Nat.choose 5 2 + Nat.choose 2 2 + Nat.choose 4 2 = 17 :=
   ⟨rfl, rfl, rfl⟩
 
-/-- Proton exponent from D₅+D₃+D₂ pair counts: baryon = lepton-scale + color -/
+/-- Proton exponent from N5+N3+N2 pair counts: baryon = lepton-scale + color -/
 theorem proton_exponent :
     Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14 := rfl
 
@@ -523,7 +510,6 @@ theorem proton_exponent :
 theorem proton_exponent_from_muon_and_color :
     (Nat.choose 5 2 + Nat.choose 2 2) + Nat.choose 3 2 = 14 := rfl
 
-/-- W boson exponent from D₅+D₆ total pair count -/
 theorem wBoson_exponent :
     Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
 
@@ -531,17 +517,12 @@ theorem wBoson_exponent :
 theorem darkMatter_exponent :
     Nat.choose 5 2 + Nat.choose 6 2 = 25 := rfl
 
-/-- All D₆-sector particle exponents from pair count sums -/
+/-- All sector particle exponents from pair count sums -/
 theorem all_particle_exponents :
-    -- electron: base (n=0)
     (0 = 0) ∧
-    -- muon: D₅ + D₂
     (Nat.choose 5 2 + Nat.choose 2 2 = 11) ∧
-    -- proton: D₅ + D₃ + D₂ (lepton-scale + color)
     (Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14) ∧
-    -- tau: D₅ + D₄ + D₂
     (Nat.choose 5 2 + Nat.choose 4 2 + Nat.choose 2 2 = 17) ∧
-    -- W boson: D₅ + D₆
     (Nat.choose 5 2 + Nat.choose 6 2 = 25) :=
   ⟨rfl, rfl, rfl, rfl, rfl⟩
 

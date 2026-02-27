@@ -91,7 +91,7 @@ theorem shellCapacity_values :
 
 /-! ## Section 4: Period Structure
 
-Wave function polynomial degree (n-1)+l → D₆ energy increases with n+l.
+Wave function polynomial degree (n-1)+l → energy increases with n+l.
 Constraint n ≥ l+1 gives l_max = ⌊(k-1)/2⌋ at spectral index k = n+l.
 periodLength(p) = shellCapacity((p+2)/2). -/
 
@@ -115,9 +115,9 @@ theorem total_elements_118 :
   periodLength 1 + periodLength 2 + periodLength 3 + periodLength 4 +
   periodLength 5 + periodLength 6 + periodLength 7 = 118 := rfl
 
-/-! ## Section 5: Quark Charge from D₃ Structure -/
+/-! ## Section 5: Quark Charge -/
 
--- Charge denominator = C(3, 2) from D₃ structure
+-- Charge denominator = C(3, 2) from N3 structure
 abbrev chargeDenom : ℕ := Nat.choose 3 2
 
 theorem chargeDenom_eq : chargeDenom = 3 := rfl
@@ -177,7 +177,7 @@ theorem chargeDenom_in_baryon_normalization :
 -- Neutron (udd) vs proton (uud): one u↔d flip (from composition_unique above)
 theorem quark_flip_is_one : (2 : ℕ) - 1 = 1 ∧ (2 : ℕ) - 1 = 1 := ⟨rfl, rfl⟩
 
--- m_u/m_d = 1/2 from MassRatios (D₂ isospin)
+-- m_u/m_d = 1/2 from MassRatios
 theorem quark_mass_ratio_from_isospin :
     muMdRatio.val = 1 / 2 := muMdRatio_val
 
@@ -322,7 +322,7 @@ theorem shell_from_channel_dimensions :
 
 /-! ## Section 9: Neutron Cannot Form Electron Shell
 
-dimNeutron = dimProton × dimTimeD2⁻¹ (isospin factor from D₂).
+dimNeutron = dimProton × dimTimeD2⁻¹
 A hypothetical neutron-electron bound state has dim ≠ hydrogen dim. -/
 
 theorem dimNeutron_eq_dimProton_mul_dimTimeD2_inv :
@@ -341,7 +341,7 @@ theorem neutron_shell_obstruction :
 /-! ## Section 10: Magic Number Gap Analysis
 
 For n ≥ 3: gap = nuclearMagic(n+1) - nuclearMagic(n) = hoLevelCapacity(n) + spinDegeneracy.
-The "+2" term = spinDegeneracy = dim ker(D₅) arises from the constant intruder growth rate.
+The "+2" term = spinDegeneracy arises from the constant intruder growth rate.
 Shell degeneracy C(n+2,2) is the D_{n+2} pair count — the same structure underlying
 particle mass exponents and the spectral zeta function. -/
 
@@ -377,11 +377,11 @@ theorem shell_degeneracy_is_operator_pair_count (N : ℕ) :
 
 -- The pair counts governing magic gaps are the SAME as particle mass exponents
 theorem magic_gap_uses_mass_pair_counts :
-    -- Shell 3 gap uses C(5,2) = 10 (same as muon/proton/tau D₅ component)
+    -- Shell 3 gap uses C(5,2) = 10
     Nat.choose 5 2 = 10 ∧
-    -- Shell 4 gap uses C(6,2) = 15 (same as D₆ pair count in W boson)
+    -- Shell 4 gap uses C(6,2) = 15
     Nat.choose 6 2 = 15 ∧
-    -- Shell 5 gap uses C(7,2) = 21 (next D-operator pair count)
+    -- Shell 5 gap uses C(7,2) = 21
     Nat.choose 7 2 = 21 := by decide
 
 /-! ## Section 11: Summary -/

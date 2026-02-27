@@ -1,9 +1,9 @@
 /-
-φ-Bloch Structure for D6
+φ-Bloch Structure
 
-The D6 operator has a φ-quasi-commutation property analogous to Bloch's theorem
+The N6 operator has a φ-quasi-commutation property analogous to Bloch's theorem
 in solid-state physics. The numerator operator N6 commutes exactly with
-φ-dilation, while D6 acquires a factor φ due to its 1/x normalization.
+φ-dilation, while N6 acquires a factor φ due to its 1/x normalization.
 In log-coordinates, this becomes translation invariance by log(φ).
 -/
 
@@ -44,26 +44,6 @@ theorem N6_phiDilate_comm (f : ℂ → ℂ) (z : ℂ) :
   simp only [N6, phiDilate]
   ring_nf
 
-/-! ## D6 Quasi-Commutation with φ-Dilation -/
-
-/-- D6 quasi-commutation: D6(f ∘ φ)(z) = φ · D6(f)(φz) -/
-theorem D6_phiDilate_quasi_comm (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
-    D6 (phiDilate f) z = (↑φ : ℂ) * D6 f ((↑φ : ℂ) * z) := by
-  have hφ : (↑φ : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt phi_pos)
-  have hφz : (↑φ : ℂ) * z ≠ 0 := mul_ne_zero hφ hz
-  rw [D6_eq_N6_div _ z, D6_eq_N6_div f ((↑φ : ℂ) * z)]
-  rw [N6_phiDilate_comm]
-  simp only [phiDilate]
-  field_simp
-
-/-! ## Hamiltonian Quasi-Commutation -/
-
-/-- Hamiltonian quasi-commutation: H(f∘φ)(z) = φ² · H(f)(φz) -/
-theorem hamiltonian_phiDilate_quasi_comm (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
-    (D6 (phiDilate f) z)^2 = (↑φ : ℂ)^2 * (D6 f ((↑φ : ℂ) * z))^2 := by
-  rw [D6_phiDilate_quasi_comm f z hz]
-  ring
-
 /-! ## φ-Bloch Eigenfunction Characterization -/
 
 /-- A function is a φ-Bloch eigenfunction if U_φ[f] = c · f -/
@@ -100,11 +80,22 @@ theorem N6_commutation_unconditional :
     ∀ (f : ℂ → ℂ) (z : ℂ), N6 (phiDilate f) z = phiDilate (N6 f) z :=
   N6_phiDilate_comm
 
-/-- D6 quasi-commutation is unconditional -/
-theorem D6_quasi_commutation_unconditional :
-    ∀ (f : ℂ → ℂ) (z : ℂ), z ≠ 0 →
-      D6 (phiDilate f) z = (↑φ : ℂ) * D6 f ((↑φ : ℂ) * z) :=
-  D6_phiDilate_quasi_comm
+/-- N6 distributes over finite sums -/
+theorem N6_finset_sum {ι : Type*}
+    (s : Finset ι) (cs : ι → ℂ) (fs : ι → ℂ → ℂ) (z : ℂ) :
+    N6 (fun w => ∑ i ∈ s, cs i * fs i w) z = ∑ i ∈ s, cs i * N6 (fs i) z := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [N6]
+  | insert a s' ha ih =>
+    rw [Finset.sum_insert ha]
+    have step1 : N6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
+        cs a * N6 (fs a) z + N6 (fun w => ∑ i ∈ s', cs i * fs i w) z := by
+      have : N6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
+          N6 (fun w => cs a * fs a w + ∑ i ∈ s', cs i * fs i w) z := by
+        congr 1; ext w; exact Finset.sum_insert ha
+      rw [this]; simp only [N6]; ring
+    rw [step1, ih]
 
 /-- Crystalline order implies N6 f inherits the Bloch structure -/
 theorem crystalline_N6_preserves (f : ℂ → ℂ)

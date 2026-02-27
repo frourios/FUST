@@ -2,22 +2,22 @@
 \chapter{Six-Element Completeness and \texorpdfstring{$D_\zeta$}{Dζ} Unification}
 \label{chap:six_completeness}
 
-\section{\texorpdfstring{$D_6$}{D6} Completeness}
+\section{\texorpdfstring{$N_6$}{N6} Completeness}
 \label{sec:fust_completeness}
 
 \begin{theorem}[Kernel Equality]
 \label{thm:kernel_equality}
-\lean{FUST.D7_kernel_equals_D6_kernel}
+\lean{FUST.N7_kernel_equals_N6_kernel}
 \leanok
 \[
-\ker(D_n)|_{\mathbb{C}[z]} = \ker(D_6)|_{\mathbb{C}[z]} = \mathrm{span}\{1, z, z^2\} \quad \text{for } n \ge 7
+\ker(N_n)|_{\mathbb{C}[z]} = \ker(N_6)|_{\mathbb{C}[z]} = \mathrm{span}\{1, z, z^2\} \quad \text{for } n \ge 7
 \]
 \end{theorem}
 
 \begin{enumerate}
-\item $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (3-dimensional)
-\item $D_6[z^3] \ne 0$: $D_6$ detects cubic and higher degree polynomials
-\item $\ker(D_7) = \ker(D_6)$: no new independent structure for $n \ge 7$
+\item $\ker(N_6) = \mathrm{span}\{1, z, z^2\}$ (3-dimensional)
+\item $N_6[z^3] \ne 0$: $N_6$ detects cubic and higher degree polynomials
+\item $\ker(N_7) = \ker(N_6)$: no new independent structure for $n \ge 7$
 \end{enumerate}
 
 \section{Elimination Conditions}
@@ -28,55 +28,36 @@
 \hline
 Operator & Coeff.\ sum & Eliminated monomials & $\dim \ker$ \\
 \hline
-$D_2$ & $0$ & $\{z^0\}$ (constant) & 1 \\
-$D_3$ & $0$ & $\{z^0\}$ (constant) & 1 \\
-$D_4$ & $-\sqrt{5}$ & $\{z^2\}$ ($z^2$ only) & 1 \\
-$D_5$ & $0$ & $\{z^0, z^1\}$ (constant and $z$) & 2 \\
-$D_6$ & $0$ & $\{z^0, z^1, z^2\}$ (constant, $z$, $z^2$) & 3 \\
+$N_2$ & $0$ & $\{z^0\}$ (constant) & 1 \\
+$N_3$ & $0$ & $\{z^0\}$ (constant) & 1 \\
+$N_4$ & $-\sqrt{5}$ & $\{z^2\}$ ($z^2$ only) & 1 \\
+$N_5$ & $0$ & $\{z^0, z^1\}$ (constant and $z$) & 2 \\
+$N_6$ & $0$ & $\{z^0, z^1, z^2\}$ (constant, $z$, $z^2$) & 3 \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{$D_\zeta$ perspective}: Each operator corresponds to a specific projection of $D_\zeta$ through the $\mathbb{Z}/6\mathbb{Z}$ Fourier decomposition. $D_2, D_4, D_6$ lie in the antisymmetric (AF) channel; $D_3, D_5$ lie in the symmetric (SY) channel. The kernel hierarchy $1 \to 2 \to 3$ is a structural consequence of the hyperbolic-elliptic composition.
+\textbf{$D_\zeta$ perspective}: Each operator corresponds to a specific projection of $D_\zeta$ through the $\mathbb{Z}/6\mathbb{Z}$ Fourier decomposition. $N_2, N_4, N_6$ lie in the antisymmetric (AF) channel; $N_3, N_5$ lie in the symmetric (SY) channel. The kernel hierarchy $1 \to 2 \to 3$ is a structural consequence of the hyperbolic-elliptic composition.
 
 \section{Integer Order Reduction}
 \label{sec:integer_reduction}
 
 \begin{proposition}[Integer orders $n\ge7$ have no new structure]
 \label{prop:n_ge_7}
-\lean{FUST.D7_kernel_equals_D6_kernel}
+\lean{FUST.N7_kernel_equals_N6_kernel}
 \leanok
-For any integer $n\ge7$, $\ker(D_n) = \ker(D_6)$.
+For any integer $n\ge7$, $\ker(N_n) = \ker(N_6)$.
 \end{proposition}
 
-This means $D_6$ is the \textbf{completeness boundary}: the hyperbolic lattice cannot produce kernel dimensions greater than 3. In $D_\zeta$, this is reflected by the fact that $\zeta_6^6 = 1$ closes the elliptic cycle.
+This means $N_6$ is the \textbf{completeness boundary}: the hyperbolic lattice cannot produce kernel dimensions greater than 3. In $D_\zeta$, this is reflected by the fact that $\zeta_6^6 = 1$ closes the elliptic cycle.
 
 \section{Half-Order Collapse}
 \label{sec:half_collapse}
 
 \begin{proposition}[Half-orders for $n\ge6$ collapse]
 \label{prop:half_collapse}
-For $n \ge 6$, half-order structures are absorbed into integer orders: $D_{n+0.5} \sim D_n$.
+For $n \ge 6$, half-order structures are absorbed into integer orders.
 \end{proposition}
-
-\section{Independence and Uniqueness of \texorpdfstring{$D_{5\frac{1}{2}}$}{D5half}}
-\label{sec:d55_uniqueness}
-
-\begin{proposition}[Algebraic Independence of $D_{5\frac{1}{2}}$]
-\label{prop:d55_independence}
-\lean{FUST.D5half_independence}
-\leanok
-$D_{5\frac{1}{2}}$ is algebraically non-equivalent to $D_5$ and $D_6$:
-\[
-D_5[z] = D_6[z] = 0, \quad \text{but} \quad D_{5\frac{1}{2}}[z] \neq 0
-\]
-\end{proposition}
-
-In the $D_\zeta$ framework, $D_{5\frac{1}{2}}$ bridges the AF and SY channels: it is $D_5$ (SY channel) plus $\mu \cdot \Delta_2$ (AF channel component). This direct sum structure
-\[
-D_{5\frac{1}{2}} \in \mathrm{ScaleQ}(-4,0) \oplus \mathrm{ScaleQ}(-1,1)
-\]
-is the unique half-order that crosses the channel boundary.
 
 \section{Six-Element Completeness Theorem}
 \label{sec:main_theorem}
@@ -87,23 +68,23 @@ is the unique half-order that crosses the channel boundary.
 \leanok
 In the Frourio difference hierarchy, the algebraically non-equivalent difference operators are limited to the \textbf{6 types}:
 \[
-\boxed{\{D_2, D_3, D_4, D_5, D_{5\frac{1}{2}}, D_6\}}
+\boxed{\{N_2, N_3, N_4, N_5, \Phi_S, N_6\}}
 \]
 \end{theorem}
 
 These 6 operators are the component projections of the unified $D_\zeta$:
 \begin{itemize}
-\item AF channel: $D_2$ ($r=5$), $D_4$ ($r=3$), $D_6$ ($r=1$)
-\item SY channel: $D_3$ ($r=4$), $D_5$ ($r=2$)
-\item Channel bridge: $D_{5\frac{1}{2}}$ (AF $\oplus$ SY)
+\item AF channel: $N_2$ ($r=5$), $N_4$ ($r=3$), $N_6$ ($r=1$)
+\item SY channel: $N_3$ ($r=4$), $N_5$ ($r=2$)
+\item Channel bridge: $\Phi_S$ (AF $\oplus$ SY)
 \end{itemize}
 
-\section{\texorpdfstring{$D_6$}{D6} Spectral Coefficients}
+\section{\texorpdfstring{$N_6$}{N6} Spectral Coefficients}
 \label{sec:spectral_coefficients}
 
-\begin{definition}[D6 Spectral Coefficient]
-\label{def:D6Coeff}
-\lean{FUST.SpectralCoefficients.D6Coeff}
+\begin{definition}[N6 Spectral Coefficient]
+\label{def:N6Coeff}
+\lean{FUST.SpectralCoefficients.N6Coeff}
 \leanok
 \[
 C_n := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}
@@ -112,22 +93,22 @@ C_n := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n
 \end{definition}
 
 \begin{theorem}[Fibonacci Representation]
-\label{thm:D6Coeff_fibonacci}
-\lean{FUST.SpectralCoefficients.D6Coeff_fibonacci}
+\label{thm:N6Coeff_fibonacci}
+\lean{FUST.SpectralCoefficients.N6Coeff_fibonacci}
 \leanok
 $C_n = \sqrt{5} \cdot (F_{3n} - 3F_{2n} + F_n)$
 \end{theorem}
 
 \begin{theorem}[Polynomial Kernel Characterization]
-\label{thm:D6Coeff_eq_zero_iff}
-\lean{FUST.SpectralCoefficients.D6Coeff_eq_zero_iff}
+\label{thm:N6Coeff_eq_zero_iff}
+\lean{FUST.SpectralCoefficients.N6Coeff_eq_zero_iff}
 \leanok
 $C_n = 0 \iff n \le 2$. In particular, $C_0 = C_1 = C_2 = 0$ and $C_3 = 12\sqrt{5} \ne 0$.
 \end{theorem}
 
 \begin{theorem}[Factorization]
-\label{thm:D6Coeff_factored}
-\lean{FUST.SpectralCoefficients.D6Coeff_factored}
+\label{thm:N6Coeff_factored}
+\lean{FUST.SpectralCoefficients.N6Coeff_factored}
 \leanok
 \[
 C_n = (\varphi^n - \psi^n)\bigl(\varphi^{2n} + \psi^{2n} + (-1)^n + 1 - 3(\varphi^n + \psi^n)\bigr)
@@ -135,31 +116,31 @@ C_n = (\varphi^n - \psi^n)\bigl(\varphi^{2n} + \psi^{2n} + (-1)^n + 1 - 3(\varph
 \end{theorem}
 
 \begin{theorem}[Asymptotic Growth]
-\label{thm:D6Coeff_asymptotic}
-\lean{FUST.SpectralCoefficients.D6Coeff_asymptotic}
+\label{thm:N6Coeff_asymptotic}
+\lean{FUST.SpectralCoefficients.N6Coeff_asymptotic}
 \leanok
 For $n \ge 3$, there exists $C > 0$ such that $|C_n - \varphi^{3n}| \le C \cdot \varphi^{2n}$.
 \end{theorem}
 
 \subsection{Extended Kernel on \texorpdfstring{$\mathbb{Z}$}{Z}}
 
-\begin{definition}[Laurent D6 Coefficient]
-\label{def:D6CoeffZ}
-\lean{FUST.SpectralCoefficients.D6CoeffZ}
+\begin{definition}[Laurent N6 Coefficient]
+\label{def:N6CoeffZ}
+\lean{FUST.SpectralCoefficients.N6CoeffZ}
 \leanok
 $C_n^{\mathbb{Z}} := \varphi^{3n} - 3\varphi^{2n} + \varphi^n - \psi^n + 3\psi^{2n} - \psi^{3n}$ for $n \in \mathbb{Z}$.
 \end{definition}
 
 \begin{theorem}[Extended Kernel Dimension]
-\label{thm:D6_extended_kernel_dim}
-\lean{FUST.SpectralCoefficients.D6_extended_kernel_dim}
+\label{thm:N6_extended_kernel_dim}
+\lean{FUST.SpectralCoefficients.N6_extended_kernel_dim}
 \leanok
 The Laurent kernel is 4-dimensional: $\{n \in \mathbb{Z} \mid C_n^{\mathbb{Z}} = 0\} \supseteq \{-2, 0, 1, 2\}$.
 \end{theorem}
 
 \begin{theorem}[Kernel Gap Structure]
-\label{thm:D6_kernel_gap_structure}
-\lean{FUST.SpectralCoefficients.D6_kernel_gap_structure}
+\label{thm:N6_kernel_gap_structure}
+\lean{FUST.SpectralCoefficients.N6_kernel_gap_structure}
 \leanok
 $C_{-3}^{\mathbb{Z}} \ne 0$, $C_{-2}^{\mathbb{Z}} = 0$, $C_{-1}^{\mathbb{Z}} \ne 0$, $C_0 = C_1 = C_2 = 0$, $C_3 \ne 0$.
 The polynomial kernel $\{0, 1, 2\}$ extends to the Laurent kernel $\{-2, 0, 1, 2\}$.

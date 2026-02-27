@@ -1530,8 +1530,8 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
 /-! ## Fζ Channel Decomposition
 
 Fζ = 5z·Dζ decomposes via Φ_A = N6+N2-N4, Φ_S = 2N5+N3+μN2.
-The AF channel carries odd-rank operators (D6, D4, D2)
-and the SY channel carries even-rank operators (D5, D3). -/
+The AF channel carries odd-rank operators (N6, M4, N2)
+and the SY channel carries even-rank operators (N5, N3). -/
 
 /-- Fζ decomposes into AF and SY channels through Nn -/
 theorem Fζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :

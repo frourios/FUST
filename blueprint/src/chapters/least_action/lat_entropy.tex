@@ -5,7 +5,7 @@
 \section{Golden Ratio Asymmetry}
 \label{sec:mat_asymmetry}
 
-The core asymmetry of the $D_6$ structure lies in the absolute values of the golden ratio $\varphi$ and its conjugate $\psi$:
+The core asymmetry of the $F_\zeta$ structure lies in the absolute values of the golden ratio $\varphi$ and its conjugate $\psi$:
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
@@ -88,7 +88,7 @@ Given the Poincar\'{e} identification of $\varphi$-scaling with the temporal dir
 \item \textbf{$\psi$ direction ($|\psi| < 1$)}: Past (information converges)
 \end{itemize}
 
-Behavior of $D_6$ evaluation points:
+Behavior of $N_6$ evaluation points:
 \begin{itemize}
 \item $\varphi^3 x, \varphi^2 x, \varphi x \to$ Divergent direction when $x > 0$
 \item $\psi^3 x, \psi^2 x, \psi x \to$ Convergent direction when $|x| > 0$
@@ -97,7 +97,7 @@ Behavior of $D_6$ evaluation points:
 \section{Invariance of Kernel}
 \label{sec:mat_ker_invariance}
 
-Photons ($\ker(D_6)$) are invariant under time evolution:
+Photons ($\ker(F_\zeta)$) are invariant under time evolution:
 
 \begin{theorem}[Kernel Invariance under Time Evolution]
 \label{thm:mat_ker_invariant}
@@ -113,7 +113,7 @@ f \in \ker(F_\zeta) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(F_\zeta)
 \section{Definition of Entropy}
 \label{sec:mat_entropy_def}
 
-Quantify the deviation from $\ker(D_6)$ as entropy:
+Quantify the deviation from $\ker(F_\zeta)$ as entropy:
 
 \begin{definition}[Entropy]
 \label{def:mat_entropy}
@@ -152,12 +152,12 @@ Time evolution for monomials $f(t) = t^n$:
 For $n \geq 1$, $\varphi^n > 1$
 \end{theorem}
 
-Thus, time evolution amplifies $\ker(D_6)^\perp$ components ($n \geq 3$) by a factor of $\varphi^n$.
+Thus, time evolution amplifies $\ker(F_\zeta)^\perp$ components ($n \geq 3$) by a factor of $\varphi^n$.
 
 \section{Summary of Arrow of Time}
 \label{sec:mat_arrow_summary}
 
-The following are derived from $D_6$ and Poincar\'{e} $I_4$ structure:
+The following are derived from $F_\zeta$ and Poincar\'{e} $I_4$ structure:
 \begin{enumerate}
 \item $\varphi$-scaling = temporal direction: $D_\zeta$-components at $\mathrm{Sum.inr}\,0 = \Phi_A$-coeff (built from $\varphi,\psi$) with $\eta = -1$ --- \texttt{FUST.Physics.Gravity.$\Phi$\_A\_coeff\_one}, \texttt{FUST.Physics.Gravity.$\eta$\_temporal}
 \item $\varphi > 1$ (future direction) --- \texttt{FUST.phi\_gt\_one}
@@ -177,22 +177,22 @@ Thermodynamics & FUST \\
 Entropy $S$ & $\mathrm{perpProjection}^2$ \\
 Second law & Amplification by $\varphi^n > 1$ \\
 Arrow of time & $\varphi/\psi$ asymmetry \\
-Reversible process & Remains in $\ker(D_6)$ \\
-Irreversible process & Transition to $\ker(D_6)^\perp$ \\
+Reversible process & Remains in $\ker(F_\zeta)$ \\
+Irreversible process & Transition to $\ker(F_\zeta)^\perp$ \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{Important}: These are derived from $D_6$ and $D_\zeta$ structure (including the Poincar\'{e} $I_4$ temporal channel identification), without external assumptions (initial conditions, statistical assumptions, external time parameter).
+\textbf{Important}: These are derived from $F_\zeta$ and $D_\zeta$ structure (including the Poincar\'{e} $I_4$ temporal channel identification), without external assumptions (initial conditions, statistical assumptions, external time parameter).
 
 \section{Dimensional Type of Entropy}
 \label{sec:mat_entropy_dim}
 
 Entropy $S(f)(t) = (\mathrm{perpProjection}(f)(t))^2$ has the same dimension as the Lagrangian:
 \[
-\dim(S) = \dim((D_6 f)^2) = (-10, 2) \quad (\text{ScaleQuantity})
+\dim(S) = \dim((N_6 f)^2) = (-10, 2) \quad (\text{ScaleQuantity})
 \]
-Time evolution amplifies $D_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
+Time evolution amplifies $N_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
 
 Lean: \texttt{FUST.TimeStructure.entropyAtFζ} with type \texttt{FζLagrangian}.
 

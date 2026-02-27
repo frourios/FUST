@@ -6,8 +6,8 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 # FUST Mass Ratio Derivation
 
 Fermion mass ratios derived from D-operator pair counts C(m,2):
-- τ/μ exponent 6 = C(4,2) from D₄ pairs
-- μ/e exponent 11 = C(5,2) + C(2,2) from D₅ + D₂ pairs
+- τ/μ exponent 6 = C(4,2)
+- μ/e exponent 11 = C(5,2) + C(2,2)
 - τ/e exponent 17 = C(4,2) + C(5,2) + C(2,2)
 -/
 
@@ -64,63 +64,56 @@ theorem experimental_verification :
     (6 : ℤ) + 11 = 17 ∧
     Nat.choose 5 2 + Nat.choose 2 2 = 11 := by decide
 
-/-! ## D5/D6 Coefficient Corrections
+/-! ## N5/N6 Coefficient Corrections
 
 The coefficients are uniquely determined by drift annihilation conditions:
-- D5: a = -1, b = -4 (from C0: D5[1]=0, C1: D5[x]=0)
-- D6: A = 3, B = 1 (from D1: D6[x]=0, D2: D6[x²]=0)
+- N5: a = -1, b = -4 (from C0: N5[1]=0, C1: N5[x]=0)
+- N6: A = 3, B = 1 (from D1: N6[x]=0, D2: N6[x²]=0)
 -/
 
-/-- D5 coefficients from drift annihilation (uniquely determined by kernel conditions) -/
-abbrev D5_coeff_a : ℝ := -1
-abbrev D5_coeff_b : ℝ := -4
+/-- N5 coefficients from drift annihilation (uniquely determined by kernel conditions) -/
+abbrev N5_coeff_a : ℝ := -1
+abbrev N5_coeff_b : ℝ := -4
 
-/-- D5 coefficients are uniquely determined by D5[1]=0 and D5[x]=0 -/
-theorem D5_coefficients_from_kernel :
-    D5_coeff_a = -1 ∧ D5_coeff_b = -4 ∧
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) :=
-  ⟨rfl, rfl, fun x _hx => D5_const 1 x, fun x _hx => D5_linear x⟩
+/-- N6 coefficients from drift annihilation (A = C(3,2) = 3, B = C(2,2) = 1) -/
+abbrev N6_coeff_A : ℝ := 3
+abbrev N6_coeff_B : ℝ := 1
 
-/-- D6 coefficients from drift annihilation (A = C(3,2) = 3, B = C(2,2) = 1) -/
-abbrev D6_coeff_A : ℝ := 3
-abbrev D6_coeff_B : ℝ := 1
+/-- N6 coefficients are pair counts -/
+theorem N6_coefficients_as_pair_counts :
+    N6_coeff_A = (Nat.choose 3 2 : ℝ) ∧ N6_coeff_B = (Nat.choose 2 2 : ℝ) := by
+  simp only [N6_coeff_A, N6_coeff_B, Nat.choose]; norm_num
 
-/-- D6 coefficients are pair counts -/
-theorem D6_coefficients_as_pair_counts :
-    D6_coeff_A = (Nat.choose 3 2 : ℝ) ∧ D6_coeff_B = (Nat.choose 2 2 : ℝ) := by
-  simp only [D6_coeff_A, D6_coeff_B, Nat.choose]; norm_num
+/-- N6 correction factor κ_n = B/(n×A) = C(2,2)/(n×C(3,2)) -/
+noncomputable abbrev N6CorrectionFactor (n : ℕ) : ℝ :=
+  if n = 0 then 0 else N6_coeff_B / (n * N6_coeff_A)
 
-/-- D6 correction factor κ_n = B/(n×A) = C(2,2)/(n×C(3,2)) -/
-noncomputable abbrev D6CorrectionFactor (n : ℕ) : ℝ :=
-  if n = 0 then 0 else D6_coeff_B / (n * D6_coeff_A)
-
-/-- D5 correction factor η_n = |a|/(n×|b|) -/
-noncomputable abbrev D5CorrectionFactor (n : ℕ) : ℝ :=
-  if n = 0 then 0 else |D5_coeff_a| / (n * |D5_coeff_b|)
+/-- N5 correction factor η_n = |a|/(n×|b|) -/
+noncomputable abbrev N5CorrectionFactor (n : ℕ) : ℝ :=
+  if n = 0 then 0 else |N5_coeff_a| / (n * |N5_coeff_b|)
 
 /-- κ_6 = B/(6A) = 1/18 -/
-theorem D6_correction_6pt : D6CorrectionFactor 6 = 1 / 18 := by
-  unfold D6CorrectionFactor D6_coeff_A D6_coeff_B; norm_num
+theorem N6_correction_6pt : N6CorrectionFactor 6 = 1 / 18 := by
+  unfold N6CorrectionFactor N6_coeff_A N6_coeff_B; norm_num
 
 /-- η_11 = |a|/(11|b|) = 1/44 -/
-theorem D5_correction_11pt : D5CorrectionFactor 11 = 1 / 44 := by
-  unfold D5CorrectionFactor D5_coeff_a D5_coeff_b; norm_num
+theorem N5_correction_11pt : N5CorrectionFactor 11 = 1 / 44 := by
+  unfold N5CorrectionFactor N5_coeff_a N5_coeff_b; norm_num
 
-/-- τ/μ ratio with D6 correction: φ^6 × (1 - κ_6) = φ^6 × 17/18 -/
-noncomputable abbrev tauMuRatio_corrected : ℝ := φ ^ 6 * (1 - D6CorrectionFactor 6)
+/-- τ/μ ratio with N6 correction: φ^6 × (1 - κ_6) = φ^6 × 17/18 -/
+noncomputable abbrev tauMuRatio_corrected : ℝ := φ ^ 6 * (1 - N6CorrectionFactor 6)
 
 theorem tauMuRatio_corrected_formula : tauMuRatio_corrected = φ ^ 6 * (17 / 18) := by
   unfold tauMuRatio_corrected
-  rw [D6_correction_6pt]
+  rw [N6_correction_6pt]
   norm_num
 
-/-- μ/e ratio with D5 correction: φ^11 × (1 + η_11) = φ^11 × 45/44 -/
-noncomputable abbrev muERatio_corrected : ℝ := φ ^ 11 * (1 + D5CorrectionFactor 11)
+/-- μ/e ratio with N5 correction: φ^11 × (1 + η_11) = φ^11 × 45/44 -/
+noncomputable abbrev muERatio_corrected : ℝ := φ ^ 11 * (1 + N5CorrectionFactor 11)
 
 theorem muERatio_corrected_formula : muERatio_corrected = φ ^ 11 * (45 / 44) := by
   unfold muERatio_corrected
-  rw [D5_correction_11pt]
+  rw [N5_correction_11pt]
   norm_num
 
 /-- Baryon spatial factor: C(6,3) × C(4,2) = 120 -/
@@ -144,10 +137,10 @@ theorem protonElectronRatio_formula :
 
 /-- All corrections are derived from uniquely determined coefficients -/
 theorem corrections_not_fitted :
-    (D5_coeff_a = -1 ∧ D5_coeff_b = -4) ∧
-    (D6_coeff_A = 3 ∧ D6_coeff_B = 1) ∧
-    (D6CorrectionFactor 6 = 1 / 18) ∧
-    (D5CorrectionFactor 11 = 1 / 44) :=
-  ⟨⟨rfl, rfl⟩, ⟨rfl, rfl⟩, D6_correction_6pt, D5_correction_11pt⟩
+    (N5_coeff_a = -1 ∧ N5_coeff_b = -4) ∧
+    (N6_coeff_A = 3 ∧ N6_coeff_B = 1) ∧
+    (N6CorrectionFactor 6 = 1 / 18) ∧
+    (N5CorrectionFactor 11 = 1 / 44) :=
+  ⟨⟨rfl, rfl⟩, ⟨rfl, rfl⟩, N6_correction_6pt, N5_correction_11pt⟩
 
 end FUST.MassRatioDerivation

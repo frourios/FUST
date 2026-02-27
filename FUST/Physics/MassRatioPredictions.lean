@@ -7,7 +7,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 /-!
 # FUST Mass Ratio Predictions
 
-This module derives mass ratios for particles from FUST D-structure principles.
+This module derives mass ratios for particles.
 
 ## Key Predictions (dimensionless ratios only)
 
@@ -30,10 +30,10 @@ open FUST.WaveEquation
 m_H/m_W = φ - 1/C(5,2) = φ - 1/10
 
 Derivation:
-- Higgs is spin-0, associated with D₂ structure
-- W is spin-1, associated with D₃ structure
-- The transition D₂ → D₃ involves C(5,2) correction
-- φ is the fundamental scale, 1/C(5,2) is the D₅ suppression
+- Higgs is spin-0, associated with N2 structure
+- W is spin-1, associated with N3 structure
+- The transition N2 → N3 involves C(5,2) correction
+- φ is the fundamental scale, 1/C(5,2) is the N5 suppression
 -/
 
 /-- Higgs/W mass ratio: φ - 1/C(5,2) -/
@@ -46,12 +46,7 @@ theorem higgsWRatio_structure :
 
 /-- Components of Higgs/W ratio from D-structure -/
 theorem higgsWRatio_components :
-    -- φ from golden ratio (fundamental scale)
-    (φ > 1) ∧
-    -- 1/C(5,2) from D₅ pair count
-    (Nat.choose 5 2 = 10) ∧
-    -- Combined: φ - 1/10 ≈ 1.518
-    (higgsWRatio = φ - 1/10) := by
+    (φ > 1) ∧ (Nat.choose 5 2 = 10) ∧ (higgsWRatio = φ - 1/10) := by
   refine ⟨φ_gt_one, rfl, ?_⟩
   simp only [higgsWRatio, Nat.choose]; norm_num
 
@@ -60,12 +55,11 @@ theorem higgsWRatio_components :
 m_DM/m_e = φ^(C(5,2)+C(6,2)) = φ^25
 
 Derivation:
-- D5½ dark matter candidate sits between D₅ and D₆
 - Total pair count: C(5,2) + C(6,2) = 10 + 15 = 25
 - Mass hierarchy: φ^25 ≈ 1.68×10⁵ (WIMP scale ~100 GeV)
 -/
 
-/-- Dark matter exponent from D₅+D₆ pair counts -/
+/-- Dark matter exponent -/
 abbrev darkMatterExponent : ℕ := Nat.choose 5 2 + Nat.choose 6 2
 
 theorem darkMatterExponent_eq : darkMatterExponent = 25 := rfl
@@ -75,15 +69,6 @@ noncomputable abbrev darkMatterElectronRatio : ℝ := φ ^ darkMatterExponent
 
 theorem darkMatterElectronRatio_eq :
     darkMatterElectronRatio = φ ^ 25 := rfl
-
-/-- D5½ structure: between D₅ and D₆ -/
-theorem D5half_structure :
-    -- D₅ pair count
-    (Nat.choose 5 2 = 10) ∧
-    -- D₆ pair count
-    (Nat.choose 6 2 = 15) ∧
-    -- Combined exponent
-    (darkMatterExponent = 25) := ⟨rfl, rfl, rfl⟩
 
 /-- Dark matter ratio is positive -/
 theorem darkMatterElectronRatio_pos : darkMatterElectronRatio > 0 :=
@@ -184,17 +169,9 @@ theorem baryonAsymmetry_pos : baryonAsymmetry > 0 := by
 /-! ## Part 6: W Boson / Electron Mass Ratio
 
 m_W/m_e = φ^(C(5,2)+C(6,2)) × C(6,2)/(C(6,2)+C(2,2)) = φ^25 × 15/16
-
-Derivation:
-- W boson is the SU(2) gauge boson from ker(D₅), dim = 2
-- ker(D₅) ⊊ ker(D₆): the extra DOF x² acts as Higgs mechanism
-- Exponent C(5,2)+C(6,2) = 25: total pair count of the D₅+D₆ sectors
-- Factor C(6,2)/(C(6,2)+C(2,2)) = 15/16: D₆ pairs normalized by D₆+D₂ boundary
-  where D₂ is the minimum D-level with nonzero pair count C(2,2) = 1
-- Predicted: 80.368 GeV (exp: 80.369 ± 0.013 GeV, error 0.002%)
 -/
 
-/-- W/electron exponent from D₅+D₆ pair counts -/
+/-- W/electron exponent -/
 abbrev WElectronExponent : ℕ := Nat.choose 5 2 + Nat.choose 6 2
 
 theorem WElectronExponent_eq : WElectronExponent = 25 := rfl
@@ -221,17 +198,6 @@ theorem WElectronRatio_pos : WElectronRatio > 0 := by
   · exact pow_pos phi_pos _
   · simp only [Nat.choose]; norm_num
 
-/-- W/electron derivation from kernel structure -/
-theorem WElectronRatio_from_kernel :
-    -- ker(D₅) ⊊ ker(D₆): D₅ does not annihilate x², D₆ does
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
-    -- Exponent from pair counts
-    (WElectronExponent = 25) ∧
-    -- Factor from D₆/D₂ boundary
-    (WElectronFactor = 15 / 16) := by
-  refine ⟨D5_not_annihilate_quadratic, fun x _hx => D6_quadratic x, rfl, WElectronFactor_eq⟩
-
 /-- Z/electron mass ratio derived from W and Weinberg angle -/
 noncomputable abbrev ZElectronRatio : ℝ :=
   WElectronRatio / Real.sqrt ((FUST.WeinbergAngle.syWeight : ℝ) / FUST.WeinbergAngle.totalWeight)
@@ -248,19 +214,6 @@ noncomputable abbrev HiggsElectronRatio : ℝ :=
 theorem HiggsElectronRatio_eq :
     HiggsElectronRatio = φ ^ 25 * (15 / 16) * (φ - 1 / 10) := by
   simp only [HiggsElectronRatio, WElectronRatio_eq, higgsWRatio, Nat.choose]; norm_num
-
-/-- Gauge boson mass hierarchy: gluon and photon massless, W/Z massive -/
-theorem gauge_boson_mass_hierarchy :
-    -- Gluon: in ker(D₆) → massless
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
-    -- W/Z: ker(D₅) ⊊ ker(D₆), x² is the Higgs DOF
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    -- W mass ratio is positive
-    (WElectronRatio > 0) := by
-  refine ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
-          fun x _hx => D6_quadratic x, D5_not_annihilate_quadratic, WElectronRatio_pos⟩
 
 /-! ## Summary Theorem -/
 

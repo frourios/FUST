@@ -67,11 +67,6 @@ theorem degree_nitrogen14Atom : (dimAtom 7 7 7).effectiveDegree = 232 := by deci
 theorem degree_nitrogen15Atom : (dimAtom 7 8 7).effectiveDegree = 247 := by decide
 theorem degree_nitrideAnion : (dimAtom 7 7 10).effectiveDegree = 238 := by decide
 
-theorem nitrogen_degree_exceeds_kerD6 :
-    (dimAtom 7 7 0).effectiveDegree > 2 ∧
-    (dimAtom 7 7 7).effectiveDegree > 2 ∧
-    (dimAtom 7 7 10).effectiveDegree > 2 := by decide
-
 /-! ## Section 4: Electron Shell Structure
 
 Nitrogen: 1s² 2s² 2p³ (7 electrons). Half-filled 2p shell.
@@ -164,4 +159,3 @@ theorem nitrogen_isotope_classification :
     nitrogen_not_closed_shell, Helium.neon_is_closed_shell, rfl, by decide⟩
 
 end FUST.Chemistry.Nitrogen
-

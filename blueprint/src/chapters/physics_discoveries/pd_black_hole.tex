@@ -1,30 +1,9 @@
-% FUST Physics Discoveries - Gravitational Collapse from D₆ Structure
+% FUST Physics Discoveries - Gravitational Collapse from Dζ Structure
 \chapter{Gravitational Collapse from \texorpdfstring{$D_\zeta$}{Dζ} Structure}
 \label{chap:pd_black_hole}
 
 All results derived from the unified $D_\zeta$ operator algebra and $\varphi$-$\psi$ duality.
 No continuous theory (GR, QFT, Bekenstein-Hawking) is assumed.
-
-\section{\texorpdfstring{$D_6$}{D6} Completeness (No Singularity)}
-\label{sec:bh_no_singularity}
-
-\begin{theorem}[$D_6$ Completeness]
-\label{thm:bh_d6_completeness}
-\lean{FUST.BlackHole.D6_completeness}
-\leanok
-$6 = \binom{3}{2} + \binom{3}{2}$. $D_6$ is the maximum D-level.
-\end{theorem}
-
-\begin{theorem}[No Singularity from $D_6$ Completeness]
-\label{thm:bh_no_singularity}
-\lean{FUST.BlackHole.no_singularity_from_D6_completeness}
-\leanok
-For all $n \geq 7$, $D_n$ projects to $D_6$:
-\[
-\forall n \geq 7: \mathrm{projectToD6}(n) = 6
-\]
-Physics has finite resolution. Infinite density (singularity) cannot exist.
-\end{theorem}
 
 \section{Discrete Scale Lattice}
 \label{sec:bh_discrete_scales}
@@ -83,34 +62,21 @@ Scale inversion:
 \]
 \end{theorem}
 
-\section{\texorpdfstring{$\ker(D_6)$}{ker(D6)} Structure}
+\section{\texorpdfstring{$\ker(F_\zeta)$}{ker(Fζ)} Structure}
 \label{sec:bh_kernel}
 
 \begin{theorem}[Spatial Dimension from Kernel]
 \label{thm:bh_spatial_dim}
 \lean{FUST.BlackHole.spatial_from_kernel}
 \leanok
-$\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ (dimension 3).
-Spatial dimension is 3, derived from $D_6$ algebra, not imported from GR.
+$\ker(F_\zeta) = \mathrm{span}\{1, x, x^2\}$ (dimension 3).
+Spatial dimension is 3, derived from $F_\zeta$ algebra, not imported from GR.
 \end{theorem}
 
-\begin{theorem}[Kernel Dimension]
-\label{thm:bh_kernel_dimension}
-\lean{FUST.BlackHole.kernel_dimension}
-\leanok
-$\{1, x, x^2\}$ are annihilated by $D_6$, but $x^3$ is detected:
-\begin{enumerate}
-\item $D_6(1)(x) = 0$ for $x \neq 0$
-\item $D_6(\mathrm{id})(x) = 0$ for $x \neq 0$
-\item $D_6(t^2)(x) = 0$ for $x \neq 0$
-\item $D_6(t^3)(x) \neq 0$ for $x \neq 0$
-\end{enumerate}
-\end{theorem}
-
-\section{\texorpdfstring{$D_6$}{D6} Dissipation Rate}
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Dissipation Rate}
 \label{sec:bh_dissipation}
 
-$D_6$ output decays geometrically by $|\psi|$ per step.
+$F_\zeta$ output decays geometrically by $|\psi|$ per step.
 This replaces continuous Hawking temperature without importing QFT.
 
 \begin{theorem}[Dissipation Geometric Decay]
@@ -137,7 +103,7 @@ The ratio $|\psi| = \varphi^{-1}$ is a purely algebraic consequence of $\varphi 
 \label{sec:bh_scale_separation}
 
 The minimum scale separation is $\varphi^{-k}$ for $k$ steps.
-This is the $D_6$ resolution limit, not a ``horizon width'' from GR.
+This is the $F_\zeta$ resolution limit, not a ``horizon width'' from GR.
 
 \begin{theorem}[Scale Resolution Decreasing]
 \label{thm:bh_scale_resolution_decreasing}
@@ -149,11 +115,11 @@ This is the $D_6$ resolution limit, not a ``horizon width'' from GR.
 where $\mathrm{scaleResolution}(k) = \varphi^{-k} > 0$.
 \end{theorem}
 
-\section{State Space Dimension from \texorpdfstring{$D_6$}{D6}}
+\section{State Space Dimension from \texorpdfstring{$F_\zeta$}{Fζ}}
 \label{sec:bh_dof}
 
 The number of independent degrees of freedom at scale level $k$
-is determined by $\ker(D_6)$ dimension and the number of scale steps.
+is determined by $\ker(F_\zeta)$ dimension and the number of scale steps.
 This replaces Bekenstein-Hawking $S \propto A$ without importing continuous GR.
 
 \begin{theorem}[Degrees of Freedom from Kernel Dimension]
@@ -161,7 +127,7 @@ This replaces Bekenstein-Hawking $S \propto A$ without importing continuous GR.
 \lean{FUST.BlackHole.dof_from_kernel_dim}
 \leanok
 \[
-\mathrm{degreesOfFreedom}(k) = \dim\ker(D_6) \times k = 3k
+\mathrm{degreesOfFreedom}(k) = \dim\ker(F_\zeta) \times k = 3k
 \]
 \end{theorem}
 
@@ -195,16 +161,6 @@ Purely algebraic ($\varphi \cdot |\psi| = 1$), not ``white holes'' from GR.
 In FUST coordinate $x \in (0, 1)$, the sequence $\varphi^{-n} \to 0$ provides
 algebraic completion. This is NOT a ``Big Bang singularity'' from GR.
 
-\begin{theorem}[Completion Bounded by $D_6$]
-\label{thm:bh_completion_bounded}
-\lean{FUST.BlackHole.completion_bounded}
-\leanok
-$D_6$ boundary prevents trans-Planckian extension:
-\[
-\forall n \geq 7: \mathrm{projectToD6}(n) = 6
-\]
-\end{theorem}
-
 \section{Scale Unboundedness}
 \label{sec:bh_unbounded}
 
@@ -218,7 +174,7 @@ $\varphi^n$ grows without bound ($\varphi > 1$):
 \]
 \end{theorem}
 
-\section{\texorpdfstring{$D_6$}{D6} Critical Scale}
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Critical Scale}
 \label{sec:bh_critical_scale}
 
 From $\Delta = 12/25$ (massScale) and mass $m = \Delta \cdot x_0^2$,
@@ -285,18 +241,18 @@ x_1 \leq x_2 \Rightarrow \mathrm{criticalScale}(x_1) \leq \mathrm{criticalScale}
 \]
 \end{theorem}
 
-\section{Summary: All from \texorpdfstring{$D_6$}{D6} Algebra}
+\section{Summary: All from \texorpdfstring{$F_\zeta$}{Fζ} Algebra}
 \label{sec:bh_summary}
 
-\begin{theorem}[All from $D_6$ Algebra]
-\label{thm:bh_all_from_d6}
-\lean{FUST.BlackHole.all_from_D6_algebra}
+\begin{theorem}[All from $F_\zeta$ Algebra]
+\label{thm:bh_all_from_Fzeta}
+\lean{FUST.BlackHole.all_from_Fζ_algebra}
 \leanok
 Every result uses only:
 \begin{itemize}
 \item $\varphi, \psi$: roots of $x^2 = x + 1$
-\item $D_6$: difference operator with $\ker = \mathrm{span}\{1, x, x^2\}$
-\item $D_6$ completeness: $6 = \binom{3}{2} + \binom{3}{2}$
+\item $F_\zeta$: unified operator with $\ker = \mathrm{span}\{1, x, x^2\}$
+\item $F_\zeta$ completeness: $6 = \binom{3}{2} + \binom{3}{2}$
 \end{itemize}
 No GR metric, no QFT, no Bekenstein-Hawking, no Hawking temperature assumed.
 \end{theorem}

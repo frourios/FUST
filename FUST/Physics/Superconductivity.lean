@@ -1,9 +1,8 @@
 /-
-High-Temperature Superconductivity from D-operator Kernel Structure
+High-Temperature Superconductivity
 
-Cooper pairing = spinDeg electrons (dim ker(D5) = 2) forming a boson.
+Cooper pairing = spinDeg electrons forming a boson.
 The pair charge 2e and flux quantum Φ₀ = h/(2e) reflect spinDeg.
-ker(D5) ⊂ ker(D6): the spin pair embeds in spatial structure (dim 3).
 
 High-Tc cuprates: CuO₂ plane has baseCount = 4 in-plane O per Cu.
 d-wave pairing symmetry: angular momentum l = spinDeg = 2,

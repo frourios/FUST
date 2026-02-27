@@ -1,6 +1,4 @@
 /-
-Aluminum from D-operator Kernel Structure
-
 Aluminum Z = 13 = closedShellElectronCount(2) + spatialDim = 10 + 3.
 Configuration: [Ne] 3s² 3p¹ (p-block metal, no d-electrons).
 Al-27 (Z=13, N=14): only stable isotope. N = 2 × nitrogenZ.
@@ -57,10 +55,6 @@ theorem aluminum27Atom_eq (x : ℝ) :
 
 theorem effDeg_aluminum27Ion : (dimAtom 13 14 0).effectiveDegree = 419 := by decide
 theorem effDeg_aluminum27Atom : (dimAtom 13 14 13).effectiveDegree = 445 := by decide
-
-theorem aluminum_effDeg_exceeds_kerD6 :
-    (dimAtom 13 14 0).effectiveDegree > 2 ∧
-    (dimAtom 13 14 13).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Number -/
 

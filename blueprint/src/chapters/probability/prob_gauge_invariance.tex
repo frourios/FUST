@@ -3,15 +3,15 @@
 \chapter{Gauge Invariance of Same-Degree Ratios}
 \label{chap:gauge_invariance}
 
-\section{\texorpdfstring{Linearity of $D_6$}{Linearity of D6}}
+\section{\texorpdfstring{Linearity of $F_\zeta$}{Linearity of Fζ}}
 
-\begin{theorem}[$D_6$ Linear Scalar]
-\label{thm:D6_linear}
-\lean{FUST.Probability.D6_linear_scalar}
+\begin{theorem}[$F_\zeta$ Linear Scalar]
+\label{thm:Fzeta_linear}
+\lean{FUST.Probability.Fζ_linear_scalar}
 \leanok
 For any scalar $a \in \mathbb{C}$ and function $f$:
 \[
-D_6[a \cdot f](x) = a \cdot D_6[f](x)
+F_\zeta[a \cdot f](x) = a \cdot F_\zeta[f](x)
 \]
 \end{theorem}
 
@@ -19,7 +19,7 @@ D_6[a \cdot f](x) = a \cdot D_6[f](x)
 
 For same-degree monomials $f_A = a \cdot x^n$ and $f_B = b \cdot x^n$:
 \[
-\frac{|D_6[f_A](x)|}{|D_6[f_B](x)|} = \frac{|a|}{|b|}
+\frac{|F_\zeta[f_A](x)|}{|F_\zeta[f_B](x)|} = \frac{|a|}{|b|}
 \]
 This is independent of $x$ (gauge-invariant).
 
@@ -27,18 +27,18 @@ This is independent of $x$ (gauge-invariant).
 \label{thm:gauge_invariant}
 \lean{FUST.Probability.same_degree_ratio_gauge_invariant}
 \leanok
-For $b \neq 0$ and $D_6[f](x) \neq 0$:
+For $b \neq 0$ and $F_\zeta[f](x) \neq 0$:
 \[
-\frac{|D_6[a \cdot f](x)|}{|D_6[b \cdot f](x)|} = \frac{|a|}{|b|}
+\frac{|F_\zeta[a \cdot f](x)|}{|F_\zeta[b \cdot f](x)|} = \frac{|a|}{|b|}
 \]
 \end{theorem}
 
 \begin{proof}
 By linearity:
 \begin{align*}
-\frac{|D_6[a \cdot f](x)|}{|D_6[b \cdot f](x)|}
-&= \frac{|a \cdot D_6[f](x)|}{|b \cdot D_6[f](x)|} \\
-&= \frac{|a| \cdot |D_6[f](x)|}{|b| \cdot |D_6[f](x)|} \\
+\frac{|F_\zeta[a \cdot f](x)|}{|F_\zeta[b \cdot f](x)|}
+&= \frac{|a \cdot F_\zeta[f](x)|}{|b \cdot F_\zeta[f](x)|} \\
+&= \frac{|a| \cdot |F_\zeta[f](x)|}{|b| \cdot |F_\zeta[f](x)|} \\
 &= \frac{|a|}{|b|}
 \end{align*}
 \end{proof}
@@ -47,10 +47,10 @@ By linearity:
 \label{cor:position_independent}
 \lean{FUST.Probability.monomial_ratio_invariant}
 \leanok
-For any $x, y$ with $D_6[t^n](x) \neq 0$ and $D_6[t^n](y) \neq 0$:
+For any $x, y$ with $F_\zeta[t^n](x) \neq 0$ and $F_\zeta[t^n](y) \neq 0$:
 \[
-\frac{|D_6[a \cdot t^n](x)|}{|D_6[b \cdot t^n](x)|} =
-\frac{|D_6[a \cdot t^n](y)|}{|D_6[b \cdot t^n](y)|}
+\frac{|F_\zeta[a \cdot t^n](x)|}{|F_\zeta[b \cdot t^n](x)|} =
+\frac{|F_\zeta[a \cdot t^n](y)|}{|F_\zeta[b \cdot t^n](y)|}
 \]
 \end{corollary}
 

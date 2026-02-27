@@ -1,6 +1,4 @@
 /-
-Niobium from D-operator Kernel Structure
-
 Niobium Z = 41 = 2 × nuclearMagic(2) + hydrogenZ = 40 + 1.
 Configuration: [Kr] 4d⁴ 5s¹ (anomalous — half-filled proximity).
 Nb-93 (Z=41, N=52): only stable isotope.
@@ -65,11 +63,6 @@ set_option maxRecDepth 4096 in
 theorem effDeg_niobium93Ion : (dimAtom 41 52 0).effectiveDegree = 1437 := by decide
 set_option maxRecDepth 4096 in
 theorem effDeg_niobium93Atom : (dimAtom 41 52 41).effectiveDegree = 1519 := by decide
-
-set_option maxRecDepth 4096 in
-theorem niobium_effDeg_exceeds_kerD6 :
-    (dimAtom 41 52 0).effectiveDegree > 2 ∧
-    (dimAtom 41 52 41).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Number -/
 

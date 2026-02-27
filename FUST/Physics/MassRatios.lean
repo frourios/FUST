@@ -12,7 +12,7 @@ The exponents n are CountQ (structure-derived integers). -/
 
 def msMdExponent : CountQ := ⟨Nat.choose 4 2⟩
 def mcMsValue : CountQ :=
-  ⟨FUST.QuarkMassRatios.mc_ms_D5_component +
+  ⟨FUST.QuarkMassRatios.mc_ms_component +
    FUST.QuarkMassRatios.mc_ms_isospin_component⟩
 def mbMcValue : CountQ := ⟨Nat.choose 3 2⟩
 def mtMbExpHigh : CountQ := ⟨FUST.QuarkMassRatios.mt_mb_exp_high⟩
@@ -97,8 +97,7 @@ def dimWBoson : FDim := dimTime⁻¹ * dimTimeD2 ^ (25 : ℤ)
 
 /-! ## Dimensioned Masses: each with its unique FDim
 
-Each particle has a unique dimension deriveFDim(6)^a × dimTimeD2^n.
-The electron (n=0) is the D₆ mass gap Δ = 12/25. -/
+Each particle has a unique dimension deriveFDim(6)^a × dimTimeD2^n. -/
 
 /-- Electron mass: m_e = Δ (lightest charged fermion = mass scale) -/
 noncomputable def electronMass : ScaleQ dimElectron := massScale
@@ -131,7 +130,7 @@ theorem protonMass_val :
   norm_num
 
 /-- Neutron-proton ratio: multiplicative isospin correction.
-dim(R) = deriveFDim(2) = (-1,1,1): u↔d swap is a D₂ operation.
+dim(R) = deriveFDim(2) = (-1,1,1): u↔d swap is a N2 operation.
 R = (C(6,3)·C(4,2)·2·C(6,2)·φ⁹ + F₁₄) / (C(6,3)·C(4,2)·2·C(6,2)·φ⁹)
 where F₁₄ = 377 = (C(3,2)+C(5,2))·(2·C(6,2)-C(2,2)) -/
 noncomputable def neutronProtonRatio : ScaleQ (deriveFDim 2) :=
@@ -153,7 +152,7 @@ theorem neutron_denom_decomposition :
     Nat.choose 6 3 * Nat.choose 4 2 * (2 * Nat.choose 6 2) = 3600 := by
   decide
 
-/-- Neutron mass: m_n = m_p × R where R is the D₂ isospin correction.
+/-- Neutron mass: m_n = m_p × R where R is the N2 isospin correction.
 dim(m_n) = dimProton × deriveFDim(2) = dimNeutron. -/
 noncomputable def neutronMass : ScaleQ dimNeutron :=
   protonMass * neutronProtonRatio
@@ -200,9 +199,6 @@ theorem beta_decay_possible :
   have hφ2_bound : φ ^ 2 > 2 := by rw [golden_ratio_property]; linarith
   nlinarith
 
-/-- m_e = Δ: lightest charged fermion is the D₆ mass gap -/
-theorem electronMass_eq_massScale : electronMass = massScale := rfl
-
 /-- m_p / m_e = φ¹¹ × 120/13 -/
 theorem protonElectronRatio_from_masses :
     protonMass.val / electronMass.val = φ ^ (11 : ℤ) * 120 / 13 := by
@@ -224,11 +220,11 @@ theorem tau_muon_ratio_from_masses :
 
 /-! ## Gauge Boson Masses
 
-W boson: D₆ sector, ScaleQ dimWBoson.
+W boson: ScaleQ dimWBoson.
 Z boson: DimSum2 with two components from electroweak mixing.
-Higgs: DimSum2 with φ vacuum + D₅ correction. -/
+Higgs: DimSum2 with φ vacuum + N5 correction. -/
 
-/-- W boson mass: m_W = Δ × φ^25 × 15/16. D₆ sector. -/
+/-- W boson mass: m_W = Δ × φ^25 × 15/16. -/
 noncomputable def wBosonMass : ScaleQ dimWBoson :=
   ⟨FUST.massScale * FUST.MassRatioPredictions.WElectronRatio⟩
 

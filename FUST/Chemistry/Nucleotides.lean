@@ -75,8 +75,8 @@ theorem uracil_effDeg :
 
 /-! ## Section 4: Watson-Crick Hydrogen Bonds
 
-A-T: 2 hydrogen bonds = spinDegeneracy = dim ker(D₅)
-G-C: 3 hydrogen bonds = spatialDim = dim ker(D₆)
+A-T: 2 hydrogen bonds = spinDegeneracy
+G-C: 3 hydrogen bonds = spatialDim
 -/
 
 abbrev AT_hbonds : ℕ := Nuclear.spinDegeneracy

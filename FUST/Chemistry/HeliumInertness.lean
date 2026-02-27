@@ -3,7 +3,6 @@ Helium State Functions and Algebraic Inertness
 
 Key result: He is chemically inert because e = shellCapacity(1) = 2,
 meaning its electron shell is exactly filled with zero vacancies.
-This is derived purely from D-operator kernel dimensions.
 -/
 
 import FUST.Chemistry.OxygenIsotopes
@@ -61,23 +60,14 @@ theorem He4_proton_magic : ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2 :=
 theorem He4_neutron_magic : ∃ i, i < 7 ∧ Nuclear.nuclearMagic i = 2 :=
   ⟨0, by omega, rfl⟩
 
-/-! ## Section 4: Pairwise Particle Factors and ker(D6)
+/-! ## Section 4: Pairwise Particle Factors
 
-The three particle factors: proton=x, neutron=(1+x), electron=(1+ψx).
-Pairwise products have FDim in ker(D6) regime.
-The triple product (unit cell) exits ker(D6). -/
+The three particle factors: proton=x, neutron=(1+x), electron=(1+ψx). -/
 
 theorem pn_pair_effDeg : (dimAtom 1 1 0).effectiveDegree = 32 := by decide
 theorem pe_pair_effDeg : (dimAtom 1 0 1).effectiveDegree = 19 := by decide
 theorem ne_pair_effDeg : (dimAtom 0 1 1).effectiveDegree = 18 := by decide
 theorem unitCell_effDeg : (dimAtom 1 1 1).effectiveDegree = 34 := by decide
-
--- All species have effectiveDegree > 2 (outside ker(D6))
-theorem all_pairs_outside_kerD6 :
-    (dimAtom 1 1 0).effectiveDegree > 2 ∧
-    (dimAtom 1 0 1).effectiveDegree > 2 ∧
-    (dimAtom 0 1 1).effectiveDegree > 2 ∧
-    (dimAtom 1 1 1).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Closed Shell Electron Count
 

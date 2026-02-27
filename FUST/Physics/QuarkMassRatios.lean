@@ -3,9 +3,9 @@ import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
-# Quark Mass Ratios from D-Structure
+# Quark Mass Ratios
 
-This module derives quark mass ratios from FUST D-structure principles,
+This module derives quark mass ratios,
 using kernel structure of difference operators and binomial coefficients.
 
 ## Main Results
@@ -23,16 +23,13 @@ namespace FUST.QuarkMassRatios
 
 /-! ## Part 1: m_u/m_d = 1/2 (Isospin Symmetry) -/
 
-/-- Up/down quark mass ratio from D₂ isospin structure -/
-theorem mu_md_from_D2 : (1 : ℚ) / 2 = 1 / 2 := rfl
-
-/-- D₂ has C(2,2) = 1 pair, 2 evaluation points -/
+/-- N2 has C(2,2) = 1 pair, 2 evaluation points -/
 theorem mu_md_justification : Nat.choose 2 2 = 1 := rfl
 
-/-! ## Part 2: m_s/m_d = φ^6 (D₃ Pair Count)
+/-! ## Part 2: m_s/m_d = φ^6
 
-The exponent 6 = T(3) = C(4,2) comes from D₄ pair count.
-This matches the lepton τ/μ ratio (same D-structure origin).
+The exponent 6 = T(3) = C(4,2).
+This matches the lepton τ/μ ratio.
 -/
 
 /-- The ratio φ^6 matches the lepton τ/μ pattern -/
@@ -40,44 +37,35 @@ noncomputable abbrev ms_md_structural : ℝ := φ ^ Nat.choose 4 2
 
 theorem ms_md_structural_eq : ms_md_structural = φ ^ 6 := rfl
 
-/-! ## Part 3: m_c/m_s = C(5,2) + 2 = 12 (D₅ + Isospin)
+/-! ## Part 3: m_c/m_s = C(5,2) + 2 = 12
 
 The value 12 = C(5,2) + 2 = 10 + 2:
-- C(5,2) = 10 from D₅ pair count
-- 2 from isospin (D₂ evaluation points)
+- C(5,2) = 10 from N5 pair count
+- 2 from isospin (N2 evaluation points)
 -/
 
 /-- Charm/strange quark mass ratio components -/
-abbrev mc_ms_D5_component : ℕ := Nat.choose 5 2
+abbrev mc_ms_component : ℕ := Nat.choose 5 2
 abbrev mc_ms_isospin_component : ℕ := 2
 
-theorem mc_ms_D5_component_eq : mc_ms_D5_component = 10 := rfl
 theorem mc_ms_isospin_component_eq : mc_ms_isospin_component = 2 := rfl
 
-/-- Charm/strange quark mass ratio from D₅ pairs plus isospin -/
-theorem mc_ms_value : mc_ms_D5_component + mc_ms_isospin_component = 12 := rfl
+/-- Charm/strange quark mass ratio -/
+theorem mc_ms_value : mc_ms_component + mc_ms_isospin_component = 12 := rfl
 
 /-- Alternative: C(5,2) + 2 = 12 -/
 theorem mc_ms_value' : Nat.choose 5 2 + 2 = 12 := rfl
 
-/-! ## Part 4: m_b/m_c = C(3,2) = 3 (D₃ Pairs, Exact) -/
+/-! ## Part 4: m_b/m_c = C(3,2) = 3 -/
 
-/-- Bottom/charm quark mass ratio from D₃ pair count -/
+/-- Bottom/charm quark mass ratio -/
 theorem mb_mc_value : Nat.choose 3 2 = 3 := rfl
-
-/-- This prediction is exact (0% error) -/
-theorem mb_mc_from_D3_kernel :
-    -- D₃ has gauge invariance
-    (∀ x, x ≠ 0 → D3 (fun _ => 1) x = 0) →
-    -- The pair count C(3,2) = 3
-    Nat.choose 3 2 = 3 := by
-  intro _; rfl
 
 /-! ## Part 5: m_t/m_b = φ^7 + φ^5 (Combined Hierarchy)
 
 Exponents 7 and 5 from D-structure:
-- 7 = C(4,2) + C(2,2) = 6 + 1 (D₄ + D₂ pairs)
-- 5 = C(4,2) - C(2,2) = 6 - 1 (D₄ - D₂ pairs)
+- 7 = C(4,2) + C(2,2) = 6 + 1
+- 5 = C(4,2) - C(2,2) = 6 - 1
 -/
 
 /-- Top/bottom exponent 7 = C(4,2) + C(2,2) -/
@@ -162,10 +150,10 @@ theorem quark_mass_ratios_from_d_structure :
     -- m_s/m_d exponent = C(4,2) = 6
     (Nat.choose 4 2 = 6) ∧
     -- m_c/m_s = C(5,2) + 2 = 12
-    (mc_ms_D5_component + mc_ms_isospin_component = 12) ∧
+    (mc_ms_component + mc_ms_isospin_component = 12) ∧
     -- m_b/m_c = C(3,2) = 3
     (Nat.choose 3 2 = 3) ∧
-    -- m_t/m_b exponents from D₄±D₂ pairs
+    -- m_t/m_b exponents from N4±N2 pairs
     (mt_mb_exp_high = Nat.choose 4 2 + Nat.choose 2 2) ∧
     (mt_mb_exp_low = Nat.choose 4 2 - Nat.choose 2 2) ∧
     -- Neutrino ratio denominator = 2 × C(6,2) = 30
@@ -177,7 +165,7 @@ theorem all_exponents_from_pair_counts :
     -- m_s/m_d: C(4,2) = 6
     (Nat.choose 4 2 = 6) ∧
     -- m_c/m_s: C(5,2) + 2
-    (mc_ms_D5_component = Nat.choose 5 2) ∧
+    (mc_ms_component = Nat.choose 5 2) ∧
     -- m_b/m_c: C(3,2)
     (Nat.choose 3 2 = 3) ∧
     -- m_t/m_b: C(4,2) ± C(2,2)

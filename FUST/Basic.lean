@@ -538,17 +538,17 @@ end ComplexGolden
 
 /-! ## Golden Ratio Uniqueness — Why φ and not √2 or √3?
 
-For a real quadratic unit α with Galois conjugate β, define D₅ and D₆ operators
+For a real quadratic unit α with Galois conjugate β, define N5 and N6 operators
 at φ-power evaluation points. The operator coefficients are determined by
 kernel conditions (D[1]=0, D[x]=0, D[x²]=0).
 
 Theorem: Among all norm(-1) quadratic units (αβ = -1) with α > 1 > |β|,
-φ = (1+√5)/2 is the UNIQUE one for which D₆ has integer coefficients.
+φ = (1+√5)/2 is the UNIQUE one for which N6 has integer coefficients.
 
 Key identity: (s²+1)(s²+2) = (s²+s+2)(s²-s+2) - 2
 where s = α + β ∈ ℤ.
 
-D₆ coefficient A = (s²+1)(s²+2)/(s²-s+2), so A ∈ ℤ ⟺ (s²-s+2) | 2.
+N6 coefficient A = (s²+1)(s²+2)/(s²-s+2), so A ∈ ℤ ⟺ (s²-s+2) | 2.
 Since s²-s+2 ≥ 2 for all s ∈ ℤ with equality iff s ∈ {0,1}, and s=0 is
 degenerate (α=1), the unique valid solution is s=1, giving α = φ. -/
 
@@ -558,8 +558,8 @@ section GoldenUniqueness
 theorem golden_key_identity (s : ℤ) :
     (s^2 + 1) * (s^2 + 2) = (s^2 + s + 2) * (s^2 - s + 2) - 2 := by ring
 
--- D₆ coefficient A for a norm(-1) unit with trace s
-noncomputable def D6_coeff_A (s : ℤ) : ℚ :=
+-- N6 coefficient A for a norm(-1) unit with trace s
+noncomputable def N6_coeff_A (s : ℤ) : ℚ :=
   ((s^2 + 1) * (s^2 + 2) : ℤ) / (s^2 - s + 2 : ℤ)
 
 -- s²-s+2 > 0 for all integers (it equals (2s-1)²/4 + 7/4 ≥ 7/4)
@@ -569,7 +569,7 @@ theorem trace_denom_pos (s : ℤ) : s ^ 2 - s + 2 > 0 := by nlinarith [sq_nonneg
 theorem trace_denom_ge_two (s : ℤ) : s ^ 2 - s + 2 ≥ 2 := by nlinarith [sq_nonneg (s - 1)]
 
 -- A is integral iff (s²-s+2) | 2
-theorem D6_integral_iff_dvd (s : ℤ) :
+theorem N6_integral_iff_dvd (s : ℤ) :
     (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2) ↔
     (s ^ 2 - s + 2 : ℤ) ∣ 2 := by
   have hid := golden_key_identity s
@@ -601,14 +601,14 @@ theorem trace_dvd_two_solutions (s : ℤ) :
 -- The golden ratio is the unique root > 1 of x² - x - 1 = 0
 -- (already known: golden_ratio_property : φ² = φ + 1)
 
--- Main theorem: φ is unique among norm(-1) quadratic units with integer D₆
-theorem phi_unique_D6_integral (α β : ℝ)
+-- Main theorem: φ is unique among norm(-1) quadratic units with integer N6
+theorem phi_unique_N6_integral (α β : ℝ)
     (hprod : α * β = -1)
     (hα_gt : α > 1)
-    (hD6 : ∃ s : ℤ, α + β = s ∧ (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2)) :
+    (hN6 : ∃ s : ℤ, α + β = s ∧ (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2)) :
     α + β = 1 := by
-  obtain ⟨s, hs, hdvd⟩ := hD6
-  have h02 := (D6_integral_iff_dvd s).mp hdvd
+  obtain ⟨s, hs, hdvd⟩ := hN6
+  have h02 := (N6_integral_iff_dvd s).mp hdvd
   have h01 := trace_dvd_two_solutions s h02
   rcases h01 with rfl | rfl
   · -- s = 0: α + β = 0, αβ = -1 → α² = 1, contradicts α > 1
@@ -631,16 +631,16 @@ theorem trace_one_is_golden (α : ℝ) (hα_gt : α > 1) (hα_eq : α ^ 2 - α -
   · linarith
   · exfalso; nlinarith [phi_pos]
 
--- Combined: D₆ integrality + norm(-1) + α > 1 → α = φ
+-- Combined: N6 integrality + norm(-1) + α > 1 → α = φ
 theorem phi_uniqueness (α β : ℝ)
     (hprod : α * β = -1) (hα_gt : α > 1)
     (hsum : ∃ s : ℤ, α + β = ↑s)
-    (hD6_int : ∀ s : ℤ, α + β = ↑s →
+    (hN6_int : ∀ s : ℤ, α + β = ↑s →
       (s ^ 2 - s + 2 : ℤ) ∣ (s ^ 2 + 1) * (s ^ 2 + 2)) :
     α = φ := by
   obtain ⟨s, hs⟩ := hsum
-  have hdvd := hD6_int s hs
-  have h02 := (D6_integral_iff_dvd s).mp hdvd
+  have hdvd := hN6_int s hs
+  have h02 := (N6_integral_iff_dvd s).mp hdvd
   have h01 := trace_dvd_two_solutions s h02
   rcases h01 with rfl | rfl
   · -- s = 0: degenerate

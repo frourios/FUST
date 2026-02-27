@@ -41,7 +41,7 @@ Define the state space and action as follows:
 \lean{FUST.action_functional}
 \leanok
 \[
-\boxed{\mathcal{A}[f] = \int_0^\infty |D_6 f(x)|^2 \frac{dx}{x}}
+\boxed{\mathcal{A}[f] = \int_0^\infty |N_6 f(x)|^2 \frac{dx}{x}}
 \]
 \end{definition}
 
@@ -51,7 +51,7 @@ Define the state space and action as follows:
 \item \textbf{Inner product structure}: $L^2$ provides natural inner product and norm, enabling variational calculus
 \item \textbf{Euler-Lagrange equation}: The variation $\delta\mathcal{A}/\delta f = 0$ is well-defined
 \item \textbf{$\varphi$-covariance}: $\mathcal{A}[f \circ S_\varphi] = \varphi^2 \cdot \mathcal{A}[f] \circ S_\varphi$ where $S_\varphi(x) = \varphi x$
-\item \textbf{Consistency with kernel}: $\mathcal{A}[f] = 0 \iff f \in \ker(D_6)$
+\item \textbf{Consistency with kernel}: $\mathcal{A}[f] = 0 \iff f \in \ker(F_\zeta)$
 \end{enumerate}
 
 \subsection{Properties of the Action Functional (Numerically Verified)}
@@ -61,8 +61,8 @@ Define the state space and action as follows:
 \hline
 State & Action value & Note \\
 \hline
-$f = 1 + x + x^2$ & $\approx 0$ & In $\ker(D_6)$ \\
-$f = x^3$ & $\approx 576$ & Outside $\ker(D_6)$ (minimal mass state) \\
+$f = 1 + x + x^2$ & $\approx 0$ & In $\ker(F_\zeta)$ \\
+$f = x^3$ & $\approx 576$ & Outside $\ker(F_\zeta)$ (minimal mass state) \\
 $f = 1 + x^3$ & $\approx 576$ & Mixed state (kernel component does not contribute) \\
 \hline
 \end{tabular}
@@ -120,28 +120,28 @@ The concrete witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ fo
 
 \subsection{Integral Form}
 
-For the action functional $\mathcal{A}[f] = \int |D_6 f|^2 d\mu$, the integral variation gives:
+For the action functional $\mathcal{A}[f] = \int |N_6 f|^2 d\mu$, the integral variation gives:
 \[
-\delta\mathcal{A} = 2 \int D_6 f \cdot D_6(\delta f) \, d\mu = 2 \int \delta f \cdot D_6^\dagger(D_6 f) \, d\mu
+\delta\mathcal{A} = 2 \int N_6 f \cdot N_6(\delta f) \, d\mu = 2 \int \delta f \cdot N_6^\dagger(N_6 f) \, d\mu
 \]
 
 \begin{theorem}[Euler-Lagrange Equation]
 \label{thm:mat_euler_lagrange}
 \[
-D_6^\dagger(D_6 f) = 0
+N_6^\dagger(N_6 f) = 0
 \]
 \end{theorem}
 
-Since $D_6^\dagger D_6$ is self-adjoint:
+Since $N_6^\dagger N_6$ is self-adjoint:
 \[
-\ker(D_6^\dagger D_6) = \ker(D_6)
+\ker(N_6^\dagger N_6) = \ker(F_\zeta)
 \]
 
 \begin{theorem}[Least Action Solutions]
 \label{thm:mat_minimal_action}
 \lean{FUST.minimal_action_ker}
 \leanok
-Minimal action solutions belong to $\ker(D_6)$.
+Minimal action solutions belong to $\ker(F_\zeta)$.
 \end{theorem}
 
 \subsection{Physical Interpretation}
@@ -151,8 +151,8 @@ Minimal action solutions belong to $\ker(D_6)$.
 \hline
 State & Condition & Physics \\
 \hline
-$\ker(D_6)$ & $\mathcal{A}[f] = 0$ & Light cone (worldline of photon) \\
-$\ker(D_6)^\perp$ & $\mathcal{A}[f] > 0$ & Massive state (has proper time) \\
+$\ker(F_\zeta)$ & $\mathcal{A}[f] = 0$ & Light cone (worldline of photon) \\
+$\ker(F_\zeta)^\perp$ & $\mathcal{A}[f] > 0$ & Massive state (has proper time) \\
 \hline
 \end{tabular}
 \end{center}

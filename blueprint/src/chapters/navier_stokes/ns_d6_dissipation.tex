@@ -2,33 +2,19 @@
 \chapter{\texorpdfstring{$D_\zeta$}{Dζ} AF-Channel Dissipation Structure}
 \label{chap:ns_d6_dissipation}
 
-\section{\texorpdfstring{$D_6$}{D6} as \texorpdfstring{$D_\zeta$}{Dζ} AF-Channel Projection}
+\section{\texorpdfstring{$N_6$}{N6} as \texorpdfstring{$D_\zeta$}{Dζ} AF-Channel Projection}
 \label{sec:ns_d6_def}
 
-$D_6$ is the antisymmetric (AF) channel projection of the unified operator $D_\zeta$ at normalization power $r = 1$. For $\varphi = (1+\sqrt{5})/2$ and $\psi = (1-\sqrt{5})/2$:
+$N_6$ is the antisymmetric (AF) channel projection of the unified operator $D_\zeta$ at normalization power $r = 1$. For $\varphi = (1+\sqrt{5})/2$ and $\psi = (1-\sqrt{5})/2$:
 
-\begin{definition}[$D_6$: $D_\zeta$ AF-Channel Projection]
+\begin{definition}[$N_6$: $D_\zeta$ AF-Channel Projection]
 \label{def:ns_D6}
-\lean{FUST.D6}
+\lean{FUST.N6}
 \leanok
 \[
-D_6[f](z) = \frac{f(\varphi^3 z) - 3f(\varphi^2 z) + f(\varphi z) - f(\psi z) + 3f(\psi^2 z) - f(\psi^3 z)}{(\varphi - \psi)^5 z}
+N_6[f](z) = \frac{f(\varphi^3 z) - 3f(\varphi^2 z) + f(\varphi z) - f(\psi z) + 3f(\psi^2 z) - f(\psi^3 z)}{(\varphi - \psi)^5 z}
 \]
 \end{definition}
-
-\section{Kernel Structure (Spatial Degrees of Freedom)}
-\label{sec:ns_kernel}
-
-\begin{theorem}[Kernel of $D_6$]
-\label{thm:ns_kernel}
-\lean{FUST.D6_const, FUST.D6_linear, FUST.D6_quadratic}
-\leanok
-\[
-\ker(D_6) = \mathrm{span}\{1, z, z^2\}
-\]
-\end{theorem}
-
-$\ker(D_6)$ is 3-dimensional, corresponding to the 3 spatial dimensions in $D_\zeta$'s 4D spacetime ($I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$, from $|D_\zeta|^2 = 12(3a^2 + b^2)$).
 
 \section{Spectral Coefficients}
 \label{sec:ns_dissipation_coeff}
@@ -62,4 +48,4 @@ n \geq 3 \Rightarrow C_n^2 > 0
 \]
 \end{theorem}
 
-The boundary $n = 3$ marks the first mode beyond the spatial DOF of $D_\zeta$'s 4D spacetime: $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ captures spatial structure, while $n \geq 3$ modes carry dynamical (temporal) information and dissipate.
+The boundary $n = 3$ marks the first mode beyond the spatial DOF of $D_\zeta$'s 4D spacetime: $\ker(F_\zeta) = \mathrm{span}\{1, z, z^2\}$ captures spatial structure, while $n \geq 3$ modes carry dynamical (temporal) information and dissipate.

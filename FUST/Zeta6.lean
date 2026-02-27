@@ -1,7 +1,7 @@
 /-
 ζ₆-based difference operator for Dynamics.
 ζ₆ = e^{iπ/3}: compact (|ζ₆|=1, ζ₆·ζ₆'=+1), contrasting FUST's φψ=-1.
-ζ₆_N6 has ker = {1, z, z²} and detects z³, same as FUST D₆ but via rotation.
+ζ₆_N6 has ker = {1, z, z²} and detects z³.
 -/
 import FUST.DifferenceOperators
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
@@ -78,10 +78,6 @@ noncomputable def ζ₆_N6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   f z - f (ζ₆ * z) + f (ζ₆ ^ 2 * z) - f (ζ₆ ^ 3 * z) +
   f (ζ₆ ^ 4 * z) - f (ζ₆ ^ 5 * z)
 
-/-- ζ₆_D6: normalized DFT projection -/
-noncomputable def ζ₆_D6 (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  ζ₆_N6 f z / 6
-
 /-! ## Kernel: {1, z, z²} -/
 
 /-- Alternating sum of 6th roots of unity vanishes -/
@@ -145,15 +141,6 @@ theorem ζ₆_N6_cubic (z : ℂ) : ζ₆_N6 (fun w => w ^ 3) z = 6 * z ^ 3 := by
     (ζ₆ ^ 4 * z) ^ 3 - (ζ₆ ^ 5 * z) ^ 3 =
     (1 - ζ₆ ^ 3 + ζ₆ ^ 6 - ζ₆ ^ 9 + ζ₆ ^ 12 - ζ₆ ^ 15) * z ^ 3 := by ring
   rw [this, alternating_cube_root_sum]
-
-/-- ζ₆_D6[z³] = z³ -/
-theorem ζ₆_D6_cubic (z : ℂ) : ζ₆_D6 (fun w => w ^ 3) z = z ^ 3 := by
-  simp only [ζ₆_D6, ζ₆_N6_cubic]; field_simp
-
-/-- ζ₆_D6 detects z³ -/
-theorem ζ₆_D6_detects_cubic (z : ℂ) (hz : z ≠ 0) :
-    ζ₆_D6 (fun w => w ^ 3) z ≠ 0 := by
-  rw [ζ₆_D6_cubic]; exact pow_ne_zero 3 hz
 
 /-! ## Kernel dimension = 3 -/
 
@@ -910,13 +897,13 @@ theorem Dζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :
     from funext (Φ_A_decompose f), show Φ_S f = fun w => 2 * N5 f w + N3 f w +
     (2 / ((↑φ : ℂ) + 2)) * N2 f w from funext (fun w => by simp only [Φ_S])]
 
-/-- AF channel of Dζ: carries N6, N2, N4 (odd-rank operators D6, D4, D2) -/
+/-- AF channel of Dζ: carries N6, N2, N4 (odd-rank operators N6, N4, N2) -/
 theorem Dζ_AF_channel (f : ℂ → ℂ) (z : ℂ) :
     AFNum (Φ_A f) z / z =
     (AFNum (N6 f) z + AFNum (N2 f) z - AFNum (N4 f) z) / z := by
   rw [AFNum_Φ_A_decompose]
 
-/-- SY channel of Dζ: carries N5, N3, N2 (even-rank operators D5, D3) -/
+/-- SY channel of Dζ: carries N5, N3, N2 (even-rank operators N5, N3) -/
 theorem Dζ_SY_channel (f : ℂ → ℂ) (z : ℂ) :
     SymNum (Φ_S f) z / z =
     (2 * SymNum (N5 f) z + SymNum (N3 f) z +

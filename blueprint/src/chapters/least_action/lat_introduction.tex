@@ -19,7 +19,7 @@ Neither explains \textbf{why time exists}.
 \label{sec:mat_purpose}
 
 \begin{quote}
-\textbf{To derive time, the action theorem, and causal structure solely from FUST's $D_6$ structure.}
+\textbf{To derive time, the action theorem, and causal structure solely from FUST's $F_\zeta$ structure.}
 \end{quote}
 
 We clearly distinguish:
@@ -28,25 +28,25 @@ We clearly distinguish:
 \item \textbf{Not established as theorems}: Quantitative values of time (gauge-dependent)
 \end{itemize}
 
-\textbf{Important}: FUST has no ``principles.'' Minimal action is not a principle assumed externally, but \textbf{derived as a theorem} from $D_6$ structure.
+\textbf{Important}: FUST has no ``principles.'' Minimal action is not a principle assumed externally, but \textbf{derived as a theorem} from $F_\zeta$ structure.
 
-\section{Overview of FUST and D6 Structure}
+\section{Overview of FUST and $F_\zeta$ Structure}
 \label{sec:mat_d6_overview}
 
-\subsection{Definition of the D6 Operator}
+\subsection{Definition of the N6 Operator}
 
-The $D_6$ operator is defined using the golden ratio $\varphi = (1+\sqrt{5})/2$ and its conjugate $\psi = (1-\sqrt{5})/2$:
+The $N_6$ operator is defined using the golden ratio $\varphi = (1+\sqrt{5})/2$ and its conjugate $\psi = (1-\sqrt{5})/2$:
 
-\begin{definition}[$D_6$ Operator]
+\begin{definition}[$N_6$ Operator]
 \label{def:mat_D6}
-\lean{FUST.D6}
+\lean{FUST.N6}
 \leanok
 \[
-D_6[f](x) = \frac{f(\varphi^3 x) - 3f(\varphi^2 x) + f(\varphi x) - f(\psi x) + 3f(\psi^2 x) - f(\psi^3 x)}{(\varphi - \psi)^5 x}
+N_6[f](x) = \frac{f(\varphi^3 x) - 3f(\varphi^2 x) + f(\varphi x) - f(\psi x) + 3f(\psi^2 x) - f(\psi^3 x)}{(\varphi - \psi)^5 x}
 \]
 \end{definition}
 
-The coefficients $[1, -3, 1, -1, 3, -1]$ are uniquely determined from golden ratio relations (proven in Lean4).
+The coefficients $[1, -3, 1, -1, 3, -1]$ are uniquely determined from golden ratio relations (proven in Lean4). The unified operator $F_\zeta = 5z \cdot D_\zeta$ combines this numerator structure with the $\zeta_6$ arithmetic factor.
 
 \subsection{Algebraic Properties of the Golden Ratio}
 
@@ -64,14 +64,14 @@ $\varphi - \psi$ & $\sqrt{5}$ & Difference (normalization factor) \\
 \end{tabular}
 \end{center}
 
-$D_7$ and higher do not introduce new structure. $D_6$ determines the ``minimal and complete'' causal structure.
+$N_7$ and higher do not introduce new structure. $F_\zeta$ determines the ``minimal and complete'' causal structure.
 
-\textbf{Numerical verification}: Coefficient $C_n$ for monomials $t^n$ under $D_6$:
+\textbf{Numerical verification}: Coefficient $C_n$ for monomials $t^n$ under $N_6$:
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-$n$ & $C_n$ & $\ker(D_6)$ \\
+$n$ & $C_n$ & $\ker(F_\zeta)$ \\
 \hline
 0 & 0 & $\checkmark$ \\
 1 & 0 & $\checkmark$ \\
@@ -87,7 +87,7 @@ This structure automatically decomposes the state space into ``invisible/reversi
 
 \subsection{Gauge Parameter x}
 
-The parameter $x$ in the definition of $D_6$ is a gauge choice, not a physical quantity.
+The parameter $x$ in the definition of $N_6$ is a gauge choice, not a physical quantity.
 
 \begin{itemize}
 \item $x \neq 0$: Technical condition for the gauge to be well-defined
@@ -96,10 +96,10 @@ The parameter $x$ in the definition of $D_6$ is a gauge choice, not a physical q
 
 \begin{theorem}[Gauge Scaling]
 \label{thm:mat_gauge_scaling}
-\lean{FUST.GravitationalCoupling.D6_homogeneous}
+\lean{FUST.GravitationalCoupling.N6_homogeneous}
 \leanok
 \[
-D_6[f(c \cdot)](x) = c \cdot D_6[f](cx)
+N_6[f(c \cdot)](x) = c \cdot N_6[f](cx)
 \]
 \end{theorem}
 
@@ -107,7 +107,7 @@ D_6[f(c \cdot)](x) = c \cdot D_6[f](cx)
 
 For homogeneous functions $f(t) = t^n$:
 \[
-D_6[t^n](x) \propto x^{n-1}
+N_6[t^n](x) \propto x^{n-1}
 \]
 
 Thus, \textbf{degree $n$ serves as an eigenvalue label under scaling}.

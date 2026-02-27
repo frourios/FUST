@@ -74,12 +74,6 @@ theorem effDeg_oxideAnion : (dimAtom 8 8 10).effectiveDegree = 269 := by decide
 theorem effDeg_superoxideAnion : (dimAtom 8 8 9).effectiveDegree = 267 := by decide
 theorem effDeg_oxygenCation : (dimAtom 8 8 7).effectiveDegree = 263 := by decide
 
--- All oxygen species have effectiveDegree ≫ ker(D6) threshold
-theorem oxygen_effDeg_lower_bound :
-    (dimAtom 8 8 0).effectiveDegree > 2 ∧
-    (dimAtom 8 8 8).effectiveDegree > 2 ∧
-    (dimAtom 8 8 10).effectiveDegree > 2 := by decide
-
 /-! ## Section 6: Ionization Series -/
 
 theorem ionization_effDeg_O16 :
@@ -115,12 +109,7 @@ theorem oxygen16_mass_number : oxygenZ + neutrons_O16 = 16 := rfl
 theorem oxygen17_mass_number : oxygenZ + neutrons_O17 = 17 := rfl
 theorem oxygen18_mass_number : oxygenZ + neutrons_O18 = 18 := rfl
 
-/-! ## Section 8: D6 Non-Kernel via State Function -/
-
-theorem oxygen16Ion_vanishes_at_zero : oxygen16Ion 0 = 0 := by
-  unfold oxygen16Ion; exact atomStateFn_vanishes_at_zero 8 8 0 (by omega)
-
-/-! ## Section 9: FDim Distinctness
+/-! ## Section 8: FDim Distinctness
 
 Isotopes and ionization states have distinct FDim. -/
 
@@ -133,7 +122,7 @@ theorem oxygen_ion_atom_distinct :
     dimAtom 8 8 0 ≠ dimAtom 8 8 8 ∧
     dimAtom 8 8 8 ≠ dimAtom 8 8 10 := by decide
 
-/-! ## Section 10: Electron Shell Filling -/
+/-! ## Section 9: Electron Shell Filling -/
 
 theorem oxygen_electron_count : oxygenZ = 8 := rfl
 
@@ -155,7 +144,7 @@ theorem oxide_fills_2p :
 theorem oxide_fills_two_shells :
     Nuclear.shellCapacity 1 + Nuclear.shellCapacity 2 = 10 := rfl
 
-/-! ## Section 11: Summary -/
+/-! ## Section 10: Summary -/
 
 theorem oxygen_isotope_classification :
     -- O-16 is doubly magic

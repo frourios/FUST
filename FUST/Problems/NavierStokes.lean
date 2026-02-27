@@ -1,29 +1,26 @@
 import FUST.Physics.TimeStructure
 import FUST.Physics.GaugeGroups
 import FUST.Physics.Thermodynamics
+import FUST.Physics.WeinbergAngle
 
 /-!
-# Navier-Stokes Global Regularity via Dζ 4D Spacetime
+# Navier-Stokes Global Regularity via Fζ 4D Spacetime
 
-The unified operator Dζ = [AFNum(Φ_A) + SymNum(Φ_S)] / z determines
-4-dimensional spacetime via I4 = Fin 3 ⊕ Fin 1 (weight ratio 3:1 in |Dζ|²).
+|Dζ|² = 12(3a² + b²) determines 4D spacetime:
+  syWeight = 3 (spatial) + afWeight = 1 (temporal) = totalWeight = 4.
 
-D6 — the AF-channel projection of Dζ at r=1 — provides the dissipation
-structure on the φ-lattice. Its spectral coefficients C_n control energy
-cascade across scales.
+## Fζ Spacetime Structure
 
-## Dζ Spacetime Structure
-
-- |6a + AF_coeff·b|² = 12(3a² + b²): 3 spatial + 1 temporal dimension
-- D6 samples at {φ³z,...,ψ³z}: 6-point stencil on logarithmic lattice
-- ker(D6) = span{1,z,z²} (dim 3): spatial degrees of freedom
-- Time direction: 1-dimensional from parabolic normalization (/z)
+- |6a + AF_coeff·b|² = 12(3a² + b²): weight ratio 3:1
+- syWeight = 3: spatial degrees of freedom
+- afWeight = 1: temporal direction
+- totalWeight = 4: spacetime dimension
 
 ## Dissipation Mechanism
 
 - C_n = φ^(3n) - 3φ^(2n) + φ^n - ψ^n + 3ψ^(2n) - ψ^(3n)
 - C_n = 0 for n ≤ 2 (kernel modes), C_n² > 0 for n ≥ 3 (dissipation)
-- ker(D6) invariant under time evolution → large-scale steady state
+- ker(Fζ) invariant under time evolution → large-scale steady state
 -/
 
 namespace FUST.NavierStokes
@@ -32,7 +29,7 @@ open FUST.TimeStructure
 
 section ScaleTransfer
 
-/-- Scale transfer coefficient from Dζ AF-channel (D6) normalization: μ = 1/(√5)⁵ -/
+/-- Scale transfer coefficient from Fζ AF-channel normalization: μ = 1/(√5)⁵ -/
 noncomputable def scaleTransferCoeff : ℝ := 1 / (Real.sqrt 5)^5
 
 theorem scaleTransferCoeff_positive : scaleTransferCoeff > 0 := by
@@ -43,15 +40,15 @@ end ScaleTransfer
 
 section DissipationCoefficients
 
-/-- Spectral coefficient C_n of Dζ AF-channel projection D6 on monomial t^n -/
+/-- Spectral coefficient C_n of Fζ AF-channel on monomial t^n -/
 noncomputable def dissipationCoeff (n : ℕ) : ℝ :=
   φ^(3*n) - 3*φ^(2*n) + φ^n - ψ^n + 3*ψ^(2*n) - ψ^(3*n)
 
-/-- C_0 = 0: constants ∈ ker(D6) ⊂ ker(Dζ) -/
+/-- C_0 = 0: constants ∈ ker(Fζ) -/
 theorem dissipationCoeff_zero : dissipationCoeff 0 = 0 := by
   simp [dissipationCoeff]
 
-/-- C_1 = 0: linear functions ∈ ker(D6) ⊂ ker(Dζ) -/
+/-- C_1 = 0: linear functions ∈ ker(Fζ) -/
 theorem dissipationCoeff_one : dissipationCoeff 1 = 0 := by
   simp only [dissipationCoeff, mul_one, pow_one]
   have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
@@ -68,7 +65,7 @@ theorem dissipationCoeff_one : dissipationCoeff 1 = 0 := by
     = (2*φ + 1) - 3*(φ + 1) + φ - ψ + 3*(ψ + 1) - (2*ψ + 1) := by rw [hφ3, hφ2, hψ2, hψ3]
     _ = 0 := by ring
 
-/-- C_2 = 0: quadratics ∈ ker(D6), dim ker(D6) = 3 = spatial dim from I4 -/
+/-- C_2 = 0: quadratics ∈ ker(Fζ), dim = syWeight = 3 -/
 theorem dissipationCoeff_two : dissipationCoeff 2 = 0 := by
   simp only [dissipationCoeff]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
@@ -113,7 +110,7 @@ theorem dissipation_fibonacci_decomposition (n : ℕ) :
   field_simp
   ring
 
-/-- C_3 ≠ 0: cubics detected by D6 (first mode beyond ker(D6) = spatial DOF) -/
+/-- C_3 ≠ 0: first mode beyond ker(Fζ), onset of dissipation -/
 theorem dissipationCoeff_three_ne_zero : dissipationCoeff 3 ≠ 0 := by
   simp only [dissipationCoeff]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
@@ -285,7 +282,7 @@ theorem dissipation_positive_outside_kernel (n : ℕ) (hn : n ≥ 3) :
 
 C_n satisfies a 6th-order recurrence from the characteristic polynomial
 x⁶ - 8x⁵ + 18x⁴ - 6x³ - 12x² + 2x + 1 whose roots are {φ³,φ²,φ,ψ,ψ²,ψ³}
-— the 6 evaluation points of Dζ's AF-channel projection D6.
+— the 6 evaluation points of Fζ's AF-channel.
 -/
 
 private lemma charPoly_phi3_zero :
@@ -394,8 +391,8 @@ theorem dissipation_recurrence (n : ℕ) :
     + ψ ^ (3*n) = 0 := by nlinarith [hmF]
   linarith
 
-/-- D6 evaluation point power sum: p₂ = Σ φ^(2k) + ψ^(2k) = 28 -/
-theorem D6_power_sum_2 :
+/-- Fζ evaluation point power sum: p₂ = Σ φ^(2k) + ψ^(2k) = 28 -/
+theorem Fζ_power_sum_2 :
     φ ^ 6 + φ ^ 4 + φ ^ 2 + ψ ^ 2 + ψ ^ 4 + ψ ^ 6 = 28 := by
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
@@ -463,13 +460,13 @@ theorem polynomial_growth (n : ℕ) : |dissipationCoeff n| ≤ 10 * φ^(3*n) := 
 
 end CoefficientGrowth
 
-/-! ## Nonlinear Term from Dζ Leibniz Deviation
+/-! ## Nonlinear Term from Fζ Leibniz Deviation
 
-The NS nonlinear term (u·∇)u corresponds to the Leibniz deviation in D6 (Dζ AF-channel):
-  N[f,g] := D6[fg] - D6[f]·g - f·D6[g]
+The NS nonlinear term (u·∇)u corresponds to the Leibniz deviation in Fζ AF-channel:
+  N[f,g] := C_{m+n} - C_m - C_n (spectral coefficient deviation)
 
 For monomials: N[xᵐ, xⁿ] = (C_{m+n} - C_m - C_n) x^{m+n-1} / (√5)⁵
-Key property: N = 0 when ker(D6) products remain in ker(D6).
+Key property: N = 0 when ker(Fζ) products remain in ker(Fζ).
 -/
 
 section NonlinearTerm
@@ -691,12 +688,12 @@ theorem high_mode_dissipation_dominates :
 
 end DissipationDominance
 
-/-! ## Energy Decay in Dζ 4D Spacetime
+/-! ## Energy Decay in Fζ 4D Spacetime
 
-In the 4D spacetime (I4 = Fin 3 ⊕ Fin 1) determined by Dζ's |·|² decomposition:
+In the 4D spacetime (totalWeight = syWeight + afWeight = 3 + 1 = 4):
   d/dt û_n = -C_n² û_n + (nonlinear terms)
 
-The 3 spatial modes (ker(D6) = span{1,z,z²}) are stationary;
+The syWeight = 3 spatial modes are stationary;
 higher modes dissipate with C_n² > 0 for n ≥ 3. Nonlinear terms
 redistribute energy but do not create it.
 -/
@@ -788,7 +785,7 @@ theorem energy_decay_rate_linear (û : ℕ → ℝ) (N : ℕ) :
   · intro n _ _
     apply mul_nonneg (sq_nonneg _) (sq_nonneg _)
 
-/-- Energy outside ker(D6) (= spatial DOF of Dζ 4D spacetime) decays -/
+/-- Energy outside ker(Fζ) (syWeight = 3 spatial DOF) decays -/
 theorem energy_decay_outside_kernel :
     ∀ û : ℕ → ℝ, ∀ N ≥ 3,
     highModeDissipation û N ≥ 0 ∧
@@ -811,18 +808,18 @@ theorem energy_decay_outside_kernel :
 
 end EnergyDecay
 
-/-! ## Clay NS Global Regularity in Dζ 4D Spacetime
+/-! ## Clay NS Global Regularity in Fζ 4D Spacetime
 
-Dζ determines 4D spacetime via I4 = Fin 3 ⊕ Fin 1 (weight ratio 3:1).
-The AF-channel projection D6 provides the dissipation structure.
+|Dζ|² = 12(3a² + b²): syWeight = 3 (spatial) + afWeight = 1 (temporal) = totalWeight = 4.
+The AF-channel provides the dissipation structure.
 
-At planckSecond = 1/(20√15), D6 sampling falls below resolution,
+At planckSecond = 1/(20√15), sampling falls below resolution,
 making the mode system finite-dimensional and guaranteeing global existence:
 
-1. Dζ determines spacetimeDim = 4 = dim ker(D6) + 1 = 3 + 1
-2. D6 samples at {φ³z,...,ψ³z}: below structural minimum, unresolvable
-3. Third law: massive states (¬ker(D6)) always dissipate
-4. Finite-dimensional truncation with C_n² > 0 → global solution
+1. Fζ determines spacetimeDim = totalWeight = syWeight + afWeight = 3 + 1 = 4
+2. Planck scale: below structural minimum, unresolvable
+3. Third law: massive states always dissipate (C_n² > 0 for n ≥ 3)
+4. Finite-dimensional truncation → global solution
 -/
 
 namespace PlanckCutoff
@@ -831,23 +828,23 @@ open FUST.Thermodynamics Filter
 
 section PlanckResolutionLimit
 
-/-- Cutoff scale: minimum x where Dζ AF-channel's outermost point φ³x reaches planckSecond -/
+/-- Cutoff scale: minimum x where Fζ AF-channel's outermost point φ³x reaches planckSecond -/
 noncomputable def planckCutoffScale : ℝ := planckSecond / φ^3
 
 theorem planckCutoffScale_pos : planckCutoffScale > 0 := by
   simp only [planckCutoffScale]
   exact div_pos planckSecond_pos (pow_pos (by linarith [φ_gt_one]) 3)
 
-/-- Below cutoff, Dζ AF-channel sampling points fall below structural minimum -/
-theorem D6_below_planck_unresolvable (x : ℝ) (_hx : 0 < x)
+/-- Below cutoff, Fζ AF-channel sampling points fall below structural minimum -/
+theorem Fζ_below_planck_unresolvable (x : ℝ) (_hx : 0 < x)
     (hlt : x < planckCutoffScale) : φ^3 * x < planckSecond := by
   simp only [planckCutoffScale] at hlt
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
   calc φ^3 * x < φ^3 * (planckSecond / φ^3) := by nlinarith
     _ = planckSecond := mul_div_cancel₀ _ (ne_of_gt hφ3_pos)
 
-/-- At or above Planck cutoff, Dζ resolves the structure -/
-theorem D6_above_planck_resolvable (x : ℝ) (hx : x ≥ planckCutoffScale) :
+/-- At or above Planck cutoff, Fζ resolves the structure -/
+theorem Fζ_above_planck_resolvable (x : ℝ) (hx : x ≥ planckCutoffScale) :
     φ^3 * x ≥ planckSecond := by
   simp only [planckCutoffScale] at hx
   have hφ3_pos : φ^3 > 0 := pow_pos (by linarith [φ_gt_one]) 3
@@ -998,10 +995,10 @@ structure ClayInitialData where
   finiteEnergy : ∀ N, totalEnergy modes N ≥ 0
   rapidDecay : ∀ k : ℕ, ∃ C > 0, ∀ n ≥ 3, |modes n| ≤ C / φ^(k * n)
 
-/-- Clay NS Problem in Dζ 4D spacetime (I4 = Fin 3 ⊕ Fin 1) -/
+/-- Clay NS Problem in Fζ 4D spacetime (totalWeight = syWeight + afWeight = 3 + 1 = 4) -/
 structure ClayNSProblem where
   spacetimeDim : ℕ
-  spacetimeDim_eq : spacetimeDim = 4
+  spacetimeDim_eq : spacetimeDim = FUST.WeinbergAngle.totalWeight
   systemSize : ℝ
   systemSize_pos : systemSize > 0
   initialData : ClayInitialData
@@ -1064,12 +1061,12 @@ end MainProof
 
 section Verification
 
-/-- Complete verification: Dζ 4D spacetime + Planck cutoff + global existence -/
+/-- Complete verification: Fζ 4D spacetime + Planck cutoff + global existence -/
 theorem clay_conditions_verified :
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) ∧
+    -- Fζ channel weights determine 4D spacetime: syWeight + afWeight = 3 + 1 = 4
+    (FUST.WeinbergAngle.syWeight = 3) ∧
+    (FUST.WeinbergAngle.afWeight = 1) ∧
+    (FUST.WeinbergAngle.totalWeight = 4) ∧
     (∀ n ≥ 3, (dissipationCoeff n)^2 > 0) ∧
     (nonlinearCoeff 1 2 ≠ 0) ∧
     (∀ n, |dissipationCoeff n| ≤ 10 * φ^(3*n)) ∧
@@ -1080,8 +1077,7 @@ theorem clay_conditions_verified :
     (planckSecond > 0) ∧
     (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < planckSecond) ∧
     ClayNSStatement :=
-  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
-   fun x _hx => D6_quadratic x, D6_not_annihilate_cubic,
+  ⟨rfl, rfl, rfl,
    dissipation_positive_outside_kernel,
    nonlinearCoeff_1_2_ne_zero,
    polynomial_growth,

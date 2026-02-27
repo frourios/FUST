@@ -1,6 +1,4 @@
 /-
-Zirconium from D-operator Kernel Structure
-
 Zirconium Z = 40 = 2 × nuclearMagic(2) = 2 × 20.
 Configuration: [Kr] 4d² 5s².
 Zr-90 (Z=40, N=50): most abundant isotope.
@@ -78,10 +76,6 @@ set_option maxRecDepth 4096 in
 theorem effDeg_zirconium90Ion : (dimAtom 40 50 0).effectiveDegree = 1391 := by decide
 set_option maxRecDepth 4096 in
 theorem effDeg_zirconium90Atom : (dimAtom 40 50 40).effectiveDegree = 1471 := by decide
-
-theorem zirconium_effDeg_exceeds_kerD6 :
-    (dimAtom 40 50 0).effectiveDegree > 2 ∧
-    (dimAtom 40 50 40).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

@@ -24,19 +24,19 @@ and external force $f \equiv 0$, prove the existence of smooth $u(x,t)$, $p(x,t)
 
 The unified operator $D_\zeta = [\mathrm{AFNum}(\Phi_A) + \mathrm{SymNum}(\Phi_S)] / z$ determines 4-dimensional spacetime via $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (from the weight ratio 3:1 in $|D_\zeta|^2 = 12(3a^2 + b^2)$).
 
-The AF-channel projection $D_6$ (antisymmetric, $r = 1$) provides the dissipation structure on the $\varphi$-lattice. FUST replaces the continuous PDE with an algebraic mode evolution system:
+The AF-channel projection $N_6$ (antisymmetric, $r = 1$) provides the dissipation structure on the $\varphi$-lattice. FUST replaces the continuous PDE with an algebraic mode evolution system:
 \begin{equation}\label{eq:ns_mode_ode}
 \frac{d\hat{u}_n}{dt} = -C_n^2 \hat{u}_n + \sum_{m+k=n} N_{m,k}\, \hat{u}_m \hat{u}_k
 \end{equation}
-where $C_n$ is the spectral coefficient of $D_\zeta$'s AF-channel projection $D_6$, and $N_{m,k}$ is the Leibniz deviation.
+where $C_n$ is the spectral coefficient of $D_\zeta$'s AF-channel projection $N_6$, and $N_{m,k}$ is the Leibniz deviation.
 
 \subsection{Key Structural Properties from \texorpdfstring{$D_\zeta$}{Dζ}}
 \begin{enumerate}
-\item \textbf{4D spacetime}: $D_\zeta$ determines $\dim\ker(D_6) + 1 = 3 + 1 = 4$ via $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$
-\item \textbf{Spatial DOF}: $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dim 3 = spatial dimensions)
+\item \textbf{4D spacetime}: $D_\zeta$ determines $\dim\ker(F_\zeta) + 1 = 3 + 1 = 4$ via $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$
+\item \textbf{Spatial DOF}: $\ker(F_\zeta) = \mathrm{span}\{1, z, z^2\}$ (dim 3 = spatial dimensions)
 \item \textbf{Dissipation}: $C_n^2 > 0$ for $n \geq 3$, with lower bound $C_n \geq \tfrac{1}{3}\varphi^{3n}$
 \item \textbf{Energy monotonicity}: Nonlinear terms redistribute but do not create energy
-\item \textbf{Kernel stability}: $\ker(D_6)$ is time-invariant (spatial steady state)
+\item \textbf{Kernel stability}: $\ker(F_\zeta)$ is time-invariant (spatial steady state)
 \item \textbf{Planck-scale cutoff}: Below the structural minimum $\ell_P = 25/12$, $D_\zeta$ AF-channel sampling is unresolvable
 \end{enumerate}
 
@@ -44,7 +44,7 @@ where $C_n$ is the spectral coefficient of $D_\zeta$'s AF-channel projection $D_
 \label{sec:ns_planck_cutoff}
 
 \begin{enumerate}
-\item \textbf{$D_\zeta$ AF-channel resolution}: $D_6$ evaluates at $\{\varphi^3 z, \varphi^2 z, \varphi z, \psi z, \psi^2 z, \psi^3 z\}$. When $z$ is too small, sampling points fall below $\ell_P = 25/12$
+\item \textbf{$D_\zeta$ AF-channel resolution}: $N_6$ evaluates at $\{\varphi^3 z, \varphi^2 z, \varphi z, \psi z, \psi^2 z, \psi^3 z\}$. When $z$ is too small, sampling points fall below $\ell_P = 25/12$
 
 \item \textbf{Planck cutoff scale}: $z_P = \ell_P / \varphi^3$. For $z < z_P$, the outermost point $\varphi^3 z < \ell_P$
 
@@ -63,7 +63,7 @@ where $C_n$ is the spectral coefficient of $D_\zeta$'s AF-channel projection $D_
 The solution is constructed for continuous time $t \in [0,\infty)$, matching Fefferman's requirement.
 The decay factor $r_n^t$ uses real exponentiation, so evolution is defined for all $t \geq 0$:
 \begin{itemize}
-\item $D_\zeta$'s AF-channel $D_6$ acts as a 6-point sampling operator on the $\varphi^n$-lattice
+\item $D_\zeta$'s AF-channel $N_6$ acts as a 6-point sampling operator on the $\varphi^n$-lattice
 \item Time $t \in [0,\infty)$ is continuous, consistent with the Clay formulation
 \item The 4D spacetime structure from $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ governs the mode dynamics
 \end{itemize}
@@ -82,5 +82,5 @@ where $r_n = 1/(1 + C_n^2)$ and $r_n^t$ denotes real exponentiation.
 \begin{itemize}
 \item Kernel modes ($n \leq 2$, spatial DOF from $D_\zeta$): $C_n = 0 \Rightarrow r_n = 1$ (stationary)
 \item High modes ($3 \leq n \leq N_{\max}$): $C_n^2 > 0 \Rightarrow r_n < 1$ (exponential decay)
-\item Sub-Planck modes ($n > N_{\max}$): set to $0$ (below $D_\zeta$ resolution)
+\item Sub-Planck modes ($n > N_{\max}$): set to $0$ (below $F_\zeta$ resolution)
 \end{itemize}

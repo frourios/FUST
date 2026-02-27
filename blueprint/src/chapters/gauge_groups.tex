@@ -1,21 +1,21 @@
-% Chapter 7: Standard Gauge Group from Dζ
-\chapter{Standard Gauge Group from \texorpdfstring{$D_\zeta$}{Dζ}}
+% Chapter 7: Standard Gauge Group from Fζ
+\chapter{Standard Gauge Group from \texorpdfstring{$F_\zeta$}{Fζ}}
 \label{chap:gauge_groups}
 
-\section{Overview: Unique Derivation from \texorpdfstring{$D_\zeta$}{Dζ}}
+\section{Overview: Unique Derivation from \texorpdfstring{$F_\zeta$}{Fζ}}
 \label{sec:gauge_overview}
 
-This chapter proves that the Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is \textbf{uniquely determined} by the unified operator $D_\zeta$, with no free parameters or selection principles. The derivation uses the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition of $D_\zeta$ and the kernel hierarchy of its component operators.
+This chapter proves that the Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is \textbf{uniquely determined} by the $F_\zeta$ channel structure, with no free parameters or selection principles. The derivation uses the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition into SY (symmetric, weight 3) and AF (antisymmetric, weight 1) channels.
 
 \begin{theorem}[Standard Gauge Group Uniqueness]
 \label{thm:standard_gauge_unique}
 \lean{FUST.standard_gauge_group_unique}
 \leanok
-The following properties of $D_\zeta$ uniquely determine the gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
+The following properties of $F_\zeta$ uniquely determine the gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
 \begin{enumerate}
 \item $\Phi_S$ has rank 3 (3 linearly independent sub-operators) $\Rightarrow$ $\mathrm{SU}(3)$
 \item $\mathrm{AF\_coeff} = 2i\sqrt{3} \neq 0$ is purely imaginary $\Rightarrow$ $\mathrm{SU}(2)$
-\item $\ker(D_2) = \mathrm{span}\{1\}$ is 1-dimensional $\Rightarrow$ $\mathrm{U}(1)$
+\item Residual U(1) from 1-dimensional trivial channel $\Rightarrow$ $\mathrm{U}(1)$
 \item $\zeta_6 \neq \varphi^n$ for all $n$ (ensures non-reducibility)
 \item $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio 3:1)
 \end{enumerate}
@@ -31,7 +31,7 @@ The following properties of $D_\zeta$ uniquely determine the gauge group $\mathr
 For all $n \in \mathbb{N}$, $\zeta_6 \neq \varphi^n$, since $\mathrm{Im}(\zeta_6) = \sqrt{3}/2 \neq 0$ while $\varphi^n \in \mathbb{R}$.
 \end{theorem}
 
-This separation guarantees that $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces, preventing gauge group reduction. On $\ker(D_6)$ with basis $\{1, z, z^2\}$, the $\varphi$-dilation eigenvalues are $\{1, \varphi, \varphi^2\}$ (all real and distinct), but $\zeta_6$ acts non-diagonally on this basis, providing the off-diagonal mixing necessary for non-abelian gauge structure.
+This separation guarantees that $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces, preventing gauge group reduction. On the SY channel space (dim $= \mathrm{syWeight} = 3$) with basis $\{1, z, z^2\}$, the $\varphi$-dilation eigenvalues are $\{1, \varphi, \varphi^2\}$ (all real and distinct), but $\zeta_6$ acts non-diagonally on this basis, providing the off-diagonal mixing necessary for non-abelian gauge structure.
 
 \section{Channel Non-Degeneracy}
 \label{sec:channel_nondegeneracy}
@@ -50,33 +50,16 @@ $\mathrm{AF\_coeff} \neq 0$, since $|\mathrm{AF\_coeff}|^2 = 12 \neq 0$.
 $\mathrm{Re}(\mathrm{AF\_coeff}) = 0$, i.e., $\mathrm{AF\_coeff} = 2i\sqrt{3}$.
 \end{theorem}
 
-The AF channel being purely imaginary means it acts \textbf{orthogonally} to the real $\varphi$-dilation diagonal. On $\ker(D_5) = \mathrm{span}\{1, z\}$, the AF direction provides the off-diagonal generator needed for $\mathrm{su}(2)$.
-
-\section{Kernel Hierarchy and Dimensions}
-\label{sec:kernel_hierarchy}
-
-\begin{theorem}[Kernel Hierarchy]
-\label{thm:kernel_hierarchy}
-\lean{FUST.kernel_hierarchy}
-\leanok
-\[
-\ker(D_2) \subset \ker(D_5) \subset \ker(D_6), \quad \dim: 1 \to 2 \to 3
-\]
-\begin{itemize}
-\item $D_2[1] = 0$, $D_2[z] \neq 0$ ($\ker(D_2) = \mathrm{span}\{1\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,1) = 1$)
-\item $D_5[1] = D_5[z] = 0$, $D_5[z^2] \neq 0$ ($\ker(D_5) = \mathrm{span}\{1, z\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,2) = 2$)
-\item $D_6[1] = D_6[z] = D_6[z^2] = 0$, $D_6[z^3] \neq 0$ ($\ker(D_6) = \mathrm{span}\{1, z, z^2\}$, $\dim = \mathrm{card}(\mathrm{Fin}\,3) = 3$)
-\end{itemize}
-\end{theorem}
+The AF channel being purely imaginary means it acts \textbf{orthogonally} to the real $\varphi$-dilation diagonal. On the AF channel space (dim $= \mathrm{spinDegeneracy} = 2$) with basis $\{1, z\}$, the AF direction provides the off-diagonal generator needed for $\mathrm{su}(2)$.
 
 \section{\texorpdfstring{$\varphi$}{φ}-Dilation Eigenvalue Structure}
 \label{sec:phi_dilation}
 
 \begin{theorem}[$\varphi$-Dilation Eigenvalues are Pairwise Distinct]
 \label{thm:eigenvalues_distinct}
-\lean{FUST.kerD6_eigenvalues_distinct}
+\lean{FUST.phi_eigenvalues_distinct_3}
 \leanok
-On $\ker(D_6)$, the $\varphi$-dilation $U_\varphi: f(z) \mapsto f(\varphi z)$ has eigenvalues:
+On the SY channel space (dim $= \mathrm{syWeight} = 3$), the $\varphi$-dilation $U_\varphi: f(z) \mapsto f(\varphi z)$ has eigenvalues:
 \[
 \varphi^0 = 1, \quad \varphi^1 = \varphi, \quad \varphi^2 = \varphi + 1
 \]
@@ -87,7 +70,7 @@ These are pairwise distinct since $\varphi > 1$.
 \label{thm:commutant_diagonal}
 \lean{FUST.phiDilation_commutant_diagonal}
 \leanok
-Let $S = \mathrm{diag}(1, \varphi, \varphi^2)$ be the scaling matrix on $\ker(D_6)$. If $M \in \mathrm{GL}(3, \mathbb{C})$ satisfies $MS = SM$, then $M$ is diagonal.
+Let $S = \mathrm{diag}(1, \varphi, \varphi^2)$ be the scaling matrix on the syWeight $= 3$ space. If $M \in \mathrm{GL}(3, \mathbb{C})$ satisfies $MS = SM$, then $M$ is diagonal.
 \end{theorem}
 
 \begin{proof}
@@ -104,7 +87,7 @@ From $MS = SM$, entry-wise: $M_{ij} \cdot \varphi^j = \varphi^i \cdot M_{ij}$, s
 $\Phi_S = 2 \cdot N_5 + N_3 + \mu \cdot N_2$ decomposes into 3 linearly independent sub-operators.
 \begin{itemize}
 \item The $3 \times 3$ determinant of $(\sigma_{N_5}, \sigma_{N_3}, \sigma_{N_2})$ at $s = 1, 5, 7$ equals $-6952(\varphi - \psi) \neq 0$
-\item These 3 independent components act on $\ker(D_6) = \mathrm{span}\{1, z, z^2\}$ (dimension 3)
+\item These 3 independent components act on the SY channel space $\mathrm{span}\{1, z, z^2\}$ (dim $= \mathrm{syWeight} = 3$)
 \item Rank $=$ dim $\Rightarrow$ irreducible action on a 3-dimensional space
 \item $\zeta_6 \neq \varphi^n$ ensures $\zeta_6$-rotation mixes $\varphi$-eigenspaces non-diagonally
 \item The unique compact simple Lie group acting irreducibly on $\mathbb{C}^3$ is $\mathrm{SU}(3)$
@@ -122,7 +105,7 @@ $\mathrm{SU}(3)$ has dimension $3^2 - 1 = 8$ (8 gluons).
 \leanok
 \begin{itemize}
 \item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ is nonzero and purely imaginary
-\item On $\ker(D_5) = \mathrm{span}\{1, z\}$ (dimension 2), $\varphi$-dilation has eigenvalues $\{1, \varphi\}$ (diagonal, real)
+\item On the AF channel space $\mathrm{span}\{1, z\}$ (dim $= \mathrm{spinDegeneracy} = 2$), $\varphi$-dilation has eigenvalues $\{1, \varphi\}$ (diagonal, real)
 \item The AF direction provides the off-diagonal, purely imaginary generator
 \item One real direction ($\varphi$-dilation Cartan) $+$ one imaginary direction (AF root) $=$ $\mathrm{su}(2)$ algebra
 \item The unique compact simple Lie group on $\mathbb{C}^2$ is $\mathrm{SU}(2)$
@@ -133,7 +116,7 @@ $\mathrm{SU}(2)$ has dimension $2^2 - 1 = 3$ ($W^\pm, Z$ bosons).
 
 \subsection{su(2) Commutation Relations}
 
-View $V_0 := \ker(D_5) = \mathrm{span}\{1, z\}$ as a 2-dimensional space with basis $|{\uparrow}\rangle = 1$, $|{\downarrow}\rangle = z$.
+View $V_0 := \mathrm{span}\{1, z\}$ (AF channel, dim $= \mathrm{spinDegeneracy} = 2$) with basis $|{\uparrow}\rangle = 1$, $|{\downarrow}\rangle = z$.
 
 Ladder operators: $\sigma_+ := d/dz|_{V_0}$, $\sigma_- := P_0 \circ M_z|_{V_0}$, $\sigma_z := [\sigma_+, \sigma_-]$.
 
@@ -144,13 +127,13 @@ These satisfy $[\sigma_z, \sigma_+] = 2\sigma_+$, $[\sigma_z, \sigma_-] = -2\sig
 
 \begin{theorem}[Trivial Channel Determines U(1)]
 \label{thm:trivial_U1}
-On $\ker(D_2) = \mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
+On the trivial channel $\mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
 \end{theorem}
 
 \section{Weight Ratio and Spacetime Structure}
 \label{sec:weight_ratio}
 
-\begin{theorem}[$D_\zeta$ Norm-Squared Decomposition]
+\begin{theorem}[$F_\zeta$ Norm-Squared Decomposition]
 \label{thm:normSq_decomposition}
 \lean{FUST.Zeta6.Dzeta_normSq_decomposition}
 \leanok
@@ -167,11 +150,11 @@ The weight ratio $3 : 1$ between symmetric ($a$, SU(3)) and antisymmetric ($b$, 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-$D_\zeta$ channel & Kernel & $\dim$ & Gauge group & $\dim(G)$ \\
+$F_\zeta$ channel & Space & $\dim$ & Gauge group & $\dim(G)$ \\
 \hline
-Symmetric ($\Phi_S$) & $\ker(D_6) = \{1, z, z^2\}$ & 3 & SU(3) & 8 \\
-Antisymmetric ($\Phi_A$) & $\ker(D_5) = \{1, z\}$ & 2 & SU(2) & 3 \\
-Trivial & $\ker(D_2) = \{1\}$ & 1 & U(1) & 1 \\
+SY (symmetric, $\Phi_S$) & $\mathrm{span}\{1, z, z^2\}$ & syWeight $= 3$ & SU(3) & 8 \\
+AF (antisymmetric, $\Phi_A$) & $\mathrm{span}\{1, z\}$ & spinDegeneracy $= 2$ & SU(2) & 3 \\
+Trivial & $\mathrm{span}\{1\}$ & 1 & U(1) & 1 \\
 \hline
 \multicolumn{4}{|r|}{Total gauge dimensions:} & 12 \\
 \hline
@@ -183,24 +166,24 @@ $12 = 8 + 3 + 1$: matching the 12 gauge bosons of the Standard Model (8 gluons $
 \section{Gauge Boson Mass Mechanism}
 \label{sec:gauge_mass_mechanism}
 
-The kernel inclusion $\ker(D_5) \subsetneq \ker(D_6)$ provides a structural mass mechanism:
+The SY/AF channel inclusion (spinDegeneracy $= 2 <$ syWeight $= 3$) provides a structural mass mechanism:
 
 \[
-z^2 \in \ker(D_6) \setminus \ker(D_5): \quad D_6(z^2) = 0 \text{ but } D_5(z^2) \neq 0.
+z^2 \in \text{SY channel} \setminus \text{AF channel}: \quad N_6(z^2) = 0 \text{ but } N_5(z^2) \neq 0.
 \]
 
-This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs to $\mathrm{SU}(3)$ ($\ker D_6$) but not to $\mathrm{SU}(2)$ ($\ker D_5$), breaking electroweak symmetry.
+This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs to the SU(3) space (SY channel) but not to the SU(2) space (AF channel), breaking electroweak symmetry.
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-Gauge boson & Origin in $D_\zeta$ & Mass mechanism & Mass \\
+Gauge boson & Origin in $F_\zeta$ & Mass mechanism & Mass \\
 \hline
-Gluon (8) & $\Phi_S$ on $\ker(D_6)$ & $D_6 = 0$ & massless \\
-Photon & U(1) grading & All $D_m$ preserve & massless \\
-$W^\pm$ & $\Phi_A$ on $\ker(D_5)$ & $D_5(z^2) \neq 0$ & massive \\
-$Z$ & $\Phi_A$ on $\ker(D_5)$ & via $\theta_W$ mixing & massive \\
-$H$ & $\ker(D_6) \setminus \ker(D_5)$ & Higgs DOF & massive \\
+Gluon (8) & $\Phi_S$ on SY channel & $N_6 = 0$ & massless \\
+Photon & U(1) grading & All $N_m$ preserve & massless \\
+$W^\pm$ & $\Phi_A$ on AF channel & $N_5(z^2) \neq 0$ & massive \\
+$Z$ & $\Phi_A$ on AF channel & via $\theta_W$ mixing & massive \\
+$H$ & SY $\setminus$ AF & Higgs DOF & massive \\
 \hline
 \end{tabular}
 \end{center}
@@ -225,11 +208,11 @@ where $U: f(z) \mapsto f(\varphi z)$ and $R: f(z) \mapsto f(-z)$. The Weyl refle
 \section{Summary}
 \label{sec:gauge_summary}
 
-\textbf{No free parameters}: The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is the unique output of $D_\zeta$'s algebraic structure. The derivation uses:
+\textbf{No free parameters}: The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is the unique output of $F_\zeta$'s channel structure. The derivation uses:
 \begin{itemize}
-\item $\Phi_S$ rank 3 (from $D_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ symmetric channel)
-\item AF$\_$coeff $= 2i\sqrt{3}$ (from $D_\zeta$'s antisymmetric channel)
-\item Kernel hierarchy $1 \to 2 \to 3$ (from $D_2 \subset D_5 \subset D_6$)
+\item $\Phi_S$ rank 3 (from $F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ symmetric channel, syWeight $= 3$)
+\item AF$\_$coeff $= 2i\sqrt{3}$ (from $F_\zeta$'s antisymmetric channel, afWeight $= 1$)
+\item Channel dimension hierarchy $1 \to 2 \to 3$ (trivial $\subset$ AF $\subset$ SY)
 \item $\zeta_6 \neq \varphi^n$ (elliptic-hyperbolic separation)
 \item $|6a + 2i\sqrt{3} \cdot b|^2 = 12(3a^2 + b^2)$ (spacetime weight ratio)
 \end{itemize}

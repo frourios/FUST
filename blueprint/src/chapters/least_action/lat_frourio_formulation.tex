@@ -40,7 +40,7 @@ t(x) := \log_{\mathfrak{f}}(x) = \frac{\log x}{\log \mathfrak{f}}
 \leanok
 In real space:
 \[
-L(f, x) := (D_6[f](x))^2
+L(f, x) := (N_6[f](x))^2
 \]
 \end{definition}
 
@@ -50,7 +50,7 @@ L(f, x) := (D_6[f](x))^2
 \leanok
 In Frourio coordinates:
 \[
-L_{\mathfrak{f}}(f, t) := (D_6[f](\mathfrak{f}^t))^2
+L_{\mathfrak{f}}(f, t) := (N_6[f](\mathfrak{f}^t))^2
 \]
 \end{definition}
 
@@ -80,7 +80,7 @@ L(f, x) = L_{\mathfrak{f}}(f, \log_{\mathfrak{f}}(x))
 \label{thm:kernel-zero-lagrangian}
 \lean{FUST.LeastAction.lagrangian_ker_zero}
 \leanok
-If $f \in \ker(D_6)$ and $x \neq 0$:
+If $f \in \ker(F_\zeta)$ and $x \neq 0$:
 \[
 L(f, x) = 0
 \]
@@ -90,7 +90,7 @@ L(f, x) = 0
 \label{thm:frourio-kernel-zero}
 \lean{FUST.LeastAction.frourio_lagrangian_ker_zero}
 \leanok
-If $f \in \ker(D_6)$:
+If $f \in \ker(F_\zeta)$:
 \[
 \forall t \in \mathbb{R}: L_{\mathfrak{f}}(f, t) = 0
 \]
@@ -143,7 +143,7 @@ This shows that $\varphi$-scaling in real space corresponds to a uniform time tr
 \label{thm:kernel-zero-action}
 \lean{FUST.LeastAction.ker_zero_action_density}
 \leanok
-If $f \in \ker(D_6)$:
+If $f \in \ker(F_\zeta)$:
 \[
 \forall t: \rho(f, t) = 0
 \]
@@ -169,9 +169,9 @@ In Frourio coordinates, the least action theorem becomes:
 
 \begin{enumerate}
     \item \textbf{Time = Frourio coordinate}: $t = \log_{\mathfrak{f}}(x)$
-    \item \textbf{Lagrangian}: $L(t) = (D_6[f](\mathfrak{f}^t))^2$ is uniform in $t$
+    \item \textbf{Lagrangian}: $L(t) = (N_6[f](\mathfrak{f}^t))^2$ is uniform in $t$
     \item \textbf{Action}: $A = \int L(t) \, dt$ measures deviation from timelessness
-    \item \textbf{Timeless states}: $L(t) = 0$ for all $t$ $\Leftrightarrow$ $f \in \ker(D_6)$
+    \item \textbf{Timeless states}: $L(t) = 0$ for all $t$ $\Leftrightarrow$ $f \in \ker(F_\zeta)$
     \item \textbf{Massive states}: $\exists t: L(t) > 0$ $\Leftrightarrow$ proper time exists
 \end{enumerate}
 
@@ -181,7 +181,7 @@ In Frourio coordinates, the least action theorem becomes:
 \leanok
 \begin{enumerate}
     \item[(A)] Coordinate change preserves Lagrangian
-    \item[(B)] $\ker(D_6)$ states have zero action density
+    \item[(B)] $\ker(F_\zeta)$ states have zero action density
     \item[(C)] Positive action density implies time exists
     \item[(D)] $\varphi$-scaling becomes time translation
 \end{enumerate}
@@ -206,7 +206,7 @@ In Frourio coordinates, the least action theorem becomes:
 \lean{FUST.LeastAction.TimeExistsAtPoint}
 \leanok
 \[
-\mathrm{TimeExistsAtPoint}(f) := \exists x \neq 0: D_6[f](x) \neq 0
+\mathrm{TimeExistsAtPoint}(f) := \exists x \neq 0: N_6[f](x) \neq 0
 \]
 \end{definition}
 
@@ -239,6 +239,6 @@ Key insight: In Frourio space, $\varphi$-scaling symmetry becomes translation sy
 \begin{itemize}
     \item Frourio time is logarithmic
     \item Time step is uniform in Frourio space
-    \item Timeless states ($\ker(D_6)$) have zero Lagrangian everywhere
+    \item Timeless states ($\ker(F_\zeta)$) have zero Lagrangian everywhere
     \item Massive states have positive Lagrangian somewhere
 \end{itemize}

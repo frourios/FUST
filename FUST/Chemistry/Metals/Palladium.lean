@@ -1,6 +1,4 @@
 /-
-Palladium from D-operator Kernel Structure
-
 Palladium Z = 46 = nuclearMagic(4) - 2 × spinDegeneracy = 50 - 4.
 Configuration: [Kr] 4d¹⁰ (anomalous — filled d-shell, no 5s electrons).
 Pd-106 (Z=46, N=60): most abundant isotope.
@@ -67,11 +65,6 @@ set_option maxRecDepth 4096 in
 theorem effDeg_palladium106Ion : (dimAtom 46 60 0).effectiveDegree = 1637 := by decide
 set_option maxRecDepth 4096 in
 theorem effDeg_palladium106Atom : (dimAtom 46 60 46).effectiveDegree = 1729 := by decide
-
-set_option maxRecDepth 4096 in
-theorem palladium_effDeg_exceeds_kerD6 :
-    (dimAtom 46 60 0).effectiveDegree > 2 ∧
-    (dimAtom 46 60 46).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

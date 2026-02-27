@@ -1,11 +1,11 @@
 /-
-Fibonacci Arithmetic: Lucas numbers, D_t vs D6 discrepancy, Fibonacci divisibility.
+Fibonacci Arithmetic: Lucas numbers, D_t vs N6discrepancy, Fibonacci divisibility.
 
 Key results:
 1. Lucas-Binet: L_n = φ^n + ψ^n (Lucas numbers via golden ratio)
 2. Lucas-Fibonacci identity: L_n² - 5·F_n² = 4·(-1)^n
-3. D_t eigenvalue at t=logφ vs D6Coeff discrepancy formula
-4. Fibonacci integrality of D6Coeff/√5
+3. D_t eigenvalue at t=logφ vs N6Coeff discrepancy formula
+4. Fibonacci integrality of N6Coeff/√5
 -/
 import FUST.SpectralCoefficients
 import Mathlib.Data.Nat.Fib.Basic
@@ -84,13 +84,13 @@ end LucasNumbers
 
 /-! ## Section 2: Continuous D_t Eigenvalue
 
-The continuous analog of D6 uses sinh instead of Fibonacci:
+The continuous analog of N6uses sinh instead of Fibonacci:
   D_t(n) = 2sinh(3nt) - 6sinh(2nt) + 2sinh(nt)
 
 At t = log(φ), we have φ^{-1} = -ψ (from φψ = -1), so:
   2sinh(kn·logφ) = φ^{kn} - φ^{-kn} = φ^{kn} - (-ψ)^{kn}
 
-The difference from D6Coeff arises because (-ψ)^{kn} ≠ ψ^{kn} for odd kn. -/
+The difference from N6Coeff arises because (-ψ)^{kn} ≠ ψ^{kn} for odd kn. -/
 
 section ContinuousDiscrete
 
@@ -104,10 +104,10 @@ noncomputable def DtEigenvalue (n : ℕ) : ℝ :=
 theorem neg_psi_even_pow (k : ℕ) : (-ψ) ^ (2 * k) = ψ ^ (2 * k) :=
   (even_two_mul k).neg_pow ψ
 
-/-- For even n: D_t = D6Coeff exactly -/
+/-- For even n: D_t = N6Coeff exactly -/
 theorem DtEigenvalue_even (n : ℕ) (hn : Even n) :
-    DtEigenvalue n = D6Coeff n := by
-  simp only [DtEigenvalue, D6Coeff]
+    DtEigenvalue n = N6Coeff n := by
+  simp only [DtEigenvalue, N6Coeff]
   have h3 : Even (3 * n) := hn.mul_left 3
   have h2 : Even (2 * n) := even_two_mul n
   rw [h3.neg_pow, h2.neg_pow, hn.neg_pow]; ring
@@ -116,18 +116,18 @@ theorem DtEigenvalue_even (n : ℕ) (hn : Even n) :
 theorem neg_psi_odd_pow (n : ℕ) (hn : Odd n) : (-ψ) ^ n = -(ψ ^ n) := by
   rw [neg_pow, Odd.neg_one_pow hn]; ring
 
-/-- Discrepancy for odd n: D_t - D6 = 2(ψ^{3n} + ψ^n) -/
+/-- Discrepancy for odd n: D_t - N6= 2(ψ^{3n} + ψ^n) -/
 theorem DtEigenvalue_odd_discrepancy (n : ℕ) (hn : Odd n) :
-    DtEigenvalue n = D6Coeff n + 2 * (ψ ^ (3 * n) + ψ ^ n) := by
-  simp only [DtEigenvalue, D6Coeff]
+    DtEigenvalue n = N6Coeff n + 2 * (ψ ^ (3 * n) + ψ ^ n) := by
+  simp only [DtEigenvalue, N6Coeff]
   have h3n_odd : Odd (3 * n) := by rw [Nat.odd_mul]; exact ⟨⟨1, rfl⟩, hn⟩
   rw [neg_psi_odd_pow _ h3n_odd, neg_psi_even_pow, neg_psi_odd_pow _ hn]
   ring
 
 /-- Unified discrepancy formula:
-    D_t(n) = D6Coeff(n) + (1 - (-1)^n) · (ψ^{3n} + ψ^n) -/
+    D_t(n) = N6Coeff(n) + (1 - (-1)^n) · (ψ^{3n} + ψ^n) -/
 theorem DtEigenvalue_unified (n : ℕ) :
-    DtEigenvalue n = D6Coeff n + (1 - (-1 : ℝ) ^ n) * (ψ ^ (3 * n) + ψ ^ n) := by
+    DtEigenvalue n = N6Coeff n + (1 - (-1 : ℝ) ^ n) * (ψ ^ (3 * n) + ψ ^ n) := by
   rcases Nat.even_or_odd n with hn | hn
   · rw [DtEigenvalue_even n hn, Even.neg_one_pow hn]; ring
   · rw [DtEigenvalue_odd_discrepancy n hn, Odd.neg_one_pow hn]; ring
@@ -151,9 +151,9 @@ theorem abs_psi_pow_lt (n : ℕ) (hn : 1 ≤ n) : |ψ| ^ n < 1 :=
 
 end ContinuousDiscrete
 
-/-! ## Section 3: D6Coeff Integrality
+/-! ## Section 3: N6Coeff Integrality
 
-D6Coeff(n) / √5 = F_{3n} - 3F_{2n} + F_n ∈ ℤ -/
+N6Coeff(n) / √5 = F_{3n} - 3F_{2n} + F_n ∈ ℤ -/
 
 section Integrality
 
@@ -161,10 +161,10 @@ section Integrality
 def fibCombination (n : ℕ) : ℤ :=
   Nat.fib (3 * n) - 3 * Nat.fib (2 * n) + Nat.fib n
 
-/-- D6Coeff(n) = √5 · fibCombination(n) -/
-theorem D6Coeff_eq_sqrt5_mul_int (n : ℕ) :
-    D6Coeff n = Real.sqrt 5 * (fibCombination n : ℝ) := by
-  rw [D6Coeff_fibonacci]
+/-- N6Coeff(n) = √5 · fibCombination(n) -/
+theorem N6Coeff_eq_sqrt5_mul_int (n : ℕ) :
+    N6Coeff n = Real.sqrt 5 * (fibCombination n : ℝ) := by
+  rw [N6Coeff_fibonacci]
   simp only [fibCombination, Int.cast_add, Int.cast_sub, Int.cast_mul,
     Int.cast_natCast, Int.cast_ofNat]
 
@@ -193,9 +193,9 @@ theorem fibCombination_eq_zero_iff (n : ℕ) :
   · intro h
     by_contra hne
     push_neg at hne
-    have hD6 := D6Coeff_ne_zero_of_ge_three n hne
-    rw [D6Coeff_eq_sqrt5_mul_int] at hD6
-    simp [h] at hD6
+    have hN6 := N6Coeff_ne_zero_of_ge_three n hne
+    rw [N6Coeff_eq_sqrt5_mul_int] at hN6
+    simp [h] at hN6
   · intro h
     interval_cases n
     · exact fibCombination_zero
@@ -242,18 +242,18 @@ theorem fib_five_dvd_of_five_dvd (n : ℕ) (h : 5 ∣ n) : 5 ∣ Nat.fib n := by
 
 end FibonacciDivisibility
 
-/-! ## Section 5: D6Coeff via Lucas and Fibonacci
+/-! ## Section 5: N6Coeff via Lucas and Fibonacci
 
-Express D6Coeff using both Fibonacci (φ^n-ψ^n)/√5 and Lucas (φ^n+ψ^n). -/
+Express N6Coeff using both Fibonacci (φ^n-ψ^n)/√5 and Lucas (φ^n+ψ^n). -/
 
 section LucasFibonacci
 
-/-- D6Coeff via triple factorization with Lucas:
+/-- N6Coeff via triple factorization with Lucas:
     C_n = (φ^n-ψ^n) · (L_{2n} - 3·L_n + (-1)^n + 1) -/
-theorem D6Coeff_lucas_fibonacci (n : ℕ) :
-    D6Coeff n = (φ ^ n - ψ ^ n) *
+theorem N6Coeff_lucas_fibonacci (n : ℕ) :
+    N6Coeff n = (φ ^ n - ψ ^ n) *
       (lucasConst (2 * n) - 3 * lucasConst n + (-1 : ℝ) ^ n + 1) := by
-  have h := D6Coeff_factored n
+  have h := N6Coeff_factored n
   simp only [lucasConst]; rw [h]; ring
 
 /-- D_t eigenvalue via Lucas numbers (for odd n):
@@ -266,9 +266,9 @@ theorem DtEigenvalue_odd_via_lucas (n : ℕ) (hn : Odd n) :
   rw [neg_psi_odd_pow _ h3n_odd, neg_psi_even_pow, neg_psi_odd_pow _ hn]
   ring
 
-/-- D_t uses Lucas where D6 uses Fibonacci (for odd harmonics) -/
-theorem Dt_lucas_D6_fibonacci_odd (n : ℕ) (hn : Odd n) :
-    DtEigenvalue n - D6Coeff n = 2 * ψ ^ (3 * n) + 2 * ψ ^ n := by
+/-- D_t uses Lucas where N6uses Fibonacci (for odd harmonics) -/
+theorem Dt_lucas_N6_fibonacci_odd (n : ℕ) (hn : Odd n) :
+    DtEigenvalue n - N6Coeff n = 2 * ψ ^ (3 * n) + 2 * ψ ^ n := by
   have := DtEigenvalue_odd_discrepancy n hn; linarith
 
 end LucasFibonacci
@@ -277,9 +277,9 @@ end LucasFibonacci
 
 /-- Complete characterization of continuous-discrete discrepancy -/
 theorem continuous_discrete_summary :
-    (∀ n, Even n → DtEigenvalue n = D6Coeff n) ∧
-    (∀ n, Odd n → DtEigenvalue n = D6Coeff n + 2 * (ψ ^ (3 * n) + ψ ^ n)) ∧
-    (∀ n, DtEigenvalue n = D6Coeff n + (1 - (-1 : ℝ) ^ n) * (ψ ^ (3 * n) + ψ ^ n)) ∧
+    (∀ n, Even n → DtEigenvalue n = N6Coeff n) ∧
+    (∀ n, Odd n → DtEigenvalue n = N6Coeff n + 2 * (ψ ^ (3 * n) + ψ ^ n)) ∧
+    (∀ n, DtEigenvalue n = N6Coeff n + (1 - (-1 : ℝ) ^ n) * (ψ ^ (3 * n) + ψ ^ n)) ∧
     (∀ n, |ψ ^ (3 * n) + ψ ^ n| ≤ 2 * |ψ| ^ n) ∧
     (∀ n, lucasConst n ^ 2 - 5 * FStructureConst n ^ 2 = 4 * (-1 : ℝ) ^ n) :=
   ⟨DtEigenvalue_even,

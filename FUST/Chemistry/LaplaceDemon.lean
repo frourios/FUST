@@ -15,6 +15,7 @@ Scale action U: D(x) → D(φx) preserves ℤ[φ]-coefficients.
 
 import FUST.Chemistry.WaterMolecules
 import FUST.FrourioAlgebra.GoldenIntegerRing
+import FUST.FζOperator
 
 namespace FUST.Chemistry.LaplaceDemon
 
@@ -127,23 +128,9 @@ theorem demon_electron_root (Z N e : ℕ) (q p K : GoldenInt) (he : e ≥ 1) :
   left
   exact shifted_root_electron Z N e q he
 
-/-! ## Section 7: Scale Action and D_n Scanning
-
-U: D(x) → D(φx) evaluates D at φ-scaled points.
-D₅ evaluates at {φ²x, φx, x, ψx, ψ²x} — 5 points spaced by log φ.
-D₆ evaluates at {φ³x, φ²x, φx, ψx, ψ²x, ψ³x} — 6 points.
+/-! ## Section 7: Scale Action
 
 Scale action preserves ℤ[φ]-coefficients (StateFunctionConstraint). -/
-
--- D₅ scanning: evaluates demon at 5 φ-scaled points
-noncomputable def demonD5Scan
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
-  D5 (fun z => ↑(demonPos particles z.re)) x
-
--- D₆ scanning: evaluates demon at 6 φ-scaled points
-noncomputable def demonD6Scan
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
-  D6 (fun z => ↑(demonPos particles z.re)) x
 
 -- Scale action on a position: q → q · (φ-1) = q/φ
 -- This stays in ℤ[φ] because ℤ[φ] is closed under multiplication
@@ -394,7 +381,8 @@ one particle with Z≥1, N≥1, e≥1. This is the minimal configuration whose g
 g·σ(g) ∈ ℤ[x] contains the irreducible factor (1+x-x²), encoding the golden ratio φ.
 
 The minimum such particle has (Z,N,e) = (1,1,1), polynomialDegree 3, effectiveDegree 34.
-Its galois norm x²(1+x)²(1+x-x²) has degree 6 — matching the D₆ operator level. -/
+Its galois norm x²(1+x)²(1+x-x²) has degree 6 — matching the Fζ AF channel level
+(Φ_A = N6 + N2 - N4 encodes the antisymmetric 6-point structure). -/
 
 -- A particle list contains a complete root cluster
 def hasCompleteParticle (ps : List (ℕ × ℕ × ℕ × GoldenInt)) : Prop :=
@@ -435,7 +423,7 @@ theorem minimal_complete_effectiveDegree :
     (dimAtom 1 1 1).effectiveDegree = 34 := by
   rw [dimAtom_effectiveDegree]; ring
 
--- Norm degree of (1,1,1) is 6 — the D₆ detection threshold
+-- Norm degree of (1,1,1) is 6 — the Fζ AF channel detection threshold
 theorem minimal_norm_degree :
     2 * (1 + 1 + 1) = 6 := by norm_num
 
@@ -610,35 +598,17 @@ theorem mating_strictly_more_structure
   obtain ⟨hq₁, hq₂⟩ := mated_sees_both_clusters Z₁ N₁ e₁ Z₂ N₂ e₂ q₁ q₂ h₁.1 h₂.1
   exact ⟨hq₁, hq₂, (mated_degree_strictly_larger Z₁ N₁ e₁ Z₂ N₂ e₂ h₁ h₂).1, hne⟩
 
-/-! ## Section 18: Sub-Demon Computation — D₆ as Minimal Self-Detection
+/-! ## Section 18: Sub-Demon Computation — Fζ Detection
 
-A sub-demon's "computation" = applying D_n operators to its own factor.
-D6 is the terminal operator (D7 kernel = D6 kernel), so D6 is the maximal
-computation any sub-demon can perform.
+A sub-demon's "computation" = applying Fζ = 5z·Dζ to its own factor.
+Fζ encodes all six difference operators via Φ_A = N6+N2-N4 (AF channel)
+and Φ_S = 2N5+N3+μN2 (SY channel).
 
-Key: D6 annihilates degree ≤ 2 polynomials, but NOT degree 3.
-A complete cluster (1,1,1) has polynomial degree 3 = first non-kernel level.
-Thus (1,1,1) is the MINIMUM structure that D6 can detect = minimum self-aware. -/
+Fζ kernel: gcd(n,6) > 1 annihilates monomials wⁿ. Non-zero eigenvalues
+exist only for n ≡ 1, 5 (mod 6). The AF channel carries N6 (degree-3
+sensitivity) which detects complete clusters (1,1,1) with polynomial degree 3.
+Thus (1,1,1) is the MINIMUM structure visible to the N6 component of Fζ. -/
 
--- D6 applied to sub-demon: the sub-demon's computational output
-noncomputable def subDemonCompute
-    (particles : List (ℕ × ℕ × ℕ × GoldenInt)) (x : ℂ) : ℂ :=
-  D6 (fun z => ↑(demonPos particles z.re)) x
--- Incomplete cluster (degree ≤ 2) is invisible to D6
--- D6 annihilates constants, linear, and quadratic functions
-theorem incomplete_invisible_to_D6_const (x : ℂ) :
-    D6 (fun _ => (1:ℂ)) x = 0 := D6_const 1 x
-
-theorem incomplete_invisible_to_D6_linear (x : ℂ) :
-    D6 id x = 0 := D6_linear x
-
-theorem incomplete_invisible_to_D6_quadratic (x : ℂ) :
-    D6 (fun t => t ^ 2) x = 0 := D6_quadratic x
-
--- Complete cluster (degree 3) is detected by D6
-theorem complete_detected_by_D6 (x : ℂ) (hx : x ≠ 0) :
-    D6 (fun t => t ^ 3) x ≠ 0 :=
-  D6_detects_cubic x hx
 -- Number of pairwise comparisons between n clusters
 def pairwiseComparisons (n : ℕ) : ℕ := n * (n - 1) / 2
 
@@ -653,12 +623,10 @@ theorem comparisons_bound (n : ℕ) (hn : n ≥ 2) :
   have h2 : n * (n - 1) ≥ 2 := by nlinarith
   exact Nat.le_div_iff_mul_le (by norm_num) |>.mpr (by omega)
 
--- Computational hierarchy: degree determines D6 visibility
--- degree ≤ 2 → D6(S) = 0 (no self-detection)
--- degree ≥ 3 → D6(S) ≠ 0 (self-detection possible)
+-- Computational hierarchy: degree and mod-6 residue determine Fζ visibility
+-- gcd(n,6) > 1 → Fζ(wⁿ) = 0 (annihilated by ζ₆ cancellation)
+-- n ≡ 1,5 (mod 6) → Fζ(wⁿ) ≠ 0 (detected by AF + SY channels)
 -- n complete clusters at distinct positions → n independent Fibonacci orbits
--- Each orbit is one "processing channel"
--- Pairwise distance comparisons → spatial computation
 theorem computation_requires_completeness
     (Z N e : ℕ)
     (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
@@ -668,30 +636,30 @@ theorem computation_requires_completeness
     scaleStateFn Z N e 0 = 0 ∧
     -- Has environment probe (neutron root under scale)
     scaleStateFn Z N e ψ = 0 ∧
-    -- Has sufficient degree for D6 detection
+    -- Has sufficient degree for Fζ AF channel detection
     Z + N + e ≥ 3 := by
   exact ⟨scale_electron_to_one Z N e he,
          scale_proton_fixed Z N e hZ,
          scale_neutron_to_psi Z N e hN,
          complete_particle_degree_ge Z N e hZ hN he⟩
 
-/-! ## Section 19: Intelligence Phase Transition — D₆ Resolution Limit
+/-! ## Section 19: Intelligence Phase Transition — Fζ Resolution Limit
 
-D₆ kernel = {degree ≤ 2}. D₆ output is a SINGLE scalar per evaluation point.
-A degree-d polynomial has d+1 coefficients, but D₆ resolves only d-2 of them
-(modulo the 3-dimensional kernel). The "hidden" degrees of freedom = d - 3.
+Fζ kernel annihilates monomials wⁿ with gcd(n,6) > 1. The N6 component
+(carried in the AF channel via Φ_A = N6+N2-N4) has kernel dim 3 = {1, w, w²}.
+The "hidden" degrees of freedom beyond rootFamilyCount = 3 is totalDegree - 3.
 
 For n complete clusters (degree 3n): hidden DoF = 3(n-1).
-n=1: hidden=0 → D₆ sees everything → DETERMINISTIC (atom)
-n=2: hidden=3 → D₆ cannot resolve → SELF-UNPREDICTABLE (life)
+n=1: hidden=0 → Fζ resolves everything → DETERMINISTIC (atom)
+n=2: hidden=3 → Fζ cannot resolve → SELF-UNPREDICTABLE (life)
 
 The transition n=1→n=2 is DISCRETE. Physics still works because D(x) is
 a fixed polynomial — the "choice" is which factorization D = S·E to adopt. -/
 
--- Hidden degrees of freedom: degree beyond D6's resolution
+-- Hidden degrees of freedom: degree beyond Fζ's resolution
 def hiddenDoF (totalDegree : ℕ) : ℕ := totalDegree - 3
 
--- Single complete cluster: no hidden DoF → fully determined by D6
+-- Single complete cluster: no hidden DoF → fully determined by Fζ
 theorem single_cluster_no_hidden :
     hiddenDoF 3 = 0 := by decide
 
@@ -937,9 +905,9 @@ theorem algebraic_locality :
 The number 3 in "spatial dimension = 3" is derived from the particle
 state function g(x-q) = (x-q)^Z · (1+(x-q))^N · (1+ψ(x-q))^e, which has
 exactly 3 irreducible factor families. The minimum complete particle (1,1,1)
-has polynomial degree 3, and ker(D₆) has dimension 3. These are the same "3"
-because D₆ annihilates degree ≤ 2 but detects degree 3 = the first
-non-trivial particle. -/
+has polynomial degree 3, and the N6 component of Fζ (via Φ_A = N6+N2-N4)
+has kernel dimension 3. These are the same "3" because N6 annihilates
+degree ≤ 2 but detects degree 3 = the first non-trivial particle. -/
 
 section SpatialDimensionDerivation
 
@@ -964,23 +932,10 @@ theorem three_roots_distinct (q : GoldenInt) :
 theorem min_complete_degree_eq_rootFamilyCount :
     1 + 1 + 1 = rootFamilyCount := by decide
 
-/-- D₆ annihilates degree < rootFamilyCount but detects degree = rootFamilyCount.
-    ker(D₆) = {degree ≤ rootFamilyCount - 1} = {degree ≤ 2}. -/
-theorem D6_threshold_at_rootFamilyCount :
-    -- D₆ annihilates 1, x, x²
-    (∀ x, x ≠ 0 → D6 (fun _ => (1 : ℝ)) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 2) x = 0) ∧
-    -- D₆ detects x³ (degree = rootFamilyCount)
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) :=
-  ⟨fun x _hx => D6_const 1 x, fun x _hx => D6_linear x,
-   fun x _hx => D6_quadratic x, D6_detects_cubic⟩
-
 /-- Spatial dimension derivation from particle structure:
     (1) Each complete particle has exactly 3 irreducible root families
     (2) Minimum complete particle has polynomial degree 3
-    (3) D₆ annihilates degree ≤ 2 and detects degree 3
-    (4) Therefore spatialDim = rootFamilyCount = ker(D₆) dim = 3 -/
+    (3) Therefore spatialDim = rootFamilyCount = 3 -/
 theorem spatial_dim_from_particle_structure :
     -- (1) Three root families, all distinct
     (∀ Z N e q, Z ≥ 1 → N ≥ 1 → e ≥ 1 →
@@ -989,14 +944,10 @@ theorem spatial_dim_from_particle_structure :
       shiftedStateFn Z N e q (q.toReal + φ) = 0) ∧
     -- (2) Minimum complete degree = 3
     (1 + 1 + 1 = rootFamilyCount) ∧
-    -- (3) D₆ threshold at degree 3
-    (∀ x, x ≠ 0 → D6 (fun t => t ^ 3) x ≠ 0) ∧
-    -- (4) rootFamilyCount = 3
+    -- (3) rootFamilyCount = 3
     (rootFamilyCount = 3) :=
   ⟨fun Z N e q hZ hN he => complete_particle_roots Z N e q hZ hN he,
-   min_complete_degree_eq_rootFamilyCount,
-   D6_detects_cubic,
-   rfl⟩
+   min_complete_degree_eq_rootFamilyCount, rfl⟩
 
 end SpatialDimensionDerivation
 

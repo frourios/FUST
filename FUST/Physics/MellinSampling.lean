@@ -26,41 +26,6 @@ namespace FUST.MellinSampling
 open FUST FUST.SpectralCoefficients Real Complex Filter
   Topology Asymptotics Bornology
 
-/-! ## D6 Structure Preservation -/
-
-section D6Preservation
-
-structure KernelDecomposition (f : ℂ → ℂ) where
-  a : ℂ
-  b : ℂ
-  c : ℂ
-  d : ℂ
-  complement : ℂ → ℂ
-  decomp : ∀ x, x ≠ 0 → f x = a * x⁻¹ ^ 2 + b + c * x + d * x ^ 2 + complement x
-
-theorem kernel_part_annihilated (a b c d : ℂ) (x : ℂ) (hx : x ≠ 0) :
-    D6 (fun t => a * t⁻¹ ^ 2 + b + c * t + d * t ^ 2) x = 0 := by
-  have h1 := D6_const b x
-  have h2 := D6_linear x
-  have h3 := D6_quadratic x
-  have h4 := FUST.GravitationalCoupling.D6_inv_sq_zero x hx
-  simp only [D6, N6] at h1 h2 h3 h4 ⊢
-  have h_denom : D6Denom * x ≠ 0 := D6Denom_mul_ne_zero x hx
-  rw [div_eq_zero_iff] at h1 h2 h3 h4 ⊢
-  left
-  have n2 := h2.resolve_right h_denom
-  have n3 := h3.resolve_right h_denom
-  have n4 := h4.resolve_right h_denom
-  simp [id] at n2
-  linear_combination a * n4 + c * n2 + d * n3
-
-def KernelRecoverable (f : ℂ → ℂ) (x₀ : ℂ) : Prop :=
-  ∃! p : ℂ × ℂ × ℂ × ℂ, ∀ n ∈ ({0, 1, 2, 3} : Set ℤ),
-    PhiBloch.phiLatticeSample f x₀ n = p.1 * ((↑φ : ℂ) ^ n * x₀)⁻¹ ^ 2
-    + p.2.1 + p.2.2.1 * ((↑φ : ℂ) ^ n * x₀) + p.2.2.2 * ((↑φ : ℂ) ^ n * x₀) ^ 2
-
-end D6Preservation
-
 /-! ## Analytic Continuation Framework -/
 
 section AnalyticContinuation
@@ -997,30 +962,6 @@ theorem aliasing_preserves_even (fhat : ℝ → ℂ) (T : ℝ)
 
 end MellinPoisson
 
-/-! ## φ-Lattice D6 Compatibility -/
-
-section LatticeCompatibility
-
-def D6Compatible (b : ℝ) : Prop :=
-  ∃ k : ℕ, k ≥ 1 ∧ b ^ k = φ
-
-theorem phi_D6_compatible : D6Compatible φ :=
-  ⟨1, le_refl 1, pow_one φ⟩
-
-theorem phi_coarsest_compatible (b : ℝ) (hb : 1 < b) (hcompat : D6Compatible b) :
-    b ≤ φ := by
-  obtain ⟨k, hk, hbk⟩ := hcompat
-  by_cases hk1 : k = 1
-  · rw [hk1, pow_one] at hbk; linarith
-  · have hk_ge2 : k ≥ 2 := by omega
-    have hb_pos : 0 < b := by linarith
-    have : b ^ k ≥ b ^ 2 := pow_le_pow_right₀ (le_of_lt hb) hk_ge2
-    have : b ^ 2 > b := by nlinarith
-    rw [hbk] at *
-    nlinarith [φ_gt_one]
-
-end LatticeCompatibility
-
 /-! ## Discrete Rotation Representation -/
 
 section DiscreteRotation
@@ -1043,22 +984,21 @@ theorem psi_on_phi_lattice (n k : ℤ) (x₀ : ℝ) :
   ring_nf
 
 -- ψ^k on φ-lattice: odd k → π-rotation, even k → pure shift
-theorem D6_rotation_parity (k : ℤ) (hk : Odd k) (n : ℤ) (x₀ : ℝ) :
+theorem rotation_parity (k : ℤ) (hk : Odd k) (n : ℤ) (x₀ : ℝ) :
     ψ ^ k * (φ ^ n * x₀) = -(φ ^ (n - k) * x₀) := by
   rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
 
-theorem D6_shift_parity (k : ℤ) (hk : Even k) (n : ℤ) (x₀ : ℝ) :
+theorem shift_parity (k : ℤ) (hk : Even k) (n : ℤ) (x₀ : ℝ) :
     ψ ^ k * (φ ^ n * x₀) = φ ^ (n - k) * x₀ := by
   rw [psi_on_phi_lattice, hk.neg_one_zpow]; ring
 
--- D6 probes both f and π-rotated f simultaneously
-theorem D6_dual_probe (f : ℝ → ℝ) (n : ℤ) (x₀ : ℝ) :
+theorem dual_probe (f : ℝ → ℝ) (n : ℤ) (x₀ : ℝ) :
     (f (ψ ^ (1:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-1) * x₀))) ∧
     (f (ψ ^ (2:ℤ) * (φ ^ n * x₀)) = f (φ ^ (n-2) * x₀)) ∧
     (f (ψ ^ (3:ℤ) * (φ ^ n * x₀)) = f (-(φ ^ (n-3) * x₀))) :=
-  ⟨by congr 1; exact D6_rotation_parity 1 ⟨0, by ring⟩ n x₀,
-   by congr 1; exact D6_shift_parity 2 ⟨1, by ring⟩ n x₀,
-   by congr 1; exact D6_rotation_parity 3 ⟨1, by ring⟩ n x₀⟩
+  ⟨by congr 1; exact rotation_parity 1 ⟨0, by ring⟩ n x₀,
+   by congr 1; exact shift_parity 2 ⟨1, by ring⟩ n x₀,
+   by congr 1; exact rotation_parity 3 ⟨1, by ring⟩ n x₀⟩
 
 end DiscreteRotation
 

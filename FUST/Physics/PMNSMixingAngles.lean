@@ -10,14 +10,14 @@ New predictions for neutrino mixing angles derived from FUST probability structu
 
 1. **sin²θ₁₃ = φ⁻⁸** (improved from 1/15, error: 2.4% vs 206%)
 2. **sin²θ₂₃ = 1/2 + φ⁻⁵/2** (maximal mixing + φ correction, error: 0.02%)
-3. **sin²θ₁₂ = 1/3** (D₃ triplet symmetry, existing)
+3. **sin²θ₁₂ = 1/3** (N3 triplet symmetry, existing)
 
 ## Probability-Theoretic Interpretation
 
-The mixing angles arise from transition probabilities between ker(D_n) levels:
-- θ₁₃: Direct D₂→D₆ transition (8 = 6 + 2 steps)
-- θ₂₃: Maximal mixing with D₅ correction
-- θ₁₂: Triplet symmetry from D₃
+The mixing angles arise from transition probabilities:
+- θ₁₃: Direct N2→N6 transition (8 = 6 + 2 steps)
+- θ₂₃: Maximal mixing with N5 correction
+- θ₁₂: Triplet symmetry from N3
 
 ## Cosmological Density Parameters
 
@@ -39,9 +39,7 @@ Experimental value: 0.0218 (error: 206%)
 New prediction: sin²θ₁₃ = φ⁻⁸ ≈ 0.0213
 Experimental value: 0.0218 (error: 2.4%)
 
-Probability interpretation:
-- 8 = D_max + D_min = 6 + 2
-- Transition probability from ker(D₂) to ker(D₆) decays as φ⁻⁸
+Probability interpretation: 8 = D_max + D_min = 6 + 2
 -/
 
 section ReactorAngle
@@ -156,18 +154,14 @@ end AtmosphericAngle
 /-!
 ## Section 3: PMNS Solar Angle θ₁₂
 
-Existing prediction: sin²θ₁₂ = 1/3 (from D₃ triplet symmetry)
+Existing prediction: sin²θ₁₂ = 1/3
 Experimental value: 0.307 (error: 8.6%)
-
-This is derived from D₃ symmetry, not directly from probability theory.
 -/
 
 section SolarAngle
 
-/-- sin²θ₁₂ = 1/3 from D₃ triplet symmetry -/
 def sin2_theta12 : ℚ := 1/3
 
-/-- D₃ triplet: ker(D₃) acts on 3 generations equally -/
 theorem theta12_from_triplet_symmetry : sin2_theta12 = 1 / (Nat.choose 3 2) := by
   simp only [sin2_theta12, Nat.choose]
   norm_num
@@ -289,7 +283,7 @@ theorem pmns_predictions_complete :
     sin2_theta13_new = φ ^ (-8 : ℤ) ∧
     -- (B) sin²θ₂₃ = 1/2 + φ⁻⁵/2 (atmospheric angle)
     sin2_theta23 = 1/2 + φ ^ (-5 : ℤ) / 2 ∧
-    -- (C) sin²θ₁₂ = 1/3 (solar angle, from D₃ symmetry)
+    -- (C) sin²θ₁₂ = 1/3 (solar angle)
     sin2_theta12 = 1/3 ∧
     -- (D) All angles in valid range
     (0 < sin2_theta13_new ∧ sin2_theta13_new < 1) ∧

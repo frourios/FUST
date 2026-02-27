@@ -1,6 +1,4 @@
 /-
-Copper from D-operator Kernel Structure
-
 Copper Z = 29 = nuclearMagic(3) + hydrogenZ = 28 + 1.
 Configuration: [Ar] 3d¹⁰ 4s¹ (anomalous — filled d-shell).
 Cu-63 (Z=29, N=34): most abundant isotope.
@@ -66,10 +64,6 @@ theorem copper63Atom_eq (x : ℝ) :
 
 theorem effDeg_copper63Ion : (dimAtom 29 34 0).effectiveDegree = 975 := by decide
 theorem effDeg_copper63Atom : (dimAtom 29 34 29).effectiveDegree = 1033 := by decide
-
-theorem copper_effDeg_exceeds_kerD6 :
-    (dimAtom 29 34 0).effectiveDegree > 2 ∧
-    (dimAtom 29 34 29).effectiveDegree > 2 := by decide
 
 /-! ## Section 5: Mass Numbers -/
 

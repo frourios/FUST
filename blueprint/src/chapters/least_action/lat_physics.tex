@@ -10,11 +10,11 @@
 \hline
 Classical mechanics & FUST \\
 \hline
-Lagrangian $L = T - V$ & $L_{\mathrm{FUST}} = \|D_6 f\|^2$ \\
+Lagrangian $L = T - V$ & $L_{\mathrm{FUST}} = \|N_6 f\|^2$ \\
 Action $A = \int L \, dt$ & $\mathcal{A} = \int L_{\mathrm{FUST}} \, d\mu$ \\
-Kinetic energy $T$ & Norm of $\ker(D_6)^\perp$ component \\
+Kinetic energy $T$ & Norm of $\ker(F_\zeta)^\perp$ component \\
 Potential $V$ & 0 (in this framework) \\
-Minimal action path & $\ker(D_6)$ (light-like geodesic) \\
+Minimal action path & $\ker(F_\zeta)$ (light-like geodesic) \\
 \hline
 \end{tabular}
 \end{center}
@@ -39,7 +39,7 @@ The FUST Least Action Theorem derives the following variational principles (whic
 Relativity & FUST \\
 \hline
 Energy $E$ & Homogeneous degree $n$ \\
-Mass $m$ & Lowest degree component in $\ker(D_6)^\perp$ \\
+Mass $m$ & Lowest degree component in $\ker(F_\zeta)^\perp$ \\
 Kinetic energy & Contribution of higher degree components \\
 \hline
 \end{tabular}
@@ -49,12 +49,12 @@ Kinetic energy & Contribution of higher degree components \\
 \label{sec:mat_state_decomp}
 
 \[
-f(t) = \underbrace{a_0 + a_1 t + a_2 t^2}_{\ker(D_6): \text{light-like component}} + \underbrace{a_3 t^3 + a_4 t^4 + \cdots}_{\ker(D_6)^\perp: \text{massive component}}
+f(t) = \underbrace{a_0 + a_1 t + a_2 t^2}_{\ker(F_\zeta): \text{light-like component}} + \underbrace{a_3 t^3 + a_4 t^4 + \cdots}_{\ker(F_\zeta)^\perp: \text{massive component}}
 \]
 
 \begin{itemize}
-\item $\ker(D_6)$ component: Light-like energy (does not contribute to mass)
-\item $\ker(D_6)^\perp$ component: Massive energy (generates proper time)
+\item $\ker(F_\zeta)$ component: Light-like energy (does not contribute to mass)
+\item $\ker(F_\zeta)^\perp$ component: Massive energy (generates proper time)
 \end{itemize}
 
 \section{Derivation of Mass Gap (Clay Millennium Prize)}
@@ -79,16 +79,16 @@ Requirements:
 
 \textbf{Physical interpretation}:
 \begin{itemize}
-\item Mass = Deviation from $\ker(D_6)$
+\item Mass = Deviation from $\ker(F_\zeta)$
 \item Has mass $\leftrightarrow$ Proper time exists
-\item No mass (photon) $\leftrightarrow$ Proper time does not exist ($D_6 f = 0$)
+\item No mass (photon) $\leftrightarrow$ Proper time does not exist ($N_6 f = 0$)
 \end{itemize}
 
 This identifies the Clay problem's ``mass gap'' with ``the minimum energy of states having proper time.''
 
 \subsection{Derivation of 4-Dimensional Spacetime}
 
-Spacetime dimension is not an arbitrary assumption but derived from $D_6$ structure:
+Spacetime dimension is not an arbitrary assumption but derived from $F_\zeta$ structure:
 
 \textbf{Spatial dimension = 3}: Uniquely determined from the following constraints:
 \begin{itemize}
@@ -97,7 +97,7 @@ Spacetime dimension is not an arbitrary assumption but derived from $D_6$ struct
 \item $d \neq 2$ (minimal coupling degeneracy)
 \end{itemize}
 
-\textbf{Time dimension = 1}: The AF channel weight in $|D_\zeta|^2 = 12(3a^2 + b^2)$ is 1, encoding a single temporal degree of freedom. Physically, $\mathrm{TimeExists}\, f \leftrightarrow f \notin \ker(D_6)$ (binary nature), and $\varphi > 1$ uniquely defines the future direction.
+\textbf{Time dimension = 1}: The AF channel weight in $|D_\zeta|^2 = 12(3a^2 + b^2)$ is 1, encoding a single temporal degree of freedom. Physically, $\mathrm{TimeExists}\, f \leftrightarrow f \notin \ker(F_\zeta)$ (binary nature), and $\varphi > 1$ uniquely defines the future direction.
 
 \begin{theorem}[Spacetime Dimension from $F_\zeta$ Channel Weights]
 \label{thm:mat_spacetime_dim}
@@ -107,21 +107,21 @@ From $|D_\zeta|^2 = 12(3a^2 + b^2)$:
 \[
 \mathrm{SY\_weight} + \mathrm{AF\_weight} = 3 + 1 = 4
 \]
-where $\mathrm{SY\_weight} = \dim\ker(D_6) = 3$ (spatial) and $\mathrm{AF\_weight} = 1$ (temporal).
+where $\mathrm{SY\_weight} = \dim\ker(F_\zeta) = 3$ (spatial) and $\mathrm{AF\_weight} = 1$ (temporal).
 The 3:1 weight ratio encodes $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$.
 \end{theorem}
 
 \subsection{Derivation of Gauge Group}
 
-The gauge group is derived from the $\varphi$-dilation eigenvalue structure on the kernels of $D$ operators. The $\varphi$-dilation eigenvalues $\{\varphi^0, \varphi^1, \ldots\}$ are pairwise distinct, so the gauge group on each kernel is a binary choice: $\varphi$-preserving (diagonal $\mathrm{U}(1)^n$) or $\varphi$-breaking (non-diagonal $\mathrm{SU}(n)$):
+The gauge group is derived from the $\varphi$-dilation eigenvalue structure on the kernels of numerator operators. The $\varphi$-dilation eigenvalues $\{\varphi^0, \varphi^1, \ldots\}$ are pairwise distinct, so the gauge group on each kernel is a binary choice: $\varphi$-preserving (diagonal $\mathrm{U}(1)^n$) or $\varphi$-breaking (non-diagonal $\mathrm{SU}(n)$):
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
-$D$ operator & Kernel dim & $\varphi$-preserving & $\varphi$-breaking \\
+Operator & Kernel dim & $\varphi$-preserving & $\varphi$-breaking \\
 \hline
-$D_5$ & $\dim \ker(D_5) = 2$ & $\mathrm{U}(1)^2$ & $\mathrm{SU}(2)$ \\
-$D_6$ & $\dim \ker(D_6) = 3$ & $\mathrm{U}(1)^3$ & $\mathrm{SU}(3)$ \\
+$N_5$ & $\dim \ker(N_5) = 2$ & $\mathrm{U}(1)^2$ & $\mathrm{SU}(2)$ \\
+$N_6$ & $\dim \ker(F_\zeta) = 3$ & $\mathrm{U}(1)^3$ & $\mathrm{SU}(3)$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -130,32 +130,32 @@ $D_6$ & $\dim \ker(D_6) = 3$ & $\mathrm{U}(1)^3$ & $\mathrm{SU}(3)$ \\
 \label{thm:mat_gauge_exclusion}
 \lean{FUST.YangMills.fust_gauge_group_exclusion}
 \leanok
-Only SU(2) and SU(3) have minimal representation dimension $\leq \dim\ker(D_6) = 3$:
+Only SU(2) and SU(3) have minimal representation dimension $\leq \dim\ker(F_\zeta) = 3$:
 \[
-\dim \ker(D_5) = 2 \;\to\; \mathfrak{su}(2) \;(2^2 - 1 = 3), \qquad
-\dim \ker(D_6) = 3 \;\to\; \mathfrak{su}(3) \;(3^2 - 1 = 8)
+\dim \ker(N_5) = 2 \;\to\; \mathfrak{su}(2) \;(2^2 - 1 = 3), \qquad
+\dim \ker(F_\zeta) = 3 \;\to\; \mathfrak{su}(3) \;(3^2 - 1 = 8)
 \]
 All other compact simple groups (SU($N \geq 4$), SO($N \geq 5$), $G_2$, $F_4$, $E_{6,7,8}$) are excluded.
 \end{theorem}
 
 \subsection{Derivation of Mass Gap Value}
 
-The mass gap is derived from the $D_6$ gauge-invariant output:
+The mass gap is derived from the $N_6$ gauge-invariant output:
 
 \begin{theorem}[Mass Gap Formula]
 \label{thm:mat_mass_gap_formula}
 \lean{FUST.massGap_formula_justified}
 \leanok
 
-$D_6(t^d)(x) = C_d \cdot x^{d-1} / (\sqrt{5})^5$ where $C_d \cdot x^{d-1} / (\sqrt{5})^5 \cdot x^{-(d-1)} = C_d/(\sqrt{5})^5$ is gauge-invariant (independent of probe point $x$).
+$N_6(t^d)(x) = C_d \cdot x^{d-1} / (\sqrt{5})^5$ where $C_d \cdot x^{d-1} / (\sqrt{5})^5 \cdot x^{-(d-1)} = C_d/(\sqrt{5})^5$ is gauge-invariant (independent of probe point $x$).
 
 Kernel structure:
 \begin{itemize}
-\item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$, $\dim = 3$ ($D_6$ annihilates up to degree 2, not degree 3)
+\item $\ker(F_\zeta) = \mathrm{span}\{1, x, x^2\}$, $\dim = 3$ ($N_6$ annihilates up to degree 2, not degree 3)
 \item Minimum massive degree is $d = 3$
 \end{itemize}
 
-$D_6$ minimum eigenvalue from gauge-invariant output at $d = 3$:
+$F_\zeta$ minimum eigenvalue from gauge-invariant output at $d = 3$:
 \[
 \lambda_{\min} = \frac{C_3}{(\sqrt{5})^5} = \frac{12\sqrt{5}}{(\sqrt{5})^5} = \frac{12}{25}
 \]
@@ -173,9 +173,9 @@ m^2 = -P^\mu P_\mu = -(0^2 + (-1)^2 + (\sqrt{5})^2 - (2\sqrt{5})^2) = 14
 \lean{FUST.minimum_massive_degree}
 \leanok
 
-From $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$, the minimum degree outside $\ker(D_6)$ is 3:
+From $\ker(F_\zeta) = \mathrm{span}\{1, x, x^2\}$, the minimum degree outside $\ker(F_\zeta)$ is 3:
 \[
-\forall x \neq 0, D_6[t^2](x) = 0 \land D_6[t^3](x) \neq 0
+\forall x \neq 0, N_6[t^2](x) = 0 \land N_6[t^3](x) \neq 0
 \]
 \end{theorem}
 
@@ -183,32 +183,32 @@ This is the physical origin of the mass gap: the minimal mass state has degree 3
 
 \subsection{SU(2) Mass Gap}
 
-$D_5$ is the mass operator for SU(2). The vacuum is $\ker(D_5) = \mathrm{span}\{1, x\}$ (dimension 2).
-The first function outside $\ker(D_5)$ is $x^2$:
+SU(2) arises from $\mathrm{spinDegeneracy} = \mathrm{afWeight} + 1 = 2$ (the $F_\zeta$ AF channel).
+The $F_\zeta$ kernel annihilates 4 of every 6 monomial modes; the active mode $n \equiv 5 \pmod{6}$ detects mass:
 \[
-\forall x \neq 0,\; D_5(1)(x) = 0,\; D_5(x)(x) = 0,\; D_5(x^2)(x) \neq 0
+F_\zeta(z^5)(z) \neq 0 \quad \text{for } z \neq 0
 \]
 
 \begin{theorem}[SU(2) Mass Gap]
 \label{thm:mat_su2_mass_gap}
 \lean{FUST.YangMills.yangMills_massGap_SU2}
 \leanok
-$\dim\ker(D_5) = 2 \to \mathrm{SU}(2)$, $\dim\,\mathfrak{su}(2) = 2^2 - 1 = 3$.
-$D_5(x^2) \neq 0$ gives a positive mass gap for the first mode outside $\ker(D_5)$.
+$\mathrm{spinDegeneracy} = 2 \to \mathrm{SU}(2)$, $\dim\,\mathfrak{su}(2) = 2^2 - 1 = 3$.
+$F_\zeta(z^5) \neq 0$ gives a positive mass gap for the first active mode outside the $F_\zeta$ kernel.
 \end{theorem}
 
 \subsection{Algebraic Confinement}
 
-$\ker(D_6)$ is a vector space (closed under addition) but \textbf{not a subalgebra} (not closed under multiplication):
+$\ker(F_\zeta)$ is a vector space (closed under addition) but \textbf{not a subalgebra} (not closed under multiplication):
 
 \begin{theorem}[Algebraic Confinement]
 \label{thm:mat_confinement}
-\lean{FUST.YangMills.algebraic_confinement}
+\lean{FUST.YangMills.ker_Fζ_not_subalgebra}
 \leanok
 \[
-\exists\, f, g \in \ker(D_6),\; f \cdot g \notin \ker(D_6)
+\exists\, f, g \in \ker(F_\zeta),\; f \cdot g \notin \ker(F_\zeta)
 \]
-Witness: $f = \mathrm{id}$, $g(t) = t^2$, then $f \cdot g = t^3 \notin \ker(D_6)$.
+Witness: $f(t) = t^2$, $g(t) = t^3$, then $f \cdot g = t^5 \notin \ker(F_\zeta)$.
 This is the algebraic origin of gluon confinement: gluon interactions (products of kernel elements) necessarily produce massive states.
 \end{theorem}
 
@@ -223,13 +223,13 @@ theory on $\mathbb{R}^4$ has a mass gap $\Delta > 0$.''
 
 FUST answer:
 \begin{enumerate}
-\item $\checkmark$ \textbf{Gauge group exclusion}: Only SU(2) and SU(3) arise from FUST kernel structure.
-All other compact simple groups have minimal representation dimension $> \dim\ker(D_6) = 3$.
-\item $\checkmark$ \textbf{SU(3) mass gap}: $D_6$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$ from $C_3/(\sqrt{5})^5$.
+\item $\checkmark$ \textbf{Gauge group exclusion}: Only SU(2) and SU(3) arise from $F_\zeta$ channel structure.
+$\mathrm{syWeight} = 3 \to \mathrm{SU}(3)$, $\mathrm{spinDegeneracy} = 2 \to \mathrm{SU}(2)$.
+\item $\checkmark$ \textbf{SU(3) mass gap}: $\Delta = |AF\_coeff|^2/5^2 = 12/25 > 0$.
 Casimir mass squared $m^2 = -P^\mu P_\mu = 14 > 0$ from $D_\zeta$ 4-momentum at $s=1$.
-\item $\checkmark$ \textbf{SU(2) mass gap}: $D_5(x^2) \neq 0$ (first mode outside $\ker(D_5) = \mathrm{span}\{1, x\}$).
-\item $\checkmark$ \textbf{Confinement}: $\ker(D_6)$ is NOT a subalgebra --- gluon interactions produce mass.
-\item $\checkmark$ \textbf{4-dimensional spacetime}: $3 + 1 = 4$ (derived from kernel dimensions and Time Theorem).
+\item $\checkmark$ \textbf{SU(2) mass gap}: $F_\zeta(z^5) \neq 0$ (active mode $n \equiv 5 \bmod 6$).
+\item $\checkmark$ \textbf{Confinement}: $\ker(F_\zeta)$ is NOT a subalgebra --- gluon interactions produce mass.
+\item $\checkmark$ \textbf{4-dimensional spacetime}: $\mathrm{totalWeight} = 3 + 1 = 4$.
 \end{enumerate}
 \end{theorem}
 
@@ -241,8 +241,8 @@ Casimir mass squared $m^2 = -P^\mu P_\mu = 14 > 0$ from $D_\zeta$ 4-momentum at 
 \leanok
 No arbitrary selection is involved in deriving the mass gap:
 \begin{itemize}
-\item $\ker(D_6) = \mathrm{span}\{1, x, x^2\}$ is uniquely determined from $D_6$ annihilation structure
-\item $C_3 = 12\sqrt{5}$ is the unique value of $D_6$ applied to $x^3$
+\item $\ker(F_\zeta) = \mathrm{span}\{1, x, x^2\}$ is uniquely determined from $N_6$ annihilation structure
+\item $C_3 = 12\sqrt{5}$ is the unique value of $N_6$ applied to $x^3$
 \item $\lambda_{\min} = C_3/(\sqrt{5})^5 = 12/25$ is uniquely derived as a gauge-invariant quantity
 \item $m^2 = -P^\mu P_\mu = 14$ from Casimir invariant of $D_\zeta$ 4-momentum
 \item 4 dimensions are uniquely derived from kernel structure
@@ -259,11 +259,11 @@ The dimensional type system classifies the quantities in this chapter:
 \hline
 Quantity & Type & Dimension / Value \\
 \hline
-$L_{\mathrm{FUST}} = \|D_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
+$L_{\mathrm{FUST}} = \|N_6 f\|^2$ & ScaleQuantity & $(-10, 2, -2)$ \\
 $\lambda_{\min} = C_3/(\sqrt{5})^5 = 12/25$ & ScaleQuantity & $(-5, 1, -1)$ = dimTime$^{-1}$ \\
 $m^2 = 14$ (Casimir mass gap) & ScaleQuantity & from $D_\zeta$ 4-momentum \\
 Spacetime dimension & CountQuantity & $4$ \\
-$f \in \ker(D_6)$ vs $f \notin \ker(D_6)$ & --- & (type separation) \\
+$f \in \ker(F_\zeta)$ vs $f \notin \ker(F_\zeta)$ & --- & (type separation) \\
 \hline
 \end{tabular}
 \end{center}

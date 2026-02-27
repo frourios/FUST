@@ -7,15 +7,15 @@
 
 The FUST action:
 \[
-\mathcal{A}[f] = \int |D_6[f](x)|^2 \frac{dx}{x}
+\mathcal{A}[f] = \int |F_\zeta[f](x)|^2 \frac{dx}{x}
 \]
 equals the probability expectation:
 \[
-\mathcal{A}[f] = \mathbb{E}_{P_f}[|D_6[f]|^2]
+\mathcal{A}[f] = \mathbb{E}_{P_f}[|F_\zeta[f]|^2]
 \]
 
 This shows Born rule is NOT a new axiom but a structural consequence
-of the $D_6$ action.
+of the $F_\zeta$ action.
 
 \section{Discrete Version}
 
@@ -24,7 +24,7 @@ of the $D_6$ action.
 \lean{FUST.Probability.discreteExpectation}
 \leanok
 \[
-\mathbb{E}_N[|D_6[f]|^2] := \frac{1}{2N+1} \sum_{k=-N}^{N} A_f(k)^2
+\mathbb{E}_N[|F_\zeta[f]|^2] := \frac{1}{2N+1} \sum_{k=-N}^{N} A_f(k)^2
 \]
 \end{definition}
 
@@ -33,7 +33,7 @@ of the $D_6$ action.
 \lean{FUST.Probability.born_rule_discrete}
 \leanok
 \[
-\mathcal{A}_N[f] = (2N + 1) \cdot \log\varphi \cdot \mathbb{E}_N[|D_6[f]|^2]
+\mathcal{A}_N[f] = (2N + 1) \cdot \log\varphi \cdot \mathbb{E}_N[|F_\zeta[f]|^2]
 \]
 \end{theorem}
 
@@ -42,7 +42,7 @@ By definition:
 \begin{align*}
 \mathcal{A}_N[f] &= \sum_{k=-N}^{N} A_f(k)^2 \cdot \log\varphi \\
 &= (2N+1) \cdot \log\varphi \cdot \frac{1}{2N+1} \sum_{k=-N}^{N} A_f(k)^2 \\
-&= (2N+1) \cdot \log\varphi \cdot \mathbb{E}_N[|D_6[f]|^2]
+&= (2N+1) \cdot \log\varphi \cdot \mathbb{E}_N[|F_\zeta[f]|^2]
 \end{align*}
 \end{proof}
 
@@ -52,13 +52,13 @@ The Born rule $P \propto |\psi|^2$ in quantum mechanics is usually
 postulated as a fundamental axiom. In FUST:
 
 \begin{enumerate}
-\item $|D_6[f]|^2$ naturally appears in the action functional
+\item $|F_\zeta[f]|^2$ naturally appears in the action functional
 \item The $\varphi$-scale iteration generates a ``sample space''
 \item Frequency counts give empirical probabilities
-\item The action equals the expectation of $|D_6[f]|^2$
+\item The action equals the expectation of $|F_\zeta[f]|^2$
 \end{enumerate}
 
-\textbf{Conclusion}: Born rule emerges from the $D_6$ structure
+\textbf{Conclusion}: Born rule emerges from the $F_\zeta$ structure
 without being postulated.
 
 \section{Complete Summary}
@@ -72,6 +72,6 @@ without being postulated.
 \item[(B)] Observation values are non-negative
 \item[(C)] Probability normalization: $P_f(\mathbb{R}_{\geq 0}) = 1$
 \item[(D)] Born rule: Action $= (2N+1) \cdot \log\varphi \cdot$ Expectation
-\item[(E)] $\ker(D_6)$ states have zero action
+\item[(E)] $\ker(F_\zeta)$ states have zero action
 \end{enumerate}
 \end{theorem}

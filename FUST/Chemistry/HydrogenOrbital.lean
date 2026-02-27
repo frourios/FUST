@@ -1,10 +1,6 @@
 /-
 Hydrogen Atom: Shell Structure and Spectral Properties
 
-Shell structure derives from D-operator kernel dimensions:
-  spinDeg = dim ker(D₅) = 2
-  spatialDim = dim ker(D₆) = 3
-
 Mass structure: hydrogen mass = DimSum2 of proton and electron components,
 with the electron component reduced by the electromagnetic binding energy.
 -/
@@ -17,11 +13,7 @@ namespace FUST.Chemistry.HydrogenOrbital
 
 open FUST FUST.Dim FUST.Chemistry FUST.TimeStructure
 
-/-! ## Section 1: Shell Structure from D-operator Kernel Dimensions -/
-
--- Spin degeneracy from ker(D₅)
-theorem spin_from_kerD5 : Nuclear.spinDegeneracy = 2 := rfl
-
+/-! ## Section 1: Shell Structure -/
 
 -- Subshell capacity: 2(2l+1) electrons
 theorem subshell_capacity_formula (l : ℕ) :
@@ -38,19 +30,19 @@ theorem hydrogen_shell_capacity : Nuclear.shellCapacity 1 = 2 := rfl
 
 /-! ## Section 2: Spectral Gap -/
 
--- D6 spectral coefficient: first non-zero at k=3
-theorem D6_spectrum_kernel :
-    FUST.SpectralCoefficients.D6Coeff 0 = 0 ∧
-    FUST.SpectralCoefficients.D6Coeff 1 = 0 ∧
-    FUST.SpectralCoefficients.D6Coeff 2 = 0 :=
-  ⟨FUST.SpectralCoefficients.D6Coeff_zero,
-   FUST.SpectralCoefficients.D6Coeff_one,
-   FUST.SpectralCoefficients.D6Coeff_two⟩
+-- N6 spectral coefficient: first non-zero at k=3
+theorem N6_spectrum_kernel :
+    FUST.SpectralCoefficients.N6Coeff 0 = 0 ∧
+    FUST.SpectralCoefficients.N6Coeff 1 = 0 ∧
+    FUST.SpectralCoefficients.N6Coeff 2 = 0 :=
+  ⟨FUST.SpectralCoefficients.N6Coeff_zero,
+   FUST.SpectralCoefficients.N6Coeff_one,
+   FUST.SpectralCoefficients.N6Coeff_two⟩
 
--- D6 spectral coefficient at k=3: C_3 = 12√5
-theorem D6_spectrum_gap :
-    FUST.SpectralCoefficients.D6Coeff 3 = 12 * Real.sqrt 5 :=
-  FUST.SpectralCoefficients.D6Coeff_three
+-- N6 spectral coefficient at k=3: C_3 = 12√5
+theorem N6_spectrum_gap :
+    FUST.SpectralCoefficients.N6Coeff 3 = 12 * Real.sqrt 5 :=
+  FUST.SpectralCoefficients.N6Coeff_three
 
 /-! ## Section 3: Hydrogen Mass as DimSum2
 

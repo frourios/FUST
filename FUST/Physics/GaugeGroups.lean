@@ -1,5 +1,5 @@
 /-
-Standard gauge group SU(3)×SU(2)×U(1) derived uniquely from the unified Dζ operator.
+Standard gauge group SU(3)×SU(2)×U(1) derived uniquely from the Fζ channel structure.
 The ℤ/6ℤ Fourier decomposition into SymNum (even parity) and AFNum (odd parity) channels
 is canonical, and the rank/dimension matching forces the gauge group without free parameters.
 -/
@@ -70,48 +70,6 @@ theorem channels_independent :
 
 end ChannelNonDegeneracy
 
-/-! ## Kernel dimension structure and hierarchy -/
-
-section KernelDimension
-
-theorem kernel_hierarchy :
-    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) :=
-  ⟨fun x _hx => D2_const 1 x,
-   fun x _hx => D5_const 1 x,
-   fun x _hx => D5_linear x,
-   fun x _hx => D6_const 1 x,
-   fun x _hx => D6_linear x,
-   fun x _hx => D6_quadratic x⟩
-
-theorem kernel_dimension_strict_increase :
-    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
-    (∃ x, x ≠ 0 ∧ D2 id x ≠ 0) ∧
-    (∀ x, x ≠ 0 → D5 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D5 id x = 0) ∧
-    (∀ x, x ≠ 0 → D5 (fun t => t^2) x ≠ 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun _ => 1) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 id x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^2) x = 0) ∧
-    (∀ x, x ≠ 0 → D6 (fun t => t^3) x ≠ 0) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact fun x _hx => D2_const 1 x
-  · use 1, one_ne_zero
-    exact D2_linear_ne_zero 1 one_ne_zero
-  · exact fun x _hx => D5_const 1 x
-  · exact fun x _hx => D5_linear x
-  · exact D5_not_annihilate_quadratic
-  · exact fun x _hx => D6_const 1 x
-  · exact fun x _hx => D6_linear x
-  · exact fun x _hx => D6_quadratic x
-  · exact D6_not_annihilate_cubic
-
-end KernelDimension
-
 /-! ## φ-Dilation eigenvalues and scaling structure -/
 
 section PhiDilation
@@ -119,22 +77,14 @@ section PhiDilation
 noncomputable def scalingMatrix (s : ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
   Matrix.diagonal (fun i => s ^ i.val)
 
-theorem kerD5_eigenvalues :
-    (↑φ : ℂ) ^ (0 : ℕ) = 1 ∧ (↑φ : ℂ) ^ (1 : ℕ) = ↑φ := by simp
-
-theorem kerD5_eigenvalues_distinct :
+/-- φ-eigenvalues {1,φ} are distinct (spinDegeneracy = 2 space) -/
+theorem phi_eigenvalues_distinct_2 :
     (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (1 : ℕ) := by
   simp only [pow_zero, pow_one]
   exact_mod_cast (ne_of_gt φ_gt_one).symm
 
-theorem kerD6_eigenvalues :
-    (↑φ : ℂ) ^ (0 : ℕ) = 1 ∧
-    (↑φ : ℂ) ^ (1 : ℕ) = ↑φ ∧
-    (↑φ : ℂ) ^ (2 : ℕ) = ↑φ + 1 := by
-  refine ⟨by simp, by simp, ?_⟩
-  exact golden_ratio_property_complex
-
-theorem kerD6_eigenvalues_distinct :
+/-- φ-eigenvalues {1,φ,φ²} are distinct (syWeight = 3 space) -/
+theorem phi_eigenvalues_distinct_3 :
     (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (1 : ℕ) ∧
     (↑φ : ℂ) ^ (1 : ℕ) ≠ (↑φ : ℂ) ^ (2 : ℕ) ∧
     (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (2 : ℕ) := by
@@ -160,7 +110,7 @@ open Matrix
 
 private theorem phi_pow_fin3_ne (i j : Fin 3) (hij : i ≠ j) :
     (↑φ : ℂ) ^ i.val ≠ (↑φ : ℂ) ^ j.val := by
-  have ⟨h01, h12, h02⟩ := kerD6_eigenvalues_distinct
+  have ⟨h01, h12, h02⟩ := phi_eigenvalues_distinct_3
   fin_cases i <;> fin_cases j <;> first | exact absurd rfl hij | simp only at *
   · exact h01
   · exact h02
@@ -200,7 +150,7 @@ theorem phiDilation_commutant_diagonal_2 (M : Matrix (Fin 2) (Fin 2) ℂ)
   have hdiff : M i j * ((↑φ : ℂ) ^ j.val - (↑φ : ℂ) ^ i.val) = 0 := by
     linear_combination hentry
   have hne : (↑φ : ℂ) ^ j.val ≠ (↑φ : ℂ) ^ i.val := by
-    have hd := kerD5_eigenvalues_distinct
+    have hd := phi_eigenvalues_distinct_2
     fin_cases i <;> fin_cases j <;> first | exact absurd rfl hij | simp only at *
     · exact hd.symm
     · exact hd
@@ -208,11 +158,11 @@ theorem phiDilation_commutant_diagonal_2 (M : Matrix (Fin 2) (Fin 2) ℂ)
 
 end PhiDilationCommutant
 
-/-! ## Symmetric channel (SymNum) rank = 3 → SU(3) on ker(D6)
+/-! ## Symmetric channel (SymNum) rank = 3 → SU(3) on syWeight = 3 space
 
 Φ_S = 2·N5 + N3 + μ·N2 has 3 linearly independent sub-operators.
 This is proven by Φ_S_rank_three: the 3×3 determinant at s=1,5,7 is -6952(φ-ψ) ≠ 0.
-Symmetric rank 3 on dim 3 space = irreducible action → SU(3). -/
+Symmetric rank 3 on Fζ SY channel space (dim = syWeight = 3) → SU(3). -/
 
 section SymmetricChannelSU3
 
@@ -226,10 +176,10 @@ theorem symmetric_channel_SU3 :
 
 end SymmetricChannelSU3
 
-/-! ## Antisymmetric channel (AFNum) → SU(2) on ker(D5)
+/-! ## Antisymmetric channel (AFNum) → SU(2) on spinDegeneracy = 2 space
 
 AF_coeff = 2i√3 is purely imaginary, providing an off-diagonal generator.
-Combined with the φ-dilation diagonal generator on ker(D5) = span{1, x},
+Combined with the φ-dilation diagonal generator on Fζ AF channel space (dim = spinDegeneracy = 2),
 this generates the su(2) Lie algebra. -/
 
 section AntisymmetricChannelSU2
@@ -240,25 +190,11 @@ theorem antisymmetric_channel_SU2 :
     (↑φ : ℂ) ^ (0 : ℕ) ≠ (↑φ : ℂ) ^ (1 : ℕ) ∧
     (2 ^ 2 - 1 = 3) := by
   exact ⟨AF_channel_nondegenerate, AF_coeff_re_zero,
-         kerD5_eigenvalues_distinct, by norm_num⟩
+         phi_eigenvalues_distinct_2, by norm_num⟩
 
 end AntisymmetricChannelSU2
 
-/-! ## Trivial channel → U(1) on ker(D2) -/
-
-section TrivialChannelU1
-
-theorem trivial_channel_U1 :
-    (∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
-    (∃ x, x ≠ 0 ∧ D2 id x ≠ 0) ∧
-    (1 ^ 2 - 1 + 1 = 1) := by
-  exact ⟨fun x hx => D2_const 1 x,
-         ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩,
-         by norm_num⟩
-
-end TrivialChannelU1
-
-/-! ## Main theorem: Standard Model gauge group uniquely determined by Dζ -/
+/-! ## Main theorem: Standard Model gauge group uniquely determined by Fζ -/
 
 section StandardGaugeGroup
 
@@ -266,7 +202,7 @@ theorem weight_ratio_3_1 (a b : ℝ) :
     Complex.normSq (6 * (a : ℂ) + AF_coeff * b) = 12 * (3 * a ^ 2 + b ^ 2) :=
   Dζ_normSq_decomposition a b
 
-/-- Standard Model gauge group is uniquely determined by Dζ channel structure. -/
+/-- Standard Model gauge group is uniquely determined by Fζ channel structure. -/
 theorem standard_gauge_group_unique :
     (σ_N5 1 * (σ_N3 5 * σ_N2 7 - σ_N2 5 * σ_N3 7) -
      σ_N3 1 * (σ_N5 5 * σ_N2 7 - σ_N2 5 * σ_N5 7) +
@@ -274,17 +210,12 @@ theorem standard_gauge_group_unique :
     (3 ^ 2 - 1 = 8) ∧
     (AF_coeff ≠ 0 ∧ AF_coeff.re = 0) ∧
     (2 ^ 2 - 1 = 3) ∧
-    ((∀ x, x ≠ 0 → D2 (fun _ => 1) x = 0) ∧
-     (∃ x, x ≠ 0 ∧ D2 id x ≠ 0)) ∧
     (∀ n : ℕ, ζ₆ ≠ (↑φ : ℂ) ^ n) ∧
     (∀ a b : ℝ, Complex.normSq (6 * (a : ℂ) + AF_coeff * b) =
       12 * (3 * a ^ 2 + b ^ 2)) := by
   exact ⟨Φ_S_rank_three, by norm_num,
          ⟨AF_channel_nondegenerate, AF_coeff_re_zero⟩, by norm_num,
-         ⟨fun x hx => D2_const 1 x,
-          ⟨1, one_ne_zero, D2_linear_ne_zero 1 one_ne_zero⟩⟩,
-         zeta6_ne_phi_pow,
-         Dζ_normSq_decomposition⟩
+         zeta6_ne_phi_pow, Dζ_normSq_decomposition⟩
 
 end StandardGaugeGroup
 

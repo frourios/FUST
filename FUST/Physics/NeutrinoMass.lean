@@ -78,10 +78,9 @@ theorem nu3ElectronRatio_pos : nu3ElectronRatio > 0 := by
 
 /-! ## Part 3: Dimensioned Neutrino Masses
 
-Neutrinos have unique FDim in the D₆² sector:
+Neutrinos have unique FDim:
 m_ν₃ = Δ² × φ^(-32), m_ν₂ = m_ν₃ × √(1/30). -/
 
--- Neutrino FDim: D₆² sector
 def dimNu3 : FDim := dimLagrangian * dimTimeD2 ^ (-(32 : ℤ))
 def dimNu2 : FDim := dimNu3 * deriveFDim 2
 

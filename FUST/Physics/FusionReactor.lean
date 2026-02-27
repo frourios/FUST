@@ -5,7 +5,7 @@ Four fundamental obstacles in fusion reactor engineering, formalized:
 1. Plasma turbulence = exit from ker(Fζ), detected by Fζ operator
 2. Tritium permeation = FDim gap between D⁺ and T⁺ structural barrier
 3. Alpha heating = He4Ion ∉ ker(Fζ) → positive entropy (second law)
-4. Superconducting magnet = flux quantization from ker(D5) uniqueness
+4. Superconducting magnet = flux quantization
 -/
 
 import FUST.Physics.Superconductivity
@@ -105,10 +105,7 @@ theorem effDeg_SiC :
     (dimAtom SiC_Z (neutrons_Si28 + neutrons_C12) SiC_Z).effectiveDegree =
     661 := by decide
 
-/-! ## Section 4: Alpha Particle Heating and Entropy Transfer
-
-He-4 ion (α particle) is outside ker(D6).
--/
+/-! ## Section 4: Alpha Particle Heating and Entropy Transfer -/
 
 theorem alpha_effDeg : (dimAtom 2 2 0).effectiveDegree = 63 := by decide
 

@@ -54,11 +54,6 @@ theorem degree_phosphorus31Ion : (dimAtom 15 16 0).effectiveDegree = 481 := by d
 theorem degree_phosphorus31Atom : (dimAtom 15 16 15).effectiveDegree = 511 := by decide
 theorem degree_phosphideAnion : (dimAtom 15 16 18).effectiveDegree = 517 := by decide
 
-theorem phosphorus_degree_exceeds_kerD6 :
-    (dimAtom 15 16 0).effectiveDegree > 2 ∧
-    (dimAtom 15 16 15).effectiveDegree > 2 ∧
-    (dimAtom 15 16 18).effectiveDegree > 2 := by decide
-
 /-! ## Section 4: Nitrogen-Phosphorus Homology
 
 N (Z=7) and P (Z=15) are Group VA homologues.
@@ -126,4 +121,3 @@ theorem phosphorus_classification :
   exact ⟨rfl, ⟨4, by omega, rfl⟩, rfl, rfl, by decide⟩
 
 end FUST.Chemistry.Phosphorus
-

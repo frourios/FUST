@@ -5,11 +5,11 @@
 \section{Overview}
 \label{sec:thermo_overview}
 
-FUST derives all thermodynamic laws from the $D_6$ operator structure:
+FUST derives all thermodynamic laws from the $F_\zeta$ operator structure:
 \begin{itemize}
-\item \textbf{First Law}: Energy conservation from $D_6$ linearity
+\item \textbf{First Law}: Energy conservation from $F_\zeta$ linearity
 \item \textbf{Second Law}: Entropy increase from $\varphi > 1$ amplification
-\item \textbf{Third Law}: Absolute zero unreachable for massive states ($f \notin \ker(D_6)$)
+\item \textbf{Third Law}: Absolute zero unreachable for massive states ($f \notin \ker(F_\zeta)$)
 \item \textbf{Stefan-Boltzmann}: $L \propto T^4$ from spacetime dimension 4
 \end{itemize}
 
@@ -21,15 +21,15 @@ The third law states that absolute zero (zero entropy everywhere) is unreachable
 In FUST:
 \begin{itemize}
 \item Absolute zero $\Leftrightarrow \forall t,\, \mathrm{entropyAt}(f, t) = 0$
-\item $\mathrm{entropy\_zero\_iff\_ker}$: $(\forall t,\, \mathrm{entropyAt}(f, t) = 0) \Leftrightarrow f \in \ker(D_6)$
-\item Therefore: $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
+\item $\mathrm{entropy\_zero\_iff\_ker}$: $(\forall t,\, \mathrm{entropyAt}(f, t) = 0) \Leftrightarrow f \in \ker(F_\zeta)$
+\item Therefore: $f \notin \ker(F_\zeta) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
 \end{itemize}
 
 \begin{theorem}[Third Law: Massive States Cannot Reach Absolute Zero]
 \label{thm:third_law}
 \lean{FUST.Thermodynamics.third_law_massive_positive_entropy}
 \leanok
-For $f \notin \ker(D_6)$:
+For $f \notin \ker(F_\zeta)$:
 \[
 \exists t,\, \mathrm{entropyAt}(f, t) > 0
 \]
@@ -39,14 +39,14 @@ For $f \notin \ker(D_6)$:
 \label{thm:absolute_zero_lightlike}
 \lean{FUST.Thermodynamics.absolute_zero_implies_lightlike}
 \leanok
-If $\forall t,\, \mathrm{entropyAt}(f, t) = 0$, then $f \in \ker(D_6)$.
+If $\forall t,\, \mathrm{entropyAt}(f, t) = 0$, then $f \in \ker(F_\zeta)$.
 \end{theorem}
 
 \begin{theorem}[Lightlike States Can Reach Zero]
 \label{thm:lightlike_zero}
 \lean{FUST.Thermodynamics.lightlike_can_reach_zero}
 \leanok
-If $f \in \ker(D_6)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
+If $f \in \ker(F_\zeta)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
 \end{theorem}
 
 \section{Stefan-Boltzmann Law}
@@ -54,7 +54,7 @@ If $f \in \ker(D_6)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
 
 The Stefan-Boltzmann law $L \propto T^4$ follows from:
 \begin{enumerate}
-\item $\mathrm{spacetimeDim} = 4$ (from $\ker(D_6)$ dimension + time)
+\item $\mathrm{spacetimeDim} = 4$ (from $\ker(F_\zeta)$ dimension + time)
 \item Energy density scales as $\varphi^{-4k}$
 \item Temperature scales as $\varphi^k$
 \end{enumerate}
@@ -91,14 +91,14 @@ Therefore: $L \propto \rho \propto \varphi^{-4k} = (\varphi^{-k})^4 \propto T^{-
 \section{First Law: Energy Conservation}
 \label{sec:thermo_first_law}
 
-Energy conservation follows from $D_6$ linearity and $L^2$ norm structure.
+Energy conservation follows from $F_\zeta$ linearity and $L^2$ norm structure.
 
 \begin{theorem}[First Law: Linearity]
 \label{thm:first_law_linearity}
 \lean{FUST.Thermodynamics.first_law_linearity}
 \leanok
 \[
-D_6[a \cdot f](x) = a \cdot D_6[f](x)
+F_\zeta[a \cdot f](x) = a \cdot F_\zeta[f](x)
 \]
 \end{theorem}
 
@@ -161,12 +161,12 @@ For $x > 0$:
 \label{thm:fust_thermodynamics}
 \lean{FUST.Thermodynamics.fust_thermodynamics}
 \leanok
-All thermodynamic laws are derived from $D_6$ structure:
+All thermodynamic laws are derived from $F_\zeta$ structure:
 \begin{enumerate}
-\item \textbf{First Law}: $D_6[a \cdot f] = a \cdot D_6[f]$ and $\mathcal{A}[f] \geq 0$
+\item \textbf{First Law}: $F_\zeta[a \cdot f] = a \cdot F_\zeta[f]$ and $\mathcal{A}[f] \geq 0$
 \item \textbf{Second Law}: $\varphi > 1$ and $\varphi^n > 1$ for $n \geq 1$
-\item \textbf{Third Law}: $f \notin \ker(D_6) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
-\item \textbf{Light-Sound Separation}: $\ker(D_6)$ vs $\ker(D_6)^\perp$
+\item \textbf{Third Law}: $f \notin \ker(F_\zeta) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
+\item \textbf{Light-Sound Separation}: $\ker(F_\zeta)$ vs $\ker(F_\zeta)^\perp$
 \item \textbf{Stefan-Boltzmann}: $\mathrm{spacetimeDim} = 4$
 \end{enumerate}
 \end{theorem}

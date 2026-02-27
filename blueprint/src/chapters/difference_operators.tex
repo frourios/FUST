@@ -2,60 +2,50 @@
 \chapter{Difference Operators and the Unified \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{chap:difference_operators}
 
-\section{Component Operators \texorpdfstring{$D_n$}{Dn} (ZF + DC)}
+\section{Component Operators \texorpdfstring{$N_n$}{Nn} (ZF + DC)}
 \label{sec:diff_op_def}
 
 All operators act on functions $f : \mathbb{C} \to \mathbb{C}$ with $z \neq 0$. These are the \textbf{hyperbolic components} of $D_\zeta$, acting on the $\varphi$-dilation lattice $\{\varphi^k z\}$.
 
-\begin{definition}[$D_2$: 2-Point Difference]
+\begin{definition}[$N_2$: 2-Point Difference]
 \label{def:D2}
-\lean{FUST.D2}
+\lean{FUST.N2}
 \leanok
 \[
-D_2 f(z) = \frac{f(\varphi z)-f(\psi z)}{(\varphi-\psi)z}
+N_2 f(z) = \frac{f(\varphi z)-f(\psi z)}{(\varphi-\psi)z}
 \]
 \end{definition}
 
-\begin{definition}[$D_3$: 3-Point Difference]
+\begin{definition}[$N_3$: 3-Point Difference]
 \label{def:D3}
 \[
-D_3 f(z) = \frac{f(\varphi^2 z) - f(\varphi z) + f(\psi z)}{(\varphi-\psi)^2 z}
+N_3 f(z) = \frac{f(\varphi^2 z) - f(\varphi z) + f(\psi z)}{(\varphi-\psi)^2 z}
 \]
 \end{definition}
 
-\begin{definition}[$D_4$: 4-Point Difference]
+\begin{definition}[$N_4$: 4-Point Difference]
 \label{def:D4}
 \[
-D_4 f(z) = \frac{f(\varphi^2 z) - \varphi^2 f(\varphi z) + \psi^2 f(\psi z) - f(\psi^2 z)}{(\varphi-\psi)^3 z}
+N_4 f(z) = \frac{f(\varphi^2 z) - \varphi^2 f(\varphi z) + \psi^2 f(\psi z) - f(\psi^2 z)}{(\varphi-\psi)^3 z}
 \]
 \end{definition}
 
-\begin{definition}[$D_5$: 5-Point Difference]
+\begin{definition}[$N_5$: 5-Point Difference]
 \label{def:D5}
-\lean{FUST.D5}
+\lean{FUST.N5}
 \leanok
 \[
-D_5 f(z) = \frac{f(\varphi^2 z) + f(\varphi z) - 4f(z) + f(\psi z) + f(\psi^2 z)}{(\varphi-\psi)^4 z}
+N_5 f(z) = \frac{f(\varphi^2 z) + f(\varphi z) - 4f(z) + f(\psi z) + f(\psi^2 z)}{(\varphi-\psi)^4 z}
 \]
 \end{definition}
 
-\begin{definition}[$D_6$: 6-Point Difference]
+\begin{definition}[$N_6$: 6-Point Difference]
 \label{def:D6}
-\lean{FUST.D6}
+\lean{FUST.N6}
 \leanok
 \[
-D_6 f(z) = \frac{f(\varphi^3 z) - 3f(\varphi^2 z) + f(\varphi z) - f(\psi z) + 3f(\psi^2 z) - f(\psi^3 z)}{(\varphi-\psi)^5 z}
+N_6 f(z) = \frac{f(\varphi^3 z) - 3f(\varphi^2 z) + f(\varphi z) - f(\psi z) + 3f(\psi^2 z) - f(\psi^3 z)}{(\varphi-\psi)^5 z}
 \]
-\end{definition}
-
-\begin{definition}[$D_{5\frac{1}{2}}$: Half-Order Operator]
-\label{def:D5half}
-\lean{FUST.D5half}
-\leanok
-\[
-D_{5\frac{1}{2}} f(z) := D_5 f(z) + \mu \cdot \Delta_2 f(z), \quad \mu = \frac{2}{\varphi + 2}
-\]
-where $\Delta_2 f(z) := f(\varphi z) - f(\psi z)$ is the antisymmetric difference.
 \end{definition}
 
 \section{Elliptic Component: \texorpdfstring{$\zeta_6$}{ζ6} Operators}
@@ -77,7 +67,7 @@ The $\zeta_6$-rotation operators act on the compact elliptic lattice $\{\zeta_6^
 \lean{FUST.Zeta6.zeta6_N6_const, FUST.Zeta6.zeta6_N6_linear, FUST.Zeta6.zeta6_N6_quadratic}
 \leanok
 $\ker(\zeta_6\text{-}N_6) \supseteq \mathrm{span}\{1, z, z^2\}$ and $\zeta_6\text{-}N_6[z^3] = 2z^3 \neq 0$.
-The elliptic kernel has the same dimension 3 as the hyperbolic $\ker(D_6)$.
+The elliptic kernel has the same dimension 3 as the hyperbolic $\ker(N_6)$.
 \end{theorem}
 
 \section{Channel Decomposition: AFNum and SymNum}
@@ -184,7 +174,7 @@ The weight ratio 3:1 between symmetric and antisymmetric channels encodes $I_4 =
 \section{\texorpdfstring{$D_\zeta$}{Dζ} Encodes All Six Component Operators}
 \label{sec:dzeta_encodes}
 
-The component operators $D_2, \ldots, D_6$ are recovered as specific projections of $D_\zeta$:
+The component operators $N_2, \ldots, N_6$ are recovered as specific projections of $D_\zeta$:
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
@@ -203,11 +193,11 @@ $\mathrm{AFNum} / (\zeta_6 - \bar{\zeta}_6)^5$ & $D_{\zeta,2}$ & AF (odd) & $r =
 \section{Uniqueness of Coefficients}
 \label{sec:coeff_uniqueness}
 
-\begin{theorem}[$D_5$ and $D_6$ Coefficient Uniqueness]
+\begin{theorem}[$N_5$ and $N_6$ Coefficient Uniqueness]
 \label{thm:coeff_uniqueness}
-\lean{FUST.D5_coefficients_unique, FUST.D6_coefficients_unique}
+\lean{FUST.N5_coefficients_unique, FUST.N6_coefficients_unique}
 \leanok
-The only coefficients satisfying the kernel conditions are $a=-1, b=-4$ ($D_5$) and $A=3, B=1$ ($D_6$).
+The only coefficients satisfying the kernel conditions are $a=-1, b=-4$ ($N_5$) and $A=3, B=1$ ($N_6$).
 \end{theorem}
 
-Since all five operators have distinct dimensions, $D_i f(z) + D_j f(z)$ ($i \neq j$) is a type error.
+Since all five operators have distinct dimensions, $N_i f(z) + N_j f(z)$ ($i \neq j$) is a type error.

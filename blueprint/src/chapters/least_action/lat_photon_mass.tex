@@ -17,14 +17,14 @@ $f$ is non-constant $\iff \neg\mathrm{IsConstant}\, f$
 \label{thm:mat_constant_kernel}
 \lean{FUST.constant_in_kernel}
 \leanok
-Constant functions belong to $\ker(D_6)$.
+Constant functions belong to $\ker(F_\zeta)$.
 \end{theorem}
 
 \begin{theorem}[Kernel Decomposition]
 \label{thm:mat_kernel_decomp}
 \lean{FUST.kernel_decomposition}
 \leanok
-$\ker(D_6) = \text{Constant functions} \lor \text{Non-constant functions}$
+$\ker(F_\zeta) = \text{Constant functions} \lor \text{Non-constant functions}$
 \end{theorem}
 
 \section{Derivation of Photon States}
@@ -35,11 +35,11 @@ $\ker(D_6) = \text{Constant functions} \lor \text{Non-constant functions}$
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-Physical property & Correspondence in $D_6$ structure \\
+Physical property & Correspondence in $F_\zeta$ structure \\
 \hline
-Mass $m = 0$ & No components of degree 3 or higher (belongs to $\ker(D_6)$) \\
+Mass $m = 0$ & No components of degree 3 or higher (belongs to $\ker(F_\zeta)$) \\
 Energy $E \neq 0$ & Non-constant ($a_1 \neq 0$ or $a_2 \neq 0$) \\
-Proper time $d\tau = 0$ & $D_6 f = 0$ \\
+Proper time $d\tau = 0$ & $N_6 f = 0$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -56,7 +56,7 @@ $\mathrm{IsPhotonState}\, f \iff \mathrm{IsInKerF\zeta}\, f \land \mathrm{HasEne
 \lean{FUST.photon_state_iff_points}
 \leanok
 \[
-\mathrm{IsPhotonState}\, f \iff f \in \ker(D_6) \land (f(1) \neq f(0) \lor f(-1) \neq f(0))
+\mathrm{IsPhotonState}\, f \iff f \in \ker(F_\zeta) \land (f(1) \neq f(0) \lor f(-1) \neq f(0))
 \]
 \end{theorem}
 
@@ -70,7 +70,7 @@ Photon states have non-trivial linear or quadratic components.
 \section{Derivation of Mass States}
 \label{sec:mat_mass}
 
-\textbf{The definition of mass states is not arbitrary, but derived as deviation from $\ker(D_6)$:}
+\textbf{The definition of mass states is not arbitrary, but derived as deviation from $\ker(F_\zeta)$:}
 
 \begin{definition}[HasHigherDegree]
 $\mathrm{HasHigherDegree}\, f \iff f$ cannot be written as a polynomial of degree 2 or less
@@ -107,11 +107,11 @@ $\mathrm{IsMassiveState}\, f \iff \mathrm{HasHigherDegree}\, f$
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-State & $D_6$ structure & Physical meaning \\
+State & $F_\zeta$ structure & Physical meaning \\
 \hline
-Vacuum & Constant function $\in \ker(D_6)$ & No energy, no mass \\
-Photon & Non-constant $\in \ker(D_6)$ & Has energy, no mass, no proper time \\
-Matter & $f \notin \ker(D_6)$ & Has energy, has mass, has proper time \\
+Vacuum & Constant function $\in \ker(F_\zeta)$ & No energy, no mass \\
+Photon & Non-constant $\in \ker(F_\zeta)$ & Has energy, no mass, no proper time \\
+Matter & $f \notin \ker(F_\zeta)$ & Has energy, has mass, has proper time \\
 \hline
 \end{tabular}
 \end{center}
@@ -126,9 +126,9 @@ Any analytic state function $f$ decomposes into homogeneous components:
 f(t) = \sum_{n=0}^{\infty} a_n t^n
 \]
 
-By linearity of $D_6$ and the scaling law:
+By linearity of $N_6$ and the scaling law:
 \[
-D_6[f](x) = \sum_{n \geq 3} a_n D_6[t^n](x)
+N_6[f](x) = \sum_{n \geq 3} a_n N_6[t^n](x)
 \]
 
 \subsection{Gauge Invariance of Time Delay Ratio}
@@ -139,7 +139,7 @@ D_6[f](x) = \sum_{n \geq 3} a_n D_6[t^n](x)
 \leanok
 For $f_A = a \cdot f$, $f_B = b \cdot f$ (scalar multiples of the same function),
 \[
-\frac{|D_6 f_A(x)|}{|D_6 f_B(x)|} = \frac{|a|}{|b|}
+\frac{|N_6 f_A(x)|}{|N_6 f_B(x)|} = \frac{|a|}{|b|}
 \]
 This is independent of $x$ $\Rightarrow$ \textbf{gauge-invariant}
 \end{theorem}
@@ -148,7 +148,7 @@ This is independent of $x$ $\Rightarrow$ \textbf{gauge-invariant}
 \label{thm:mat_diff_degree}
 For $f_A = t^n$, $f_B = t^m$ ($n \neq m$),
 \[
-\frac{|D_6 f_A(x)|}{|D_6 f_B(x)|} \propto x^{n-m}
+\frac{|N_6 f_A(x)|}{|N_6 f_B(x)|} \propto x^{n-m}
 \]
 This depends on $x$ $\Rightarrow$ \textbf{gauge-dependent}
 \end{theorem}
