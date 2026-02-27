@@ -1,26 +1,45 @@
 % FUST Least Action Theorem - Conclusion
-\chapter{Gauge Invariance and Conclusion}
+\chapter{Conclusion: Unified Derivation from \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{chap:mat_conclusion}
 
-\section{Gauge-Dependent and Gauge-Invariant Quantities}
-\label{sec:mat_gauge_quantities}
+\section{Complete Derivation Chain}
+\label{sec:mat_derivation_chain}
 
-\subsection{Gauge-Invariant (Established as Theorems)}
+The preceding chapters establish a single derivation chain with no external assumptions:
+
+\[
+\boxed{D_\zeta} \;\xrightarrow{\text{Ch.\ref{chap:mat_poincare}}}\; I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1 \;\to\; \eta \;\to\; \mathfrak{so}(3,1) \;\to\; \mathfrak{iso}(3,1)
+\]
+\[
+\xrightarrow{\text{Ch.\ref{chap:mat_time_space}}}\; \text{Time, Space, Arrow of Time} \;\xrightarrow{\text{Ch.\ref{chap:mat_mass_energy}}}\; \text{Mass, Energy, Lagrangian}
+\]
+\[
+\xrightarrow{\text{Ch.\ref{chap:mat_action_functional}}}\; \text{Action Principle} \;\xrightarrow{\text{Ch.\ref{chap:mat_physical_laws}}}\; \text{Thermodynamics, Gravity, Gauge Groups}
+\]
+
+Every link in this chain is a Lean4 theorem, not a physical assumption.
+
+\section{Gauge-Invariant Quantities}
+\label{sec:mat_gauge_invariant}
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-Quantity & Lean4 theorem name & Description \\
+Quantity & Lean4 theorem & Description \\
 \hline
-$f \in \ker(F_\zeta)$ & Fζ\_kernel\_const, Fζ\_kernel\_quad, Fζ\_kernel\_cube & Non-existence of time (light-like state) \\
-$f \notin \ker(F_\zeta)$ & Fζ\_nonzero\_implies\_time & Existence of time (massive state) \\
-Time delay ratio within same degree & same\_degree\_ratio\_gauge\_invariant & Causally comparable quantity \\
-FζLagrangian = 0 & Fζ\_lagrangian\_zero\_iff & Membership in $\ker(F_\zeta)$ \\
+$f \in \ker(F_\zeta)$ & kernel classification & Massless (light-like) state \\
+$f \notin \ker(F_\zeta)$ & Fζ\_nonzero\_implies\_time & Massive state with proper time \\
+$L[f] = 0$ & Fζ\_lagrangian\_zero\_iff & Membership in $\ker(F_\zeta)$ \\
+$m^2 = 14$ & casimirMassSq\_one & Poincar\'{e} Casimir invariant \\
+$\Delta = 12/25$ & massScale\_eq & $F_\zeta$ mass scale \\
+$\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ & standard\_gauge\_group\_unique & Gauge group from $\mathbb{Z}/6\mathbb{Z}$ channels \\
+Time delay ratio (same degree) & same\_degree\_ratio\_gauge\_invariant & Causally comparable quantity \\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection{Gauge-Dependent (Not Fixed as Theorems)}
+\section{Gauge-Dependent Quantities}
+\label{sec:mat_gauge_dependent}
 
 \begin{center}
 \begin{tabular}{|c|c|}
@@ -29,113 +48,65 @@ Quantity & Dependent parameter \\
 \hline
 Value of $\mathrm{Diff}_6 f(x)$ & Gauge $x$ \\
 Time delay ratio between different degrees & Gauge $x$ \\
-Concrete value of perpProjection & Choice of interpolation points (but zero set is invariant) \\
+Concrete value of perpProjection & Choice of interpolation points \\
 \hline
 \end{tabular}
 \end{center}
-
-\section{Established Results}
-\label{sec:mat_results}
-
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-Item & Content & Status \\
-\hline
-Action functional & $\mathcal{A}[f] = \int_0^\infty \|\mathrm{Diff}_6 f\|^2 \frac{dx}{x}$ & Derived \\
-$\varphi$-invariant measure & $dx/x$ (Haar measure) & Uniqueness proven \\
-Variational structure & $F_\zeta$ linearity, perturbation, critical point & Lean4 proven \\
-Euler-Lagrange & $\ker(\mathrm{Diff}_6^\dagger \mathrm{Diff}_6) = \ker(F_\zeta)$ & Derived \\
-Time existence equivalence & $\mathcal{A}[f] > 0 \iff \mathrm{TimeExists}\, f$ & Consistency confirmed \\
-Numerical verification & $A \approx 0$ in $\ker(F_\zeta)$, $A > 0$ outside & Verified \\
-\hline
-\end{tabular}
-\end{center}
-
-\section{Established Theorems (All Lean4 Proven)}
-\label{sec:mat_theorems}
-
-\begin{enumerate}
-\item \textbf{Time--Mass--Lagrangian Unification}: $f \notin \ker(F_\zeta) \iff$ time exists $\iff$ $L[f] > 0$ $\iff$ $m^2 > 0$
-\item \textbf{Higher Order Reduction Theorem} (Diff7\_kernel\_equals\_Diff6\_kernel): $\ker(\mathrm{Diff}_7) = \ker(F_\zeta)$
-\item \textbf{Homogeneous Decomposition Theorem} (same\_degree\_ratio\_gauge\_invariant): Time delay ratio is gauge-invariant only within same degree
-\item \textbf{Causal Boundary Theorem} (causal\_boundary\_theorem): $\ker(F_\zeta) =$ Light cone
-\item \textbf{Gauge Transformation Rule} (Diff6\_homogeneous): $\mathrm{Diff}_6[f(c\cdot)](x) = c \cdot \mathrm{Diff}_6[f](cx)$. $\varphi$-scaling is time evolution via Poincar\'{e} $I_4$ temporal channel (Gravity.lean: $\Phi$\_A\_coeff\_one, $\eta$\_temporal, temporal\_nonzero)
-\item \textbf{Interpolation Uniqueness Theorem} (kernel\_interpolation\_unique): Projection to $\ker(F_\zeta)$ is unique at 3 points
-\item \textbf{Lagrangian Zero Equivalence} (Fζ\_lagrangian\_zero\_iff): FζLagrangian = 0 is equivalent to $\ker(F_\zeta)$
-\item \textbf{Mass Gap Theorem} (yangMills\_massGap): $F_\zeta$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$; Casimir mass gap $m^2 = 14$ from $D_\zeta$ 4-momentum; SU(2) mass gap via $\mathrm{Diff}_5(x^2) \neq 0$; algebraic confinement from $\ker(F_\zeta)$ not being a subalgebra
-\item \textbf{Variational Structure} (lagrangian\_perturbation, critical\_point\_of\_witness): $F_\zeta$ linearity $\Rightarrow$ first variation $\Rightarrow$ $\delta L = 0$ iff $f \in \ker(F_\zeta)$
-\end{enumerate}
 
 \section{Derived Concepts (Theorems, Not Definitions)}
 \label{sec:mat_derived}
 
 \begin{center}
-\begin{tabular}{|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-Concept & Derivation \\
+Concept & Derivation & Source \\
 \hline
-Photon state & $\ker(F_\zeta) \cap$ Non-constant functions (has energy, no mass) \\
-Mass state & $\ker(F_\zeta)^\perp$ (has components of degree 3 or higher) \\
-Existence of time & Deviation from $\ker(F_\zeta)$ \\
-Mass gap & Casimir $m^2 = -P^\mu P_\mu = 14$ from $D_\zeta$ 4-momentum at $s=1$ \\
-\hline
-\end{tabular}
-\end{center}
-
-\section{Physical Correspondence}
-\label{sec:mat_correspondence}
-
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline
-Relativistic concept & FUST correspondence \\
-\hline
-Light cone & $\ker(F_\zeta)$ \\
-Photon & IsPhotonState ($\ker(F_\zeta) \cap$ non-constant) \\
-Massive particle & IsMassiveState ($\ker(F_\zeta)^\perp$) \\
-timelike/spacelike & Same degree/different degrees \\
-Speed of light $c$ & Degree mixing prohibition condition \\
-Mass gap & Minimum energy having proper time \\
+Poincar\'{e} group $\mathrm{ISO}(3,1)$ & $D_\zeta$ 3+1 decomposition & Ch.\ref{chap:mat_poincare} \\
+Time & $\Phi_A$ temporal channel, $\varphi$-scaling & Ch.\ref{chap:mat_time_space} \\
+Space & $\Phi_S$ spatial channels, $\ker(F_\zeta)$ & Ch.\ref{chap:mat_time_space} \\
+Arrow of time & $\varphi > 1 > |\psi|$ asymmetry & Ch.\ref{chap:mat_time_space} \\
+Mass & Casimir invariant $m^2 = -\eta_{\mu\nu} p^\mu p^\nu$ & Ch.\ref{chap:mat_mass_energy} \\
+Mass gap & $m^2(1) = 14 > 0$, $\Delta = 12/25 > 0$ & Ch.\ref{chap:mat_mass_energy} \\
+Action principle & $F_\zeta$ linearity + $\varphi$-invariant measure & Ch.\ref{chap:mat_action_functional} \\
+Thermodynamics & $S = |F_\zeta f|^2$, $\varphi$-equivariance & Ch.\ref{chap:mat_physical_laws} \\
+General relativity & Localized $\mathfrak{so}(3,1)$ on $I_4$ & Ch.\ref{chap:mat_physical_laws} \\
+Gauge group & $\mathbb{Z}/6\mathbb{Z}$ channel decomposition & Ch.\ref{chap:mat_physical_laws} \\
+Yang-Mills mass gap & $\ker(F_\zeta)$ not a subalgebra & Ch.\ref{chap:mat_physical_laws} \\
 \hline
 \end{tabular}
 \end{center}
 
-\section{Core Claims}
-\label{sec:mat_core_claims}
+\section{Core Principles}
+\label{sec:mat_core_principles}
 
 \begin{quote}
-\textbf{The FUST action functional is uniquely determined from $F_\zeta$ structure and contains no arbitrariness.}
+\textbf{The Poincar\'{e} group $\mathrm{ISO}(3,1)$ is not assumed but derived from $D_\zeta$ structure.}
 \end{quote}
 
 \begin{quote}
-\textbf{Positive action is equivalent to proper time existing.}
+\textbf{Time, space, and mass are theorems, not parameters.}
 \end{quote}
 
 \begin{quote}
-\textbf{Minimal action solutions belong to $\ker(F_\zeta)$, corresponding to the light cone (photon worldlines).}
+\textbf{Whether time flows is uniquely determined. How fast it flows is gauge-invariant only within the same degree.}
 \end{quote}
 
 \begin{quote}
-\textbf{The ``existence'' of time is a theorem. The ``value'' of time is not a theorem.}
+\textbf{The variational principle is a theorem forced by $F_\zeta$ linearity and $\varphi$-scale invariance.}
 \end{quote}
 
 \begin{quote}
-\textbf{The speed of light is not a numerical value, but a structural condition prohibiting comparison between different degrees.}
+\textbf{All physical laws---thermodynamics, gravity, gauge interactions---follow from localizing a single algebraic structure.}
 \end{quote}
-
-\begin{quote}
-\textbf{The concepts of photon and mass are not definitions, but theorems derived from $F_\zeta$ structure.}
-\end{quote}
-
-\begin{quote}
-\textbf{The mass gap is the minimum energy of states that experience proper time.}
-\end{quote}
-
-Whether time flows is uniquely determined from $F_\zeta$ structure. How fast it flows is gauge-invariantly defined only within the same degree, and is causally incomparable between different degrees.
 
 \section{Significance}
 \label{sec:mat_final_significance}
 
-This result provides the first non-circular answer to the fundamental question of why nature appears to follow variational principles. The variational principle is not a principle, but a theorem \textbf{forced to be derived} from $F_\zeta$ structure and $\varphi$-scale invariance.
+This unified derivation provides the first non-circular answer to three fundamental questions:
+
+\begin{enumerate}
+\item \textbf{Why $(3,1)$ signature?} Because $D_\zeta$ has exactly 3 spatial sub-operators ($\Phi_S$) and 1 temporal channel ($\Phi_A$), with weight ratio $3:1$.
+\item \textbf{Why the Standard Model gauge group?} Because $F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ channel structure uniquely determines $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$.
+\item \textbf{Why a mass gap?} Because the Poincar\'{e} Casimir invariant of $D_\zeta$ 4-momentum gives $m^2 = 14 > 0$ at the minimum active mode.
+\end{enumerate}
 

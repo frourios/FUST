@@ -1,0 +1,177 @@
+% FUST Least Action Theorem - Time and Space from Poincaré
+\chapter{Time and Space from Poincar\'{e} Structure}
+\label{chap:mat_time_space}
+
+Time and space are not external parameters but consequences of the $D_\zeta$ decomposition into $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (Chapter~\ref{chap:mat_poincare}).
+
+\section{Time = \texorpdfstring{$\varphi$}{φ}-Scaling (Poincar\'{e} Temporal Channel)}
+\label{sec:mat_time_definition}
+
+The temporal direction is identified via the $\Phi_A$ channel of $D_\zeta$:
+
+\begin{theorem}[$\Phi_A$-Coefficient at $s=1$]
+\label{thm:mat_phiA_one}
+\lean{FUST.Physics.Gravity.Φ_A_coeff_one}
+\leanok
+\[
+\Phi_A\text{-coeff}(1) = 2(\varphi - \psi) = 2\sqrt{5}
+\]
+\end{theorem}
+
+\begin{theorem}[Temporal Channel is Non-Degenerate]
+\label{thm:mat_temporal_nonzero}
+\lean{FUST.Physics.Gravity.temporal_nonzero}
+\leanok
+$\Phi_A\text{-coeff}(1) \neq 0$.
+\end{theorem}
+
+Combined with $\eta(\mathrm{Sum.inr}\,0, \mathrm{Sum.inr}\,0) = -1$ (Theorem~\ref{thm:mat_eta_temporal}), the $\mathrm{Sum.inr}\,0$ component is timelike. The $\Phi_A$ channel is built from $\varphi, \psi$ powers, so $\varphi$-scaling is intrinsically temporal.
+
+\begin{definition}[Time Evolution]
+\label{def:mat_time_evolution}
+\lean{FUST.TimeStructure.timeEvolution}
+\leanok
+\[
+\mathrm{timeEvolution}(f)(t) := f(\varphi \cdot t)
+\]
+\end{definition}
+
+\section{Space = \texorpdfstring{$\ker(F_\zeta)$}{ker(Fζ)} Structure}
+\label{sec:mat_space_definition}
+
+The 3 spatial directions correspond to the $\Phi_S$ sub-operators:
+
+\begin{itemize}
+\item $\sigma_{\mathrm{Diff}_5}(s)$, $\sigma_{\mathrm{Diff}_3}(s)$, $\sigma_{\mathrm{Diff}_2}(s)$ at $\mathrm{Sum.inl}\,0,1,2$
+\item $\eta(\mathrm{Sum.inl}\,i, \mathrm{Sum.inl}\,i) = +1$ (spacelike, Theorem~\ref{thm:mat_eta_spatial})
+\item $\ker(F_\zeta) = \mathrm{span}\{1, z, z^2\}$ has dimension 3, matching spatial dimension
+\end{itemize}
+
+\section{\texorpdfstring{$\varphi/\psi$}{φ/ψ} Duality}
+\label{sec:mat_phi_psi_duality}
+
+\begin{theorem}[$\varphi \cdot |\psi| = 1$]
+\label{thm:mat_phi_psi}
+\lean{FUST.TimeStructure.phi_mul_abs_psi}
+\leanok
+The golden ratio and its conjugate satisfy $\varphi \cdot |\psi| = 1$.
+\end{theorem}
+
+\begin{theorem}[$\varphi > 1$]
+\label{thm:mat_phi_gt_one}
+\lean{FUST.phi_gt_one}
+\leanok
+\end{theorem}
+
+\begin{theorem}[$|\psi| < 1$]
+\label{thm:mat_psi_lt_one}
+\lean{FUST.abs_psi_lt_one}
+\leanok
+\end{theorem}
+
+This asymmetry $\varphi > 1 > |\psi|$ with $\varphi \cdot |\psi| = 1$ is the algebraic origin of the arrow of time.
+
+\section{Arrow of Time}
+\label{sec:mat_arrow_of_time}
+
+\begin{itemize}
+\item \textbf{$\varphi$-direction} ($|\varphi| > 1$): future. $\mathrm{Diff}_6$ evaluates at $\varphi^3 z, \varphi^2 z, \varphi z$ which diverge as $z \to \infty$.
+\item \textbf{$\psi$-direction} ($|\psi| < 1$): past. $\mathrm{Diff}_6$ evaluates at $\psi z, \psi^2 z, \psi^3 z$ which converge to 0.
+\end{itemize}
+
+\begin{theorem}[$\ker(F_\zeta)$ Invariance]
+\label{thm:mat_ker_invariance}
+\lean{FUST.TimeStructure.ker_Fζ_invariant}
+\leanok
+If $f \in \ker(F_\zeta)$, then $\mathrm{timeEvolution}(f) \in \ker(F_\zeta)$.
+\end{theorem}
+
+Photons (in $\ker(F_\zeta)$) do not experience time: time evolution preserves their kernel membership.
+
+\begin{theorem}[Monomial Amplification]
+\label{thm:mat_amplification}
+\lean{FUST.TimeStructure.monomial_amplification}
+\leanok
+$\mathrm{timeEvolution}(t^n)(t) = \varphi^n \cdot t^n$.
+\end{theorem}
+
+\begin{theorem}[$\varphi^n > 1$ for $n \geq 1$]
+\label{thm:mat_phi_pow_gt}
+\lean{FUST.TimeStructure.phi_pow_gt_one}
+\leanok
+Time evolution amplifies all non-constant monomials.
+\end{theorem}
+
+\section{Planck Second from Temporal Eigenvalue}
+\label{sec:mat_planck_second}
+
+The minimum time interval is derived from the Poincar\'{e} temporal channel at the minimum active mode $s = 1$:
+
+\begin{definition}[Planck Second]
+\label{def:mat_planck_second}
+\lean{FUST.TimeStructure.planckSecond}
+\leanok
+\[
+t_P = \frac{1}{20\sqrt{15}}
+\]
+\end{definition}
+
+\begin{theorem}[$t_P > 0$]
+\label{thm:mat_planck_pos}
+\lean{FUST.TimeStructure.planckSecond_pos}
+\leanok
+\end{theorem}
+
+\begin{theorem}[$t_P^2 = 1/6000$]
+\label{thm:mat_planck_sq}
+\lean{FUST.TimeStructure.planckSecond_sq}
+\leanok
+\end{theorem}
+
+The derivation chain:
+\begin{enumerate}
+\item $\Phi_A\text{-coeff}(1) = 2\sqrt{5}$ (temporal channel at $s = 1$)
+\item Temporal $F_\zeta$ eigenvalue $= 5 \cdot \Phi_A\text{-coeff}(1) \cdot \mathrm{AF\_coeff} = 10\sqrt{5} \cdot 2i\sqrt{3} = 20i\sqrt{15}$
+\item $|\text{temporal eigenvalue}|^2 = (20\sqrt{15})^2 = 6000$
+\item $t_P = 1/\sqrt{6000} = 1/(20\sqrt{15})$
+\end{enumerate}
+
+\begin{theorem}[Temporal Eigenvalue Decomposition]
+\label{thm:mat_temporal_decomposition}
+\lean{FUST.TimeStructure.temporalEigenNormSq_mass_formula}
+\leanok
+\[
+6000 = 12 \cdot (10\sqrt{5})^2
+\]
+where $12 = |\mathrm{AF\_coeff}|^2$ and $10\sqrt{5} = 5 \cdot \Phi_A\text{-coeff}(1)$.
+\end{theorem}
+
+\section{Spacetime Dimension}
+\label{sec:mat_spacetime_dim}
+
+\begin{theorem}[Spacetime Dimension from Channel Weights]
+\label{thm:mat_spacetime_dimension}
+\lean{FUST.WeinbergAngle.totalWeight_eq}
+\leanok
+\[
+\mathrm{syWeight} + \mathrm{afWeight} = 3 + 1 = 4
+\]
+\end{theorem}
+
+\section{Summary}
+\label{sec:mat_time_space_summary}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Physical concept & $D_\zeta$ origin & Lean reference \\
+\hline
+Time direction & $\Phi_A$-channel, $\eta(\mathrm{inr}\,0,\mathrm{inr}\,0) = -1$ & \texttt{Φ\_A\_coeff\_one}, \texttt{η\_temporal} \\
+Spatial dimensions & $\Phi_S$ sub-operators, $\eta(\mathrm{inl}\,i,\mathrm{inl}\,i) = +1$ & \texttt{η\_spatial} \\
+Time evolution & $f \mapsto f(\varphi \cdot)$ & \texttt{timeEvolution} \\
+Arrow of time & $\varphi > 1 > |\psi|$, $\varphi \cdot |\psi| = 1$ & \texttt{phi\_gt\_one}, \texttt{phi\_mul\_abs\_psi} \\
+Planck second & $t_P = 1/(20\sqrt{15})$ & \texttt{planckSecond} \\
+Spacetime dim & $3 + 1 = 4$ & \texttt{totalWeight\_eq} \\
+\hline
+\end{tabular}
+\end{center}

@@ -1,0 +1,185 @@
+% FUST Least Action Theorem - Mass and Energy
+\chapter{Mass and Energy from Poincar\'{e} Casimir}
+\label{chap:mat_mass_energy}
+
+Mass is not an input parameter but the Poincar\'{e} Casimir invariant of $D_\zeta$ 4-momentum (Chapter~\ref{chap:mat_poincare}).
+
+\section{Mass = Poincar\'{e} Casimir Invariant}
+\label{sec:mat_mass_casimir}
+
+\begin{definition}[$D_\zeta$ 4-Momentum]
+\label{def:mat_momentum}
+\lean{FUST.Physics.Gravity.Dζ_momentum}
+\leanok
+\[
+p^\mu(s) = \mathrm{Re}(D_\zeta\text{-components}(s))_\mu
+\]
+\end{definition}
+
+At the minimum active mode $s = 1$:
+
+\begin{theorem}[$p^\mu(1)$ Components]
+\label{thm:mat_momentum_components}
+\lean{FUST.Physics.Gravity.Dζ_momentum_one_inl0, FUST.Physics.Gravity.Dζ_momentum_one_inl1, FUST.Physics.Gravity.Dζ_momentum_one_inl2, FUST.Physics.Gravity.Dζ_momentum_one_inr0}
+\leanok
+\[
+p^\mu(1) = (0,\; -1,\; \varphi - \psi,\; 2(\varphi - \psi)) = (0,\; -1,\; \sqrt{5},\; 2\sqrt{5})
+\]
+\end{theorem}
+
+\begin{theorem}[Mass from Casimir]
+\label{thm:mat_casimir_mass}
+\lean{FUST.casimirMassSq_one}
+\leanok
+\[
+m^2 = -\eta_{\mu\nu} p^\mu p^\nu = -(0^2 + 1 + 5 - 20) = 14
+\]
+\end{theorem}
+
+\section{Casimir Mass Gap}
+\label{sec:mat_mass_gap}
+
+\begin{theorem}[Mass Gap is Positive]
+\label{thm:mat_mass_gap_pos}
+\lean{FUST.massGapSq_pos}
+\leanok
+$m^2 = 14 > 0$.
+\end{theorem}
+
+\begin{theorem}[Mass Gap Value]
+\label{thm:mat_mass_gap_value}
+\lean{FUST.massGapSq_eq}
+\leanok
+$\mathrm{massGapSq} = 14$.
+\end{theorem}
+
+\begin{theorem}[On-Mass-Shell at $s = 1$]
+\label{thm:mat_on_shell}
+\lean{FUST.massGap_onMassShell}
+\leanok
+$D_\zeta$-momentum at $s = 1$ is on the mass shell with $m = \sqrt{14}$.
+\end{theorem}
+
+This is the \textbf{Clay Millennium Problem mass gap}: the minimum energy of a non-trivial excitation above the vacuum. In FUST, it is computed exactly from the Poincar\'{e} Casimir invariant of $D_\zeta$ 4-momentum.
+
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Mass Scale \texorpdfstring{$\Delta = 12/25$}{Δ = 12/25}}
+\label{sec:mat_mass_scale}
+
+\begin{definition}[Mass Scale]
+\label{def:mat_mass_scale}
+\lean{FUST.massScale}
+\leanok
+\[
+\Delta = \frac{|\mathrm{AF\_coeff}|^2}{5^2} = \frac{12}{25}
+\]
+\end{definition}
+
+\begin{theorem}[$\Delta = 12/25$]
+\label{thm:mat_mass_scale_eq}
+\lean{FUST.massScale_eq}
+\leanok
+\end{theorem}
+
+\begin{theorem}[$\Delta > 0$]
+\label{thm:mat_mass_scale_pos}
+\lean{FUST.massScale_pos}
+\leanok
+\end{theorem}
+
+The numerator $12 = |\mathrm{AF\_coeff}|^2 = |2i\sqrt{3}|^2$ comes from the $\zeta_6$ structure. The denominator $25 = 5^2$ comes from $F_\zeta = 5z \cdot D_\zeta$.
+
+\section{Lagrangian as Energy Functional}
+\label{sec:mat_lagrangian}
+
+\begin{definition}[$F_\zeta$ Lagrangian]
+\label{def:mat_lagrangian}
+\lean{FUST.TimeStructure.FζLagrangian}
+\leanok
+\[
+L[f](z) = |F_\zeta f(z)|^2
+\]
+\end{definition}
+
+\begin{theorem}[Non-Negativity]
+\label{thm:mat_lagrangian_nonneg}
+\lean{FUST.TimeStructure.Fζ_lagrangian_nonneg}
+\leanok
+$L[f](z) \geq 0$.
+\end{theorem}
+
+\begin{theorem}[Zero Iff Kernel]
+\label{thm:mat_lagrangian_zero}
+\lean{FUST.TimeStructure.Fζ_lagrangian_zero_iff}
+\leanok
+$L[f](z) = 0 \iff F_\zeta f(z) = 0$.
+\end{theorem}
+
+\begin{theorem}[$\varphi$-Equivariance]
+\label{thm:mat_lagrangian_equivariant}
+\lean{FUST.TimeStructure.lagrangian_phi_equivariant}
+\leanok
+\[
+L[\mathrm{timeEvolution}(f)](z) = L[f](\varphi z)
+\]
+Energy is conserved under time translation (Noether's theorem).
+\end{theorem}
+
+\section{Photon and Mass States}
+\label{sec:mat_photon_mass}
+
+\begin{definition}[$\ker(F_\zeta)$ Membership]
+\label{def:mat_ker}
+\lean{FUST.TimeStructure.IsInKerFζ}
+\leanok
+$f \in \ker(F_\zeta) \iff \forall z,\; F_\zeta f(z) = 0$.
+\end{definition}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+State & Condition & Physics \\
+\hline
+Vacuum & $f = 0$ & No excitation, $m = 0$ \\
+Photon & $f \in \ker(F_\zeta) \setminus \{0\}$ & Massless, no proper time \\
+Massive & $f \notin \ker(F_\zeta)$ & $m^2 > 0$, has proper time \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theorem}[Vacuum is Massless]
+\label{thm:mat_photon_vacuum}
+\lean{FUST.vacuum_massless}
+\leanok
+$p = 0 \implies m^2 = 0$.
+\end{theorem}
+
+\section{\texorpdfstring{$\ker(F_\zeta)$}{ker(Fζ)} Mod 6 Structure}
+\label{sec:mat_kernel_structure}
+
+\begin{theorem}[Kernel Classification]
+\label{thm:mat_kernel_mod6}
+\lean{FUST.kernel_mod6}
+\leanok
+On monomials $z^n$:
+\begin{itemize}
+\item $n \equiv 0, 2, 3, 4 \pmod{6}$: $F_\zeta[z^n] = 0$ \quad (kernel, 4 of 6 modes)
+\item $n \equiv 1, 5 \pmod{6}$: $F_\zeta[z^n] = \lambda_n \cdot z^n$ with $\lambda_n \neq 0$ \quad (active, 2 of 6 modes)
+\end{itemize}
+\end{theorem}
+
+\section{Summary}
+\label{sec:mat_mass_energy_summary}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Physical concept & Formula & Lean reference \\
+\hline
+4-momentum & $p^\mu(s) = \mathrm{Re}(D_\zeta\text{-comp}(s))_\mu$ & \texttt{Dζ\_momentum} \\
+Mass & $m^2 = -\eta_{\mu\nu} p^\mu p^\nu$ & \texttt{poincareCasimir} \\
+Mass gap & $m^2(1) = 14$ & \texttt{casimirMassSq\_one} \\
+Mass scale & $\Delta = 12/25$ & \texttt{massScale\_eq} \\
+Lagrangian & $L[f](z) = |F_\zeta f(z)|^2$ & \texttt{FζLagrangian} \\
+\hline
+\end{tabular}
+\end{center}

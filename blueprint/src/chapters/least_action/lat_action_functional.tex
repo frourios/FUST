@@ -1,79 +1,55 @@
 % FUST Least Action Theorem - Action Functional
-\chapter{Golden Ratio Scale Invariant Measure and Action Functional}
+\chapter{Action Principle and Variational Structure}
 \label{chap:mat_action_functional}
 
-\section{Derivation of the Scale Invariant Measure}
+The action principle is not assumed but derived from $F_\zeta$ linearity. The Lagrangian $L[f](z) = |F_\zeta f(z)|^2$ (Chapter~\ref{chap:mat_mass_energy}) admits rigorous variational calculus.
+
+\section{Scale Invariant Measure}
 \label{sec:mat_measure}
 
-\subsection{Invariance Condition}
-
-The measure $\mu$ required for the action functional must be invariant under $\varphi$-scale transformations:
+The measure must be invariant under $\varphi$-scaling $x \to \varphi x$:
 \[
 \mu(\varphi A) = \mu(A) \quad \text{for all measurable } A
 \]
 
-\subsection{Solution via Logarithmic Coordinates}
-
-In logarithmic coordinates $y = \log(x)$, the $\varphi$-scale transformation $x \to \varphi x$ becomes a translation $y \to y + \log(\varphi)$.
-
-Since Lebesgue measure $dy$ is invariant under translation, in the original coordinates:
+In logarithmic coordinates $y = \log(x)$, $\varphi$-scaling becomes translation $y \to y + \log(\varphi)$. Since Lebesgue measure is translation-invariant:
 \[
 d\mu = \frac{dx}{x}
 \]
+This is the \textbf{Haar measure} on $(0, \infty)$, unique up to scalar.
 
-This is the \textbf{Haar measure} on the multiplicative group $(0, \infty)$, and is the unique (up to constant multiple) $\varphi$-scale invariant measure.
-
-\section{Concrete Form of the FUST Action Functional}
+\section{Action Functional}
 \label{sec:mat_action}
-
-\subsection{Definition of the Action Functional}
-
-Define the state space and action as follows:
-
-\begin{definition}[State Space]
-\[
-\mathcal{S} = \{f : \mathbb{C} \to \mathbb{C} \mid \mathcal{A}[f] < \infty\}
-\]
-\end{definition}
 
 \begin{definition}[FUST Action Functional]
 \label{def:mat_action}
 \lean{FUST.action_functional}
 \leanok
 \[
-\boxed{\mathcal{A}[f] = \int_0^\infty |\mathrm{Diff}_6 f(x)|^2 \frac{dx}{x}}
+\mathcal{A}[f] = \int_0^\infty |\mathrm{Diff}_6 f(x)|^2 \frac{dx}{x}
 \]
 \end{definition}
 
-\subsection{Why L2 Norm}
-
-\begin{enumerate}
-\item \textbf{Inner product structure}: $L^2$ provides natural inner product and norm, enabling variational calculus
-\item \textbf{Euler-Lagrange equation}: The variation $\delta\mathcal{A}/\delta f = 0$ is well-defined
-\item \textbf{$\varphi$-covariance}: $\mathcal{A}[f \circ S_\varphi] = \varphi^2 \cdot \mathcal{A}[f] \circ S_\varphi$ where $S_\varphi(x) = \varphi x$
-\item \textbf{Consistency with kernel}: $\mathcal{A}[f] = 0 \iff f \in \ker(F_\zeta)$
-\end{enumerate}
-
-\subsection{Properties of the Action Functional (Numerically Verified)}
+\begin{theorem}[Least Action Solutions]
+\label{thm:mat_minimal_action}
+\lean{FUST.minimal_action_ker}
+\leanok
+$\mathcal{A}[f] = 0 \iff f \in \ker(F_\zeta)$. Minimal action solutions are light-cone states.
+\end{theorem}
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-State & Action value & Note \\
+State & Action & Physics \\
 \hline
-$f = 1 + x + x^2$ & $\approx 0$ & In $\ker(F_\zeta)$ \\
-$f = x^3$ & $\approx 576$ & Outside $\ker(F_\zeta)$ (minimal mass state) \\
-$f = 1 + x^3$ & $\approx 576$ & Mixed state (kernel component does not contribute) \\
+$\ker(F_\zeta)$ & $\mathcal{A}[f] = 0$ & Light cone (photon worldline) \\
+$\ker(F_\zeta)^\perp$ & $\mathcal{A}[f] > 0$ & Massive state (has proper time) \\
 \hline
 \end{tabular}
 \end{center}
 
-\section{Variational Structure (Lean4 Proven)}
+\section{Variational Structure}
 \label{sec:mat_variational}
-
-The Lagrangian $L[f](z) = |F_\zeta f(z)|^2$ admits a rigorous variational calculus because $F_\zeta$ is linear.
-
-\subsection{Linearity of \texorpdfstring{$F_\zeta$}{Fζ}}
 
 \begin{theorem}[$F_\zeta$ Linearity]
 \label{thm:mat_Fzeta_linear}
@@ -84,8 +60,6 @@ F_\zeta(af + bg)(z) = a \cdot F_\zeta f(z) + b \cdot F_\zeta g(z)
 \]
 \end{theorem}
 
-\subsection{First Variation}
-
 \begin{theorem}[Lagrangian Perturbation]
 \label{thm:mat_lagrangian_perturbation}
 \lean{FUST.LeastAction.lagrangian_perturbation}
@@ -94,23 +68,19 @@ For perturbation $f \mapsto f + \varepsilon\eta$:
 \[
 L[f + \varepsilon\eta](z) = |F_\zeta f(z)|^2 + 2\,\mathrm{Re}(\varepsilon \cdot F_\zeta\eta(z) \cdot \overline{F_\zeta f(z)}) + |\varepsilon|^2 |F_\zeta\eta(z)|^2
 \]
-The first-order term is $2\,\mathrm{Re}(\varepsilon \cdot F_\zeta\eta \cdot \overline{F_\zeta f})$.
 \end{theorem}
-
-\subsection{Critical Point Condition}
 
 \begin{theorem}[Critical Point of Witness]
 \label{thm:mat_critical_point}
 \lean{FUST.LeastAction.critical_point_of_witness}
 \leanok
-If a nontrivial test variation exists ($\exists \eta: F_\zeta\eta(z) \neq 0$), then:
+If $\exists \eta: F_\zeta\eta(z) \neq 0$, then:
 \[
 (\forall \eta,\; F_\zeta f(z) \cdot F_\zeta\eta(z) = 0) \;\Longrightarrow\; F_\zeta f(z) = 0
 \]
 \end{theorem}
 
-The concrete witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ for $z \neq 0$
-(Lean: \texttt{FUST.WaveEquation.Fζ\_detects\_active}), completing the chain:
+The witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ for $z \neq 0$ (Lean: \texttt{FUST.SchrodingerEquation.Fζ\_detects\_active}), completing:
 \[
 \delta L = 0 \;\Longrightarrow\; F_\zeta f = 0 \;\Longleftrightarrow\; f \in \ker(F_\zeta)
 \]
@@ -118,42 +88,54 @@ The concrete witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ fo
 \section{Euler-Lagrange Equation}
 \label{sec:mat_euler_lagrange}
 
-\subsection{Integral Form}
-
-For the action functional $\mathcal{A}[f] = \int |\mathrm{Diff}_6 f|^2 d\mu$, the integral variation gives:
+For $\mathcal{A}[f] = \int |\mathrm{Diff}_6 f|^2 d\mu$:
 \[
-\delta\mathcal{A} = 2 \int \mathrm{Diff}_6 f \cdot \mathrm{Diff}_6(\delta f) \, d\mu = 2 \int \delta f \cdot \mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) \, d\mu
+\delta\mathcal{A} = 2 \int \delta f \cdot \mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) \, d\mu = 0
 \]
 
 \begin{theorem}[Euler-Lagrange Equation]
 \label{thm:mat_euler_lagrange}
-\[
-\mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) = 0
-\]
+$\mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) = 0$, equivalently $\ker(\mathrm{Diff}_6^\dagger \mathrm{Diff}_6) = \ker(F_\zeta)$.
 \end{theorem}
 
-Since $\mathrm{Diff}_6^\dagger \mathrm{Diff}_6$ is self-adjoint:
-\[
-\ker(\mathrm{Diff}_6^\dagger \mathrm{Diff}_6) = \ker(F_\zeta)
-\]
+\section{Frourio Formulation}
+\label{sec:mat_frourio}
 
-\begin{theorem}[Least Action Solutions]
-\label{thm:mat_minimal_action}
-\lean{FUST.minimal_action_ker}
+In logarithmic (Frourio) coordinates, $\varphi$-scaling becomes time translation:
+
+\begin{definition}[Frourio Time]
+\label{def:mat_frourio_time}
+\lean{FUST.LeastAction.frourioTime}
 \leanok
-Minimal action solutions belong to $\ker(F_\zeta)$.
+$t(x) = \log_{\mathfrak{f}}(x)$, where $\mathfrak{f}$ is the Frourio constant.
+\end{definition}
+
+\begin{definition}[Frourio Lagrangian]
+\label{def:mat_frourio_lagrangian}
+\lean{FUST.LeastAction.FrourioLagrangian}
+\leanok
+$L_{\mathfrak{f}}(f, t) = (\mathrm{Diff}_6[f](\mathfrak{f}^t))^2$.
+\end{definition}
+
+\begin{theorem}[$\varphi$-Scaling = Time Translation]
+\label{thm:mat_phi_time_shift}
+\lean{FUST.LeastAction.phi_scale_is_time_shift}
+\leanok
+$t(\varphi x) = t(x) + \mathrm{phiStep}$.
 \end{theorem}
 
-\subsection{Physical Interpretation}
+\begin{theorem}[Complete Frourio Formulation]
+\label{thm:mat_frourio_complete}
+\lean{FUST.LeastAction.frourio_least_action_formulation}
+\leanok
+\begin{enumerate}
+\item Coordinate change preserves Lagrangian
+\item $\ker(F_\zeta)$ states have zero action density
+\item Positive action density implies time exists
+\item $\varphi$-scaling becomes time translation
+\end{enumerate}
+\end{theorem}
 
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-State & Condition & Physics \\
-\hline
-$\ker(F_\zeta)$ & $\mathcal{A}[f] = 0$ & Light cone (worldline of photon) \\
-$\ker(F_\zeta)^\perp$ & $\mathcal{A}[f] > 0$ & Massive state (has proper time) \\
-\hline
-\end{tabular}
-\end{center}
-
+\begin{quote}
+\textbf{Time is the logarithmic deviation from scale invariance.}
+\end{quote}

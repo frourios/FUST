@@ -1,14 +1,10 @@
-/-
-Fζ = 5z·Dζ: rescaled unified operator closed on ℤ[φ,ζ₆][z].
-Clearing the 1/5 denominator from Φ_S makes all coefficients integral.
--/
 import FUST.DζOperator
 import FUST.FrourioAlgebra.GoldenEisensteinInt
-import FUST.FibonacciArithmetic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 namespace FUST.FζOperator
 
-open Complex FUST.DζOperator FUST.FibonacciArithmetic FUST.SpectralCoefficients
+open Complex FUST.DζOperator
 
 /-! ## Rescaled symmetric operator: 5·Φ_S with ℤ[φ] coefficients -/
 
@@ -18,23 +14,18 @@ noncomputable def Φ_S_int (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   50 * f z + (9 + 2 * (↑φ : ℂ)) * f ((↑ψ : ℂ) * z) +
   10 * f ((↑ψ : ℂ) ^ 2 * z)
 
-private lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
-  rw [ne_eq, ← ofReal_ofNat, ← ofReal_add, ofReal_eq_zero]
-  linarith [phi_pos]
-
-private lemma phi_mul_phi_c : (↑φ : ℂ) * ↑φ = ↑φ + 1 := by
-  have h := golden_ratio_property
-  have : φ * φ = φ + 1 := by nlinarith [h]
-  calc (↑φ : ℂ) * ↑φ = ↑(φ * φ) := by push_cast; ring
-    _ = ↑(φ + 1) := congrArg _ this
-    _ = ↑φ + 1 := by push_cast; ring
-
 /-- Φ_S_int = 5 · Φ_S -/
 theorem Φ_S_int_eq (f : ℂ → ℂ) (z : ℂ) : Φ_S_int f z = 5 * Φ_S f z := by
   simp only [Φ_S_int, Φ_S, Diff5, Diff3, Diff2]
   have hne := phi_plus_two_ne
   have hP : (↑φ : ℂ) * ↑φ - ↑φ - 1 = 0 := by
-    have h := phi_mul_phi_c; linear_combination h
+    have h := by
+      have h := golden_ratio_property
+      have : φ * φ = φ + 1 := by nlinarith [h]
+      calc (↑φ : ℂ) * ↑φ = ↑(φ * φ) := by push_cast; ring
+        _ = ↑(φ + 1) := congrArg _ this
+        _ = ↑φ + 1 := by push_cast; ring
+    linear_combination h
   set P := (↑φ : ℂ)
   set fφ2 := f (P ^ 2 * z)
   set fφ := f (P * z)
@@ -57,17 +48,17 @@ noncomputable def Fζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   AFNum (fun w => 5 * Φ_A f w) z + SymNum (Φ_S_int f) z
 
 /-- AFNum is linear: AFNum(c·g) = c · AFNum(g) -/
-private theorem AFNum_smul (g : ℂ → ℂ) (c : ℂ) (z : ℂ) :
+theorem AFNum_smul (g : ℂ → ℂ) (c : ℂ) (z : ℂ) :
     AFNum (fun w => c * g w) z = c * AFNum g z := by
   unfold AFNum; ring
 
 /-- SymNum is linear: SymNum(c·g) = c · SymNum(g) -/
-private theorem SymNum_smul (g : ℂ → ℂ) (c : ℂ) (z : ℂ) :
+theorem SymNum_smul (g : ℂ → ℂ) (c : ℂ) (z : ℂ) :
     SymNum (fun w => c * g w) z = c * SymNum g z := by
   unfold SymNum; ring
 
 /-- SymNum of rescaled: SymNum(5·g) = 5 · SymNum(g) -/
-private theorem SymNum_of_Φ_S_int (f : ℂ → ℂ) (z : ℂ) :
+theorem SymNum_of_Φ_S_int (f : ℂ → ℂ) (z : ℂ) :
     SymNum (Φ_S_int f) z = 5 * SymNum (Φ_S f) z := by
   have h : Φ_S_int f = fun w => 5 * Φ_S f w := by
     funext w; exact Φ_S_int_eq f w
@@ -283,49 +274,6 @@ theorem phiS_int_monomial (n : ℕ) (w : ℂ) :
      (9 + 2 * (↑φ : ℂ)) * (↑ψ : ℂ) ^ n +
      10 * (↑ψ : ℂ) ^ (2 * n)) * w ^ n := by
   unfold Φ_S_int; ring
-
-/-! ## Fibonacci explicit formulas for Φ_A and Φ_S_int coefficients
-
-Φ_A(wⁿ)(z) = √5·(F_{3n}-4F_{2n}+3F_n+F_{n+1})·zⁿ
-Φ_S_int(wⁿ)(z) = (10L_{2n}+15L_n-5F_n-50+5√5F_n)·zⁿ -/
-
-/-- Φ_A monomial coefficient: A_n = F_{3n} - 4F_{2n} + 3F_n + F_{n+1} -/
-def phiA_fib_coeff (n : ℕ) : ℤ :=
-  Nat.fib (3 * n) - 4 * Nat.fib (2 * n) + 3 * Nat.fib n + Nat.fib (n + 1)
-
-/-- Φ_A(wⁿ) coefficient equals √5 · A_n (ℝ version) -/
-theorem phiA_coeff_real (n : ℕ) :
-    φ ^ (3 * n) - 4 * φ ^ (2 * n) + (3 + φ) * φ ^ n -
-    (3 + ψ) * ψ ^ n + 4 * ψ ^ (2 * n) - ψ ^ (3 * n) =
-    Real.sqrt 5 * (phiA_fib_coeff n : ℝ) := by
-  simp only [phiA_fib_coeff]
-  have h3n := phi_sub_psi_eq_sqrt5_fib (3 * n)
-  have h2n := phi_sub_psi_eq_sqrt5_fib (2 * n)
-  have hn := phi_sub_psi_eq_sqrt5_fib n
-  have hn1 := phi_sub_psi_eq_sqrt5_fib (n + 1)
-  have hsqrt5 : Real.sqrt 5 ≠ 0 := by positivity
-  -- LHS = (φ^{3n}-ψ^{3n}) - 4(φ^{2n}-ψ^{2n}) + 3(φⁿ-ψⁿ) + (φ^{n+1}-ψ^{n+1})
-  have key : φ ^ (3 * n) - 4 * φ ^ (2 * n) + (3 + φ) * φ ^ n -
-      (3 + ψ) * ψ ^ n + 4 * ψ ^ (2 * n) - ψ ^ (3 * n) =
-      (φ ^ (3 * n) - ψ ^ (3 * n)) - 4 * (φ ^ (2 * n) - ψ ^ (2 * n)) +
-      3 * (φ ^ n - ψ ^ n) + (φ ^ (n + 1) - ψ ^ (n + 1)) := by ring
-  rw [key, h3n, h2n, hn, hn1]; push_cast; ring
-
-/-- Φ_S_int = 10L_{2n} + 15L_n + (6-2φ)(φⁿ-ψⁿ) - 50 -/
-theorem phiS_int_coeff_real (n : ℕ) :
-    10 * φ ^ (2 * n) + (21 - 2 * φ) * φ ^ n - 50 +
-    (9 + 2 * φ) * ψ ^ n + 10 * ψ ^ (2 * n) =
-    10 * lucasConst (2 * n) + 15 * lucasConst n +
-    (6 - 2 * φ) * (φ ^ n - ψ ^ n) - 50 := by
-  simp only [lucasConst]; ring
-
-/-- Φ_S_int via Fibonacci: uses (6-2φ) = (5-√5) and (φⁿ-ψⁿ) = √5·F_n -/
-theorem phiS_int_fibonacci (n : ℕ) :
-    10 * φ ^ (2 * n) + (21 - 2 * φ) * φ ^ n - 50 +
-    (9 + 2 * φ) * ψ ^ n + 10 * ψ ^ (2 * n) =
-    10 * lucasConst (2 * n) + 15 * lucasConst n - 50 +
-    (6 - 2 * φ) * Real.sqrt 5 * (Nat.fib n : ℝ) := by
-  rw [phiS_int_coeff_real, phi_sub_psi_eq_sqrt5_fib]; ring
 
 /-! ## Eigenvalue formula for n ≡ 1 mod 6
 

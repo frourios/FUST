@@ -434,17 +434,7 @@ theorem SymNum_add (f g : ℂ → ℂ) (z : ℂ) :
     SymNum (fun w => f w + g w) z = SymNum f z + SymNum g z := by
   unfold SymNum; ring
 
-/-- AFNum is ℂ-homogeneous: AFNum(c·f) = c·AFNum(f) -/
-theorem AFNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
-    AFNum (fun w => c * f w) z = c * AFNum f z := by
-  unfold AFNum; ring
-
-/-- SymNum is ℂ-homogeneous: SymNum(c·f) = c·SymNum(f) -/
-theorem SymNum_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
-    SymNum (fun w => c * f w) z = c * SymNum f z := by
-  unfold SymNum; ring
-
-/-! ## Unified Dζ operator
+/-! ## Dζ operator
 
 Rank-2 operator on ⟨φ,ζ₆⟩ ≅ ℤ × ℤ/6ℤ.
 C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
@@ -463,11 +453,11 @@ noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   let μ : ℂ := 2 / ((↑φ : ℂ) + 2)
   2 * Diff5 f z + Diff3 f z + μ * Diff2 f z
 
-/-- Unified Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
+/-- Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
 noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
 
-private lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
+lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
   rw [ne_eq, ← ofReal_ofNat, ← ofReal_add, ofReal_eq_zero]
   linarith [phi_pos]
 
@@ -482,7 +472,7 @@ theorem Φ_S_const (c : ℂ) (z : ℂ) : Φ_S (fun _ => c) z = 0 := by
   have hφ2 : (↑φ : ℂ) + 2 ≠ 0 := phi_plus_two_ne
   field_simp; ring
 
-/-- Unified Dζ annihilates constants (Φ_A gives const, AFNum kills it) -/
+/-- Dζ annihilates constants (Φ_A gives const, AFNum kills it) -/
 theorem Dζ_const (z : ℂ) : Dζ (fun _ => 1) z = 0 := by
   simp only [Dζ]
   have hA : ∀ w, Φ_A (fun _ => (1 : ℂ)) w = ((↑φ : ℂ) - ↑ψ) * 1 :=

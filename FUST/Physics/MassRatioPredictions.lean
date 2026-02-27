@@ -1,5 +1,5 @@
 import FUST.Physics.NeutrinoMass
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.WeinbergAngle
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -23,7 +23,7 @@ This module derives mass ratios for particles.
 
 namespace FUST.MassRatioPredictions
 
-open FUST.WaveEquation
+open FUST.SchrodingerEquation
 
 /-! ## Part 1: Higgs/W Mass Ratio
 

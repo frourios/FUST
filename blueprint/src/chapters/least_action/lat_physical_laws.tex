@@ -1,0 +1,218 @@
+% FUST Least Action Theorem - Physical Laws from Poincaré
+\chapter{Physical Laws from Poincar\'{e} Structure}
+\label{chap:mat_physical_laws}
+
+All physical laws are derived from the Poincar\'{e} structure established in Chapter~\ref{chap:mat_poincare}: the Minkowski metric $\eta$, the Lorentz algebra $\mathfrak{so}(3,1)$, and the temporal channel $\Phi_A$.
+
+\section{Thermodynamics from \texorpdfstring{$F_\zeta$}{Fζ}}
+\label{sec:mat_thermodynamics}
+
+Entropy is defined from the Poincar\'{e} temporal direction:
+
+\begin{definition}[Entropy]
+\label{def:mat_entropy}
+\lean{FUST.TimeStructure.entropyAtFζ}
+\leanok
+\[
+S(f)(z) := |F_\zeta f(z)|^2
+\]
+Entropy measures departure from $\ker(F_\zeta)$ along the Poincar\'{e} temporal channel.
+\end{definition}
+
+\subsection{Zeroth Law}
+
+\begin{theorem}[Kernel Equilibrium]
+\label{thm:mat_zeroth_law}
+\lean{FUST.Thermodynamics.zeroth_law_kernel_equilibrium}
+\leanok
+If $f, g \in \ker(F_\zeta)$, then $S(f) = S(g) = 0$.
+\end{theorem}
+
+Systems in $\ker(F_\zeta)$ share identical entropy (zero), providing the equivalence relation for thermal equilibrium.
+
+\subsection{First Law}
+
+\begin{theorem}[Energy Conservation ($\varphi$-Equivariance)]
+\label{thm:mat_first_law}
+\lean{FUST.Thermodynamics.first_law_equivariance}
+\leanok
+\[
+S(\mathrm{timeEvolution}(f))(z) = S(f)(\varphi z)
+\]
+Entropy is $\varphi$-equivariant: time evolution redistributes but conserves the total energy (Noether's theorem for $\varphi$-scaling symmetry).
+\end{theorem}
+
+\subsection{Second Law}
+
+\begin{theorem}[Entropy Shift]
+\label{thm:mat_second_law}
+\lean{FUST.Thermodynamics.second_law_entropy_shift}
+\leanok
+\[
+S(\mathrm{timeEvolution}(f))(z) = S(f)(\varphi z)
+\]
+Since $\varphi > 1$, time evolution probes the Lagrangian at a larger scale, amplifying $\ker(F_\zeta)^\perp$ components.
+\end{theorem}
+
+\subsection{Third Law}
+
+\begin{theorem}[Absolute Zero Unreachable]
+\label{thm:mat_third_law}
+\lean{FUST.TimeStructure.third_law_Fζ}
+\leanok
+If $f \notin \ker(F_\zeta)$, then $\exists z: S(f)(z) > 0$.
+\end{theorem}
+
+\begin{theorem}[$S \equiv 0 \iff \ker(F_\zeta)$]
+\label{thm:mat_entropy_zero}
+\lean{FUST.TimeStructure.entropy_zero_iff_kerFζ}
+\leanok
+$(\forall z, S(f)(z) = 0) \iff f \in \ker(F_\zeta)$.
+\end{theorem}
+
+\section{Einstein Equations from Localized \texorpdfstring{$\mathfrak{so}(3,1)$}{so(3,1)}}
+\label{sec:mat_einstein}
+
+Localizing the global Lorentz symmetry $\mathfrak{so}(3,1)$ introduces a connection field, yielding general relativity.
+
+\subsection{Lorentz Connection}
+
+\begin{theorem}[Connection Space Dimension]
+\label{thm:mat_connection_dim}
+\lean{FUST.Physics.Gravity.finrank_connection}
+\leanok
+\[
+\dim(\omega : I_4 \to \mathfrak{so}(3,1)) = |I_4| \times \dim \mathfrak{so}(3,1) = 4 \times 6 = 24
+\]
+\end{theorem}
+
+\subsection{Curvature}
+
+\begin{definition}[Curvature]
+\label{def:mat_curvature}
+\lean{FUST.Physics.Gravity.curvature}
+\leanok
+\[
+F_{\mu\nu} = [\omega_\mu, \omega_\nu] \in \mathfrak{so}(3,1)
+\]
+\end{definition}
+
+\begin{theorem}[Curvature Antisymmetry]
+\label{thm:mat_curvature_antisymm}
+\lean{FUST.Physics.Gravity.curvature_antisymm}
+\leanok
+$F_{\mu\nu} = -F_{\nu\mu}$.
+\end{theorem}
+
+\begin{theorem}[Curvature Preserves Minkowski Form]
+\label{thm:mat_curvature_minkowski}
+\lean{FUST.Physics.Gravity.curvature_preserves_minkowski}
+\leanok
+$B(F_{\mu\nu} v, w) + B(v, F_{\mu\nu} w) = 0$.
+\end{theorem}
+
+\subsection{Bianchi Identity}
+
+\begin{theorem}[Algebraic Bianchi Identity]
+\label{thm:mat_bianchi}
+\lean{FUST.Physics.Gravity.bianchi_identity}
+\leanok
+\[
+[\omega_\mu, [\omega_\nu, \omega_\rho]] + [\omega_\nu, [\omega_\rho, \omega_\mu]] + [\omega_\rho, [\omega_\mu, \omega_\nu]] = 0
+\]
+This is the Jacobi identity of $\mathfrak{so}(3,1)$.
+\end{theorem}
+
+\subsection{Einstein Tensor}
+
+\begin{definition}[Einstein Tensor]
+\label{def:mat_einstein}
+\lean{FUST.Physics.Gravity.einstein}
+\leanok
+\[
+G_{\mu\nu} = R_{\mu\nu} - \frac{1}{2} \eta_{\mu\nu} R
+\]
+where $R_{\mu\nu}$ is the Ricci tensor and $R$ is the scalar curvature.
+\end{definition}
+
+\begin{theorem}[Vacuum Einstein Equations]
+\label{thm:mat_vacuum_einstein}
+\lean{FUST.Physics.Gravity.vacuum_einstein}
+\leanok
+For flat connection ($\omega = 0$): $G_{\mu\nu} = 0$.
+\end{theorem}
+
+\begin{theorem}[Einstein Trace]
+\label{thm:mat_einstein_trace}
+\lean{FUST.Physics.Gravity.einstein_trace}
+\leanok
+$\eta^{\mu\nu} G_{\mu\nu} = -R$.
+\end{theorem}
+
+\section{Gauge Groups from \texorpdfstring{$F_\zeta$}{Fζ} Channels}
+\label{sec:mat_gauge_groups}
+
+The Standard Model gauge group is uniquely determined by $F_\zeta$'s channel decomposition:
+
+\begin{theorem}[Standard Gauge Group Uniqueness]
+\label{thm:mat_gauge_unique}
+\lean{FUST.standard_gauge_group_unique}
+\leanok
+$F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ channel structure uniquely determines $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
+\begin{enumerate}
+\item $\Phi_S$ rank 3 (SY channel, $\mathrm{syWeight} = 3$) $\Rightarrow$ $\mathrm{SU}(3)$
+\item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ purely imaginary (AF channel) $\Rightarrow$ $\mathrm{SU}(2)$
+\item Trivial channel ($\dim = 1$) $\Rightarrow$ $\mathrm{U}(1)$
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[$\zeta_6$ Separation]
+\label{thm:mat_zeta6_separation}
+\lean{FUST.zeta6_ne_phi_pow}
+\leanok
+$\zeta_6 \neq \varphi^n$ for all $n$, ensuring non-reducibility.
+\end{theorem}
+
+\section{Yang-Mills Mass Gap}
+\label{sec:mat_yang_mills}
+
+\begin{theorem}[$\ker(F_\zeta)$ is Not a Subalgebra]
+\label{thm:mat_ker_not_subalgebra}
+\lean{FUST.YangMills.ker_Fζ_not_subalgebra}
+\leanok
+$z^3 \in \ker(F_\zeta)$ and $z^4 \in \ker(F_\zeta)$, but $z^7 = z^3 \cdot z^4 \notin \ker(F_\zeta)$ since $7 \equiv 1 \pmod{6}$. This is algebraic confinement.
+\end{theorem}
+
+\begin{theorem}[Yang-Mills Mass Gap]
+\label{thm:mat_yang_mills_gap}
+\lean{FUST.YangMills.yangMills_massGap}
+\leanok
+The mass gap $\Delta = 12/25 > 0$ with the first active eigenvalue at degree $n = 3$: $F_\zeta[z^3] \neq 0$.
+\end{theorem}
+
+\section{Causal Structure}
+\label{sec:mat_causality}
+
+\begin{theorem}[Causal Boundary]
+\label{thm:mat_causal_boundary}
+\lean{FUST.causal_boundary_theorem}
+\leanok
+$\ker(F_\zeta)$ is the light cone: the boundary between states with proper time (massive, $f \notin \ker(F_\zeta)$) and states without (massless, $f \in \ker(F_\zeta)$).
+\end{theorem}
+
+\section{Summary: All Physics from One Structure}
+\label{sec:mat_laws_summary}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Physical law & $D_\zeta / F_\zeta$ origin & Key Lean theorem \\
+\hline
+Thermodynamics & $S = |F_\zeta f|^2$, $\varphi$-equivariance & \texttt{third\_law\_Fζ} \\
+General relativity & Localized $\mathfrak{so}(3,1)$ on $I_4$ & \texttt{vacuum\_einstein} \\
+Gauge group & $\mathbb{Z}/6\mathbb{Z}$ channel decomposition & \texttt{standard\_gauge\_group\_unique} \\
+Yang-Mills gap & $\ker(F_\zeta)$ not subalgebra & \texttt{yangMills\_massGap} \\
+Causal structure & $\ker(F_\zeta) =$ light cone & \texttt{causal\_boundary\_theorem} \\
+\hline
+\end{tabular}
+\end{center}

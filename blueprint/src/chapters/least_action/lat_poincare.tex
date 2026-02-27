@@ -1,0 +1,262 @@
+% FUST Least Action Theorem - Poincaré Group from Dζ
+\chapter{Poincar\'{e} Group from \texorpdfstring{$D_\zeta$}{Dζ}}
+\label{chap:mat_poincare}
+
+The Poincar\'{e} group $\mathrm{ISO}(3,1) = \mathrm{SO}(3,1) \ltimes \mathbb{R}^4$ is not assumed but \textbf{derived} from the algebraic structure of $D_\zeta$. This chapter establishes the complete derivation chain:
+\[
+D_\zeta \;\longrightarrow\; I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1 \;\longrightarrow\; \eta = \mathrm{diag}(+1,+1,+1,-1) \;\longrightarrow\; \mathfrak{so}(3,1) \;\longrightarrow\; \mathfrak{iso}(3,1)
+\]
+
+\section{\texorpdfstring{$D_\zeta$}{Dζ} 3+1 Decomposition}
+\label{sec:mat_31_decomposition}
+
+The unified operator $D_\zeta$ decomposes into 4 independent channels indexed by $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$:
+
+\begin{definition}[$D_\zeta$ Components]
+\label{def:mat_Dzeta_components}
+\lean{FUST.Physics.Gravity.Dζ_components}
+\leanok
+For each mode $s \in \mathbb{N}$:
+\[
+D_\zeta\text{-components}(s) : I_4 \to \mathbb{C}, \quad
+\begin{cases}
+\mathrm{Sum.inl}\,0 \mapsto \sigma_{\mathrm{Diff}_5}(s) \\
+\mathrm{Sum.inl}\,1 \mapsto \sigma_{\mathrm{Diff}_3}(s) \\
+\mathrm{Sum.inl}\,2 \mapsto \sigma_{\mathrm{Diff}_2}(s) \\
+\mathrm{Sum.inr}\,0 \mapsto \Phi_A\text{-coeff}(s)
+\end{cases}
+\]
+The first 3 components (spatial) come from $\Phi_S$; the last (temporal) from $\Phi_A$.
+\end{definition}
+
+\begin{theorem}[Spatial + Temporal = $I_4$]
+\label{thm:mat_dim_matches}
+\lean{FUST.Physics.Gravity.Dζ_dim_matches_I4}
+\leanok
+$|\mathrm{Fin}\,3| + |\mathrm{Fin}\,1| = |I_4|$.
+\end{theorem}
+
+\begin{theorem}[Weight Ratio 3:1 Matches $I_4$]
+\label{thm:mat_weight_I4}
+\lean{FUST.Physics.Gravity.weight_matches_I4}
+\leanok
+$3 + 1 = |I_4|$.
+\end{theorem}
+
+The weight ratio is determined by the $|D_\zeta|^2$ decomposition:
+
+\begin{theorem}[$|D_\zeta|^2$ Norm-Squared Decomposition]
+\label{thm:mat_normSq}
+\lean{FUST.DζOperator.Dzeta_normSq_decomposition}
+\leanok
+\[
+|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
+\]
+The weight ratio $3:1$ between symmetric ($a$) and antisymmetric ($b$) channels forces $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$.
+\end{theorem}
+
+\section{Minkowski Metric \texorpdfstring{$\eta$}{η} from Channel Weights}
+\label{sec:mat_minkowski}
+
+The 3:1 weight ratio determines the spacetime signature:
+
+\begin{definition}[Minkowski Metric]
+\label{def:mat_minkowski}
+\lean{FUST.Physics.Gravity.η}
+\leanok
+\[
+\eta_{\mu\nu} = \mathrm{diag}(+1, +1, +1, -1)
+\]
+\end{definition}
+
+\begin{theorem}[Spatial Signature]
+\label{thm:mat_eta_spatial}
+\lean{FUST.Physics.Gravity.η_spatial}
+\leanok
+$\eta(\mathrm{Sum.inl}\,i, \mathrm{Sum.inl}\,i) = +1$ for $i \in \mathrm{Fin}\,3$.
+\end{theorem}
+
+\begin{theorem}[Temporal Signature]
+\label{thm:mat_eta_temporal}
+\lean{FUST.Physics.Gravity.η_temporal}
+\leanok
+$\eta(\mathrm{Sum.inr}\,0, \mathrm{Sum.inr}\,0) = -1$.
+\end{theorem}
+
+\begin{theorem}[Diagonal]
+\label{thm:mat_eta_offdiag}
+\lean{FUST.Physics.Gravity.η_off_diag}
+\leanok
+$\eta(\mu, \nu) = 0$ for $\mu \neq \nu$.
+\end{theorem}
+
+\begin{theorem}[Trace $= 4$]
+\label{thm:mat_eta_trace}
+\lean{FUST.Physics.Gravity.η_sq_trace}
+\leanok
+$\sum_{\mu,\nu} \eta_{\mu\nu}^2 = 4 = \dim(\text{spacetime})$.
+\end{theorem}
+
+\section{Lorentz Algebra \texorpdfstring{$\mathfrak{so}(3,1)$}{so(3,1)}}
+\label{sec:mat_lorentz}
+
+\begin{theorem}[$\dim \mathfrak{so}(3,1) = 6$]
+\label{thm:mat_so31_dim}
+\lean{FUST.Physics.Lorentz.finrank_so31}
+\leanok
+The Lorentz algebra has dimension $\binom{4}{2} = 6$: 3 rotations $J_1, J_2, J_3$ and 3 boosts $K_1, K_2, K_3$.
+\end{theorem}
+
+\begin{theorem}[$\mathfrak{so}(3,1) \cong \mathbb{R}^6$]
+\label{thm:mat_so31_equiv}
+\lean{FUST.Physics.Lorentz.so31EquivR6}
+\leanok
+There is an explicit linear equivalence $\mathfrak{so}(3,1) \cong \mathbb{R}^6$.
+\end{theorem}
+
+The Lorentz algebra preserves the Minkowski form:
+
+\begin{theorem}[Infinitesimal Lorentz Invariance]
+\label{thm:mat_lorentz_inv}
+\lean{FUST.Physics.Poincare.lorentz_infinitesimal_invariance}
+\leanok
+For $A \in \mathfrak{so}(3,1)$ and all $v, w$:
+\[
+B(Av, w) + B(v, Aw) = 0
+\]
+where $B = \eta_{\mu\nu} v^\mu w^\nu$ is the Minkowski bilinear form.
+\end{theorem}
+
+This is equivalent to the skew-adjointness condition $A^\top \eta + \eta A = 0$.
+
+\section{Translation Space \texorpdfstring{$\mathbb{R}^4$}{R4}}
+\label{sec:mat_translations}
+
+\begin{theorem}[$\dim \mathbb{R}^4 = 4$]
+\label{thm:mat_translations_dim}
+\lean{FUST.Physics.Poincare.finrank_translations}
+\leanok
+$\dim(I_4 \to \mathbb{R}) = 4$.
+\end{theorem}
+
+\begin{theorem}[Translations Commute]
+\label{thm:mat_translations_commute}
+\lean{FUST.Physics.Poincare.translations_commute}
+\leanok
+For all $\mu, \nu \in \mathrm{Fin}\,4$:
+\[
+[P_\mu, P_\nu] = 0
+\]
+Translations form an abelian ideal.
+\end{theorem}
+
+\section{Poincar\'{e} Algebra \texorpdfstring{$\mathfrak{iso}(3,1) = \mathfrak{so}(3,1) \ltimes \mathbb{R}^4$}{iso(3,1)}}
+\label{sec:mat_poincare_algebra}
+
+\begin{theorem}[$\dim \mathfrak{iso}(3,1) = 10$]
+\label{thm:mat_poincare_dim}
+\lean{FUST.Physics.Poincare.finrank_poincare}
+\leanok
+$\dim(\mathfrak{so}(3,1) \times \mathbb{R}^4) = 6 + 4 = 10$.
+\end{theorem}
+
+The semidirect product structure is determined by the action of $\mathfrak{so}(3,1)$ on $\mathbb{R}^4$:
+
+\begin{theorem}[Boost--Energy Bracket]
+\label{thm:mat_boost_energy}
+\lean{FUST.Physics.Poincare.boost_energy}
+\leanok
+\[
+[K_i, P_0] = P_i \quad (i = 0,1,2)
+\]
+Boosting energy produces momentum.
+\end{theorem}
+
+\begin{theorem}[Boost--Momentum Bracket]
+\label{thm:mat_boost_momentum}
+\lean{FUST.Physics.Poincare.boost_momentum}
+\leanok
+\[
+[K_i, P_j] = \delta_{ij} P_0 \quad (i, j = 0,1,2)
+\]
+Boosting momentum produces energy.
+\end{theorem}
+
+\begin{theorem}[Rotation--Energy Bracket]
+\label{thm:mat_rotation_energy}
+\lean{FUST.Physics.Poincare.rotation_energy}
+\leanok
+\[
+[J_i, P_0] = 0
+\]
+Rotations commute with energy.
+\end{theorem}
+
+\begin{theorem}[Poincar\'{e} Algebra Summary]
+\label{thm:mat_poincare_summary}
+\lean{FUST.Physics.Poincare.poincare_algebra}
+\leanok
+The full Poincar\'{e} algebra structure:
+\begin{enumerate}
+\item $\dim \mathfrak{iso}(3,1) = 10$
+\item $[\mathbb{R}^4, \mathbb{R}^4] = 0$ \quad (abelian ideal)
+\item $[J_i, P_0] = 0$ \quad (rotation commutes with energy)
+\item $[K_i, P_0] = P_i$ \quad (boost--energy)
+\item $[K_i, P_j] = \delta_{ij} P_0$ \quad (boost--momentum)
+\end{enumerate}
+\end{theorem}
+
+\section{Poincar\'{e} Casimir Invariant and Mass}
+\label{sec:mat_casimir}
+
+The Poincar\'{e} group has a quadratic Casimir invariant that defines mass:
+
+\begin{definition}[Poincar\'{e} Casimir]
+\label{def:mat_casimir}
+\lean{FUST.poincareCasimir}
+\leanok
+\[
+C(p) = \eta_{\mu\nu} p^\mu p^\nu = p_1^2 + p_2^2 + p_3^2 - p_0^2
+\]
+\end{definition}
+
+\begin{definition}[On-Mass-Shell Condition]
+\label{def:mat_on_shell}
+\lean{FUST.onMassShell}
+\leanok
+A 4-momentum $p$ is on mass shell with mass $m$ if $-C(p) = m^2$.
+\end{definition}
+
+\begin{theorem}[Vacuum is Massless]
+\label{thm:mat_vacuum_massless}
+\lean{FUST.vacuum_massless}
+\leanok
+$p = 0 \implies -C(p) = 0$. The vacuum is on the mass shell with $m = 0$.
+\end{theorem}
+
+\begin{definition}[Minkowski Bilinear Form]
+\label{def:mat_minkowski_bilin}
+\lean{FUST.Physics.Poincare.minkowskiBilin}
+\leanok
+$B(v, w) = v^\top \eta \, w$ is the Minkowski inner product on $\mathbb{R}^4$.
+\end{definition}
+
+\section{Summary: Derivation Chain}
+\label{sec:mat_poincare_summary_chain}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$D_\zeta$ structure & Derived object & Dimension \\
+\hline
+$\Phi_S$ (3 sub-operators) + $\Phi_A$ (1 channel) & $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ & 4 \\
+$|D_\zeta|^2 = 12(3a^2 + b^2)$ weight ratio & $\eta = \mathrm{diag}(+1,+1,+1,-1)$ & signature $(3,1)$ \\
+$A^\top \eta + \eta A = 0$ & $\mathfrak{so}(3,1)$ & 6 \\
+$I_4 \to \mathbb{R}$ abelian ideal & $\mathbb{R}^4$ & 4 \\
+$\mathfrak{so}(3,1) \ltimes \mathbb{R}^4$ & $\mathfrak{iso}(3,1)$ & 10 \\
+$\eta_{\mu\nu} p^\mu p^\nu$ & Casimir $\to$ mass $m^2$ & invariant \\
+\hline
+\end{tabular}
+\end{center}
+
+Every entry in this table is a \textbf{theorem}, not an assumption.

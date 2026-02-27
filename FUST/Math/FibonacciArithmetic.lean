@@ -1,12 +1,3 @@
-/-
-Fibonacci Arithmetic: Lucas numbers, D_t vs Diff6 discrepancy, Fibonacci divisibility.
-
-Key results:
-1. Lucas-Binet: L_n = φ^n + ψ^n (Lucas numbers via golden ratio)
-2. Lucas-Fibonacci identity: L_n² - 5·F_n² = 4·(-1)^n
-3. D_t eigenvalue at t=logφ vs Diff6Coeff discrepancy formula
-4. Fibonacci integrality of Diff6Coeff/√5
--/
 import FUST.SpectralCoefficients
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic.Linarith
@@ -16,7 +7,7 @@ namespace FUST.FibonacciArithmetic
 
 open FUST FUST.SpectralCoefficients Real
 
-/-! ## Section 1: Lucas Numbers via Binet Formula -/
+/-! ## Lucas Numbers via Binet Formula -/
 
 section LucasNumbers
 
@@ -65,76 +56,7 @@ theorem phi_psi_pow_prod (n : ℕ) : φ ^ n * ψ ^ n = (-1 : ℝ) ^ n := by
 
 end LucasNumbers
 
-/-! ## Section 2: Continuous D_t Eigenvalue
-
-The continuous analog of Diff6 uses sinh instead of Fibonacci:
-  D_t(n) = 2sinh(3nt) - 6sinh(2nt) + 2sinh(nt)
-
-At t = log(φ), we have φ^{-1} = -ψ (from φψ = -1), so:
-  2sinh(kn·logφ) = φ^{kn} - φ^{-kn} = φ^{kn} - (-ψ)^{kn}
-
-The difference from Diff6Coeff arises because (-ψ)^{kn} ≠ ψ^{kn} for odd kn. -/
-
-section ContinuousDiscrete
-
-/-- Continuous D_t eigenvalue at t=logφ:
-    φ^{3n} - (-ψ)^{3n} - 3(φ^{2n} - (-ψ)^{2n}) + φ^n - (-ψ)^n -/
-noncomputable def DtEigenvalue (n : ℕ) : ℝ :=
-  φ ^ (3 * n) - (-ψ) ^ (3 * n) - 3 * (φ ^ (2 * n) - (-ψ) ^ (2 * n)) +
-  φ ^ n - (-ψ) ^ n
-
-/-- (-ψ)^{2k} = ψ^{2k} (even powers absorb sign) -/
-theorem neg_psi_even_pow (k : ℕ) : (-ψ) ^ (2 * k) = ψ ^ (2 * k) :=
-  (even_two_mul k).neg_pow ψ
-
-/-- For even n: D_t = Diff6Coeff exactly -/
-theorem DtEigenvalue_even (n : ℕ) (hn : Even n) :
-    DtEigenvalue n = Diff6Coeff n := by
-  simp only [DtEigenvalue, Diff6Coeff]
-  have h3 : Even (3 * n) := hn.mul_left 3
-  have h2 : Even (2 * n) := even_two_mul n
-  rw [h3.neg_pow, h2.neg_pow, hn.neg_pow]; ring
-
-/-- For odd n: (-ψ)^n = -ψ^n -/
-theorem neg_psi_odd_pow (n : ℕ) (hn : Odd n) : (-ψ) ^ n = -(ψ ^ n) := by
-  rw [neg_pow, Odd.neg_one_pow hn]; ring
-
-/-- Discrepancy for odd n: D_t - Diff6 = 2(ψ^{3n} + ψ^n) -/
-theorem DtEigenvalue_odd_discrepancy (n : ℕ) (hn : Odd n) :
-    DtEigenvalue n = Diff6Coeff n + 2 * (ψ ^ (3 * n) + ψ ^ n) := by
-  simp only [DtEigenvalue, Diff6Coeff]
-  have h3n_odd : Odd (3 * n) := by rw [Nat.odd_mul]; exact ⟨⟨1, rfl⟩, hn⟩
-  rw [neg_psi_odd_pow _ h3n_odd, neg_psi_even_pow, neg_psi_odd_pow _ hn]
-  ring
-
-/-- Unified discrepancy formula:
-    D_t(n) = Diff6Coeff(n) + (1 - (-1)^n) · (ψ^{3n} + ψ^n) -/
-theorem DtEigenvalue_unified (n : ℕ) :
-    DtEigenvalue n = Diff6Coeff n + (1 - (-1 : ℝ) ^ n) * (ψ ^ (3 * n) + ψ ^ n) := by
-  rcases Nat.even_or_odd n with hn | hn
-  · rw [DtEigenvalue_even n hn, Even.neg_one_pow hn]; ring
-  · rw [DtEigenvalue_odd_discrepancy n hn, Odd.neg_one_pow hn]; ring
-
-/-- The discrepancy decays exponentially: |ψ^{3n} + ψ^n| ≤ 2|ψ|^n -/
-theorem discrepancy_bound (n : ℕ) :
-    |ψ ^ (3 * n) + ψ ^ n| ≤ 2 * |ψ| ^ n := by
-  have h3n : |ψ ^ (3 * n)| = |ψ| ^ (3 * n) := abs_pow ψ (3 * n)
-  have hn' : |ψ ^ n| = |ψ| ^ n := abs_pow ψ n
-  have h_abs_lt : |ψ| < 1 := abs_psi_lt_one
-  have h3le : |ψ| ^ (3 * n) ≤ |ψ| ^ n := by
-    apply pow_le_pow_of_le_one (abs_nonneg _) (le_of_lt h_abs_lt); omega
-  calc |ψ ^ (3 * n) + ψ ^ n| ≤ |ψ ^ (3 * n)| + |ψ ^ n| := abs_add_le _ _
-    _ = |ψ| ^ (3 * n) + |ψ| ^ n := by rw [h3n, hn']
-    _ ≤ |ψ| ^ n + |ψ| ^ n := by linarith [h3le]
-    _ = 2 * |ψ| ^ n := by ring
-
-/-- Discrepancy vanishes in limit: |ψ|^n < 1 for n ≥ 1 -/
-theorem abs_psi_pow_lt (n : ℕ) (hn : 1 ≤ n) : |ψ| ^ n < 1 :=
-  pow_lt_one₀ (abs_nonneg _) abs_psi_lt_one (by omega)
-
-end ContinuousDiscrete
-
-/-! ## Section 3: Diff6Coeff Integrality
+/-! ## Diff6Coeff Integrality
 
 Diff6Coeff(n) / √5 = F_{3n} - 3F_{2n} + F_n ∈ ℤ -/
 
@@ -187,7 +109,7 @@ theorem fibCombination_eq_zero_iff (n : ℕ) :
 
 end Integrality
 
-/-! ## Section 4: Fibonacci Strong Divisibility
+/-! ## Fibonacci Strong Divisibility
 
 F_m | F_n when m | n. This is Nat.fib_dvd from Mathlib. -/
 
@@ -225,7 +147,7 @@ theorem fib_five_dvd_of_five_dvd (n : ℕ) (h : 5 ∣ n) : 5 ∣ Nat.fib n := by
 
 end FibonacciDivisibility
 
-/-! ## Section 5: Diff6Coeff via Lucas and Fibonacci
+/-! ## Diff6Coeff via Lucas and Fibonacci
 
 Express Diff6Coeff using both Fibonacci (φ^n-ψ^n)/√5 and Lucas (φ^n+ψ^n). -/
 
@@ -238,21 +160,6 @@ theorem Diff6Coeff_lucas_fibonacci (n : ℕ) :
       (lucasConst (2 * n) - 3 * lucasConst n + (-1 : ℝ) ^ n + 1) := by
   have h := Diff6Coeff_factored n
   simp only [lucasConst]; rw [h]; ring
-
-/-- D_t eigenvalue via Lucas numbers (for odd n):
-    D_t(n) = L_{3n} - 3·(φ^{2n}-ψ^{2n}) + L_n -/
-theorem DtEigenvalue_odd_via_lucas (n : ℕ) (hn : Odd n) :
-    DtEigenvalue n = lucasConst (3 * n) - 3 * (φ ^ (2 * n) - ψ ^ (2 * n)) +
-      lucasConst n := by
-  simp only [DtEigenvalue, lucasConst]
-  have h3n_odd : Odd (3 * n) := by rw [Nat.odd_mul]; exact ⟨⟨1, rfl⟩, hn⟩
-  rw [neg_psi_odd_pow _ h3n_odd, neg_psi_even_pow, neg_psi_odd_pow _ hn]
-  ring
-
-/-- D_t uses Lucas where Diff6 uses Fibonacci (for odd harmonics) -/
-theorem Dt_lucas_Diff6_fibonacci_odd (n : ℕ) (hn : Odd n) :
-    DtEigenvalue n - Diff6Coeff n = 2 * ψ ^ (3 * n) + 2 * ψ ^ n := by
-  have := DtEigenvalue_odd_discrepancy n hn; linarith
 
 end LucasFibonacci
 

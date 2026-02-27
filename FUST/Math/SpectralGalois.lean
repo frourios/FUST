@@ -5,6 +5,8 @@ missing the √(-3) direction entirely. This Galois separation constrains
 the algebraic structure of zeros in the critical strip.
 -/
 import FUST.FζOperator
+import FUST.Math.FibonacciArithmetic
+import FUST.SpectralCoefficients
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 
 namespace FUST.SpectralGalois
@@ -16,6 +18,22 @@ open FUST.FibonacciArithmetic FUST.SpectralCoefficients
 
 The SY eigenvalue channel uses only φ and ψ (golden ratio roots).
 (6-2φ)·√5 = (6-2φ)(2φ-1) = 10φ - 10 clears denominators. -/
+
+/-- Φ_S_int = 10L_{2n} + 15L_n + (6-2φ)(φⁿ-ψⁿ) - 50 -/
+theorem phiS_int_coeff_real (n : ℕ) :
+    10 * φ ^ (2 * n) + (21 - 2 * φ) * φ ^ n - 50 +
+    (9 + 2 * φ) * ψ ^ n + 10 * ψ ^ (2 * n) =
+    10 * lucasConst (2 * n) + 15 * lucasConst n +
+    (6 - 2 * φ) * (φ ^ n - ψ ^ n) - 50 := by
+  simp only [lucasConst]; ring
+
+/-- Φ_S_int via Fibonacci: uses (6-2φ) = (5-√5) and (φⁿ-ψⁿ) = √5·F_n -/
+theorem phiS_int_fibonacci (n : ℕ) :
+    10 * φ ^ (2 * n) + (21 - 2 * φ) * φ ^ n - 50 +
+    (9 + 2 * φ) * ψ ^ n + 10 * ψ ^ (2 * n) =
+    10 * lucasConst (2 * n) + 15 * lucasConst n - 50 +
+    (6 - 2 * φ) * Real.sqrt 5 * (Nat.fib n : ℝ) := by
+  rw [phiS_int_coeff_real, phi_sub_psi_eq_sqrt5_fib]; ring
 
 /-- (6-2φ)·(2φ-1) = 10φ-10 -/
 theorem six_sub_two_phi_sqrt5 :
@@ -39,19 +57,6 @@ theorem SY_coeff_golden_form (n : ℕ) :
   rw [phiS_int_fibonacci]
   have h := six_sub_two_phi_mul_sqrt5
   nlinarith [h]
-
-/-! ## AF channel structure: Im(λ) ∈ ℤ·√15
-
-5√5·A_n·AF_coeff = 10√15·A_n·i is purely imaginary. -/
-
-/-- AF coefficient is integer -/
-theorem AF_coeff_is_integer (n : ℕ) : ∃ k : ℤ, phiA_fib_coeff n = k :=
-  ⟨phiA_fib_coeff n, rfl⟩
-
-/-- AF channel is quantized: Im proportional to √15 -/
-theorem AF_channel_quantized (c_A : ℝ) :
-    ((5 : ℂ) * ↑(Real.sqrt 5 * c_A) * AF_coeff).im =
-    10 * Real.sqrt 15 * c_A := AF_channel_im c_A
 
 /-! ## Galois separation: eigenvalue lies in ℚ(√5) + ℚ(√5)·i√3
 

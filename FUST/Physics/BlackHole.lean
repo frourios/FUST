@@ -1,4 +1,4 @@
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.MassGap
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -12,7 +12,7 @@ No continuous theory (GR, QFT, Bekenstein-Hawking) is assumed.
 
 namespace FUST.BlackHole
 
-open FUST.WaveEquation FUST.TimeStructure FUST
+open FUST.SchrodingerEquation FUST.TimeStructure FUST
 
 /-! ## Discrete Scale Lattice
 

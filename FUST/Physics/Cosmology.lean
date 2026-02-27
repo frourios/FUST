@@ -1,5 +1,5 @@
 import FUST.Physics.TimeStructure
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
@@ -10,7 +10,7 @@ Scale lattice {φⁿ} and hierarchical suppression from time evolution (TimeStru
 
 namespace FUST.Cosmology
 
-open FUST.TimeStructure FUST.WaveEquation
+open FUST.TimeStructure FUST.SchrodingerEquation
 
 /-! ## Scale Lattice from φ-Invariance
 

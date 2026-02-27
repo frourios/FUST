@@ -40,6 +40,11 @@ import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 
+import FUST.Math.EulerOperator
+import FUST.Math.FibonacciArithmetic
+import FUST.Math.SpectralGalois
+import FUST.Math.SpectralObstruction
+
 import FUST.Physics.BlackHole
 import FUST.Physics.Cosmology
 import FUST.Physics.CouplingConstants
@@ -64,11 +69,11 @@ import FUST.Physics.Poincare
 import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.ScaleStructure
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.Superconductivity
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeStructure
 import FUST.Physics.VacuumStability
-import FUST.Physics.WaveEquation
 import FUST.Physics.WeinbergAngle
 
 import FUST.Problems.NavierStokes
@@ -77,10 +82,6 @@ import FUST.Problems.YangMills
 import FUST.Basic
 import FUST.DimensionalAnalysis
 import FUST.DζOperator
-import FUST.EulerOperator
-import FUST.FibonacciArithmetic
 import FUST.FζDim
 import FUST.FζOperator
 import FUST.SpectralCoefficients
-import FUST.SpectralGalois
-import FUST.SpectralObstruction

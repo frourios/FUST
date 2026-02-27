@@ -874,7 +874,7 @@ theorem sub_planck_thermal_dissipation :
     (∀ f, ¬IsInKerFζ f → ∃ t, entropyAtFζ f t > 0) ∧
     (∀ n ≥ 3, (dissipationCoeff n)^2 > 0) :=
   ⟨planckSecond_pos,
-   third_law_massive_positive_entropy,
+   third_law_positive_entropy,
    dissipation_positive_outside_kernel⟩
 
 end ThermalDissipationArgument

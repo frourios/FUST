@@ -1,4 +1,4 @@
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
@@ -26,7 +26,7 @@ Gravity emerges from the complete Fζ hierarchy through:
 
 namespace FUST.GravitationalCoupling
 
-open FUST.WaveEquation FUST.TimeStructure FUST.DζOperator
+open FUST.SchrodingerEquation FUST.TimeStructure FUST.DζOperator
 
 /-! ## Pair Counts C(m,2) -/
 

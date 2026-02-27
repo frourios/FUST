@@ -1,5 +1,5 @@
 import FUST.Physics.WeinbergAngle
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.MassRatios
 import FUST.Physics.CouplingConstants
 import Mathlib.Data.Nat.Choose.Basic

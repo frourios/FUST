@@ -1,108 +1,97 @@
 % FUST Physics Discoveries - Thermodynamics
-\chapter{Thermodynamics from \texorpdfstring{$D_\zeta$}{Dζ} Structure}
+\chapter{Thermodynamics from \texorpdfstring{$F_\zeta$}{Fζ} Structure}
 \label{chap:pd_thermodynamics}
 
 \section{Overview}
 \label{sec:thermo_overview}
 
-FUST derives all thermodynamic laws from the $F_\zeta$ operator structure:
+FUST derives all thermodynamic laws from the $F_\zeta$ operator structure.
+Time evolution $f \mapsto f(\varphi \cdot)$ is identified with the temporal direction via
+the Poincar\'{e} $I_4$ decomposition (Gravity.lean: $\Phi_A$-coeff built from $\varphi, \psi$
+with $\eta(\mathrm{inr}\,0, \mathrm{inr}\,0) = -1$).
+
 \begin{itemize}
-\item \textbf{First Law}: Energy conservation from $F_\zeta$ linearity
-\item \textbf{Second Law}: Entropy increase from $\varphi > 1$ amplification
-\item \textbf{Third Law}: Absolute zero unreachable for massive states ($f \notin \ker(F_\zeta)$)
-\item \textbf{Stefan-Boltzmann}: $L \propto T^4$ from spacetime dimension 4
+\item \textbf{Zeroth Law}: $\ker(F_\zeta)$ states share zero entropy (thermal equilibrium)
+\item \textbf{First Law}: $|F_\zeta f|^2$ is $\varphi$-equivariant (energy conservation via Noether)
+\item \textbf{Second Law}: $\varphi > 1$ amplifies $\ker(F_\zeta)^\perp$ components (entropy increase)
+\item \textbf{Third Law}: $f \notin \ker(F_\zeta) \Rightarrow \exists z,\, S(f)(z) > 0$ (absolute zero unreachable)
 \end{itemize}
 
-\section{Third Law of Thermodynamics}
-\label{sec:thermo_third_law}
+\textbf{Physical correspondence}:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Thermodynamics & FUST \\
+\hline
+Thermal equilibrium & $\ker(F_\zeta)$ (all states have $S = 0$) \\
+Energy & $|F_\zeta f|^2$ (Lagrangian) \\
+Entropy $S$ & $|F_\zeta f|^2$ (departure from $\ker(F_\zeta)$) \\
+Time evolution & $f \mapsto f(\varphi \cdot)$ \\
+Reversible process & Remains in $\ker(F_\zeta)$ \\
+Irreversible process & Transition to $\ker(F_\zeta)^\perp$ \\
+Absolute zero & $\forall z,\, S(f)(z) = 0$ \\
+Mass gap & $\Delta = 12/25 > 0$ \\
+\hline
+\end{tabular}
+\end{center}
 
-The third law states that absolute zero (zero entropy everywhere) is unreachable for massive states.
+\section{Zeroth Law: Thermal Equilibrium}
+\label{sec:thermo_zeroth_law}
 
-In FUST:
-\begin{itemize}
-\item Absolute zero $\Leftrightarrow \forall t,\, \mathrm{entropyAt}(f, t) = 0$
-\item $\mathrm{entropy\_zero\_iff\_ker}$: $(\forall t,\, \mathrm{entropyAt}(f, t) = 0) \Leftrightarrow f \in \ker(F_\zeta)$
-\item Therefore: $f \notin \ker(F_\zeta) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
-\end{itemize}
+In standard thermodynamics, the zeroth law establishes that thermal equilibrium is
+an equivalence relation. In FUST, $\ker(F_\zeta)$ states are all at ``absolute zero''
+--- they share identical entropy $S \equiv 0$.
 
-\begin{theorem}[Third Law: Massive States Cannot Reach Absolute Zero]
-\label{thm:third_law}
-\lean{FUST.Thermodynamics.third_law_massive_positive_entropy}
+\begin{theorem}[Zeroth Law: Kernel Equilibrium]
+\label{thm:zeroth_law}
+\lean{FUST.Thermodynamics.zeroth_law_kernel_equilibrium}
 \leanok
-For $f \notin \ker(F_\zeta)$:
+For $f, g \in \ker(F_\zeta)$:
 \[
-\exists t,\, \mathrm{entropyAt}(f, t) > 0
+\forall z,\, S(f)(z) = S(g)(z) = 0
 \]
 \end{theorem}
 
-\begin{theorem}[Absolute Zero Implies Lightlike]
-\label{thm:absolute_zero_lightlike}
-\lean{FUST.Thermodynamics.absolute_zero_implies_lightlike}
+For states outside $\ker(F_\zeta)$, same-degree scalar multiples have
+gauge-invariant entropy ratio, enabling temperature comparison:
+
+\begin{theorem}[Zeroth Law: Same-Degree Thermal Ratio]
+\label{thm:zeroth_law_thermal}
+\lean{FUST.Thermodynamics.zeroth_law_same_degree_thermal}
 \leanok
-If $\forall t,\, \mathrm{entropyAt}(f, t) = 0$, then $f \in \ker(F_\zeta)$.
-\end{theorem}
-
-\begin{theorem}[Lightlike States Can Reach Zero]
-\label{thm:lightlike_zero}
-\lean{FUST.Thermodynamics.lightlike_can_reach_zero}
-\leanok
-If $f \in \ker(F_\zeta)$, then $\forall t,\, \mathrm{entropyAt}(f, t) = 0$.
-\end{theorem}
-
-\section{Stefan-Boltzmann Law}
-\label{sec:thermo_stefan_boltzmann}
-
-The Stefan-Boltzmann law $L \propto T^4$ follows from:
-\begin{enumerate}
-\item $\mathrm{spacetimeDim} = 4$ (from $\ker(F_\zeta)$ dimension + time)
-\item Energy density scales as $\varphi^{-4k}$
-\item Temperature scales as $\varphi^k$
-\end{enumerate}
-
-Therefore: $L \propto \rho \propto \varphi^{-4k} = (\varphi^{-k})^4 \propto T^{-4}$
-
-\begin{theorem}[Stefan-Boltzmann Exponent]
-\label{thm:stefan_boltzmann_exponent}
-\lean{FUST.Thermodynamics.stefan_boltzmann_exponent}
-\leanok
+For $F_\zeta f(z) \neq 0$:
 \[
-\mathrm{spacetimeDim} = 4
+\frac{S(a \cdot f)(z)}{S(b \cdot f)(z)} = \frac{|a|^2}{|b|^2}
 \]
-\end{theorem}
-
-\begin{theorem}[Energy Density Ratio]
-\label{thm:energy_density_ratio}
-\lean{FUST.Thermodynamics.energy_density_ratio_is_phi_neg_4}
-\leanok
-\[
-\frac{\rho_{k+1}}{\rho_k} = \varphi^{-\mathrm{spacetimeDim}} = \varphi^{-4}
-\]
-\end{theorem}
-
-\begin{theorem}[Stefan-Boltzmann from Spacetime]
-\label{thm:stefan_boltzmann_spacetime}
-\lean{FUST.Thermodynamics.stefan_boltzmann_from_spacetime}
-\leanok
-\[
-\mathrm{spacetimeDim} = 4 \quad \text{and} \quad \forall k,\, \frac{\rho_{k+1}}{\rho_k} = \varphi^{-4}
-\]
+independent of $z$ (gauge-invariant).
 \end{theorem}
 
 \section{First Law: Energy Conservation}
 \label{sec:thermo_first_law}
 
-Energy conservation follows from $F_\zeta$ linearity and $L^2$ norm structure.
+Energy conservation follows from $\varphi$-equivariance of the $F_\zeta$ Lagrangian.
+This is the FUST Noether current: $\varphi$-scale symmetry implies energy conservation.
 
-\begin{theorem}[First Law: Linearity]
-\label{thm:first_law_linearity}
-\lean{FUST.Thermodynamics.first_law_linearity}
+\begin{theorem}[First Law: $\varphi$-Equivariance]
+\label{thm:first_law_equivariance}
+\lean{FUST.Thermodynamics.first_law_equivariance}
 \leanok
 \[
-F_\zeta[a \cdot f](x) = a \cdot F_\zeta[f](x)
+L[\mathrm{timeEvolution}(f)](z) = L[f](\varphi z)
 \]
 \end{theorem}
 
-\begin{theorem}[First Law: Energy Non-negativity]
+\begin{theorem}[Vacuum Energy is Zero]
+\label{thm:first_law_vacuum}
+\lean{FUST.Thermodynamics.first_law_vacuum_energy}
+\leanok
+For $f \in \ker(F_\zeta)$, $\forall n \in \mathbb{Z}$:
+\[
+S[f](n) = |F_\zeta f(\varphi^n)|^2 = 0
+\]
+\end{theorem}
+
+\begin{theorem}[Energy Non-negativity]
 \label{thm:first_law_nonneg}
 \lean{FUST.Thermodynamics.first_law_energy_nonneg}
 \leanok
@@ -111,21 +100,32 @@ F_\zeta[a \cdot f](x) = a \cdot F_\zeta[f](x)
 \]
 \end{theorem}
 
+\begin{theorem}[Action Monotonicity]
+\label{thm:first_law_monotone}
+\lean{FUST.Thermodynamics.first_law_action_monotone}
+\leanok
+For $N \leq M$:
+\[
+\sum_{n=-N}^{N} |F_\zeta f(\varphi^n)|^2 \leq \sum_{n=-M}^{M} |F_\zeta f(\varphi^n)|^2
+\]
+Enlarging the scale window cannot decrease energy.
+\end{theorem}
+
 \section{Second Law: Entropy Increase}
 \label{sec:thermo_second_law}
 
-Entropy increases under time evolution because $\varphi > 1$ amplifies perpProjection.
+Entropy increases under time evolution because $\varphi > 1$ amplifies $\ker(F_\zeta)^\perp$ components.
 
-\begin{theorem}[Second Law: Amplification]
-\label{thm:second_law_amplification}
-\lean{FUST.Thermodynamics.second_law_amplification}
+\begin{theorem}[Entropy Shift under Time Evolution]
+\label{thm:second_law_shift}
+\lean{FUST.Thermodynamics.second_law_entropy_shift}
 \leanok
 \[
-\varphi > 1
+S(\mathrm{timeEvolution}(f))(z) = S(f)(\varphi z)
 \]
 \end{theorem}
 
-\begin{theorem}[Second Law: Monomial Amplification]
+\begin{theorem}[Monomial Amplification]
 \label{thm:second_law_monomial}
 \lean{FUST.Thermodynamics.second_law_monomial_amplification}
 \leanok
@@ -134,9 +134,27 @@ Entropy increases under time evolution because $\varphi > 1$ amplifies perpProje
 \]
 \end{theorem}
 
-\begin{theorem}[Second Law: Power Amplification]
-\label{thm:second_law_phi_pow}
-\lean{FUST.Thermodynamics.second_law_phi_pow_amplifies}
+\begin{theorem}[Reversible Process]
+\label{thm:second_law_reversible}
+\lean{FUST.Thermodynamics.second_law_reversible}
+\leanok
+\[
+f \in \ker(F_\zeta) \Rightarrow \mathrm{timeEvolution}(f) \in \ker(F_\zeta)
+\]
+\end{theorem}
+
+\begin{theorem}[Irreversible Process]
+\label{thm:second_law_irreversible}
+\lean{FUST.Thermodynamics.second_law_irreversible}
+\leanok
+\[
+f \notin \ker(F_\zeta) \Rightarrow \mathrm{timeEvolution}(f) \notin \ker(F_\zeta)
+\]
+\end{theorem}
+
+\begin{theorem}[Amplification Factor]
+\label{thm:second_law_amplification}
+\lean{FUST.Thermodynamics.second_law_amplification}
 \leanok
 For $n \geq 1$:
 \[
@@ -144,47 +162,108 @@ For $n \geq 1$:
 \]
 \end{theorem}
 
-\begin{theorem}[Second Law: Entropy Increase]
-\label{thm:second_law_entropy}
-\lean{FUST.Thermodynamics.second_law_entropy_increase}
+\section{Third Law: Absolute Zero Unreachable}
+\label{sec:thermo_third_law}
+
+Active states ($f \notin \ker(F_\zeta)$) cannot reach absolute zero ($S \equiv 0$).
+
+\begin{theorem}[Third Law: Positive Entropy]
+\label{thm:third_law}
+\lean{FUST.Thermodynamics.third_law_positive_entropy}
 \leanok
-For $x > 0$:
+For $f \notin \ker(F_\zeta)$:
 \[
-\mathrm{frourioInfo}\left(\frac{1}{\varphi x}\right) = \mathrm{frourioInfo}\left(\frac{1}{x}\right) + \mathrm{phiStep}
+\exists z,\, S(f)(z) > 0
 \]
 \end{theorem}
 
-\section{Complete Thermodynamics Summary}
-\label{sec:thermo_summary}
-
-\begin{theorem}[FUST Thermodynamics]
-\label{thm:fust_thermodynamics}
-\lean{FUST.Thermodynamics.fust_thermodynamics}
+\begin{theorem}[Absolute Zero Characterization]
+\label{thm:third_law_iff}
+\lean{FUST.Thermodynamics.third_law_absolute_zero_iff}
 \leanok
-All thermodynamic laws are derived from $F_\zeta$ structure:
-\begin{enumerate}
-\item \textbf{First Law}: $F_\zeta[a \cdot f] = a \cdot F_\zeta[f]$ and $\mathcal{A}[f] \geq 0$
-\item \textbf{Second Law}: $\varphi > 1$ and $\varphi^n > 1$ for $n \geq 1$
-\item \textbf{Third Law}: $f \notin \ker(F_\zeta) \Rightarrow \exists t,\, \mathrm{entropyAt}(f, t) > 0$
-\item \textbf{Light-Sound Separation}: $\ker(F_\zeta)$ vs $\ker(F_\zeta)^\perp$
-\item \textbf{Stefan-Boltzmann}: $\mathrm{spacetimeDim} = 4$
-\end{enumerate}
+\[
+(\forall z,\, S(f)(z) = 0) \iff f \in \ker(F_\zeta)
+\]
 \end{theorem}
 
-\section{Dimensional Types}
-\label{sec:thermo_dim}
+\begin{theorem}[Finite Unreachability]
+\label{thm:third_law_finite}
+\lean{FUST.Thermodynamics.third_law_finite_unreachable}
+\leanok
+For $f \notin \ker(F_\zeta)$ and $n \in \mathbb{N}$:
+\[
+\mathrm{timeEvolution}^n(f) \notin \ker(F_\zeta)
+\]
+Finite iterations of time evolution cannot bring an active state to $\ker(F_\zeta)$.
+\end{theorem}
+
+\begin{theorem}[Mass Gap]
+\label{thm:third_law_mass_gap}
+\lean{FUST.Thermodynamics.third_law_mass_gap}
+\leanok
+\[
+m^2_{\min} = 14 > 0
+\]
+The minimum energy of active states is positive.
+\end{theorem}
+
+\begin{theorem}[Lightlike States at Zero]
+\label{thm:third_law_lightlike}
+\lean{FUST.Thermodynamics.third_law_lightlike_zero}
+\leanok
+For $f \in \ker(F_\zeta)$:
+\[
+\forall z,\, S(f)(z) = 0
+\]
+\end{theorem}
+
+\section{Structural Properties of Entropy}
+\label{sec:thermo_entropy_structure}
+
+\begin{theorem}[Entropy--Activity Equivalence]
+\label{thm:entropy_active}
+\lean{FUST.Thermodynamics.entropy_pos_iff_active}
+\leanok
+\[
+S(f)(z) > 0 \iff F_\zeta f(z) \neq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Quadratic Scaling]
+\label{thm:entropy_scaling}
+\lean{FUST.Thermodynamics.entropy_scalar_scaling}
+\leanok
+\[
+S(c \cdot f)(z) = |c|^2 \cdot S(f)(z)
+\]
+\end{theorem}
+
+\begin{theorem}[Thermal Gap]
+\label{thm:thermal_gap}
+\lean{FUST.Thermodynamics.thermal_gap}
+\leanok
+\[
+\Delta = \frac{|\mathrm{AF\_coeff}|^2}{5^2} = \frac{12}{25} > 0
+\]
+\end{theorem}
+
+\section{Summary}
+\label{sec:thermo_summary}
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-Quantity & Type & Dimension \\
+Law & Statement & Lean \\
 \hline
-$\mathrm{entropyAt}(f, t)$ & ScaleQuantity & $(-10, 2, -2)$ (= dimLagrangian) \\
-$\mathcal{A}_N[f]$ & ScaleQuantity & $(-10, 2, -2)$ (= dimLagrangian) \\
-spacetimeDim $= 4$ & CountQuantity & --- \\
-$\varphi^{-4}$ (density ratio) & ScaleQ$(0,0,0)$ & dimensionless \\
+Zeroth & $\ker(F_\zeta)$ states share $S = 0$ & \texttt{zeroth\_law\_kernel\_equilibrium} \\
+First & $L[f(\varphi\cdot)](z) = L[f](\varphi z)$ & \texttt{first\_law\_equivariance} \\
+First & $\mathcal{A}[f] \geq 0$ & \texttt{first\_law\_energy\_nonneg} \\
+Second & $f \notin \ker \Rightarrow \mathrm{timeEvol}(f) \notin \ker$ & \texttt{second\_law\_irreversible} \\
+Second & $\varphi^n > 1$ ($n \geq 1$) & \texttt{second\_law\_amplification} \\
+Third & $f \notin \ker \Rightarrow \exists z,\, S > 0$ & \texttt{third\_law\_positive\_entropy} \\
+Third & $\mathrm{timeEvol}^n(f) \notin \ker$ & \texttt{third\_law\_finite\_unreachable} \\
 \hline
 \end{tabular}
 \end{center}
 
-Lean: \texttt{FUST.TimeStructure.entropyAtFζ} with type \texttt{FζLagrangian}.
+All theorems are in the \texttt{FUST.Thermodynamics} namespace.

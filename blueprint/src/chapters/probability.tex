@@ -1,0 +1,322 @@
+% FUST Probability Theory
+\chapter{FUST Probability Theory}
+\label{chap:probability}
+
+This chapter presents probability theory derived structurally from the
+$F_\zeta = 5z \cdot D_\zeta$ operator, without external probability axioms or measure theory
+assumptions. Probability emerges from:
+\begin{enumerate}
+\item $\varphi$-scale iteration generating observation sequences
+\item Empirical distribution from frequency counts
+\item Born rule as a structural consequence of $F_\zeta$ action
+\end{enumerate}
+
+\section{Gauge Invariance of Same-Degree Ratios}
+\label{sec:gauge_invariance}
+
+\subsection{\texorpdfstring{Linearity of $F_\zeta$}{Linearity of Fζ}}
+
+\begin{theorem}[$F_\zeta$ Linear Scalar]
+\label{thm:Fzeta_linear}
+\lean{FUST.Probability.Fζ_linear_scalar}
+\leanok
+For any scalar $a \in \mathbb{C}$ and function $f$:
+\[
+F_\zeta[a \cdot f](x) = a \cdot F_\zeta[f](x)
+\]
+\end{theorem}
+
+\subsection{Gauge Invariance}
+
+For same-degree monomials $f_A = a \cdot x^n$ and $f_B = b \cdot x^n$:
+\[
+\frac{|F_\zeta[f_A](x)|}{|F_\zeta[f_B](x)|} = \frac{|a|}{|b|}
+\]
+This is independent of $x$ (gauge-invariant).
+
+\begin{theorem}[Same-Degree Ratio Gauge Invariance]
+\label{thm:gauge_invariant}
+\lean{FUST.Probability.same_degree_ratio_gauge_invariant}
+\leanok
+For $b \neq 0$ and $F_\zeta[f](x) \neq 0$:
+\[
+\frac{|F_\zeta[a \cdot f](x)|}{|F_\zeta[b \cdot f](x)|} = \frac{|a|}{|b|}
+\]
+\end{theorem}
+
+\begin{proof}
+By linearity:
+\begin{align*}
+\frac{|F_\zeta[a \cdot f](x)|}{|F_\zeta[b \cdot f](x)|}
+&= \frac{|a \cdot F_\zeta[f](x)|}{|b \cdot F_\zeta[f](x)|} \\
+&= \frac{|a| \cdot |F_\zeta[f](x)|}{|b| \cdot |F_\zeta[f](x)|} \\
+&= \frac{|a|}{|b|}
+\end{align*}
+\end{proof}
+
+\begin{corollary}[Position Independence]
+\label{cor:position_independent}
+\lean{FUST.Probability.monomial_ratio_invariant}
+\leanok
+For any $x, y$ with $F_\zeta[t^n](x) \neq 0$ and $F_\zeta[t^n](y) \neq 0$:
+\[
+\frac{|F_\zeta[a \cdot t^n](x)|}{|F_\zeta[b \cdot t^n](x)|} =
+\frac{|F_\zeta[a \cdot t^n](y)|}{|F_\zeta[b \cdot t^n](y)|}
+\]
+\end{corollary}
+
+\subsection{Physical Interpretation}
+
+The gauge invariance of same-degree ratios means that:
+\begin{itemize}
+\item Probability ratios are well-defined
+\item They don't depend on the choice of ``gauge'' (position $x$)
+\item This provides the foundation for FUST probability theory
+\end{itemize}
+
+\section{Observation Sequences}
+\label{sec:observation}
+
+\subsection{\texorpdfstring{$\varphi$-Scale Transformation}{phi-Scale Transformation}}
+
+The $\varphi$-scale transformation:
+\[
+x \mapsto \varphi^k \cdot x \quad (k \in \mathbb{Z})
+\]
+generates observation sequences that correspond to ``trials'' in probability theory.
+
+\begin{definition}[Observation at Step $k$]
+\label{def:observation}
+\lean{FUST.Probability.observationAt}
+\leanok
+For state $f$ and base point $x_0$:
+\[
+A_f(k) := |F_\zeta[f](\varphi^k \cdot x_0)|
+\]
+\end{definition}
+
+\begin{theorem}[Observations Non-negative]
+\label{thm:obs_nonneg}
+\lean{FUST.Probability.observationAt_nonneg}
+\leanok
+\[
+A_f(k) \geq 0 \quad \forall k \in \mathbb{Z}
+\]
+\end{theorem}
+
+\subsection{\texorpdfstring{$\varphi$-Invariant Measure}{phi-Invariant Measure}}
+
+The $\varphi$-scale invariant measure is uniquely determined:
+\[
+d\mu = \frac{dx}{x}
+\]
+This is the Haar measure on the multiplicative group, derived from
+$\varphi$-scale structure (not assumed externally).
+
+\begin{theorem}[Shift Invariance]
+\label{thm:shift_invariance}
+\lean{FUST.Probability.observation_shift}
+\leanok
+\[
+A_f(k; \varphi \cdot x_0) = A_f(k+1; x_0)
+\]
+\end{theorem}
+
+\subsection{Discrete Action}
+
+\begin{definition}[Discrete Action]
+\label{def:discrete_action}
+\lean{FUST.Probability.discreteAction}
+\leanok
+\[
+\mathcal{A}_N[f] := \sum_{k=-N}^{N} A_f(k)^2 \cdot \log\varphi
+\]
+\end{definition}
+
+\begin{definition}[Haar Weight]
+\label{def:haar_weight}
+\lean{FUST.Probability.haarWeight}
+\leanok
+\[
+w := \log\varphi
+\]
+\end{definition}
+
+\begin{theorem}[Action Non-negative]
+\label{thm:action_nonneg}
+\lean{FUST.Probability.discreteAction_nonneg}
+\leanok
+\[
+\mathcal{A}_N[f] \geq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Kernel States Have Zero Action]
+\label{thm:action_zero_ker}
+\lean{FUST.Probability.action_zero_for_ker}
+\leanok
+If $f \in \ker(F_\zeta)$, then $\mathcal{A}_N[f] = 0$ for all $N$.
+\end{theorem}
+
+\section{Empirical Distribution}
+\label{sec:distribution}
+
+\subsection{Empirical Distribution Function}
+
+\begin{definition}[Count Below Threshold]
+\label{def:count_below}
+\lean{FUST.Probability.countBelow}
+\leanok
+\[
+\#\{k \in [-N, N] \mid A_f(k) \leq t\}
+\]
+\end{definition}
+
+\begin{definition}[Empirical Distribution at Finite $N$]
+\label{def:empirical_dist}
+\lean{FUST.Probability.empiricalDistN}
+\leanok
+\[
+\rho_f^{(N)}(t) := \frac{\#\{k \in [-N, N] \mid A_f(k) \leq t\}}{2N + 1}
+\]
+\end{definition}
+
+\begin{theorem}[Distribution Bounds]
+\label{thm:dist_bounds}
+\lean{FUST.Probability.empiricalDistN_bounds}
+\leanok
+\[
+0 \leq \rho_f^{(N)}(t) \leq 1
+\]
+\end{theorem}
+
+\begin{theorem}[Distribution at Infinity]
+\label{thm:dist_infinity}
+\lean{FUST.Probability.empiricalDistN_at_infinity}
+\leanok
+If all observations are bounded by $M < t$, then:
+\[
+\rho_f^{(N)}(t) = 1
+\]
+\end{theorem}
+
+\subsection{FUST Probability}
+
+For set $E \subseteq \mathbb{R}_{\geq 0}$:
+
+\begin{definition}[FUST Probability at Finite $N$]
+\label{def:fust_prob}
+\lean{FUST.Probability.fustProbN}
+\leanok
+\[
+P_f^{(N)}(E) := \frac{\#\{k \in [-N, N] \mid A_f(k) \in E\}}{2N + 1}
+\]
+\end{definition}
+
+\begin{theorem}[Normalization]
+\label{thm:normalization}
+\lean{FUST.Probability.fustProb_normalization}
+\leanok
+\[
+P_f^{(N)}(\mathbb{R}_{\geq 0}) = 1
+\]
+\end{theorem}
+
+\begin{proof}
+Since all observations are non-negative ($A_f(k) \geq 0$), every observation
+is in $\mathbb{R}_{\geq 0}$.
+\end{proof}
+
+\begin{theorem}[Probability Non-negative]
+\label{thm:prob_nonneg}
+\lean{FUST.Probability.fustProbN_nonneg}
+\leanok
+\[
+P_f^{(N)}(E) \geq 0
+\]
+\end{theorem}
+
+\begin{theorem}[Probability Bounded]
+\label{thm:prob_bounded}
+\lean{FUST.Probability.fustProbN_le_one}
+\leanok
+\[
+P_f^{(N)}(E) \leq 1
+\]
+\end{theorem}
+
+\section{Born Rule}
+\label{sec:born_rule}
+
+\subsection{Action and Expectation}
+
+The FUST action:
+\[
+\mathcal{A}[f] = \int |F_\zeta[f](x)|^2 \frac{dx}{x}
+\]
+equals the probability expectation:
+\[
+\mathcal{A}[f] = \mathbb{E}_{P_f}[|F_\zeta[f]|^2]
+\]
+
+This shows Born rule is NOT a new axiom but a structural consequence
+of the $F_\zeta$ action.
+
+\subsection{Discrete Version}
+
+\begin{definition}[Discrete Expectation]
+\label{def:discrete_expectation}
+\lean{FUST.Probability.discreteExpectation}
+\leanok
+\[
+\mathbb{E}_N[|F_\zeta[f]|^2] := \frac{1}{2N+1} \sum_{k=-N}^{N} A_f(k)^2
+\]
+\end{definition}
+
+\begin{theorem}[Born Rule (Discrete)]
+\label{thm:born_rule}
+\lean{FUST.Probability.born_rule_discrete}
+\leanok
+\[
+\mathcal{A}_N[f] = (2N + 1) \cdot \log\varphi \cdot \mathbb{E}_N[|F_\zeta[f]|^2]
+\]
+\end{theorem}
+
+\begin{proof}
+By definition:
+\begin{align*}
+\mathcal{A}_N[f] &= \sum_{k=-N}^{N} A_f(k)^2 \cdot \log\varphi \\
+&= (2N+1) \cdot \log\varphi \cdot \frac{1}{2N+1} \sum_{k=-N}^{N} A_f(k)^2 \\
+&= (2N+1) \cdot \log\varphi \cdot \mathbb{E}_N[|F_\zeta[f]|^2]
+\end{align*}
+\end{proof}
+
+\subsection{Physical Interpretation}
+
+The Born rule $P \propto |\psi|^2$ in quantum mechanics is usually
+postulated as a fundamental axiom. In FUST:
+
+\begin{enumerate}
+\item $|F_\zeta[f]|^2$ naturally appears in the action functional
+\item The $\varphi$-scale iteration generates a ``sample space''
+\item Frequency counts give empirical probabilities
+\item The action equals the expectation of $|F_\zeta[f]|^2$
+\end{enumerate}
+
+\textbf{Conclusion}: Born rule emerges from the $F_\zeta$ structure
+without being postulated.
+
+\subsection{Complete Summary}
+
+\begin{theorem}[FUST Probability Theory]
+\label{thm:fust_probability}
+\lean{FUST.Probability.fust_probability_theory}
+\leanok
+\begin{enumerate}
+\item[(A)] Same-degree ratio is gauge-invariant
+\item[(B)] Observation values are non-negative
+\item[(C)] Probability normalization: $P_f(\mathbb{R}_{\geq 0}) = 1$
+\item[(D)] Born rule: Action $= (2N+1) \cdot \log\varphi \cdot$ Expectation
+\item[(E)] $\ker(F_\zeta)$ states have zero action
+\end{enumerate}
+\end{theorem}

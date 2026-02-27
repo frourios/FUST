@@ -1,15 +1,16 @@
 import FUST.Physics.Gravity
 import FUST.Physics.MassGap
 import FUST.Physics.LeastAction
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.WeinbergAngle
 import Mathlib.LinearAlgebra.Matrix.Trace
 
 namespace FUST.YangMills
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST
-open FUST.Physics.Lorentz FUST.Physics.Poincare FUST.Physics.Gravity
+open LieAlgebra.Orthogonal Matrix
+open FUST.FζOperator FUST.DζOperator FUST.Physics.Lorentz FUST.Physics.Poincare FUST.Physics.Gravity
+open FUST.TimeStructure FUST.LeastAction FUST.SchrodingerEquation FUST.WeinbergAngle
 
 /-! ## Killing form on so(3,1) via matrix trace -/
 
@@ -149,8 +150,6 @@ theorem curvatureEnergy_diagonal_zero (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ 
 
 section AlgebraicConfinement
 
-open FUST FUST.FζOperator FUST.DζOperator FUST.TimeStructure FUST.LeastAction FUST.WaveEquation
-
 theorem kerFζ_add_closed (f g : ℂ → ℂ) (hf : IsInKerFζ f) (hg : IsInKerFζ g) :
     IsInKerFζ (fun t => f t + g t) := by
   intro z; rw [Fζ_additive]; rw [hf z, hg z, add_zero]
@@ -249,8 +248,6 @@ end AlgebraicConfinement
 
 section MainTheorem
 
-open FUST FUST.TimeStructure FUST.FζOperator FUST.WeinbergAngle
-
 /-- SU(3) mass gap from Fζ: syWeight = 3 → SU(3), Δ = 12/25 > 0, confinement from ker(Fζ) -/
 theorem yangMills_massGap_SU3 :
     -- SU(3) from SY channel weight = 3
@@ -277,9 +274,7 @@ theorem yangMills_massGap_SU2 :
             Fζ (fun w => w ^ (6 * k + 4)) z = 0) ∧
     -- Active mode n ≡ 5 mod 6 detects mass
     (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0) :=
-  ⟨rfl,
-   fun k z => FUST.kernel_mod6 k z,
-   Fζ_detects_fifth⟩
+  ⟨rfl, fun k z => FUST.kernel_mod6 k z, Fζ_detects_fifth⟩
 
 /-- Yang-Mills mass gap: Fζ channel structure determines gauge groups and mass gaps -/
 theorem yangMills_massGap :
@@ -289,14 +284,12 @@ theorem yangMills_massGap :
     (0 < FUST.massScale ∧ FUST.massScale = 12 / 25 ∧
      0 < FUST.massGapSq ∧ FUST.massGapSq = 14) ∧
     -- SU(2): spinDegeneracy = 2, active mode detects mass
-    (spinDegeneracy = 2 ∧
-     (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0)) ∧
+    (spinDegeneracy = 2 ∧ (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0)) ∧
     -- Confinement: ker(Fζ) not a subalgebra
     (∃ f g, IsInKerFζ f ∧ IsInKerFζ g ∧ ¬IsInKerFζ (fun t => f t * g t)) :=
   ⟨⟨rfl, rfl, rfl⟩,
    ⟨FUST.massScale_pos, FUST.massScale_eq, FUST.massGapSq_pos, FUST.massGapSq_eq⟩,
-   ⟨rfl, Fζ_detects_fifth⟩,
-   ker_Fζ_not_subalgebra⟩
+   ⟨rfl, Fζ_detects_fifth⟩, ker_Fζ_not_subalgebra⟩
 
 end MainTheorem
 

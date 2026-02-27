@@ -1,4 +1,4 @@
-import FUST.Physics.WaveEquation
+import FUST.Physics.SchrodingerEquation
 import FUST.Physics.WeinbergAngle
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
