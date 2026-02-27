@@ -4,8 +4,6 @@ Carbon Z = spinDegeneracy × spatialDim = 6.
 ¹²C (Z=N=6) is a symmetric nucleus with g = unitCell^6.
 ¹⁴C has N = 8 = nuclearMagic(1), a magic neutron number.
 -/
-
-import FUST.DifferenceOperators
 import FUST.Chemistry.HeliumInertness
 
 namespace FUST.Chemistry.Carbon

@@ -1,0 +1,368 @@
+% Chapter 3: The Unified Operators Dζ and Fζ
+\chapter{The Unified Operators \texorpdfstring{$D_\zeta$}{Dζ} and \texorpdfstring{$F_\zeta$}{Fζ}}
+\label{chap:unified_operator}
+
+\section{Component Operators \texorpdfstring{$\mathrm{Diff}_n$}{Diffn} (ZF + DC)}
+\label{sec:component_operators}
+
+All operators act on functions $f : \mathbb{C} \to \mathbb{C}$ with $z \neq 0$. These are the \textbf{hyperbolic components}, acting on the $\varphi$-dilation lattice $\{\varphi^k z\}$.
+
+\begin{definition}[$\mathrm{Diff}_2$: 2-Point Difference]
+\label{def:Diff2}
+\lean{FUST.Diff2}
+\leanok
+\[
+\mathrm{Diff}_2 f(z) = \frac{f(\varphi z)-f(\psi z)}{(\varphi-\psi)z}
+\]
+\end{definition}
+
+\begin{definition}[$\mathrm{Diff}_3$: 3-Point Difference]
+\label{def:Diff3}
+\[
+\mathrm{Diff}_3 f(z) = \frac{f(\varphi^2 z) - f(\varphi z) + f(\psi z)}{(\varphi-\psi)^2 z}
+\]
+\end{definition}
+
+\begin{definition}[$\mathrm{Diff}_4$: 4-Point Difference]
+\label{def:Diff4}
+\[
+\mathrm{Diff}_4 f(z) = \frac{f(\varphi^2 z) - \varphi^2 f(\varphi z) + \psi^2 f(\psi z) - f(\psi^2 z)}{(\varphi-\psi)^3 z}
+\]
+\end{definition}
+
+\begin{definition}[$\mathrm{Diff}_5$: 5-Point Difference]
+\label{def:Diff5}
+\lean{FUST.Diff5}
+\leanok
+\[
+\mathrm{Diff}_5 f(z) = \frac{f(\varphi^2 z) + f(\varphi z) - 4f(z) + f(\psi z) + f(\psi^2 z)}{(\varphi-\psi)^4 z}
+\]
+\end{definition}
+
+\begin{definition}[$\mathrm{Diff}_6$: 6-Point Difference]
+\label{def:Diff6}
+\lean{FUST.Diff6}
+\leanok
+\[
+\mathrm{Diff}_6 f(z) = \frac{f(\varphi^3 z) - 3f(\varphi^2 z) + f(\varphi z) - f(\psi z) + 3f(\psi^2 z) - f(\psi^3 z)}{(\varphi-\psi)^5 z}
+\]
+\end{definition}
+
+\section{Coefficient Uniqueness}
+\label{sec:coeff_uniqueness}
+
+\begin{theorem}[$\mathrm{Diff}_5$ and $\mathrm{Diff}_6$ Coefficient Uniqueness]
+\label{thm:coeff_uniqueness}
+\lean{FUST.Diff5_coefficients_unique, FUST.Diff6_coefficients_unique}
+\leanok
+The only coefficients satisfying the kernel conditions are $a=-1, b=-4$ ($\mathrm{Diff}_5$) and $A=3, B=1$ ($\mathrm{Diff}_6$).
+\end{theorem}
+
+\begin{definition}[Half-Order Parameter $\mu$]
+\label{def:halfOrderParam}
+\lean{FUST.DζOperator.halfOrderParam}
+\leanok
+\[
+\mu = \frac{2}{\varphi + 2} = \frac{2}{\varphi^2 + 1}
+\]
+The unique parameter satisfying $\mu(\varphi^2 + 1) = 2$.
+\end{definition}
+
+\section{Elliptic Component: \texorpdfstring{$\zeta_6$}{ζ6}-DFT}
+\label{sec:zeta6_operators}
+
+The $\zeta_6$-rotation operators act on the compact elliptic lattice $\{\zeta_6^k z\}_{k=0}^5$.
+
+\begin{definition}[$\zeta_6$-DFT: Mode-3 Projection]
+\label{def:zeta6_Diff6}
+\lean{FUST.DζOperator.zeta6_Diff6}
+\leanok
+\[
+\zeta_6\text{-}\mathrm{Diff}_6(f)(z) = \sum_{k=0}^{5} (-1)^k f(\zeta_6^k z)
+\]
+\end{definition}
+
+\begin{theorem}[$\zeta_6$-DFT Kernel]
+\label{thm:zeta6_kernel}
+\lean{FUST.DζOperator.zeta6_Diff6_const, FUST.DζOperator.zeta6_Diff6_linear, FUST.DζOperator.zeta6_Diff6_quadratic}
+\leanok
+$\ker(\zeta_6\text{-}\mathrm{Diff}_6) \supseteq \mathrm{span}\{1, z, z^2\}$ and $\zeta_6\text{-}\mathrm{Diff}_6[z^3] = 2z^3 \neq 0$.
+The elliptic kernel has the same dimension 3 as the hyperbolic $\ker(\mathrm{Diff}_6)$.
+\end{theorem}
+
+\section{Channel Decomposition: AFNum and SymNum}
+\label{sec:channel_decomposition}
+
+The $\mathbb{Z}/6\mathbb{Z}$ Fourier transform decomposes into two channels based on parity:
+
+\begin{definition}[AFNum: Antisymmetric Channel]
+\label{def:AFNum}
+\lean{FUST.DζOperator.AFNum}
+\leanok
+\[
+\mathrm{AFNum}(g)(z) = g(\zeta_6 z) + g(\zeta_6^2 z) - g(\zeta_6^4 z) - g(\zeta_6^5 z)
+\]
+Fourier coefficients $[0, 1, 1, 0, -1, -1]$: the \textbf{anti-Fibonacci sequence} on $\mathbb{Z}/6\mathbb{Z}$.
+\end{definition}
+
+\begin{definition}[SymNum: Symmetric Channel]
+\label{def:SymNum}
+\lean{FUST.DζOperator.SymNum}
+\leanok
+\[
+\mathrm{SymNum}(g)(z) = 2g(z) + g(\zeta_6 z) - g(\zeta_6^2 z) - 2g(\zeta_6^3 z) - g(\zeta_6^4 z) + g(\zeta_6^5 z)
+\]
+Fourier coefficients $[2, 1, -1, -2, -1, 1]$.
+\end{definition}
+
+\begin{theorem}[Channel Fourier Coefficients]
+\label{thm:channel_coefficients}
+\lean{FUST.DζOperator.AF_coeff_eq, FUST.DζOperator.SY_coeff_val}
+\leanok
+On monomials $g(w) = w^s$:
+\[
+\mathrm{AF\_coeff} = \zeta_6 + \zeta_6^2 - \zeta_6^4 - \zeta_6^5 = 2i\sqrt{3}, \quad
+\mathrm{SY\_coeff} = 6
+\]
+The antisymmetric coefficient is \textbf{purely imaginary}; the symmetric coefficient is \textbf{real}.
+\end{theorem}
+
+\begin{theorem}[Mode Selection]
+\label{thm:mode_selection}
+Active modes $n \equiv 1, 5 \pmod{6}$ produce nonzero eigenvalues; kernel modes $n \equiv 0, 2, 3, 4 \pmod{6}$ are annihilated by both channels.
+\end{theorem}
+
+\section{Hyperbolic Channels: \texorpdfstring{$\Phi_A$}{Φ\_A} and \texorpdfstring{$\Phi_S$}{Φ\_S}}
+\label{sec:phi_channels}
+
+\begin{definition}[$\Phi_A$: Antisymmetric Hyperbolic Channel]
+\label{def:PhiA}
+\lean{FUST.DζOperator.Φ_A}
+\leanok
+\[
+\Phi_A(f)(z) = f(\varphi^3 z) - 4f(\varphi^2 z) + (3+\varphi)f(\varphi z) - (3+\psi)f(\psi z) + 4f(\psi^2 z) - f(\psi^3 z)
+\]
+6-point antisymmetric stencil on the $\varphi$-lattice. The parabolic point $z = 1$ has coefficient 0 by antisymmetry.
+\end{definition}
+
+\begin{definition}[$\Phi_S$: Symmetric Hyperbolic Channel]
+\label{def:PhiS}
+\lean{FUST.DζOperator.Φ_S}
+\leanok
+\[
+\Phi_S(f)(z) = 2f(\varphi^2 z) + (3+\mu)f(\varphi z) - 10f(z) + (3-\mu)f(\psi z) + 2f(\psi^2 z)
+\]
+5-point symmetric stencil \textbf{including} the parabolic point $f(z)$ with coefficient $-10$.
+\end{definition}
+
+\begin{theorem}[$\Phi_S$ Rank-Three Decomposition]
+\label{thm:PhiS_rank_three}
+\lean{FUST.DζOperator.Phi_S_rank_three}
+\leanok
+$\Phi_S = 2 \cdot \mathrm{Diff}_5 + \mathrm{Diff}_3 + \mu \cdot \mathrm{Diff}_2$, and the $3 \times 3$ matrix of sub-operator coefficients
+$(\sigma_{\mathrm{Diff}_5}, \sigma_{\mathrm{Diff}_3}, \sigma_{\mathrm{Diff}_2})$ evaluated at $s = 1, 5, 7$ has determinant $-6952(\varphi - \psi) \neq 0$.
+Thus $\Phi_S$ carries $\mathrm{Fin}\,3$ worth of independent information.
+\end{theorem}
+
+\section{The Unified Operator \texorpdfstring{$D_\zeta$}{Dζ}}
+\label{sec:unified_Dzeta}
+
+\begin{definition}[$D_\zeta$: Unified Difference Operator]
+\label{def:Dzeta}
+\lean{FUST.DζOperator.Dζ}
+\leanok
+\[
+\boxed{D_\zeta(f)(z) = \frac{\mathrm{AFNum}(\Phi_A(f))(z) + \mathrm{SymNum}(\Phi_S(f))(z)}{z}}
+\]
+\end{definition}
+
+$D_\zeta$ operates on the rank-2 lattice $\langle \varphi, \zeta_6 \rangle \cong \mathbb{Z} \times \mathbb{Z}/6\mathbb{Z}$ and composes all three geometries:
+
+\begin{enumerate}
+\item \textbf{Hyperbolic layer} ($\Phi_A, \Phi_S$): $\varphi$-dilation lattice evaluations ($c = +1$)
+\item \textbf{Elliptic layer} ($\mathrm{AFNum}, \mathrm{SymNum}$): $\zeta_6$-rotation DFT ($c = -1$)
+\item \textbf{Parabolic layer} ($\div z$): Division by $z$ extracts the degenerate root $x = 0$ of $x^2 = x$ ($c = 0$)
+\end{enumerate}
+
+\textbf{Composition order is forced}: hyperbolic $\to$ elliptic $\to$ parabolic. Moving $\div z$ before the elliptic layer would shift the Fourier mode index ($s \to s-1$), making $\mathrm{AF\_coeff}(0) = 0$ and destroying the antisymmetric channel.
+
+\begin{theorem}[$D_\zeta$ Norm-Squared Decomposition]
+\label{thm:Dzeta_normSq}
+\lean{FUST.DζOperator.Dzeta_normSq_decomposition}
+\leanok
+\[
+|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
+\]
+The weight ratio 3:1 between symmetric and antisymmetric channels encodes $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (spacetime decomposition).
+\end{theorem}
+
+\begin{theorem}[$D_\zeta$ Gauge Covariance]
+\label{thm:Dzeta_covariance}
+\lean{FUST.DζOperator.Dζ_gauge_covariance}
+\leanok
+\[
+D_\zeta(f(c\cdot))(z) = c \cdot D_\zeta(f)(cz)
+\]
+\end{theorem}
+
+\section{The Integral Closure \texorpdfstring{$F_\zeta$}{Fζ}}
+\label{sec:Fzeta_operator}
+
+$D_\zeta$ involves divisions by $z$ and $(\varphi - \psi)$, so its eigenvalues lie in $\mathbb{Q}(\varphi, \zeta_6)$.
+The \textbf{rescaled operator} $F_\zeta$ clears all denominators and operates in $\mathbb{Z}[\varphi, \zeta_6]$.
+
+\begin{definition}[$F_\zeta$: Integral Unified Operator]
+\label{def:Fzeta}
+\lean{FUST.FζOperator.Fζ}
+\leanok
+\[
+F_\zeta(f)(z) = \mathrm{AFNum}(5 \cdot \Phi_A(f))(z) + \mathrm{SymNum}(\Phi_{S,\mathrm{int}}(f))(z)
+\]
+where $\Phi_{S,\mathrm{int}} = 5 \cdot \Phi_S$ clears the $1/5$ denominator from $\mu = 2/(\varphi + 2)$.
+\end{definition}
+
+\begin{theorem}[$F_\zeta = 5z \cdot D_\zeta$]
+\label{thm:Fzeta_eq}
+\lean{FUST.FζOperator.Fζ_eq}
+\leanok
+For $z \neq 0$:
+\[
+F_\zeta(f)(z) = 5z \cdot D_\zeta(f)(z)
+\]
+Thus $\ker(F_\zeta) = \ker(D_\zeta)$ and $F_\zeta$ inherits all structural properties of $D_\zeta$.
+\end{theorem}
+
+\begin{theorem}[$F_\zeta$ Kernel]
+\label{thm:Fzeta_kernel}
+\lean{FUST.FζOperator.Fζ_kernel_const, FUST.FζOperator.Fζ_kernel_quad, FUST.FζOperator.Fζ_kernel_cube, FUST.FζOperator.Fζ_kernel_fourth}
+\leanok
+\[
+\ker(F_\zeta) \supseteq \mathrm{span}\{1, z, z^2\}, \quad F_\zeta[z^3] \neq 0, \quad F_\zeta[z^4] \neq 0
+\]
+The kernel is exactly 3-dimensional on polynomials.
+\end{theorem}
+
+\section{\texorpdfstring{$F_\zeta$}{Fζ} Spectral Structure}
+\label{sec:Fzeta_spectral}
+
+\begin{theorem}[$F_\zeta$ Eigenvalue Classification]
+\label{thm:Fzeta_eigenvalues}
+\lean{FUST.FζOperator.Fζ_eigenvalue_mod6_1, FUST.FζOperator.Fζ_eigenvalue_mod6_5}
+\leanok
+On monomials $z^n$:
+\begin{itemize}
+\item $n \equiv 1, 5 \pmod{6}$: $F_\zeta[z^n] = \lambda_n \cdot z^n$ with $\lambda_n \in \mathbb{Z}[\varphi, \zeta_6] \setminus \{0\}$
+\item $n \equiv 0, 2, 3, 4 \pmod{6}$: $F_\zeta[z^n] = 0$
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[$F_\zeta$ Linearity]
+\label{thm:Fzeta_linearity}
+\lean{FUST.FζOperator.Fζ_const_smul}
+\leanok
+$F_\zeta(c \cdot f)(z) = c \cdot F_\zeta(f)(z)$ for $c \in \mathbb{C}$.
+\end{theorem}
+
+\section{Derivation Defect and Interactions}
+\label{sec:deriv_defect}
+
+\begin{definition}[Derivation Defect]
+\label{def:deriv_defect}
+\[
+\delta(f, g)(z) := F_\zeta(f \cdot g)(z) - f(z) \cdot F_\zeta(g)(z) - g(z) \cdot F_\zeta(f)(z)
+\]
+$F_\zeta$ is \textbf{not} a derivation: $\delta \neq 0$ in general.
+\end{definition}
+
+\begin{theorem}[Emergence and Annihilation]
+\label{thm:emergence_annihilation}
+\lean{FUST.FζOperator.emergence_3_4, FUST.FζOperator.annihilation_1_5}
+\leanok
+\begin{itemize}
+\item \textbf{Emergence}: $\delta(z^3, z^4) \neq 0$ --- two kernel modes produce an active mode ($3 + 4 = 7 \equiv 1 \pmod{6}$)
+\item \textbf{Annihilation}: $\delta(z, z^5) \neq 0$ --- two active modes interact ($1 + 5 = 6 \equiv 0 \pmod{6}$)
+\end{itemize}
+\end{theorem}
+
+\section{Schwarz Reflection and Hermiticity}
+\label{sec:schwarz_hermiticity}
+
+\begin{theorem}[Channel Hermiticity]
+\label{thm:channel_hermiticity}
+\lean{FUST.FζOperator.AFNum_anti_hermitian, FUST.FζOperator.SymNum_hermitian}
+\leanok
+For Schwarz-symmetric $g$ (i.e.\ $g(\bar{z}) = \overline{g(z)}$) evaluated at real $s$:
+\begin{itemize}
+\item $\mathrm{AFNum}(g)(s) \in i\mathbb{R}$ (anti-Hermitian: purely imaginary)
+\item $\mathrm{SymNum}(g)(s) \in \mathbb{R}$ (Hermitian: purely real)
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[Spacetime Orthogonality]
+\label{thm:spacetime_orthogonality}
+\lean{FUST.FζOperator.spacetime_orthogonality}
+\leanok
+The AF and SY channels are orthogonal: $\mathrm{Re}(\mathrm{AF} \cdot \overline{\mathrm{SY}}) = 0$ on the real axis.
+\end{theorem}
+
+\section{\texorpdfstring{$\tau$}{τ}-Involution Algebra}
+\label{sec:tau_involution}
+
+\begin{theorem}[$\mathrm{AF\_coeff}^2 = -12$]
+\label{thm:AF_coeff_sq}
+\lean{FUST.FζOperator.AF_coeff_sq}
+\leanok
+$(2i\sqrt{3})^2 = -12$, so the AF channel generates a $\mathbb{Q}(\sqrt{-3})$ structure.
+\end{theorem}
+
+\begin{theorem}[$\tau$-Discriminant Non-positivity]
+\label{thm:tau_discriminant}
+\lean{FUST.FζOperator.tau_discriminant_nonpos}
+\leanok
+For $(c_A, c_S)$ in the $(\mathrm{AF}, \mathrm{SY})$ decomposition:
+\[
+\Delta = (c_S + 12c_A)^2 - 4(c_S^2 + 12c_A^2) \leq 0
+\]
+When $c_A \neq 0$, $\Delta < 0$: the eigenvalues are complex conjugate.
+\end{theorem}
+
+\section{\texorpdfstring{$\mathbb{Z}[\varphi, \zeta_6]$}{Z[φ,ζ6]} Eigenvalue Ring}
+\label{sec:eigenvalue_ring}
+
+\begin{definition}[Channel Decomposition of Eigenvalues]
+\label{def:fromChannels}
+\lean{FUST.FζDim.fromChannels}
+\leanok
+Each $F_\zeta$ eigenvalue $\lambda \in \mathbb{Z}[\varphi, \zeta_6]$ decomposes as $\lambda = \beta + \alpha \cdot \mathrm{AF\_coeff}$ where $\alpha, \beta \in \mathbb{Z}[\varphi]$.
+\end{definition}
+
+\begin{theorem}[Mass Formula]
+\label{thm:mass_formula}
+\lean{FUST.FζDim.mass_formula}
+\leanok
+\[
+|\lambda|^2 = \beta^2 + 12\alpha^2
+\]
+since $|\mathrm{AF\_coeff}|^2 = 12$ and $\mathrm{Re}(\mathrm{AF\_coeff}) = 0$.
+\end{theorem}
+
+\section{\texorpdfstring{$D_\zeta$}{Dζ} Encodes All Six Component Operators}
+\label{sec:dzeta_encodes}
+
+The component operators $\mathrm{Diff}_2, \ldots, \mathrm{Diff}_6$ are recovered as specific projections of $D_\zeta$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$D_\zeta$ projection & Operator & Channel & Normalization power $r$ \\
+\hline
+$\mathrm{AFNum} / (\zeta_6 - \bar{\zeta}_6)$ & $D_{\zeta,6}$ & AF (odd) & $r = 1$ \\
+$\mathrm{SymNum} / (\zeta_6 - \bar{\zeta}_6)^2$ & $D_{\zeta,5}$ & SY (even) & $r = 2$ \\
+$\mathrm{AFNum} / (\zeta_6 - \bar{\zeta}_6)^3$ & $D_{\zeta,4}$ & AF (odd) & $r = 3$ \\
+$\mathrm{SymNum} / (\zeta_6 - \bar{\zeta}_6)^4$ & $D_{\zeta,3}$ & SY (even) & $r = 4$ \\
+$\mathrm{AFNum} / (\zeta_6 - \bar{\zeta}_6)^5$ & $D_{\zeta,2}$ & AF (odd) & $r = 5$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Since all five operators have distinct dimensions, $\mathrm{Diff}_i f(z) + \mathrm{Diff}_j f(z)$ ($i \neq j$) is a type error.

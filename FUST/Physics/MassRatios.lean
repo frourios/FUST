@@ -130,7 +130,7 @@ theorem protonMass_val :
   norm_num
 
 /-- Neutron-proton ratio: multiplicative isospin correction.
-dim(R) = deriveFDim(2) = (-1,1,1): u↔d swap is a N2 operation.
+dim(R) = deriveFDim(2) = (-1,1,1): u↔d swap is a Diff2 operation.
 R = (C(6,3)·C(4,2)·2·C(6,2)·φ⁹ + F₁₄) / (C(6,3)·C(4,2)·2·C(6,2)·φ⁹)
 where F₁₄ = 377 = (C(3,2)+C(5,2))·(2·C(6,2)-C(2,2)) -/
 noncomputable def neutronProtonRatio : ScaleQ (deriveFDim 2) :=
@@ -152,7 +152,7 @@ theorem neutron_denom_decomposition :
     Nat.choose 6 3 * Nat.choose 4 2 * (2 * Nat.choose 6 2) = 3600 := by
   decide
 
-/-- Neutron mass: m_n = m_p × R where R is the N2 isospin correction.
+/-- Neutron mass: m_n = m_p × R where R is the Diff2 isospin correction.
 dim(m_n) = dimProton × deriveFDim(2) = dimNeutron. -/
 noncomputable def neutronMass : ScaleQ dimNeutron :=
   protonMass * neutronProtonRatio
@@ -222,7 +222,7 @@ theorem tau_muon_ratio_from_masses :
 
 W boson: ScaleQ dimWBoson.
 Z boson: DimSum2 with two components from electroweak mixing.
-Higgs: DimSum2 with φ vacuum + N5 correction. -/
+Higgs: DimSum2 with φ vacuum + Diff5 correction. -/
 
 /-- W boson mass: m_W = Δ × φ^25 × 15/16. -/
 noncomputable def wBosonMass : ScaleQ dimWBoson :=

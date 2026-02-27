@@ -382,7 +382,7 @@ g·σ(g) ∈ ℤ[x] contains the irreducible factor (1+x-x²), encoding the gold
 
 The minimum such particle has (Z,N,e) = (1,1,1), polynomialDegree 3, effectiveDegree 34.
 Its galois norm x²(1+x)²(1+x-x²) has degree 6 — matching the Fζ AF channel level
-(Φ_A = N6 + N2 - N4 encodes the antisymmetric 6-point structure). -/
+(Φ_A = Diff6 + Diff2 - Diff4 encodes the antisymmetric 6-point structure). -/
 
 -- A particle list contains a complete root cluster
 def hasCompleteParticle (ps : List (ℕ × ℕ × ℕ × GoldenInt)) : Prop :=
@@ -601,13 +601,13 @@ theorem mating_strictly_more_structure
 /-! ## Section 18: Sub-Demon Computation — Fζ Detection
 
 A sub-demon's "computation" = applying Fζ = 5z·Dζ to its own factor.
-Fζ encodes all six difference operators via Φ_A = N6+N2-N4 (AF channel)
-and Φ_S = 2N5+N3+μN2 (SY channel).
+Fζ encodes all six difference operators via Φ_A = Diff6+Diff2-Diff4 (AF channel)
+and Φ_S = 2Diff5+Diff3+μDiff2 (SY channel).
 
 Fζ kernel: gcd(n,6) > 1 annihilates monomials wⁿ. Non-zero eigenvalues
-exist only for n ≡ 1, 5 (mod 6). The AF channel carries N6 (degree-3
+exist only for n ≡ 1, 5 (mod 6). The AF channel carries Diff6 (degree-3
 sensitivity) which detects complete clusters (1,1,1) with polynomial degree 3.
-Thus (1,1,1) is the MINIMUM structure visible to the N6 component of Fζ. -/
+Thus (1,1,1) is the MINIMUM structure visible to the Diff6 component of Fζ. -/
 
 -- Number of pairwise comparisons between n clusters
 def pairwiseComparisons (n : ℕ) : ℕ := n * (n - 1) / 2
@@ -645,8 +645,8 @@ theorem computation_requires_completeness
 
 /-! ## Section 19: Intelligence Phase Transition — Fζ Resolution Limit
 
-Fζ kernel annihilates monomials wⁿ with gcd(n,6) > 1. The N6 component
-(carried in the AF channel via Φ_A = N6+N2-N4) has kernel dim 3 = {1, w, w²}.
+Fζ kernel annihilates monomials wⁿ with gcd(n,6) > 1. The Diff6 component
+(carried in the AF channel via Φ_A = Diff6+Diff2-Diff4) has kernel dim 3 = {1, w, w²}.
 The "hidden" degrees of freedom beyond rootFamilyCount = 3 is totalDegree - 3.
 
 For n complete clusters (degree 3n): hidden DoF = 3(n-1).
@@ -905,8 +905,8 @@ theorem algebraic_locality :
 The number 3 in "spatial dimension = 3" is derived from the particle
 state function g(x-q) = (x-q)^Z · (1+(x-q))^N · (1+ψ(x-q))^e, which has
 exactly 3 irreducible factor families. The minimum complete particle (1,1,1)
-has polynomial degree 3, and the N6 component of Fζ (via Φ_A = N6+N2-N4)
-has kernel dimension 3. These are the same "3" because N6 annihilates
+has polynomial degree 3, and the Diff6 component of Fζ (via Φ_A = Diff6+Diff2-Diff4)
+has kernel dimension 3. These are the same "3" because Diff6 annihilates
 degree ≤ 2 but detects degree 3 = the first non-trivial particle. -/
 
 section SpatialDimensionDerivation

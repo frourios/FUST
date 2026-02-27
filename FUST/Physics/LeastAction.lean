@@ -10,7 +10,7 @@ Time evolution equivariance (TimeStructure.lagrangian_phi_equivariant) ensures
 
 namespace FUST.LeastAction
 
-open FUST.FζOperator FUST.TimeStructure FUST.Zeta6 Complex
+open FUST.FζOperator FUST.TimeStructure FUST.DζOperator Complex
 
 /-! ## Variational Structure
 

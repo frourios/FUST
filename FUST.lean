@@ -75,8 +75,8 @@ import FUST.Problems.NavierStokes
 import FUST.Problems.YangMills
 
 import FUST.Basic
-import FUST.DifferenceOperators
 import FUST.DimensionalAnalysis
+import FUST.DζOperator
 import FUST.EulerOperator
 import FUST.FibonacciArithmetic
 import FUST.FζDim
@@ -84,4 +84,3 @@ import FUST.FζOperator
 import FUST.SpectralCoefficients
 import FUST.SpectralGalois
 import FUST.SpectralObstruction
-import FUST.Zeta6

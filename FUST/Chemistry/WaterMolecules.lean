@@ -6,8 +6,6 @@ where Z, N, e are total proton, neutron, electron counts.
 
 Key discovery: D2O and H2-18O share the same FDim (Z=10, N=10, e=10).
 -/
-
-import FUST.DifferenceOperators
 import FUST.Physics.Nuclear
 import FUST.Chemistry.OxygenIsotopes
 import FUST.Chemistry.DihydrogenMolecules

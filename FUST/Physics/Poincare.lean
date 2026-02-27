@@ -10,7 +10,7 @@ import Mathlib.LinearAlgebra.Matrix.BilinearForm
 namespace FUST.Physics.Poincare
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz Zeta6
+open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz DζOperator
 
 /-! ## Module.Finite instance for so(3,1) -/
 

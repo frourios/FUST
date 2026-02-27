@@ -24,7 +24,7 @@ $e \to \mu$: $C(5,2)+C(2,2) = 11$, \quad $\mu \to \tau$: $C(4,2) = 6$, \quad $e 
 \label{thm:particle_allowed_charges}
 \lean{FUST.ParticleSpectrum.allowedChargeCount_eq}
 \leanok
-Allowed charge count from $N_3$ structure:
+Allowed charge count from $\mathrm{Diff}_3$ structure:
 \[
 2 \times C(3,2) + 1 = 7
 \]
@@ -56,7 +56,7 @@ Maximum spin $= 2$ from the allowed spin list.
 \label{thm:particle_colored_lepton}
 \lean{FUST.ParticleSpectrum.colored_lepton_forbidden}
 \leanok
-Colored lepton (hypercharge $Y = -1$, color = triplet) is forbidden by $N_3$-$N_4$ embedding.
+Colored lepton (hypercharge $Y = -1$, color = triplet) is forbidden by $\mathrm{Diff}_3$-$\mathrm{Diff}_4$ embedding.
 \end{theorem}
 
 \section{SM Particle Count}
@@ -119,33 +119,33 @@ The graviton has:
 See Chapter~\ref{chap:pd_gravitational}, \S\ref{sec:grav_graviton} for the full derivation.
 \end{theorem}
 
-\subsection{Neutrino Mass Structure at \texorpdfstring{$N_5$}{N5}}
+\subsection{Neutrino Mass Structure at \texorpdfstring{$\mathrm{Diff}_5$}{Diff5}}
 
 \begin{theorem}[Neutrino Flavor Count]
 \label{thm:neutrino_kernel}
 3 neutrino flavors from $\mathrm{syWeight} = 3$ (SU(2) doublet with charged leptons).
 The SY channel weight determines the number of neutrino mass eigenstates.
-Right-handed neutrinos predicted at $N_5$ level (spin-1/2).
+Right-handed neutrinos predicted at $\mathrm{Diff}_5$ level (spin-1/2).
 \end{theorem}
 
 \subsection{\texorpdfstring{$\Phi_S$}{Φ_S} Dark Matter}
 
-$\Phi_S$ is the SY channel operator between $N_5$ and $F_\zeta$:
+$\Phi_S$ is the SY channel operator between $\mathrm{Diff}_5$ and $F_\zeta$:
 \[
-\Phi_S f(x) = N_5 f(x) + \mu \cdot (f(\varphi x) - f(\psi x)), \quad \mu = \frac{2}{\varphi + 2}.
+\Phi_S f(x) = \mathrm{Diff}_5 f(x) + \mu \cdot (f(\varphi x) - f(\psi x)), \quad \mu = \frac{2}{\varphi + 2}.
 \]
 
 Kernel hierarchy:
-$\ker(\Phi_S) \subset \ker(N_5) \subset \ker(F_\zeta)$, \quad $\dim: 1 \to 2 \to 3$.
+$\ker(\Phi_S) \subset \ker(\mathrm{Diff}_5) \subset \ker(F_\zeta)$, \quad $\dim: 1 \to 2 \to 3$.
 \begin{itemize}
-\item $\ker(\Phi_S) = \{1\}$: only constants (same as $N_3$)
-\item $\Phi_S[x] \neq 0$: detects linear functions (unlike $N_5$ and $F_\zeta$)
+\item $\ker(\Phi_S) = \{1\}$: only constants (same as $\mathrm{Diff}_3$)
+\item $\Phi_S[x] \neq 0$: detects linear functions (unlike $\mathrm{Diff}_5$ and $F_\zeta$)
 \item Gauge-invariant output: $\Phi_S[x](x)/x = 2/\varphi \approx 1.236$
 \end{itemize}
 
 $\mathrm{deriveFDim}(\Phi_S) = (-4, 0, 1)$:
-same denominator structure as $N_5$ ($p = -4$), antisymmetric ($\delta = 0$),
-but $\ker\dim = 1$ gives $\tau = 2 - 1 = 1$ (vs.\ $N_5$: $\tau = 0$, $F_\zeta$: $\tau = -1$).
+same denominator structure as $\mathrm{Diff}_5$ ($p = -4$), antisymmetric ($\delta = 0$),
+but $\ker\dim = 1$ gives $\tau = 2 - 1 = 1$ (vs.\ $\mathrm{Diff}_5$: $\tau = 0$, $F_\zeta$: $\tau = -1$).
 
 \begin{theorem}[Dark Matter FDim]
 \label{thm:dark_matter_fdim}
@@ -174,12 +174,12 @@ $e$ & $(-5,1,-1)$ & 0 & $F_\zeta$ \\
 $\mu$ & $(6,-10,-12)$ & 11 & $F_\zeta$ \\
 $\tau$ & $(12,-16,-18)$ & 17 & $F_\zeta$ \\
 $p$ & $(9,-13,-15)$ & 14 & $F_\zeta$ \\
-$n$ & $(8,-12,-14)$ & 14 & $F_\zeta \times N_2$ \\
+$n$ & $(8,-12,-14)$ & 14 & $F_\zeta \times \mathrm{Diff}_2$ \\
 $W$ & $(20,-24,-26)$ & 25 & $F_\zeta$ \\
 DM & $(21,-25,-24)$ & 25 & $\Phi_S$ \\
 \hline
 $\nu_3$ & $(-42,34,30)$ & $-32$ & $F_\zeta^2$ \\
-$\nu_2$ & $(-43,35,31)$ & $-32$ & $F_\zeta^2 \times N_2$ \\
+$\nu_2$ & $(-43,35,31)$ & $-32$ & $F_\zeta^2 \times \mathrm{Diff}_2$ \\
 $Z^2$ comp1 & $(40,-48,-52)$ & 50 & $F_\zeta^2$ \\
 $Z^2$ comp2 & $(42,-46,-52)$ & --- & Mixed \\
 $H$ comp1 & $(21,-25,-27)$ & 26 & $F_\zeta$ \\
@@ -197,7 +197,7 @@ and the numerator operator detection matrix separates them:
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Basis & FDim & $N_3$ & $\Phi_S$ & $N_5$ \\
+Basis & FDim & $\mathrm{Diff}_3$ & $\Phi_S$ & $\mathrm{Diff}_5$ \\
 \hline
 $1$ ($d=0$) & $(0,0,0)$ & $= 0$ & $= 0$ & $= 0$ \\
 $x$ ($d=1$) & $(1,-1,-1)$ & $\neq 0$ & $\neq 0$ & $= 0$ \\
@@ -209,9 +209,9 @@ $x^2$ ($d=2$) & $(2,-2,-2)$ & $\neq 0$ & $\neq 0$ & $\neq 0$ \\
 This 3-layer structure within $\ker(F_\zeta)$ distinguishes massless particle types:
 \begin{itemize}
 \item Layer 1 ($\ker(\Phi_S)$): vacuum, truly gauge-invisible
-\item Layer 2 ($\ker(N_5) \setminus \ker(\Phi_S)$): $\Phi_S$ detects $x$;
+\item Layer 2 ($\ker(\mathrm{Diff}_5) \setminus \ker(\Phi_S)$): $\Phi_S$ detects $x$;
   photon/gluon transitions
-\item Layer 3 ($\ker(F_\zeta) \setminus \ker(N_5)$): $N_5$ detects $x^2$;
+\item Layer 3 ($\ker(F_\zeta) \setminus \ker(\mathrm{Diff}_5)$): $\mathrm{Diff}_5$ detects $x^2$;
   Higgs DOF, W/Z mass mechanism
 \end{itemize}
 
@@ -225,7 +225,7 @@ This 3-layer structure within $\ker(F_\zeta)$ distinguishes massless particle ty
 \item \textbf{$F_\zeta^2$ sector}: base $= \mathrm{deriveFDim}(6)^2 = (-10,2,-2)$.
   Neutrinos, $Z^2$ comp1.
 \item \textbf{Mixed sector}: $Z^2$ comp2.
-  Involves $N_2$ and $N_3$ corrections.
+  Involves $\mathrm{Diff}_2$ and $\mathrm{Diff}_3$ corrections.
 \item \textbf{Ratio sector}: pure $\mathrm{dimTimeD2}^n$.
   Dimensionless mass ratios $m_s/m_d$, coupling constants.
 \end{itemize}
@@ -265,8 +265,8 @@ plus the coefficient-sum constraint, giving exactly 3 annihilation conditions:
 \subsection{Pair Count Origin}
 
 The generation exponents arise from pair counts $C(m,2)$ of the active operators.
-The $N_4$ anomaly ($N_4[1] \neq 0$ but $N_4[x^2] = 0$) explains why the
-$\tau/\mu$ exponent equals $C(4,2) = 6$: the non-contiguous kernel of $N_4$
+The $\mathrm{Diff}_4$ anomaly ($\mathrm{Diff}_4[1] \neq 0$ but $\mathrm{Diff}_4[x^2] = 0$) explains why the
+$\tau/\mu$ exponent equals $C(4,2) = 6$: the non-contiguous kernel of $\mathrm{Diff}_4$
 forces a specific pair-count contribution to the mass hierarchy.
 
 \subsection{Generation Exponents from Pair Counts}
@@ -280,7 +280,7 @@ All mass exponents are sums of pair counts $C(m,2)$ of the 5 active numerator op
 \[
 C(2,2) = 1, \quad C(3,2) = 3, \quad C(4,2) = 6, \quad C(5,2) = 10, \quad C(6,2) = 15.
 \]
-These are the pair counts $C(m,2)$ of the 5 active numerator operators $N_2, \ldots, N_6$.
+These are the pair counts $C(m,2)$ of the 5 active numerator operators $\mathrm{Diff}_2, \ldots, \mathrm{Diff}_6$.
 \end{theorem}
 
 \begin{theorem}[Lepton Generation Exponents]
@@ -293,9 +293,9 @@ m_\tau / m_\mu &= \varphi^{6}, & 6 &= C(4,2) \\
 m_\tau / m_e &= \varphi^{17}, & 17 &= C(5,2) + C(2,2) + C(4,2)
 \end{align}
 \begin{itemize}
-\item $e \to \mu$: $C(5,2) + C(2,2) = 11$ from $N_5$ kernel expansion ($\ker\dim: 1 \to 2$)
-  plus $N_2$ boundary.
-\item $\mu \to \tau$: $C(4,2) = 6$ from $N_4$'s anomalous kernel (the only operator
+\item $e \to \mu$: $C(5,2) + C(2,2) = 11$ from $\mathrm{Diff}_5$ kernel expansion ($\ker\dim: 1 \to 2$)
+  plus $\mathrm{Diff}_2$ boundary.
+\item $\mu \to \tau$: $C(4,2) = 6$ from $\mathrm{Diff}_4$'s anomalous kernel (the only operator
   detecting constants but annihilating $x^2$).
 \end{itemize}
 \end{theorem}
@@ -307,7 +307,7 @@ m_\tau / m_e &= \varphi^{17}, & 17 &= C(5,2) + C(2,2) + C(4,2)
 \[
 m_W / m_e \propto \varphi^{25}, \quad 25 = C(5,2) + C(6,2) = 10 + 15.
 \]
-The W boson exponent is the total pair count of $N_5 + N_6$.
+The W boson exponent is the total pair count of $\mathrm{Diff}_5 + \mathrm{Diff}_6$.
 \end{theorem}
 
 \begin{theorem}[Generation Structure Summary]

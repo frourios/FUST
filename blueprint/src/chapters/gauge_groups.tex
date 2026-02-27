@@ -82,11 +82,11 @@ From $MS = SM$, entry-wise: $M_{ij} \cdot \varphi^j = \varphi^i \cdot M_{ij}$, s
 
 \begin{theorem}[Symmetric Channel Determines SU(3)]
 \label{thm:symmetric_SU3}
-\lean{FUST.Zeta6.Phi_S_rank_three}
+\lean{FUST.DζOperator.Phi_S_rank_three}
 \leanok
-$\Phi_S = 2 \cdot N_5 + N_3 + \mu \cdot N_2$ decomposes into 3 linearly independent sub-operators.
+$\Phi_S = 2 \cdot \mathrm{Diff}_5 + \mathrm{Diff}_3 + \mu \cdot \mathrm{Diff}_2$ decomposes into 3 linearly independent sub-operators.
 \begin{itemize}
-\item The $3 \times 3$ determinant of $(\sigma_{N_5}, \sigma_{N_3}, \sigma_{N_2})$ at $s = 1, 5, 7$ equals $-6952(\varphi - \psi) \neq 0$
+\item The $3 \times 3$ determinant of $(\sigma_{\mathrm{Diff}_5}, \sigma_{\mathrm{Diff}_3}, \sigma_{\mathrm{Diff}_2})$ at $s = 1, 5, 7$ equals $-6952(\varphi - \psi) \neq 0$
 \item These 3 independent components act on the SY channel space $\mathrm{span}\{1, z, z^2\}$ (dim $= \mathrm{syWeight} = 3$)
 \item Rank $=$ dim $\Rightarrow$ irreducible action on a 3-dimensional space
 \item $\zeta_6 \neq \varphi^n$ ensures $\zeta_6$-rotation mixes $\varphi$-eigenspaces non-diagonally
@@ -135,7 +135,7 @@ On the trivial channel $\mathrm{span}\{1\}$ (dimension 1), the only compact conn
 
 \begin{theorem}[$F_\zeta$ Norm-Squared Decomposition]
 \label{thm:normSq_decomposition}
-\lean{FUST.Zeta6.Dzeta_normSq_decomposition}
+\lean{FUST.DζOperator.Dzeta_normSq_decomposition}
 \leanok
 \[
 |6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
@@ -169,7 +169,7 @@ $12 = 8 + 3 + 1$: matching the 12 gauge bosons of the Standard Model (8 gluons $
 The SY/AF channel inclusion (spinDegeneracy $= 2 <$ syWeight $= 3$) provides a structural mass mechanism:
 
 \[
-z^2 \in \text{SY channel} \setminus \text{AF channel}: \quad N_6(z^2) = 0 \text{ but } N_5(z^2) \neq 0.
+z^2 \in \text{SY channel} \setminus \text{AF channel}: \quad \mathrm{Diff}_6(z^2) = 0 \text{ but } \mathrm{Diff}_5(z^2) \neq 0.
 \]
 
 This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs to the SU(3) space (SY channel) but not to the SU(2) space (AF channel), breaking electroweak symmetry.
@@ -179,9 +179,9 @@ This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs 
 \hline
 Gauge boson & Origin in $F_\zeta$ & Mass mechanism & Mass \\
 \hline
-Gluon (8) & $\Phi_S$ on SY channel & $N_6 = 0$ & massless \\
-Photon & U(1) grading & All $N_m$ preserve & massless \\
-$W^\pm$ & $\Phi_A$ on AF channel & $N_5(z^2) \neq 0$ & massive \\
+Gluon (8) & $\Phi_S$ on SY channel & $\mathrm{Diff}_6 = 0$ & massless \\
+Photon & U(1) grading & All $\mathrm{Diff}_m$ preserve & massless \\
+$W^\pm$ & $\Phi_A$ on AF channel & $\mathrm{Diff}_5(z^2) \neq 0$ & massive \\
 $Z$ & $\Phi_A$ on AF channel & via $\theta_W$ mixing & massive \\
 $H$ & SY $\setminus$ AF & Higgs DOF & massive \\
 \hline

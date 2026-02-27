@@ -30,19 +30,19 @@ theorem hydrogen_shell_capacity : Nuclear.shellCapacity 1 = 2 := rfl
 
 /-! ## Section 2: Spectral Gap -/
 
--- N6 spectral coefficient: first non-zero at k=3
-theorem N6_spectrum_kernel :
-    FUST.SpectralCoefficients.N6Coeff 0 = 0 ∧
-    FUST.SpectralCoefficients.N6Coeff 1 = 0 ∧
-    FUST.SpectralCoefficients.N6Coeff 2 = 0 :=
-  ⟨FUST.SpectralCoefficients.N6Coeff_zero,
-   FUST.SpectralCoefficients.N6Coeff_one,
-   FUST.SpectralCoefficients.N6Coeff_two⟩
+-- Diff6 spectral coefficient: first non-zero at k=3
+theorem Diff6_spectrum_kernel :
+    FUST.SpectralCoefficients.Diff6Coeff 0 = 0 ∧
+    FUST.SpectralCoefficients.Diff6Coeff 1 = 0 ∧
+    FUST.SpectralCoefficients.Diff6Coeff 2 = 0 :=
+  ⟨FUST.SpectralCoefficients.Diff6Coeff_zero,
+   FUST.SpectralCoefficients.Diff6Coeff_one,
+   FUST.SpectralCoefficients.Diff6Coeff_two⟩
 
--- N6 spectral coefficient at k=3: C_3 = 12√5
-theorem N6_spectrum_gap :
-    FUST.SpectralCoefficients.N6Coeff 3 = 12 * Real.sqrt 5 :=
-  FUST.SpectralCoefficients.N6Coeff_three
+-- Diff6 spectral coefficient at k=3: C_3 = 12√5
+theorem Diff6_spectrum_gap :
+    FUST.SpectralCoefficients.Diff6Coeff 3 = 12 * Real.sqrt 5 :=
+  FUST.SpectralCoefficients.Diff6Coeff_three
 
 /-! ## Section 3: Hydrogen Mass as DimSum2
 

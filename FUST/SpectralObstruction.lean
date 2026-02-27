@@ -5,7 +5,7 @@ R = ℤ[{λ_n}] is a proper sub-ring of ℤ[φ,ζ₆]. The gap is controlled by
 primes 2, 3, 5 — encoded in the Euler factors of ζ_K(s).
 -/
 import FUST.FrourioAlgebra.GoldenEisensteinInt
-import FUST.Zeta6
+import FUST.DζOperator
 
 namespace FUST.SpectralObstruction
 

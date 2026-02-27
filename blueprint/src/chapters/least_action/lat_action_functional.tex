@@ -41,7 +41,7 @@ Define the state space and action as follows:
 \lean{FUST.action_functional}
 \leanok
 \[
-\boxed{\mathcal{A}[f] = \int_0^\infty |N_6 f(x)|^2 \frac{dx}{x}}
+\boxed{\mathcal{A}[f] = \int_0^\infty |\mathrm{Diff}_6 f(x)|^2 \frac{dx}{x}}
 \]
 \end{definition}
 
@@ -120,21 +120,21 @@ The concrete witness $\eta(t) = t$ satisfies $F_\zeta(\mathrm{id})(z) \neq 0$ fo
 
 \subsection{Integral Form}
 
-For the action functional $\mathcal{A}[f] = \int |N_6 f|^2 d\mu$, the integral variation gives:
+For the action functional $\mathcal{A}[f] = \int |\mathrm{Diff}_6 f|^2 d\mu$, the integral variation gives:
 \[
-\delta\mathcal{A} = 2 \int N_6 f \cdot N_6(\delta f) \, d\mu = 2 \int \delta f \cdot N_6^\dagger(N_6 f) \, d\mu
+\delta\mathcal{A} = 2 \int \mathrm{Diff}_6 f \cdot \mathrm{Diff}_6(\delta f) \, d\mu = 2 \int \delta f \cdot \mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) \, d\mu
 \]
 
 \begin{theorem}[Euler-Lagrange Equation]
 \label{thm:mat_euler_lagrange}
 \[
-N_6^\dagger(N_6 f) = 0
+\mathrm{Diff}_6^\dagger(\mathrm{Diff}_6 f) = 0
 \]
 \end{theorem}
 
-Since $N_6^\dagger N_6$ is self-adjoint:
+Since $\mathrm{Diff}_6^\dagger \mathrm{Diff}_6$ is self-adjoint:
 \[
-\ker(N_6^\dagger N_6) = \ker(F_\zeta)
+\ker(\mathrm{Diff}_6^\dagger \mathrm{Diff}_6) = \ker(F_\zeta)
 \]
 
 \begin{theorem}[Least Action Solutions]

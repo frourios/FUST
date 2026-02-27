@@ -26,7 +26,7 @@ Gravity emerges from the complete Fζ hierarchy through:
 
 namespace FUST.GravitationalCoupling
 
-open FUST.WaveEquation FUST.TimeStructure
+open FUST.WaveEquation FUST.TimeStructure FUST.DζOperator
 
 /-! ## Pair Counts C(m,2) -/
 
@@ -179,16 +179,16 @@ The N₆ coefficients [1, -3, 1, -1, 3, -1] satisfy:
 - Evaluation point sum φ³+φ²+φ+ψ+ψ²+ψ³ = 8 = L(1)+L(2)+L(3)
 -/
 
-theorem N6_coeff_sum : (1 : ℤ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by decide
+theorem Diff6_coeff_sum : (1 : ℤ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by decide
 
-theorem N6_coeff_abs_sum : (1 : ℕ) + 3 + 1 + 1 + 3 + 1 = Nat.choose 5 2 := by decide
+theorem Diff6_coeff_abs_sum : (1 : ℕ) + 3 + 1 + 1 + 3 + 1 = Nat.choose 5 2 := by decide
 
-theorem N6_coeff_positive_sum : (1 : ℕ) + 1 + 3 = 6 - 2 + 1 := by decide
+theorem Diff6_coeff_positive_sum : (1 : ℕ) + 1 + 3 = 6 - 2 + 1 := by decide
 
-theorem N6_coeff_negative_sum : (3 : ℕ) + 1 + 1 = 6 - 2 + 1 := by decide
+theorem Diff6_coeff_negative_sum : (3 : ℕ) + 1 + 1 = 6 - 2 + 1 := by decide
 
 /-- Sum of N₆ evaluation multipliers: φ³+φ²+φ+ψ+ψ²+ψ³ = 8 -/
-theorem N6_eval_multiplier_sum :
+theorem Diff6_eval_multiplier_sum :
     φ ^ 3 + φ ^ 2 + φ + ψ + ψ ^ 2 + ψ ^ 3 = 8 := by
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
@@ -199,7 +199,7 @@ theorem N6_eval_multiplier_sum :
 /-! ## N₆ Spectral Invariants
 
 The N₆ evaluation multipliers {φ³,φ²,φ,ψ,ψ²,ψ³} have elementary symmetric polynomials:
-- e₁ = 8 (trace, proven above as N6_eval_multiplier_sum)
+- e₁ = 8 (trace, proven above as Diff6_eval_multiplier_sum)
 - e₂ = 18 (pairwise products)
 - e₃ = 6 (triple products)
 - e₄ = -12 (4-tuple products)
@@ -211,17 +211,17 @@ determines the 6th-order recurrence for dissipation coefficients.
 -/
 
 /-- N₆ characteristic polynomial: x⁶ - 8x⁵ + 18x⁴ - 6x³ - 12x² + 2x + 1 -/
-noncomputable def N6_charPoly (x : ℝ) : ℝ :=
+noncomputable def Diff6_charPoly (x : ℝ) : ℝ :=
   x ^ 6 - 8 * x ^ 5 + 18 * x ^ 4 - 6 * x ^ 3 - 12 * x ^ 2 + 2 * x + 1
 
 /-- Product of all N₆ evaluation multipliers: e₆ = (φψ)⁶ = 1 -/
-theorem N6_eval_multiplier_product :
+theorem Diff6_eval_multiplier_product :
     φ ^ 3 * φ ^ 2 * φ * ψ * ψ ^ 2 * ψ ^ 3 = 1 := by
   have : φ ^ 3 * φ ^ 2 * φ * ψ * ψ ^ 2 * ψ ^ 3 = (φ * ψ) ^ 6 := by ring
   rw [this, phi_mul_psi]; norm_num
 
 /-- e₂ = 18: sum of pairwise products of N₆ evaluation multipliers -/
-theorem N6_eval_pairwise_sum :
+theorem Diff6_eval_pairwise_sum :
     φ ^ 3 * φ ^ 2 + φ ^ 3 * φ + φ ^ 3 * ψ + φ ^ 3 * ψ ^ 2 + φ ^ 3 * ψ ^ 3 +
     φ ^ 2 * φ + φ ^ 2 * ψ + φ ^ 2 * ψ ^ 2 + φ ^ 2 * ψ ^ 3 +
     φ * ψ + φ * ψ ^ 2 + φ * ψ ^ 3 +
@@ -250,7 +250,7 @@ theorem N6_eval_pairwise_sum :
              mul_comm φ ψ]
 
 /-- e₃ = 6: sum of triple products (φ^a·ψ^b form) -/
-theorem N6_eval_triple_sum :
+theorem Diff6_eval_triple_sum :
     ψ ^ 6 + φ * ψ ^ 3 + φ * ψ ^ 4 + φ * ψ ^ 5 +
     φ ^ 2 * ψ ^ 3 + φ ^ 2 * ψ ^ 4 + φ ^ 2 * ψ ^ 5 +
     φ ^ 3 * ψ + φ ^ 3 * ψ ^ 2 + 2 * (φ ^ 3 * ψ ^ 3) +
@@ -271,7 +271,7 @@ theorem N6_eval_triple_sum :
   nlinarith [hφ6, hψ6, hφ5, hψ5, hφ4, hψ4, hφ3, hψ3, hφ2, hψ2, hsum, hprod]
 
 /-- e₄ = -12: sum of 4-tuple products -/
-theorem N6_eval_4tuple_sum :
+theorem Diff6_eval_4tuple_sum :
     φ * ψ ^ 6 + φ ^ 2 * ψ ^ 6 + φ ^ 3 * ψ ^ 5 + φ ^ 3 * ψ ^ 4 + φ ^ 3 * ψ ^ 3 +
     φ ^ 3 * ψ ^ 6 + φ ^ 4 * ψ ^ 5 + φ ^ 4 * ψ ^ 4 + φ ^ 4 * ψ ^ 3 +
     φ ^ 5 * ψ ^ 5 + φ ^ 5 * ψ ^ 4 + φ ^ 5 * ψ ^ 3 +
@@ -291,7 +291,7 @@ theorem N6_eval_4tuple_sum :
   nlinarith [hφ6, hψ6, hφ5, hψ5, hφ4, hψ4, hφ3, hψ3, hφ2, hψ2, hsum, hprod]
 
 /-- e₅ = -2: sum of 5-tuple products -/
-theorem N6_eval_5tuple_sum :
+theorem Diff6_eval_5tuple_sum :
     φ ^ 3 * ψ ^ 6 + φ ^ 4 * ψ ^ 6 + φ ^ 5 * ψ ^ 6 +
     φ ^ 6 * ψ ^ 5 + φ ^ 6 * ψ ^ 4 + φ ^ 6 * ψ ^ 3 = -2 := by
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
@@ -308,24 +308,24 @@ theorem N6_eval_5tuple_sum :
   have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
   nlinarith [hφ6, hψ6, hφ5, hψ5, hφ4, hψ4, hφ3, hψ3, hφ2, hψ2, hsum, hprod]
 
-private lemma charPoly_root_phi : N6_charPoly φ = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_phi : Diff6_charPoly φ = 0 := by
+  simp only [Diff6_charPoly]
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
   have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
   have hφ5 : φ ^ 5 = 5 * φ + 3 := by nlinarith [hφ2, hφ4]
   have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
   nlinarith [phi_cubed]
 
-private lemma charPoly_root_psi : N6_charPoly ψ = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_psi : Diff6_charPoly ψ = 0 := by
+  simp only [Diff6_charPoly]
   have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
   have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
   have hψ5 : ψ ^ 5 = 5 * ψ + 3 := by nlinarith [hψ2, hψ4]
   have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
   nlinarith
 
-private lemma charPoly_root_phi2 : N6_charPoly (φ ^ 2) = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_phi2 : Diff6_charPoly (φ ^ 2) = 0 := by
+  simp only [Diff6_charPoly]
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
   have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
   have hφ6 : φ ^ 6 = 8 * φ + 5 := by nlinarith [hφ2, hφ4]
@@ -334,8 +334,8 @@ private lemma charPoly_root_phi2 : N6_charPoly (φ ^ 2) = 0 := by
   have hφ12 : φ ^ 12 = 144 * φ + 89 := by nlinarith [hφ2, hφ10]
   nlinarith
 
-private lemma charPoly_root_psi2 : N6_charPoly (ψ ^ 2) = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_psi2 : Diff6_charPoly (ψ ^ 2) = 0 := by
+  simp only [Diff6_charPoly]
   have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
   have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
   have hψ6 : ψ ^ 6 = 8 * ψ + 5 := by nlinarith [hψ2, hψ4]
@@ -345,8 +345,8 @@ private lemma charPoly_root_psi2 : N6_charPoly (ψ ^ 2) = 0 := by
   nlinarith
 
 -- nlinarith needs φ^18 = 2584φ+1597 reduction chain
-private lemma charPoly_root_phi3 : N6_charPoly (φ ^ 3) = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_phi3 : Diff6_charPoly (φ ^ 3) = 0 := by
+  simp only [Diff6_charPoly]
   have hφ2 : φ ^ 2 = φ + 1 := golden_ratio_property
   have hφ4 : φ ^ 4 = 3 * φ + 2 := by nlinarith [hφ2]
   have hφ5 : φ ^ 5 = 5 * φ + 3 := by nlinarith [hφ2, hφ4]
@@ -360,8 +360,8 @@ private lemma charPoly_root_phi3 : N6_charPoly (φ ^ 3) = 0 := by
   nlinarith [phi_cubed]
 
 -- nlinarith needs ψ^18 = 2584ψ+1597 reduction chain
-private lemma charPoly_root_psi3 : N6_charPoly (ψ ^ 3) = 0 := by
-  simp only [N6_charPoly]
+private lemma charPoly_root_psi3 : Diff6_charPoly (ψ ^ 3) = 0 := by
+  simp only [Diff6_charPoly]
   have hψ2 : ψ ^ 2 = ψ + 1 := psi_sq
   have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
   have hψ5 : ψ ^ 5 = 5 * ψ + 3 := by nlinarith [hψ2, hψ4]
@@ -375,19 +375,19 @@ private lemma charPoly_root_psi3 : N6_charPoly (ψ ^ 3) = 0 := by
   nlinarith
 
 /-- Each N₆ evaluation multiplier is a root of the characteristic polynomial -/
-theorem N6_charPoly_roots :
-    N6_charPoly (φ ^ 3) = 0 ∧ N6_charPoly (φ ^ 2) = 0 ∧ N6_charPoly φ = 0 ∧
-    N6_charPoly ψ = 0 ∧ N6_charPoly (ψ ^ 2) = 0 ∧ N6_charPoly (ψ ^ 3) = 0 :=
+theorem Diff6_charPoly_roots :
+    Diff6_charPoly (φ ^ 3) = 0 ∧ Diff6_charPoly (φ ^ 2) = 0 ∧ Diff6_charPoly φ = 0 ∧
+    Diff6_charPoly ψ = 0 ∧ Diff6_charPoly (ψ ^ 2) = 0 ∧ Diff6_charPoly (ψ ^ 3) = 0 :=
   ⟨charPoly_root_phi3, charPoly_root_phi2, charPoly_root_phi,
    charPoly_root_psi, charPoly_root_psi2, charPoly_root_psi3⟩
 
 /-- N₆ spectral invariants summary -/
-theorem N6_spectral_invariants :
+theorem Diff6_spectral_invariants :
     (φ ^ 3 + φ ^ 2 + φ + ψ + ψ ^ 2 + ψ ^ 3 = 8) ∧
     (φ ^ 3 * φ ^ 2 * φ * ψ * ψ ^ 2 * ψ ^ 3 = 1) ∧
-    (N6_charPoly (φ ^ 3) = 0 ∧ N6_charPoly (φ ^ 2) = 0 ∧ N6_charPoly φ = 0 ∧
-     N6_charPoly ψ = 0 ∧ N6_charPoly (ψ ^ 2) = 0 ∧ N6_charPoly (ψ ^ 3) = 0) :=
-  ⟨N6_eval_multiplier_sum, N6_eval_multiplier_product, N6_charPoly_roots⟩
+    (Diff6_charPoly (φ ^ 3) = 0 ∧ Diff6_charPoly (φ ^ 2) = 0 ∧ Diff6_charPoly φ = 0 ∧
+     Diff6_charPoly ψ = 0 ∧ Diff6_charPoly (ψ ^ 2) = 0 ∧ Diff6_charPoly (ψ ^ 3) = 0) :=
+  ⟨Diff6_eval_multiplier_sum, Diff6_eval_multiplier_product, Diff6_charPoly_roots⟩
 
 /-! ## N₆ Sector Factorization
 
@@ -397,10 +397,10 @@ corresponding to matter (φ,ψ), gauge (φ²,ψ²), gravity (φ³,ψ³).
 -/
 
 /-- N₆ charPoly factors as product of three sector polynomials -/
-theorem N6_charPoly_factorization (x : ℝ) :
-    N6_charPoly x =
+theorem Diff6_charPoly_factorization (x : ℝ) :
+    Diff6_charPoly x =
     (x ^ 2 - x - 1) * (x ^ 2 - 3 * x + 1) * (x ^ 2 - 4 * x - 1) := by
-  unfold N6_charPoly; ring
+  unfold Diff6_charPoly; ring
 
 /-- Sector traces: φᵏ+ψᵏ for k=1,2,3 -/
 theorem sector_traces :
@@ -474,8 +474,8 @@ Newton's inverse square law F ∝ 1/r² is derived purely from the N₆ operator
 section InverseSquareLaw
 
 /-- N₆ annihilates t⁻²: the inverse-square monomial is in the numerator kernel. -/
-theorem N6_inv_sq_zero (z : ℂ) (hz : z ≠ 0) : N6 (fun t => t⁻¹ ^ 2) z = 0 := by
-  simp only [N6]
+theorem Diff6_inv_sq_zero (z : ℂ) (hz : z ≠ 0) : Diff6 (fun t => t⁻¹ ^ 2) z = 0 := by
+  simp only [Diff6]
   have hφ := Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
   have hψ := Complex.ofReal_ne_zero.mpr (ne_of_lt psi_neg)
   have hφ2 := golden_ratio_property_complex
@@ -492,9 +492,9 @@ theorem N6_inv_sq_zero (z : ℂ) (hz : z ≠ 0) : N6 (fun t => t⁻¹ ^ 2) z = 0
     (-(↑φ : ℂ) ^ 6 * ((↑ψ : ℂ) ^ 2 + ↑ψ - 1)) * hψ2
 
 /-- N₆(t⁻¹)(z) = 6·(φ-ψ)/z: the gravitational force is inverse-square. -/
-theorem N6_inv_one (z : ℂ) :
-    N6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z := by
-  simp only [N6]
+theorem Diff6_inv_one (z : ℂ) :
+    Diff6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z := by
+  simp only [Diff6]
   have hφ2 := golden_ratio_property_complex
   have hψ2 := psi_sq_complex
   have hprod := phi_mul_psi_complex
@@ -510,9 +510,9 @@ theorem N6_inv_one (z : ℂ) :
     (3 * z⁻¹) * hφ2 + (-(3 * z⁻¹)) * hψ2
 
 /-- N₆ preserves pointwise equality at evaluation points -/
-lemma N6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
-    (hfg : ∀ y, y ≠ 0 → f y = g y) : N6 f z = N6 g z := by
-  simp only [N6]
+lemma Diff6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
+    (hfg : ∀ y, y ≠ 0 → f y = g y) : Diff6 f z = Diff6 g z := by
+  simp only [Diff6]
   have hφ := Complex.ofReal_ne_zero.mpr (ne_of_gt phi_pos)
   have hψ := Complex.ofReal_ne_zero.mpr (ne_of_lt psi_neg)
   rw [hfg _ (mul_ne_zero (pow_ne_zero 3 hφ) hz),
@@ -522,56 +522,56 @@ lemma N6_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
       hfg _ (mul_ne_zero (pow_ne_zero 2 hψ) hz),
       hfg _ (mul_ne_zero (pow_ne_zero 3 hψ) hz)]
 
-theorem N6_homogeneous (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
-    N6 (fun t => c * f t) z = c * N6 f z := by
-  simp only [N6]; ring
+theorem Diff6_homogeneous (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    Diff6 (fun t => c * f t) z = c * Diff6 f z := by
+  simp only [Diff6]; ring
 
-/-- N₆-normalized operator: N6(f)(z) / z -/
-private noncomputable def N6norm (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  N6 f z / z
+/-- N₆-normalized operator: Diff6(f)(z) / z -/
+private noncomputable def Diff6norm (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+  Diff6 f z / z
 
-/-- FUST d'Alembertian: iterated N₆-normalized operator □ = N6norm ∘ N6norm -/
-noncomputable def FUSTDAlembertian (f : ℂ → ℂ) : ℂ → ℂ := N6norm (N6norm f)
+/-- FUST d'Alembertian: iterated N₆-normalized operator □ = Diff6norm ∘ Diff6norm -/
+noncomputable def FUSTDAlembertian (f : ℂ → ℂ) : ℂ → ℂ := Diff6norm (Diff6norm f)
 
-private theorem N6norm_homogeneous (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
-    N6norm (fun t => c * f t) z = c * N6norm f z := by
-  simp only [N6norm, N6_homogeneous, mul_div_assoc]
+private theorem Diff6norm_homogeneous (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
+    Diff6norm (fun t => c * f t) z = c * Diff6norm f z := by
+  simp only [Diff6norm, Diff6_homogeneous, mul_div_assoc]
 
-private theorem N6norm_inv_sq_zero (z : ℂ) (hz : z ≠ 0) :
-    N6norm (fun t => t⁻¹ ^ 2) z = 0 := by
-  simp only [N6norm, div_eq_zero_iff]; left; exact N6_inv_sq_zero z hz
+private theorem Diff6norm_inv_sq_zero (z : ℂ) (hz : z ≠ 0) :
+    Diff6norm (fun t => t⁻¹ ^ 2) z = 0 := by
+  simp only [Diff6norm, div_eq_zero_iff]; left; exact Diff6_inv_sq_zero z hz
 
-private theorem N6norm_inv_one (z : ℂ) (hz : z ≠ 0) :
-    N6norm (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z ^ 2 := by
-  simp only [N6norm, N6_inv_one z]
+private theorem Diff6norm_inv_one (z : ℂ) (hz : z ≠ 0) :
+    Diff6norm (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z ^ 2 := by
+  simp only [Diff6norm, Diff6_inv_one z]
   field_simp
 
-private lemma N6norm_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
-    (hfg : ∀ y, y ≠ 0 → f y = g y) : N6norm f z = N6norm g z := by
-  simp only [N6norm]; congr 1; exact N6_congr_nonzero f g z hz hfg
+private lemma Diff6norm_congr_nonzero (f g : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0)
+    (hfg : ∀ y, y ≠ 0 → f y = g y) : Diff6norm f z = Diff6norm g z := by
+  simp only [Diff6norm]; congr 1; exact Diff6_congr_nonzero f g z hz hfg
 
 /-- The 1/r potential is harmonic under the FUST d'Alembertian:
-    □(t⁻¹) = N6norm(N6norm(t⁻¹)) = 0. -/
+    □(t⁻¹) = Diff6norm(Diff6norm(t⁻¹)) = 0. -/
 theorem dAlembertian_inv_zero (z : ℂ) (hz : z ≠ 0) :
     FUSTDAlembertian (fun t => t⁻¹) z = 0 := by
   simp only [FUSTDAlembertian]
   have hfg : ∀ y, y ≠ 0 →
-      N6norm (fun t => t⁻¹) y = (6 * ((↑φ : ℂ) - ↑ψ)) * (fun t => t⁻¹ ^ 2) y := by
+      Diff6norm (fun t => t⁻¹) y = (6 * ((↑φ : ℂ) - ↑ψ)) * (fun t => t⁻¹ ^ 2) y := by
     intro y hy
     simp only
-    rw [N6norm_inv_one y hy]
+    rw [Diff6norm_inv_one y hy]
     field_simp
-  rw [N6norm_congr_nonzero _ _ z hz hfg]
-  rw [N6norm_homogeneous]
-  rw [N6norm_inv_sq_zero z hz]
+  rw [Diff6norm_congr_nonzero _ _ z hz hfg]
+  rw [Diff6norm_homogeneous]
+  rw [Diff6norm_inv_sq_zero z hz]
   ring
 
 /-- Inverse square law derivation from N₆ structure -/
 theorem inverse_square_law_derivation :
-    (∀ z : ℂ, z ≠ 0 → N6 (fun t => t⁻¹ ^ 2) z = 0) ∧
-    (∀ z : ℂ, N6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) ∧
+    (∀ z : ℂ, z ≠ 0 → Diff6 (fun t => t⁻¹ ^ 2) z = 0) ∧
+    (∀ z : ℂ, Diff6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) ∧
     (∀ z : ℂ, z ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) z = 0) := by
-  exact ⟨N6_inv_sq_zero, N6_inv_one, dAlembertian_inv_zero⟩
+  exact ⟨Diff6_inv_sq_zero, Diff6_inv_one, dAlembertian_inv_zero⟩
 
 end InverseSquareLaw
 
@@ -587,17 +587,17 @@ Physical exponents thus form a two-layer structure:
 -/
 
 /-- N₆ does NOT annihilate Δ=-1: the force operator is outside the kernel -/
-theorem N6_force_dimension_active (z : ℂ) (hz : z ≠ 0) :
-    N6 (fun t => t⁻¹) z ≠ 0 := by
-  rw [N6_inv_one z]
+theorem Diff6_force_dimension_active (z : ℂ) (hz : z ≠ 0) :
+    Diff6 (fun t => t⁻¹) z ≠ 0 := by
+  rw [Diff6_inv_one z]
   have hdiff : (↑φ : ℂ) - ↑ψ ≠ 0 := phi_sub_psi_complex_ne
   exact div_ne_zero (mul_ne_zero (by norm_num) hdiff) hz
 
 /-- Layer 1: N₆ eigenvalue structure determines physical framework -/
 theorem derivation_layer1_eigenvalues :
     sectorTraceSq = 26 ∧
-    (∀ z : ℂ, N6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) := by
-  exact ⟨rfl, N6_inv_one⟩
+    (∀ z : ℂ, Diff6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) := by
+  exact ⟨rfl, Diff6_inv_one⟩
 
 /-- Layer 2: physical assembly with dimensional intermediates. -/
 theorem derivation_layer3_assembly :
@@ -623,15 +623,15 @@ theorem graviton_massless :
 
 /-- Complete graviton structural prediction -/
 theorem graviton_prediction :
-    (∀ x : ℝ, N6_charPoly x =
+    (∀ x : ℝ, Diff6_charPoly x =
       (x ^ 2 - x - 1) * (x ^ 2 - 3 * x + 1) * (x ^ 2 - 4 * x - 1)) ∧
     (φ ^ 3 + ψ ^ 3 = 4) ∧
     ((φ * ψ) ^ 3 = -1) ∧
     ((4 : ℕ) ^ 2 + 4 * 1 = Nat.choose 6 3) ∧
     (∀ z : ℂ, z ≠ 0 → FUSTDAlembertian (fun t => t⁻¹) z = 0) ∧
-    (∀ z : ℂ, N6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) := by
-  exact ⟨N6_charPoly_factorization, gravity_trace_eq_four,
+    (∀ z : ℂ, Diff6 (fun t => t⁻¹) z = 6 * ((↑φ : ℂ) - ↑ψ) / z) := by
+  exact ⟨Diff6_charPoly_factorization, gravity_trace_eq_four,
          gravity_sector_det, gravity_sector_discriminant,
-         dAlembertian_inv_zero, N6_inv_one⟩
+         dAlembertian_inv_zero, Diff6_inv_one⟩
 
 end FUST.GravitationalCoupling

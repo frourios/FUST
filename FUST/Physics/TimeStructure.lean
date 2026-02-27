@@ -14,7 +14,7 @@ Time evolution f ↦ f(φ·) derived from Fζ translation symmetry.
 
 namespace FUST.TimeStructure
 
-open FUST.FζOperator FUST.Zeta6 Complex
+open FUST.FζOperator FUST.DζOperator Complex
 
 /-! ## φ/ψ Duality
 

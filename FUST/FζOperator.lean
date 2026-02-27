@@ -2,13 +2,13 @@
 Fζ = 5z·Dζ: rescaled unified operator closed on ℤ[φ,ζ₆][z].
 Clearing the 1/5 denominator from Φ_S makes all coefficients integral.
 -/
-import FUST.Zeta6
+import FUST.DζOperator
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FibonacciArithmetic
 
 namespace FUST.FζOperator
 
-open Complex FUST FUST.Zeta6 FUST.FibonacciArithmetic FUST.SpectralCoefficients
+open Complex FUST.DζOperator FUST.FibonacciArithmetic FUST.SpectralCoefficients
 
 /-! ## Rescaled symmetric operator: 5·Φ_S with ℤ[φ] coefficients -/
 
@@ -31,7 +31,7 @@ private lemma phi_mul_phi_c : (↑φ : ℂ) * ↑φ = ↑φ + 1 := by
 
 /-- Φ_S_int = 5 · Φ_S -/
 theorem Φ_S_int_eq (f : ℂ → ℂ) (z : ℂ) : Φ_S_int f z = 5 * Φ_S f z := by
-  simp only [Φ_S_int, Φ_S, N5, N3, N2]
+  simp only [Φ_S_int, Φ_S, Diff5, Diff3, Diff2]
   have hne := phi_plus_two_ne
   have hP : (↑φ : ℂ) * ↑φ - ↑φ - 1 = 0 := by
     have h := phi_mul_phi_c; linear_combination h
@@ -1317,7 +1317,7 @@ private lemma zeta6'_eq_pow5 : ζ₆' = ζ₆ ^ 5 := by
   rw [h5, zeta6_cubed, zeta6_sq]; ring
 
 private lemma conj_zeta6_eq : starRingEnd ℂ ζ₆ = ζ₆ ^ 5 := by
-  rw [← conj_eq_starRingEnd, zeta6'_eq_pow5]
+  rw [← zeta6'_eq_starRingEnd, zeta6'_eq_pow5]
 
 private lemma z6_5_2 : (ζ₆ ^ 5) ^ 2 = ζ₆ ^ 4 := by
   have : (ζ₆ ^ 5) ^ 2 = (ζ₆ ^ 6) * ζ₆ ^ 4 := by ring
@@ -1529,21 +1529,21 @@ theorem eigenvalue_re_eq_phiS (c_A c_S : ℝ) :
 
 /-! ## Fζ Channel Decomposition
 
-Fζ = 5z·Dζ decomposes via Φ_A = N6+N2-N4, Φ_S = 2N5+N3+μN2.
-The AF channel carries odd-rank operators (N6, M4, N2)
-and the SY channel carries even-rank operators (N5, N3). -/
+Fζ = 5z·Dζ decomposes via Φ_A = Diff6+Diff2-Diff4, Φ_S = 2Diff5+Diff3+μDiff2.
+The AF channel carries odd-rank operators (Diff6, M4, Diff2)
+and the SY channel carries even-rank operators (Diff5, Diff3). -/
 
 /-- Fζ decomposes into AF and SY channels through Nn -/
 theorem Fζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :
     Fζ f z =
-    AFNum (fun w => 5 * (N6 f w + N2 f w - N4 f w)) z +
-    SymNum (fun w => 5 * (2 * N5 f w + N3 f w +
-      (2 / ((↑φ : ℂ) + 2)) * N2 f w)) z := by
+    AFNum (fun w => 5 * (Diff6 f w + Diff2 f w - Diff4 f w)) z +
+    SymNum (fun w => 5 * (2 * Diff5 f w + Diff3 f w +
+      (2 / ((↑φ : ℂ) + 2)) * Diff2 f w)) z := by
   unfold Fζ
-  have hA : (fun w => 5 * Φ_A f w) = fun w => 5 * (N6 f w + N2 f w - N4 f w) :=
+  have hA : (fun w => 5 * Φ_A f w) = fun w => 5 * (Diff6 f w + Diff2 f w - Diff4 f w) :=
     funext (fun w => by rw [Φ_A_decompose])
-  have hS : Φ_S_int f = fun w => 5 * (2 * N5 f w + N3 f w +
-      (2 / ((↑φ : ℂ) + 2)) * N2 f w) :=
+  have hS : Φ_S_int f = fun w => 5 * (2 * Diff5 f w + Diff3 f w +
+      (2 / ((↑φ : ℂ) + 2)) * Diff2 f w) :=
     funext (fun w => by rw [Φ_S_int_eq]; unfold Φ_S; ring)
   rw [hA, hS]
 

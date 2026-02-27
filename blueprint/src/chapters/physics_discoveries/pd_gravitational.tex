@@ -147,7 +147,7 @@ and $26 = t_1^2 + t_2^2 + t_3^2$ is the sector trace square sum.
 \item Exponent $107 = p_3 + e_3 + d$ (sector cube sum + product + vacuum dim)
 \item Fractional correction: $5/63 = 5/(C(3,2) \times C(7,2))$
 \item Numerator operator pairs: $1 + 3 + 6 + 10 + 15 = 35$
-\item $N_3$ gauge invariance: $N_3[1] = 0$
+\item $\mathrm{Diff}_3$ gauge invariance: $\mathrm{Diff}_3[1] = 0$
 \end{enumerate}
 \end{theorem}
 
@@ -163,10 +163,10 @@ and $26 = t_1^2 + t_2^2 + t_3^2$ is the sector trace square sum.
 \end{enumerate}
 \end{theorem}
 
-\section{Inverse Square Law from $N_6$ Structure}
+\section{Inverse Square Law from $\mathrm{Diff}_6$ Structure}
 \label{sec:grav_inverse_square}
 
-Newton's inverse square law $F \propto 1/r^2$ is derived purely from the $N_6$
+Newton's inverse square law $F \propto 1/r^2$ is derived purely from the $\mathrm{Diff}_6$
 operator structure, without importing any assumption from continuous field theory.
 
 \subsection{Golden Conjugate Inversion}
@@ -184,7 +184,7 @@ The derivation rests on the algebraic identity $\varphi\psi = -1$, which implies
 In particular, $\varphi^{-2k} = \psi^{2k}$ and $\psi^{-2k} = \varphi^{2k}$ for all $k$.
 \end{lemma}
 
-\subsection{Extended Kernel of $N_6$ Structure}
+\subsection{Extended Kernel of $\mathrm{Diff}_6$ Structure}
 
 Define the dissipation coefficient for the monomial $t^n$:
 \[
@@ -198,33 +198,33 @@ C(-2) = \varphi^{-6} - 3\varphi^{-4} + \varphi^{-2} - \psi^{-2} + 3\psi^{-4} - \
 = \psi^{6} - 3\psi^{4} + \psi^{2} - \varphi^{2} + 3\varphi^{4} - \varphi^{6} = -C(2) = 0.
 \]
 
-\begin{theorem}[$N_6$ Annihilates $t^{-2}$]
+\begin{theorem}[$\mathrm{Diff}_6$ Annihilates $t^{-2}$]
 \label{thm:N6_inv_sq_zero}
-\lean{FUST.GravitationalCoupling.N6_inv_sq_zero}
+\lean{FUST.GravitationalCoupling.Diff6_inv_sq_zero}
 \leanok
 For all $x \neq 0$,
 \[
-N_6[t^{-2}](x) = 0.
+\mathrm{Diff}_6[t^{-2}](x) = 0.
 \]
 \end{theorem}
 
 \begin{proof}
-Expand $N_6[t^{-2}](x)$ using $(ax)^{-2} = a^{-2}x^{-2}$.
+Expand $\mathrm{Diff}_6[t^{-2}](x)$ using $(ax)^{-2} = a^{-2}x^{-2}$.
 The numerator factors as $x^{-2} \cdot C(-2) = 0$ since $\varphi^{-2k} = \psi^{2k}$
 reduces the coefficient to $-C(2) = 0$.
 \end{proof}
 
 \subsection{Inverse-Square Force}
 
-The $N_6$ operator applied to the $1/r$ potential $\Phi(t) = t^{-1}$ yields:
+The $\mathrm{Diff}_6$ operator applied to the $1/r$ potential $\Phi(t) = t^{-1}$ yields:
 
-\begin{theorem}[Inverse-Square Force from $N_6$]
+\begin{theorem}[Inverse-Square Force from $\mathrm{Diff}_6$]
 \label{thm:N6_inv_one}
-\lean{FUST.GravitationalCoupling.N6_inv_one}
+\lean{FUST.GravitationalCoupling.Diff6_inv_one}
 \leanok
 For all $x \neq 0$,
 \[
-N_6[t^{-1}](x) = \frac{6}{(\varphi - \psi)^4 \cdot x^2} = \frac{6}{25} \cdot \frac{1}{x^2}.
+\mathrm{Diff}_6[t^{-1}](x) = \frac{6}{(\varphi - \psi)^4 \cdot x^2} = \frac{6}{25} \cdot \frac{1}{x^2}.
 \]
 \end{theorem}
 
@@ -252,18 +252,18 @@ exists and is exactly inverse-square.
 \leanok
 For all $x \neq 0$,
 \[
-\Box_\varphi[t^{-1}](x) = N_6(N_6[t^{-1}])(x) = 0.
+\Box_\varphi[t^{-1}](x) = \mathrm{Diff}_6(\mathrm{Diff}_6[t^{-1}])(x) = 0.
 \]
 \end{theorem}
 
 \begin{proof}
-By Theorem~\ref{thm:N6_inv_one}, $N_6[t^{-1}](y) = \tfrac{6}{(\varphi-\psi)^4} \cdot y^{-2}$
-for $y \neq 0$.  Since $N_6$ evaluates only at nonzero points $\varphi^k x$ and $\psi^k x$,
-the outer $N_6$ sees a constant multiple of $t^{-2}$.
-By $N_6$-linearity (homogeneity) and Theorem~\ref{thm:N6_inv_sq_zero}:
+By Theorem~\ref{thm:N6_inv_one}, $\mathrm{Diff}_6[t^{-1}](y) = \tfrac{6}{(\varphi-\psi)^4} \cdot y^{-2}$
+for $y \neq 0$.  Since $\mathrm{Diff}_6$ evaluates only at nonzero points $\varphi^k x$ and $\psi^k x$,
+the outer $\mathrm{Diff}_6$ sees a constant multiple of $t^{-2}$.
+By $\mathrm{Diff}_6$-linearity (homogeneity) and Theorem~\ref{thm:N6_inv_sq_zero}:
 \[
-N_6\!\Bigl[\frac{6}{(\varphi-\psi)^4} \cdot t^{-2}\Bigr](x)
-= \frac{6}{(\varphi-\psi)^4} \cdot N_6[t^{-2}](x) = 0. \qedhere
+\mathrm{Diff}_6\!\Bigl[\frac{6}{(\varphi-\psi)^4} \cdot t^{-2}\Bigr](x)
+= \frac{6}{(\varphi-\psi)^4} \cdot \mathrm{Diff}_6[t^{-2}](x) = 0. \qedhere
 \]
 \end{proof}
 
@@ -273,11 +273,11 @@ N_6\!\Bigl[\frac{6}{(\varphi-\psi)^4} \cdot t^{-2}\Bigr](x)
 \label{thm:inverse_square_law}
 \lean{FUST.GravitationalCoupling.inverse_square_law_derivation}
 \leanok
-From the $N_6$ structure alone:
+From the $\mathrm{Diff}_6$ structure alone:
 \begin{enumerate}
 \item $\dim\ker(F_\zeta) = 3$ determines spatial dimension $d = 3$.
-\item $N_6[t^{-2}] = 0$: the inverse-square monomial is in the extended kernel.
-\item $N_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$: force is inverse-square with nonzero coefficient.
+\item $\mathrm{Diff}_6[t^{-2}] = 0$: the inverse-square monomial is in the extended kernel.
+\item $\mathrm{Diff}_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$: force is inverse-square with nonzero coefficient.
 \item $\Box_\varphi[t^{-1}] = 0$: the $1/r$ potential is harmonic under the FUST d'Alembertian.
 \end{enumerate}
 \end{theorem}
@@ -288,50 +288,36 @@ The derivation chain is:
 \;\;\Longrightarrow\;\;
 C(-2) = 0
 \;\;\Longrightarrow\;\;
-N_6[t^{-2}] = 0
+\mathrm{Diff}_6[t^{-2}] = 0
 \;\;\Longrightarrow\;\;
 \Box_\varphi[t^{-1}] = 0
 \;\;\Longrightarrow\;\;
-F = N_6[t^{-1}] \propto \frac{1}{r^2}.
+F = \mathrm{Diff}_6[t^{-1}] \propto \frac{1}{r^2}.
 \]
 
-\section{$N_6$ Structure Algebraic Relations}
+\section{$\mathrm{Diff}_6$ Structure Algebraic Relations}
 \label{sec:grav_d_structure_relations}
 
-Systematic exploration of D$_6$ algebraic properties reveals deep connections
+Systematic exploration of $\mathrm{Diff}_6$ algebraic properties reveals deep connections
 to Fibonacci number theory and the sector factorization.
 
-\subsection{Dissipation--Fibonacci Decomposition}
+\subsection{$\mathrm{Diff}_6$ Coefficient Structure}
 
-\begin{theorem}[Dissipation--Fibonacci Decomposition]
-\label{thm:dissipation_fibonacci}
-\lean{FUST.NavierStokes.dissipation_fibonacci_decomposition}
-\leanok
-For all $n \in \mathbb{N}$,
-\[
-C(n) = (\varphi - \psi) \cdot \bigl(F(3n) - 3F(2n) + F(n)\bigr)
-\]
-where $F(k) = (\varphi^k - \psi^k)/\sqrt{5}$ is the $k$-th Fibonacci number
-and $C(n)$ is the dissipation coefficient.
-\end{theorem}
-
-\subsection{$N_6$ Coefficient Structure}
-
-\begin{theorem}[$N_6$ Evaluation Point Sum]
+\begin{theorem}[$\mathrm{Diff}_6$ Evaluation Point Sum]
 \label{thm:N6_eval_sum}
-\lean{FUST.GravitationalCoupling.N6_eval_multiplier_sum}
+\lean{FUST.GravitationalCoupling.Diff6_eval_multiplier_sum}
 \leanok
 \[
 \varphi^3 + \varphi^2 + \varphi + \psi + \psi^2 + \psi^3 = 8 = t_1 + t_2 + t_3.
 \]
 \end{theorem}
 
-\begin{theorem}[$N_6$ Coefficient Properties]
+\begin{theorem}[$\mathrm{Diff}_6$ Coefficient Properties]
 \label{thm:N6_coeff_props}
-\lean{FUST.GravitationalCoupling.N6_coeff_sum}
-\lean{FUST.GravitationalCoupling.N6_coeff_abs_sum}
+\lean{FUST.GravitationalCoupling.Diff6_coeff_sum}
+\lean{FUST.GravitationalCoupling.Diff6_coeff_abs_sum}
 \leanok
-The $N_6$ coefficients $[1, -3, 1, -1, 3, -1]$ satisfy:
+The $\mathrm{Diff}_6$ coefficients $[1, -3, 1, -1, 3, -1]$ satisfy:
 \begin{enumerate}
 \item Signed sum $= 0$ (kills constants).
 \item Absolute sum $= 10 = C(5,2)$.
@@ -339,14 +325,14 @@ The $N_6$ coefficients $[1, -3, 1, -1, 3, -1]$ satisfy:
 \end{enumerate}
 \end{theorem}
 
-\subsection{$N_6$ Spectral Invariants}
+\subsection{$\mathrm{Diff}_6$ Spectral Invariants}
 
 The elementary symmetric polynomials $e_k$ of the evaluation multipliers
 $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ are:
 
-\begin{theorem}[$N_6$ Spectral Invariants]
+\begin{theorem}[$\mathrm{Diff}_6$ Spectral Invariants]
 \label{thm:N6_spectral_invariants}
-\lean{FUST.GravitationalCoupling.N6_spectral_invariants}
+\lean{FUST.GravitationalCoupling.Diff6_spectral_invariants}
 \leanok
 \begin{align*}
 e_1 &= 8, & e_2 &= 18, & e_3 &= 6, \\
@@ -358,24 +344,24 @@ These define the characteristic polynomial
 \[
 p(x) = x^6 - 8x^5 + 18x^4 - 6x^3 - 12x^2 + 2x + 1
 \]
-whose roots are precisely the $N_6$ evaluation multipliers.
+whose roots are precisely the $\mathrm{Diff}_6$ evaluation multipliers.
 
-\begin{theorem}[$N_6$ Characteristic Polynomial Roots]
+\begin{theorem}[$\mathrm{Diff}_6$ Characteristic Polynomial Roots]
 \label{thm:N6_charPoly_roots}
-\lean{FUST.GravitationalCoupling.N6_charPoly_roots}
+\lean{FUST.GravitationalCoupling.Diff6_charPoly_roots}
 \leanok
 \[
 p(\varphi^k) = 0, \quad p(\psi^k) = 0 \quad \text{for } k = 1, 2, 3.
 \]
 \end{theorem}
 
-\subsection{\texorpdfstring{$N_6$}{N₆} Sector Factorization}
+\subsection{\texorpdfstring{$\mathrm{Diff}_6$}{Diff₆} Sector Factorization}
 
 The characteristic polynomial factors into three sectors:
 
-\begin{theorem}[$N_6$ Characteristic Polynomial Factorization]
+\begin{theorem}[$\mathrm{Diff}_6$ Characteristic Polynomial Factorization]
 \label{thm:N6_charPoly_factorization}
-\lean{FUST.GravitationalCoupling.N6_charPoly_factorization}
+\lean{FUST.GravitationalCoupling.Diff6_charPoly_factorization}
 \leanok
 \[
 p(x) = (x^2 - x - 1)(x^2 - 3x + 1)(x^2 - 4x - 1)
@@ -459,7 +445,7 @@ The gravity sector discriminant is $4 \times 5 = \mathrm{spacetimeDim} \times \m
 
 \subsection{Sector-Invariant Derivation of Physical Exponents}
 
-The $N_6$ characteristic polynomial factors into three sectors with
+The $\mathrm{Diff}_6$ characteristic polynomial factors into three sectors with
 traces $t_k = \varphi^k + \psi^k$: $t_1 = 1$ (matter), $t_2 = 3$ (gauge), $t_3 = 4$ (gravity).
 The physical exponents are expressed using independent spectral invariants:
 power sums $p_k = \sum t_i^k$, elementary symmetric functions $e_k$,
@@ -490,7 +476,7 @@ e_3 = t_1 \times t_2 \times t_3 = 1 \times 3 \times 4 = 12.
 \[
 e_3 + d = t_1 \cdot t_2 \cdot t_3 + \dim\ker(F_\zeta) = 12 + 3 = 15 = C(6,2).
 \]
-The sector product plus vacuum dimension equals the $N_6$ pair count.
+The sector product plus vacuum dimension equals the $\mathrm{Diff}_6$ pair count.
 \end{theorem}
 
 \begin{theorem}[Lepton Exponent from Sector Invariants]
@@ -575,7 +561,7 @@ $\{8, -18, 6, 12, -2, -1\} = \{e_1, -e_2, e_3, -e_4, e_5, -e_6\}$.
 \section{Dimensional Derivation Structure}
 \label{sec:grav_derivation_structure}
 
-The $N_6$ operator maps $N_6[t^n](x) = C(n) \cdot x^n / (\varphi-\psi)^5$
+The $\mathrm{Diff}_6$ operator maps $\mathrm{Diff}_6[t^n](x) = C(n) \cdot x^n / (\varphi-\psi)^5$
 where $C(n)$ is the dissipation coefficient.
 The monomial eigenvalue $\Lambda(n) = C(n)/(\varphi-\psi)^5$ vanishes
 for $n \in \{0, 1, 2\}$:
@@ -584,22 +570,22 @@ for $n \in \{0, 1, 2\}$:
 \item $\Delta = 1$: mass operators ($m_e$, $m_{Pl}$)
 \item $\Delta = 2$: kinetic energy operators ($p^2$, $\nabla^2$)
 \end{itemize}
-Since $N_6$ annihilates $\Delta = 1$, mass ratios $m_e/m_{Pl}$
-are \emph{boundary data} of the operator hierarchy, not determined by $N_6$ eigenvalues.
+Since $\mathrm{Diff}_6$ annihilates $\Delta = 1$, mass ratios $m_e/m_{Pl}$
+are \emph{boundary data} of the operator hierarchy, not determined by $\mathrm{Diff}_6$ eigenvalues.
 
-\begin{theorem}[$N_6$ Kernel Dimensions]
+\begin{theorem}[$\mathrm{Diff}_6$ Kernel Dimensions]
 \label{thm:N6_kernel_dimensions}
-\lean{FUST.GravitationalCoupling.N6_kernel_dimensions}
+\lean{FUST.GravitationalCoupling.Diff6_kernel_dimensions}
 \leanok
-$N_6[1] = N_6[t] = N_6[t^2] = 0$ (kernel: $\Delta = 0, 1, 2$),
-while $N_6[t^{-1}] \neq 0$ (force operator: outside kernel).
+$\mathrm{Diff}_6[1] = \mathrm{Diff}_6[t] = \mathrm{Diff}_6[t^2] = 0$ (kernel: $\Delta = 0, 1, 2$),
+while $\mathrm{Diff}_6[t^{-1}] \neq 0$ (force operator: outside kernel).
 \end{theorem}
 
 The physical exponents form a three-layer structure:
 
-\subsection*{Layer 1: $N_6$ Eigenvalue Structure (structural)}
+\subsection*{Layer 1: $\mathrm{Diff}_6$ Eigenvalue Structure (structural)}
 
-Determined purely by $N_6$ spectral data:
+Determined purely by $\mathrm{Diff}_6$ spectral data:
 \begin{itemize}
 \item $d = \dim(\ker F_\zeta) = 3$ (spatial dimension)
 \item $d{+}1 = 4$ (spacetime dimension)
@@ -611,7 +597,7 @@ Determined purely by $N_6$ spectral data:
 \subsection*{Layer 2: Sector-Invariant Exponents}
 
 The physical exponents derive from sector traces $t_k = \varphi^k + \psi^k$
-of the $N_6$ characteristic polynomial factorization
+of the $\mathrm{Diff}_6$ characteristic polynomial factorization
 $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$:
 \begin{itemize}
 \item $107 = p_3 + e_3 + d = \sum t_k^3 + \prod t_k + \dim\ker(F_\zeta)$
@@ -646,12 +632,12 @@ The physical quantities are assembled with dimensional intermediates:
 \noindent\textbf{Note on derivation.}
 The sector-invariant formulas (Theorems~\ref{thm:lepton_sector}--\ref{thm:sector_invariant_derivation})
 express all physical exponents using independent spectral invariants ($p_3$, $e_3$, $\sigma$, $d$, $D$)
-from the $N_6$ sector factorization, avoiding the degree-inhomogeneity of earlier spectral formulas.
+from the $\mathrm{Diff}_6$ sector factorization, avoiding the degree-inhomogeneity of earlier spectral formulas.
 
 \section{Graviton Structural Prediction}
 \label{sec:grav_graviton}
 
-The graviton is not postulated but derived from the $N_6$ structure.
+The graviton is not postulated but derived from the $\mathrm{Diff}_6$ structure.
 Seven properties follow from the characteristic polynomial and kernel analysis.
 
 \begin{theorem}[Graviton Masslessness]
@@ -660,10 +646,10 @@ Seven properties follow from the characteristic polynomial and kernel analysis.
 \leanok
 For all $x \neq 0$,
 \[
-\Box_\varphi[t^{-1}](x) = N_6(N_6[t^{-1}])(x) = 0.
+\Box_\varphi[t^{-1}](x) = \mathrm{Diff}_6(\mathrm{Diff}_6[t^{-1}])(x) = 0.
 \]
-The graviton propagator has no mass term because $N_6[t^{-1}] \propto t^{-2}$
-and $t^{-2}$ is in the extended kernel of $N_6$ (Theorem~\ref{thm:N6_inv_sq_zero}).
+The graviton propagator has no mass term because $\mathrm{Diff}_6[t^{-1}] \propto t^{-2}$
+and $t^{-2}$ is in the extended kernel of $\mathrm{Diff}_6$ (Theorem~\ref{thm:N6_inv_sq_zero}).
 \end{theorem}
 
 \begin{theorem}[Graviton Spin from Spacetime]
@@ -677,11 +663,11 @@ The maximum helicity for a massless particle in $(d{+}1)$-dimensional spacetime 
 (Weinberg's theorem). With $\dim\ker(F_\zeta) = 3$, the graviton is uniquely spin-2.
 \end{theorem}
 
-\begin{theorem}[Graviton Prediction from $N_6$ Structure]
+\begin{theorem}[Graviton Prediction from $\mathrm{Diff}_6$ Structure]
 \label{thm:graviton_prediction}
 \lean{FUST.GravitationalCoupling.graviton_prediction}
 \leanok
-From the $N_6$ characteristic polynomial and kernel alone:
+From the $\mathrm{Diff}_6$ characteristic polynomial and kernel alone:
 \begin{enumerate}
 \item \textbf{Existence}: $p(x) = (x^2{-}x{-}1)(x^2{-}3x{+}1)(x^2{-}4x{-}1)$ has a gravity sector.
 \item \textbf{Spacetime bridge}: $t_3 = \varphi^3 + \psi^3 = 4 = \mathrm{spacetimeDim}$.
@@ -689,13 +675,13 @@ From the $N_6$ characteristic polynomial and kernel alone:
 \item \textbf{Sector discriminant}: $\Delta = 20 = C(6,3) = 4 \times 5$.
 \item \textbf{Massless}: $\Box_\varphi[t^{-1}] = 0$.
 \item \textbf{Spin-2}: $\mathrm{spatialDim} - \mathrm{timeDim} = 2$.
-\item \textbf{Inverse square}: $N_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$.
+\item \textbf{Inverse square}: $\mathrm{Diff}_6[t^{-1}](x) = \tfrac{6}{25} x^{-2}$.
 \end{enumerate}
 \end{theorem}
 
 The derivation chain is:
 \[
-N_6 \text{ charPoly}
+\mathrm{Diff}_6 \text{ charPoly}
 \;\Longrightarrow\;
 \text{gravity sector } (x^2{-}4x{-}1)
 \;\Longrightarrow\;

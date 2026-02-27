@@ -117,7 +117,7 @@ theorem total_elements_118 :
 
 /-! ## Section 5: Quark Charge -/
 
--- Charge denominator = C(3, 2) from N3 structure
+-- Charge denominator = C(3, 2) from Diff3 structure
 abbrev chargeDenom : ℕ := Nat.choose 3 2
 
 theorem chargeDenom_eq : chargeDenom = 3 := rfl

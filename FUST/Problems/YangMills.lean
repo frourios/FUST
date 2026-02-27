@@ -149,7 +149,7 @@ theorem curvatureEnergy_diagonal_zero (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ 
 
 section AlgebraicConfinement
 
-open FUST FUST.FζOperator FUST.Zeta6 FUST.TimeStructure FUST.LeastAction FUST.WaveEquation
+open FUST FUST.FζOperator FUST.DζOperator FUST.TimeStructure FUST.LeastAction FUST.WaveEquation
 
 theorem kerFζ_add_closed (f g : ℂ → ℂ) (hf : IsInKerFζ f) (hg : IsInKerFζ g) :
     IsInKerFζ (fun t => f t + g t) := by

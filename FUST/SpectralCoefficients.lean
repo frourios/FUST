@@ -1,7 +1,7 @@
 /-
-FUST N₆ Spectral Coefficients
+FUST Diff₆ Spectral Coefficients
 
-N₆(xⁿ) = Cₙ · x^{n-1} where Cₙ = √5 · (F_{3n} - 3F_{2n} + Fₙ).
+Diff₆(xⁿ) = Cₙ · x^{n-1} where Cₙ = √5 · (F_{3n} - 3F_{2n} + Fₙ).
 The polynomial kernel {1, x, x²} (dim 3) and Laurent kernel {x⁻², 1, x, x²} (dim 4)
 are fundamental properties of the golden-ratio 6-point difference operator.
 -/
@@ -15,27 +15,27 @@ namespace FUST.SpectralCoefficients
 
 open FUST Real
 
-/-! ## Section 1: N₆ Spectral Coefficients (ℕ → ℝ)
+/-! ## Section 1: Diff₆ Spectral Coefficients (ℕ → ℝ)
 
-N₆(xⁿ) = Cₙ · x^{n-1} for n ≥ 3
+Diff₆(xⁿ) = Cₙ · x^{n-1} for n ≥ 3
 
-The coefficient Cₙ encodes the spectral structure of N₆.
+The coefficient Cₙ encodes the spectral structure of Diff₆.
 -/
 
 section SpectralCoefficients
 
-/-- Coefficient C_n for N₆(x^n) = C_n · x^{n-1} -/
-noncomputable def N6Coeff (n : ℕ) : ℝ :=
+/-- Coefficient C_n for Diff₆(x^n) = C_n · x^{n-1} -/
+noncomputable def Diff6Coeff (n : ℕ) : ℝ :=
   φ^(3*n) - 3*φ^(2*n) + φ^n - ψ^n + 3*ψ^(2*n) - ψ^(3*n)
 
 /-- C_0 = 0 (constant annihilation) -/
-theorem N6Coeff_zero : N6Coeff 0 = 0 := by
-  simp only [N6Coeff, Nat.mul_zero, pow_zero]
+theorem Diff6Coeff_zero : Diff6Coeff 0 = 0 := by
+  simp only [Diff6Coeff, Nat.mul_zero, pow_zero]
   ring
 
 /-- C_1 = 0 (linear annihilation) -/
-theorem N6Coeff_one : N6Coeff 1 = 0 := by
-  simp only [N6Coeff, Nat.mul_one]
+theorem Diff6Coeff_one : Diff6Coeff 1 = 0 := by
+  simp only [Diff6Coeff, Nat.mul_one]
   have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2*ψ + 1 := by
     have hψ2 : ψ^2 = ψ + 1 := psi_sq
@@ -53,8 +53,8 @@ theorem N6Coeff_one : N6Coeff 1 = 0 := by
   linarith
 
 /-- C_2 = 0 (quadratic annihilation) -/
-theorem N6Coeff_two : N6Coeff 2 = 0 := by
-  simp only [N6Coeff]
+theorem Diff6Coeff_two : Diff6Coeff 2 = 0 := by
+  simp only [Diff6Coeff]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
   have hψ2 : ψ^2 = ψ + 1 := psi_sq
   have hφ4 : φ^4 = 3*φ + 2 := by
@@ -88,8 +88,8 @@ theorem N6Coeff_two : N6Coeff 2 = 0 := by
     _ = 0 := by linarith
 
 /-- C_3 = 12√5 (first non-kernel coefficient) -/
-theorem N6Coeff_three : N6Coeff 3 = 12 * Real.sqrt 5 := by
-  simp only [N6Coeff]
+theorem Diff6Coeff_three : Diff6Coeff 3 = 12 * Real.sqrt 5 := by
+  simp only [Diff6Coeff]
   have hφ3 : φ^3 = 2*φ + 1 := phi_cubed
   have hψ3 : ψ^3 = 2*ψ + 1 := by
     have hψ2 : ψ^2 = ψ + 1 := psi_sq
@@ -145,10 +145,10 @@ theorem N6Coeff_three : N6Coeff 3 = 12 * Real.sqrt 5 := by
     _ = 12*(φ - ψ) := by ring
     _ = 12 * Real.sqrt 5 := by rw [hdiff]
 
-/-- N6Coeff expressed via Fibonacci: C_n = √5 · (F_{3n} - 3F_{2n} + F_n) -/
-theorem N6Coeff_fibonacci (n : ℕ) :
-    N6Coeff n = Real.sqrt 5 * (Nat.fib (3*n) - 3 * Nat.fib (2*n) + Nat.fib n) := by
-  simp only [N6Coeff]
+/-- Diff6Coeff expressed via Fibonacci: C_n = √5 · (F_{3n} - 3F_{2n} + F_n) -/
+theorem Diff6Coeff_fibonacci (n : ℕ) :
+    Diff6Coeff n = Real.sqrt 5 * (Nat.fib (3*n) - 3 * Nat.fib (2*n) + Nat.fib n) := by
+  simp only [Diff6Coeff]
   have h1 : (Nat.fib (3*n) : ℝ) = (φ^(3*n) - ψ^(3*n)) / Real.sqrt 5 := coe_fib_eq (3*n)
   have h2 : (Nat.fib (2*n) : ℝ) = (φ^(2*n) - ψ^(2*n)) / Real.sqrt 5 := coe_fib_eq (2*n)
   have h3 : (Nat.fib n : ℝ) = (φ^n - ψ^n) / Real.sqrt 5 := coe_fib_eq n
@@ -158,8 +158,8 @@ theorem N6Coeff_fibonacci (n : ℕ) :
   ring
 
 /-- C_3 = 12√5 ≠ 0 -/
-theorem N6Coeff_three_ne_zero : N6Coeff 3 ≠ 0 := by
-  rw [N6Coeff_three]
+theorem Diff6Coeff_three_ne_zero : Diff6Coeff 3 ≠ 0 := by
+  rw [Diff6Coeff_three]
   have : (0 : ℝ) < 12 * Real.sqrt 5 := by positivity
   linarith
 
@@ -261,8 +261,8 @@ theorem fib_combination_pos (n : ℕ) (hn : n ≥ 3) :
   exact_mod_cast h_real
 
 /-- C_n ≠ 0 for n ≥ 3 (spectrum is non-trivial) -/
-theorem N6Coeff_ne_zero_of_ge_three (n : ℕ) (hn : n ≥ 3) : N6Coeff n ≠ 0 := by
-  rw [N6Coeff_fibonacci]
+theorem Diff6Coeff_ne_zero_of_ge_three (n : ℕ) (hn : n ≥ 3) : Diff6Coeff n ≠ 0 := by
+  rw [Diff6Coeff_fibonacci]
   have hsqrt5_pos : 0 < Real.sqrt 5 := by positivity
   have h_fib_pos : Nat.fib (3*n) + Nat.fib n > 3 * Nat.fib (2*n) := fib_combination_pos n hn
   have h : (0 : ℝ) < Nat.fib (3*n) - 3 * Nat.fib (2*n) + Nat.fib n := by
@@ -271,14 +271,14 @@ theorem N6Coeff_ne_zero_of_ge_three (n : ℕ) (hn : n ≥ 3) : N6Coeff n ≠ 0 :
   exact ne_of_gt (mul_pos hsqrt5_pos h)
 
 /-- Kernel characterization: C_n = 0 iff n ≤ 2 -/
-theorem N6Coeff_eq_zero_iff (n : ℕ) : N6Coeff n = 0 ↔ n ≤ 2 := by
+theorem Diff6Coeff_eq_zero_iff (n : ℕ) : Diff6Coeff n = 0 ↔ n ≤ 2 := by
   constructor
   · intro h
     by_contra hne
     push_neg at hne
-    exact N6Coeff_ne_zero_of_ge_three n hne h
+    exact Diff6Coeff_ne_zero_of_ge_three n hne h
   · intro h
-    interval_cases n <;> simp [N6Coeff_zero, N6Coeff_one, N6Coeff_two]
+    interval_cases n <;> simp [Diff6Coeff_zero, Diff6Coeff_one, Diff6Coeff_two]
 
 end SpectralCoefficients
 
@@ -286,10 +286,10 @@ end SpectralCoefficients
 
 section ExplicitComputation
 
-/-- N6Coeff factorization: C_n = (φ^n - ψ^n) * (φ^{2n} + ψ^{2n} + (-1)^n + 1 - 3(φ^n + ψ^n)) -/
-theorem N6Coeff_factored (n : ℕ) :
-    N6Coeff n = (φ^n - ψ^n) * (φ^(2*n) + ψ^(2*n) + (-1:ℝ)^n + 1 - 3*(φ^n + ψ^n)) := by
-  simp only [N6Coeff]
+/-- Diff6Coeff factorization: C_n = (φ^n - ψ^n) * (φ^{2n} + ψ^{2n} + (-1)^n + 1 - 3(φ^n + ψ^n)) -/
+theorem Diff6Coeff_factored (n : ℕ) :
+    Diff6Coeff n = (φ^n - ψ^n) * (φ^(2*n) + ψ^(2*n) + (-1:ℝ)^n + 1 - 3*(φ^n + ψ^n)) := by
+  simp only [Diff6Coeff]
   have h_phi_psi : φ * ψ = -1 := phi_mul_psi
   have h_prod : (φ*ψ)^n = (-1:ℝ)^n := by rw [h_phi_psi]
   have h2n_φ : φ^(2*n) = (φ^n)^2 := by rw [← pow_mul]; ring_nf
@@ -304,14 +304,14 @@ theorem N6Coeff_factored (n : ℕ) :
   rw [key, h_prod]
 
 /-- For large n, C_n ~ φ^{3n} (dominant term) -/
-theorem N6Coeff_asymptotic (n : ℕ) (hn : n ≥ 3) :
-    ∃ C > 0, |N6Coeff n - φ^(3*n)| ≤ C * φ^(2*n) := by
+theorem Diff6Coeff_asymptotic (n : ℕ) (hn : n ≥ 3) :
+    ∃ C > 0, |Diff6Coeff n - φ^(3*n)| ≤ C * φ^(2*n) := by
   use 5
   constructor
   · norm_num
-  -- N6Coeff - φ^{3n} = -3φ^{2n} + φ^n - ψ^n + 3ψ^{2n} - ψ^{3n}
-  have h_diff : N6Coeff n - φ^(3*n) = -3*φ^(2*n) + φ^n - ψ^n + 3*ψ^(2*n) - ψ^(3*n) := by
-    simp only [N6Coeff]; ring
+  -- Diff6Coeff - φ^{3n} = -3φ^{2n} + φ^n - ψ^n + 3ψ^{2n} - ψ^{3n}
+  have h_diff : Diff6Coeff n - φ^(3*n) = -3*φ^(2*n) + φ^n - ψ^n + 3*ψ^(2*n) - ψ^(3*n) := by
+    simp only [Diff6Coeff]; ring
   rw [h_diff]
   have hφ_pos : 0 < φ := phi_pos
   have hψ_abs : |ψ| < 1 := abs_psi_lt_one
@@ -383,23 +383,23 @@ theorem spectralWeight_even (n : ℕ) (hn : Even n) :
   rw [spectralWeight_via_sum, Even.neg_one_pow hn]; ring
 
 /-- Triple factorization (odd): C_n = (φ^n-ψ^n)(φ^n+ψ^n-1)(φ^n+ψ^n-2) -/
-theorem N6Coeff_odd_factored (n : ℕ) (hn : Odd n) :
-    N6Coeff n = (φ^n - ψ^n) * (φ^n + ψ^n - 1) * (φ^n + ψ^n - 2) := by
-  have h1 := N6Coeff_factored n
+theorem Diff6Coeff_odd_factored (n : ℕ) (hn : Odd n) :
+    Diff6Coeff n = (φ^n - ψ^n) * (φ^n + ψ^n - 1) * (φ^n + ψ^n - 2) := by
+  have h1 := Diff6Coeff_factored n
   have h2 := spectralWeight_odd n hn
   simp only [spectralWeight] at h2
   rw [h1, h2, mul_assoc]
 
 /-- Triple factorization (even): C_n = (φ^n-ψ^n)(φ^n+ψ^n)(φ^n+ψ^n-3) -/
-theorem N6Coeff_even_factored (n : ℕ) (hn : Even n) :
-    N6Coeff n = (φ^n - ψ^n) * (φ^n + ψ^n) * (φ^n + ψ^n - 3) := by
-  have h1 := N6Coeff_factored n
+theorem Diff6Coeff_even_factored (n : ℕ) (hn : Even n) :
+    Diff6Coeff n = (φ^n - ψ^n) * (φ^n + ψ^n) * (φ^n + ψ^n - 3) := by
+  have h1 := Diff6Coeff_factored n
   have h2 := spectralWeight_even n hn
   simp only [spectralWeight] at h2
   rw [h1, h2, mul_assoc]
 
-/-- Three distinct zero mechanisms for dim ker(N₆) = 3 -/
-theorem N6_kernel_three_mechanisms :
+/-- Three distinct zero mechanisms for dim ker(Diff₆) = 3 -/
+theorem Diff6_kernel_three_mechanisms :
     (φ^0 - ψ^0 = 0) ∧
     (φ^1 + ψ^1 - 1 = 0) ∧
     (φ^2 + ψ^2 - 3 = 0) :=
@@ -442,21 +442,21 @@ theorem spectralWeight_three : spectralWeight 3 = 6 := by
   linarith [phi_add_psi]
 
 /-- C_3 = 2√5 · 3 · 2 = 12√5 via triple factorization -/
-theorem N6Coeff_three_via_triple :
-    N6Coeff 3 = (φ^3 - ψ^3) * (φ^3 + ψ^3 - 1) * (φ^3 + ψ^3 - 2) := by
-  exact N6Coeff_odd_factored 3 ⟨1, by ring⟩
+theorem Diff6Coeff_three_via_triple :
+    Diff6Coeff 3 = (φ^3 - ψ^3) * (φ^3 + ψ^3 - 1) * (φ^3 + ψ^3 - 2) := by
+  exact Diff6Coeff_odd_factored 3 ⟨1, by ring⟩
 
 /-- Spectral eigenvalue via Fibonacci and spectral weight:
     λ_n = (φ^n-ψ^n) · Q_n / (√5)^5 = F_n · Q_n / (√5)^4 = F_n · Q_n / 25 -/
 theorem spectralEigenvalue_factored (n : ℕ) :
-    N6Coeff n = (φ^n - ψ^n) * spectralWeight n := by
-  exact N6Coeff_factored n
+    Diff6Coeff n = (φ^n - ψ^n) * spectralWeight n := by
+  exact Diff6Coeff_factored n
 
 end SpectralWeight
 
 /-! ## Section 2.7: Fibonacci-Prime Bridge
 
-The N6 spectral coefficient C_n = √5 · F_n · Q_n connects to prime numbers
+The Diff6 spectral coefficient C_n = √5 · F_n · Q_n connects to prime numbers
 through the Fibonacci divisibility structure:
 
 1. Binet: φ^n - ψ^n = √5 · F_n, so C_n = √5 · F_n · Q_n
@@ -464,13 +464,13 @@ through the Fibonacci divisibility structure:
 3. Rank of apparition: every prime p divides F_{α(p)} where α(p) | p-(5/p)
 4. Periodicity: p | F_{α(p)} | F_{k·α(p)} for all k ≥ 1
 
-This means every prime p is encoded in the N6 spectrum:
+This means every prime p is encoded in the Diff6 spectrum:
   p | F_{α(p)}, so p | C_{α(p)} / (√5 · Q_{α(p)})
   and p | C_{k·α(p)} / (√5 · Q_{k·α(p)}) for all k
 
 The algebraic mechanism: p | F_n ⟺ φ^n ≡ ψ^n (mod p) in 𝔽_p[√5].
 This is governed by the Frobenius element of ℚ(√5)/ℚ at p,
-connecting N6 (which lives in ℚ(√5)) to the Euler product of ζ(s).
+connecting Diff6 (which lives in ℚ(√5)) to the Euler product of ζ(s).
 
 Key factorization: ζ_{ℚ(√5)}(s) = ζ(s) · L(s, χ_5)
 where χ_5 is the Kronecker symbol (5/·). -/
@@ -487,9 +487,9 @@ theorem phi_sub_psi_eq_sqrt5_fib (n : ℕ) :
     φ^n - ψ^n = Real.sqrt 5 * (Nat.fib n : ℝ) := by
   rw [fib_binet]; field_simp
 
-/-- N6Coeff via Fibonacci and spectral weight: C_n = √5 · F_n · Q_n -/
-theorem N6Coeff_fib_spectralWeight (n : ℕ) :
-    N6Coeff n = Real.sqrt 5 * (Nat.fib n : ℝ) * spectralWeight n := by
+/-- Diff6Coeff via Fibonacci and spectral weight: C_n = √5 · F_n · Q_n -/
+theorem Diff6Coeff_fib_spectralWeight (n : ℕ) :
+    Diff6Coeff n = Real.sqrt 5 * (Nat.fib n : ℝ) * spectralWeight n := by
   rw [spectralEigenvalue_factored, phi_sub_psi_eq_sqrt5_fib, mul_assoc]
 
 /-- Strong divisibility: gcd(F_m, F_n) = F_{gcd(m,n)} -/
@@ -525,11 +525,11 @@ theorem rank_apparition_29 : 29 ∣ Nat.fib 14 := by decide
 /-- α(89) = 11, (5/89) = 1 since 89 ≡ 4 (mod 5), and 11 | 89-1 = 88 -/
 theorem rank_apparition_89 : 89 ∣ Nat.fib 11 := by decide
 
-/-- N6Coeff is proportional to Fibonacci with spectral weight as coefficient.
+/-- Diff6Coeff is proportional to Fibonacci with spectral weight as coefficient.
     For n ≥ 3, the spectral weight is nonzero, so F_n = 0 ⟺ C_n = 0. -/
-theorem N6Coeff_zero_iff_fib_or_weight (n : ℕ) :
-    N6Coeff n = 0 ↔ Nat.fib n = 0 ∨ spectralWeight n = 0 := by
-  rw [N6Coeff_fib_spectralWeight]
+theorem Diff6Coeff_zero_iff_fib_or_weight (n : ℕ) :
+    Diff6Coeff n = 0 ↔ Nat.fib n = 0 ∨ spectralWeight n = 0 := by
+  rw [Diff6Coeff_fib_spectralWeight]
   constructor
   · intro h
     have h5 : Real.sqrt 5 ≠ 0 := by positivity
@@ -543,9 +543,9 @@ theorem N6Coeff_zero_iff_fib_or_weight (n : ℕ) :
     · simp [h]
     · simp [h]
 
-/-- Summary: N6 spectral coefficients encode all primes via Fibonacci.
+/-- Summary: Diff6 spectral coefficients encode all primes via Fibonacci.
 
-The chain: N6 → C_n = √5·F_n·Q_n → F_n (Fibonacci) → p | F_{α(p)}
+The chain: Diff6 → C_n = √5·F_n·Q_n → F_n (Fibonacci) → p | F_{α(p)}
 Every prime p enters the Fibonacci sequence at rank α(p) ≤ p+1.
 By strong divisibility gcd(F_m,F_n) = F_{gcd(m,n)}, the prime p divides
 F_n for exactly those n that are multiples of α(p).
@@ -555,18 +555,18 @@ The Frobenius element Frob_p ∈ Gal(ℚ(√5)/ℚ) determines α(p):
   (5/p) = -1 (p inert in ℤ[φ]): α(p) | p+1
   p = 5 (ramified):              α(5) = 5
 
-This connects N6 (living in ℚ(√5)) to ζ(s) through:
+This connects Diff6 (living in ℚ(√5)) to ζ(s) through:
   ζ_{ℚ(√5)}(s) = ζ(s) · L(s, χ_5) -/
-theorem N6_prime_encoding_summary :
+theorem Diff6_prime_encoding_summary :
     -- C_n = √5 · F_n · Q_n (Fibonacci factorization)
-    (∀ n, N6Coeff n = Real.sqrt 5 * (Nat.fib n : ℝ) * spectralWeight n) ∧
+    (∀ n, Diff6Coeff n = Real.sqrt 5 * (Nat.fib n : ℝ) * spectralWeight n) ∧
     -- Strong divisibility (prime periodicity)
     (∀ m n, Nat.fib (Nat.gcd m n) = Nat.gcd (Nat.fib m) (Nat.fib n)) ∧
     -- Every small prime divides some Fibonacci number
     (2 ∣ Nat.fib 3 ∧ 3 ∣ Nat.fib 4 ∧ 5 ∣ Nat.fib 5 ∧
      7 ∣ Nat.fib 8 ∧ 11 ∣ Nat.fib 10 ∧ 13 ∣ Nat.fib 7 ∧
      29 ∣ Nat.fib 14 ∧ 89 ∣ Nat.fib 11) :=
-  ⟨N6Coeff_fib_spectralWeight,
+  ⟨Diff6Coeff_fib_spectralWeight,
    fib_strong_divisibility,
    ⟨rank_apparition_2, rank_apparition_3, rank_apparition_5,
     rank_apparition_7, rank_apparition_11, rank_apparition_13,
@@ -691,24 +691,24 @@ theorem splitting_rank_apparition_consistency :
 
 end DedekindFactorization
 
-/-! ## Section 3: Extended N₆ Kernel (ℤ → ℝ) -/
+/-! ## Section 3: Extended Diff₆ Kernel (ℤ → ℝ) -/
 
 section ExtendedKernel
 
-noncomputable def N6CoeffZ (n : ℤ) : ℝ :=
+noncomputable def Diff6CoeffZ (n : ℤ) : ℝ :=
   φ ^ (3 * n) - 3 * φ ^ (2 * n) + φ ^ n - ψ ^ n + 3 * ψ ^ (2 * n) - ψ ^ (3 * n)
 
-theorem N6CoeffZ_natCast (n : ℕ) : N6CoeffZ (n : ℤ) = N6Coeff n := by
-  simp only [N6CoeffZ, N6Coeff, zpow_natCast]
+theorem Diff6CoeffZ_natCast (n : ℕ) : Diff6CoeffZ (n : ℤ) = Diff6Coeff n := by
+  simp only [Diff6CoeffZ, Diff6Coeff, zpow_natCast]
   norm_cast
 
-theorem N6CoeffZ_zero : N6CoeffZ 0 = 0 := by simp [N6CoeffZ]
+theorem Diff6CoeffZ_zero : Diff6CoeffZ 0 = 0 := by simp [Diff6CoeffZ]
 
-theorem N6CoeffZ_one : N6CoeffZ 1 = 0 := by
-  rw [show (1 : ℤ) = (1 : ℕ) from rfl, N6CoeffZ_natCast, N6Coeff_one]
+theorem Diff6CoeffZ_one : Diff6CoeffZ 1 = 0 := by
+  rw [show (1 : ℤ) = (1 : ℕ) from rfl, Diff6CoeffZ_natCast, Diff6Coeff_one]
 
-theorem N6CoeffZ_two : N6CoeffZ 2 = 0 := by
-  rw [show (2 : ℤ) = (2 : ℕ) from rfl, N6CoeffZ_natCast, N6Coeff_two]
+theorem Diff6CoeffZ_two : Diff6CoeffZ 2 = 0 := by
+  rw [show (2 : ℤ) = (2 : ℕ) from rfl, Diff6CoeffZ_natCast, Diff6Coeff_two]
 
 private theorem phi_neg_zpow (k : ℤ) : φ ^ (-k) = (-ψ) ^ k := by
   rw [zpow_neg, ← inv_zpow]
@@ -721,8 +721,8 @@ private theorem psi_neg_zpow (k : ℤ) : ψ ^ (-k) = (-φ) ^ k := by
   rw [inv_eq_of_mul_eq_one_left]
   linarith [phi_mul_psi]
 
-theorem N6CoeffZ_neg_even (n : ℤ) (hn : Even n) : N6CoeffZ (-n) = -N6CoeffZ n := by
-  simp only [N6CoeffZ]
+theorem Diff6CoeffZ_neg_even (n : ℤ) (hn : Even n) : Diff6CoeffZ (-n) = -Diff6CoeffZ n := by
+  simp only [Diff6CoeffZ]
   have h3n : Even (3 * n) := hn.mul_left 3
   have h2n : Even (2 * n) := hn.mul_left 2
   rw [show 3 * -n = -(3 * n) from by ring, show 2 * -n = -(2 * n) from by ring]
@@ -732,17 +732,17 @@ theorem N6CoeffZ_neg_even (n : ℤ) (hn : Even n) : N6CoeffZ (-n) = -N6CoeffZ n 
       h3n.neg_zpow, h2n.neg_zpow, hn.neg_zpow]
   ring
 
-theorem N6CoeffZ_neg_two : N6CoeffZ (-2) = 0 := by
-  have h := N6CoeffZ_neg_even 2 ⟨1, by ring⟩
-  rw [N6CoeffZ_two, neg_zero] at h
+theorem Diff6CoeffZ_neg_two : Diff6CoeffZ (-2) = 0 := by
+  have h := Diff6CoeffZ_neg_even 2 ⟨1, by ring⟩
+  rw [Diff6CoeffZ_two, neg_zero] at h
   exact h
 
-theorem N6_extended_kernel_dim :
-    N6CoeffZ (-2) = 0 ∧ N6CoeffZ 0 = 0 ∧ N6CoeffZ 1 = 0 ∧ N6CoeffZ 2 = 0 :=
-  ⟨N6CoeffZ_neg_two, N6CoeffZ_zero, N6CoeffZ_one, N6CoeffZ_two⟩
+theorem Diff6_extended_kernel_dim :
+    Diff6CoeffZ (-2) = 0 ∧ Diff6CoeffZ 0 = 0 ∧ Diff6CoeffZ 1 = 0 ∧ Diff6CoeffZ 2 = 0 :=
+  ⟨Diff6CoeffZ_neg_two, Diff6CoeffZ_zero, Diff6CoeffZ_one, Diff6CoeffZ_two⟩
 
-theorem N6CoeffZ_neg_one_ne_zero : N6CoeffZ (-1) ≠ 0 := by
-  simp only [N6CoeffZ]
+theorem Diff6CoeffZ_neg_one_ne_zero : Diff6CoeffZ (-1) ≠ 0 := by
+  simp only [Diff6CoeffZ]
   rw [show (3 : ℤ) * (-1) = -3 from by ring, show (2 : ℤ) * (-1) = -2 from by ring]
   rw [phi_neg_zpow, phi_neg_zpow, phi_neg_zpow,
       psi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
@@ -773,9 +773,9 @@ theorem N6CoeffZ_neg_one_ne_zero : N6CoeffZ (-1) ≠ 0 := by
     rw [phi_sub_psi]; exact Real.sqrt_ne_zero'.mpr (by norm_num : (5:ℝ) > 0)
   exact absurd h6 (mul_ne_zero (by norm_num : (6:ℝ) ≠ 0) hne)
 
-theorem N6CoeffZ_three_ne_zero : N6CoeffZ 3 ≠ 0 := by
-  rw [show (3 : ℤ) = (3 : ℕ) from rfl, N6CoeffZ_natCast]
-  exact N6Coeff_three_ne_zero
+theorem Diff6CoeffZ_three_ne_zero : Diff6CoeffZ 3 ≠ 0 := by
+  rw [show (3 : ℤ) = (3 : ℕ) from rfl, Diff6CoeffZ_natCast]
+  exact Diff6Coeff_three_ne_zero
 
 private theorem phi_pow6 : φ ^ 6 = 8 * φ + 5 := by
   have : φ ^ 6 = (φ ^ 3) ^ 2 := by ring
@@ -795,9 +795,9 @@ private theorem psi_pow9 : ψ ^ 9 = 34 * ψ + 21 := by
   have : ψ ^ 9 = ψ ^ 3 * ψ ^ 6 := by ring
   rw [this, psi_cubed, psi_pow6]; nlinarith [psi_sq]
 
-theorem N6CoeffZ_neg_three_ne_zero : N6CoeffZ (-3) ≠ 0 := by
+theorem Diff6CoeffZ_neg_three_ne_zero : Diff6CoeffZ (-3) ≠ 0 := by
   -- C(-3) = 60(φ-ψ) = 60√5 ≠ 0
-  simp only [N6CoeffZ]
+  simp only [Diff6CoeffZ]
   rw [show (3 : ℤ) * (-3) = -9 from by ring, show (2 : ℤ) * (-3) = -6 from by ring]
   rw [phi_neg_zpow, phi_neg_zpow, phi_neg_zpow,
       psi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
@@ -819,38 +819,38 @@ theorem N6CoeffZ_neg_three_ne_zero : N6CoeffZ (-3) ≠ 0 := by
   rw [phi_sub_psi] at this
   linarith [Real.sqrt_pos_of_pos (show (5:ℝ) > 0 from by norm_num)]
 
-theorem N6_kernel_gap_structure :
-    N6CoeffZ (-3) ≠ 0 ∧ N6CoeffZ (-2) = 0 ∧ N6CoeffZ (-1) ≠ 0 ∧
-    N6CoeffZ 0 = 0 ∧ N6CoeffZ 1 = 0 ∧ N6CoeffZ 2 = 0 ∧ N6CoeffZ 3 ≠ 0 :=
-  ⟨N6CoeffZ_neg_three_ne_zero, N6CoeffZ_neg_two, N6CoeffZ_neg_one_ne_zero,
-   N6CoeffZ_zero, N6CoeffZ_one, N6CoeffZ_two, N6CoeffZ_three_ne_zero⟩
+theorem Diff6_kernel_gap_structure :
+    Diff6CoeffZ (-3) ≠ 0 ∧ Diff6CoeffZ (-2) = 0 ∧ Diff6CoeffZ (-1) ≠ 0 ∧
+    Diff6CoeffZ 0 = 0 ∧ Diff6CoeffZ 1 = 0 ∧ Diff6CoeffZ 2 = 0 ∧ Diff6CoeffZ 3 ≠ 0 :=
+  ⟨Diff6CoeffZ_neg_three_ne_zero, Diff6CoeffZ_neg_two, Diff6CoeffZ_neg_one_ne_zero,
+   Diff6CoeffZ_zero, Diff6CoeffZ_one, Diff6CoeffZ_two, Diff6CoeffZ_three_ne_zero⟩
 
 end ExtendedKernel
 
-/-! ## Section 4: N₅ Spectral Coefficients
+/-! ## Section 4: Diff₅ Spectral Coefficients
 
-N₅(xⁿ) = N5Coeff(n) · x^{n-1} where
-N5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 = L(2n) + L(n) - 4.
-ker(N₅) = {n | N5Coeff(n) = 0} = {0, 1} (polynomial), {0, 1} (Laurent).
+Diff₅(xⁿ) = Diff5Coeff(n) · x^{n-1} where
+Diff5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 = L(2n) + L(n) - 4.
+ker(Diff₅) = {n | Diff5Coeff(n) = 0} = {0, 1} (polynomial), {0, 1} (Laurent).
 -/
 
-section N5Spectral
+section Diff5Spectral
 
-/-- N₅ spectral coefficient: N5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 -/
-noncomputable def N5CoeffZ (n : ℤ) : ℝ :=
+/-- Diff₅ spectral coefficient: Diff5Coeff(n) = φ^{2n} + φ^n + ψ^n + ψ^{2n} - 4 -/
+noncomputable def Diff5CoeffZ (n : ℤ) : ℝ :=
   φ ^ (2 * n) + φ ^ n + ψ ^ n + ψ ^ (2 * n) - 4
 
-theorem N5CoeffZ_zero : N5CoeffZ 0 = 0 := by simp [N5CoeffZ]; ring
+theorem Diff5CoeffZ_zero : Diff5CoeffZ 0 = 0 := by simp [Diff5CoeffZ]; ring
 
-theorem N5CoeffZ_one : N5CoeffZ 1 = 0 := by
-  simp only [N5CoeffZ, zpow_one, show (2 : ℤ) * 1 = 2 from by ring]
+theorem Diff5CoeffZ_one : Diff5CoeffZ 1 = 0 := by
+  simp only [Diff5CoeffZ, zpow_one, show (2 : ℤ) * 1 = 2 from by ring]
   rw [show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast,
       show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast]
   rw [golden_ratio_property, psi_sq]
   linarith [phi_add_psi]
 
-theorem N5CoeffZ_two : N5CoeffZ 2 = 6 := by
-  simp only [N5CoeffZ, show (2 : ℤ) * 2 = 4 from by ring]
+theorem Diff5CoeffZ_two : Diff5CoeffZ 2 = 6 := by
+  simp only [Diff5CoeffZ, show (2 : ℤ) * 2 = 4 from by ring]
   rw [show φ ^ (4 : ℤ) = φ ^ 4 from by norm_cast,
       show φ ^ (2 : ℤ) = φ ^ 2 from by norm_cast,
       show ψ ^ (2 : ℤ) = ψ ^ 2 from by norm_cast,
@@ -861,11 +861,11 @@ theorem N5CoeffZ_two : N5CoeffZ 2 = 6 := by
   have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
   linarith [phi_add_psi]
 
-theorem N5CoeffZ_two_ne_zero : N5CoeffZ 2 ≠ 0 := by
-  rw [N5CoeffZ_two]; norm_num
+theorem Diff5CoeffZ_two_ne_zero : Diff5CoeffZ 2 ≠ 0 := by
+  rw [Diff5CoeffZ_two]; norm_num
 
-theorem N5CoeffZ_neg_two : N5CoeffZ (-2) = 6 := by
-  simp only [N5CoeffZ, show (2 : ℤ) * (-2) = -4 from by ring]
+theorem Diff5CoeffZ_neg_two : Diff5CoeffZ (-2) = 6 := by
+  simp only [Diff5CoeffZ, show (2 : ℤ) * (-2) = -4 from by ring]
   rw [phi_neg_zpow, phi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
   rw [show (-ψ) ^ (4 : ℤ) = ψ ^ (4 : ℤ) from
         (Even.neg_zpow (⟨2, by ring⟩ : Even (4 : ℤ)) ψ),
@@ -885,12 +885,12 @@ theorem N5CoeffZ_neg_two : N5CoeffZ (-2) = 6 := by
   have hψ4 : ψ ^ 4 = 3 * ψ + 2 := by nlinarith [hψ2]
   linarith [phi_add_psi]
 
-/-- N₅ Laurent kernel: ker = {0, 1}, same as polynomial kernel -/
-theorem N5_kernel_structure :
-    N5CoeffZ 0 = 0 ∧ N5CoeffZ 1 = 0 ∧
-    N5CoeffZ 2 ≠ 0 ∧ N5CoeffZ (-1) ≠ 0 ∧ N5CoeffZ (-2) ≠ 0 := by
-  refine ⟨N5CoeffZ_zero, N5CoeffZ_one, N5CoeffZ_two_ne_zero, ?_, ?_⟩
-  · rw [N5CoeffZ]; simp only [show (2 : ℤ) * (-1) = -2 from by ring]
+/-- Diff₅ Laurent kernel: ker = {0, 1}, same as polynomial kernel -/
+theorem Diff5_kernel_structure :
+    Diff5CoeffZ 0 = 0 ∧ Diff5CoeffZ 1 = 0 ∧
+    Diff5CoeffZ 2 ≠ 0 ∧ Diff5CoeffZ (-1) ≠ 0 ∧ Diff5CoeffZ (-2) ≠ 0 := by
+  refine ⟨Diff5CoeffZ_zero, Diff5CoeffZ_one, Diff5CoeffZ_two_ne_zero, ?_, ?_⟩
+  · rw [Diff5CoeffZ]; simp only [show (2 : ℤ) * (-1) = -2 from by ring]
     rw [phi_neg_zpow, phi_neg_zpow, psi_neg_zpow, psi_neg_zpow]
     rw [show (-ψ) ^ (2 : ℤ) = ψ ^ (2 : ℤ) from
           (Even.neg_zpow (⟨1, by ring⟩ : Even (2 : ℤ)) ψ),
@@ -909,13 +909,13 @@ theorem N5_kernel_structure :
     have : φ - ψ = Real.sqrt 5 := phi_sub_psi
     have : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by norm_num : (5:ℝ) > 0)
     linarith
-  · rw [N5CoeffZ_neg_two]; norm_num
+  · rw [Diff5CoeffZ_neg_two]; norm_num
 
-/-- N₅ and N₆ coefficients agree at d=2: both give 6 (N₅ detects, N₆ annihilates) -/
-theorem N5N6_coeff_comparison_at_2 :
-    N5CoeffZ 2 = 6 ∧ N6CoeffZ 2 = 0 :=
-  ⟨N5CoeffZ_two, N6CoeffZ_two⟩
+/-- Diff₅ and Diff₆ coefficients agree at d=2: both give 6 (Diff₅ detects, Diff₆ annihilates) -/
+theorem Diff5Diff6_coeff_comparison_at_2 :
+    Diff5CoeffZ 2 = 6 ∧ Diff6CoeffZ 2 = 0 :=
+  ⟨Diff5CoeffZ_two, Diff6CoeffZ_two⟩
 
-end N5Spectral
+end Diff5Spectral
 
 end FUST.SpectralCoefficients

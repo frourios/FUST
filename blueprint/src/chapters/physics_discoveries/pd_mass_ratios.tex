@@ -7,12 +7,12 @@
 
 \begin{theorem}[Up/Down Ratio]
 \label{thm:mass_mu_md}
-\lean{FUST.QuarkMassRatios.mu_md_from_N2}
+\lean{FUST.QuarkMassRatios.mu_md_from_Diff2}
 \leanok
 \[
 \frac{m_u}{m_d} = \frac{1}{2}
 \]
-from $N_2$ isospin structure. Experimental: 0.47 (error 6.4\%).
+from $\mathrm{Diff}_2$ isospin structure. Experimental: 0.47 (error 6.4\%).
 \end{theorem}
 
 \begin{theorem}[Strange/Down Ratio]
@@ -22,7 +22,7 @@ from $N_2$ isospin structure. Experimental: 0.47 (error 6.4\%).
 \[
 \frac{m_s}{m_d} = \varphi^{C(4,2)} = \varphi^6 \approx 17.94
 \]
-where $C(4,2) = 6$ is the $N_4$ pair count. Experimental: 19.5 (error $\sim 8\%$).
+where $C(4,2) = 6$ is the $\mathrm{Diff}_4$ pair count. Experimental: 19.5 (error $\sim 8\%$).
 \end{theorem}
 
 \begin{theorem}[Charm/Strange Ratio]
@@ -65,8 +65,8 @@ Each lepton mass exponent is a sum of numerator operator pair counts $C(m,2)$:
 Lepton & Exponent & Pair count sum & Reason \\
 \hline
 $e$ (lightest) & 0 & base & $F_\zeta$ mass gap \\
-$\mu$ (middle) & 11 & $C(5,2)+C(2,2)$ & $N_5 + N_2$ pairs \\
-$\tau$ (heaviest) & 17 & $C(4,2)+C(5,2)+C(2,2)$ & $N_4 + N_5 + N_2$ pairs \\
+$\mu$ (middle) & 11 & $C(5,2)+C(2,2)$ & $\mathrm{Diff}_5 + \mathrm{Diff}_2$ pairs \\
+$\tau$ (heaviest) & 17 & $C(4,2)+C(5,2)+C(2,2)$ & $\mathrm{Diff}_4 + \mathrm{Diff}_5 + \mathrm{Diff}_2$ pairs \\
 \hline
 \end{tabular}
 \end{center}
@@ -78,7 +78,7 @@ $\tau$ (heaviest) & 17 & $C(4,2)+C(5,2)+C(2,2)$ & $N_4 + N_5 + N_2$ pairs \\
 \[
 \frac{m_\tau}{m_\mu} = \varphi^{C(4,2)} = \varphi^6
 \]
-The exponent $6 = C(4,2)$ is the $N_4$ pair count.
+The exponent $6 = C(4,2)$ is the $\mathrm{Diff}_4$ pair count.
 \end{theorem}
 
 \begin{theorem}[Mu/Electron Ratio]
@@ -88,7 +88,7 @@ The exponent $6 = C(4,2)$ is the $N_4$ pair count.
 \[
 \frac{m_\mu}{m_e} = \varphi^{C(5,2)+C(2,2)} = \varphi^{11}
 \]
-The exponent $11 = C(5,2) + C(2,2) = 10 + 1$ combines $N_5$ and $N_2$ pair counts.
+The exponent $11 = C(5,2) + C(2,2) = 10 + 1$ combines $\mathrm{Diff}_5$ and $\mathrm{Diff}_2$ pair counts.
 \end{theorem}
 
 \begin{theorem}[Tau/Electron Ratio]
@@ -103,18 +103,18 @@ The exponent $11 = C(5,2) + C(2,2) = 10 + 1$ combines $N_5$ and $N_2$ pair count
 \section{Coefficient Corrections}
 \label{sec:mass_corrections}
 
-\begin{theorem}[$N_6$ Correction Factor]
-\label{thm:mass_n6_correction}
-\lean{FUST.MassRatioDerivation.N6_correction_6pt}
+\begin{theorem}[$\mathrm{Diff}_6$ Correction Factor]
+\label{thm:mass_diff6_correction}
+\lean{FUST.MassRatioDerivation.Diff6_correction_6pt}
 \leanok
 \[
 \kappa_6 = \frac{B}{6A} = \frac{C(2,2)}{6 \times C(3,2)} = \frac{1}{18}
 \]
 \end{theorem}
 
-\begin{theorem}[$N_5$ Correction Factor]
-\label{thm:mass_n5_correction}
-\lean{FUST.MassRatioDerivation.N5_correction_11pt}
+\begin{theorem}[$\mathrm{Diff}_5$ Correction Factor]
+\label{thm:mass_diff5_correction}
+\lean{FUST.MassRatioDerivation.Diff5_correction_11pt}
 \leanok
 \[
 \eta_{11} = \frac{|a|}{11|b|} = \frac{1}{44}
@@ -136,7 +136,7 @@ All $\mathbb{R}$-valued mass ratios are invariant under FDim relabeling.
 \[
 m_e = \lambda_{\min} = \frac{C_3}{(\sqrt{5})^5} = \frac{12}{25} \quad [\mathrm{dimElectron} = (-5,1,-1)]
 \]
-The electron, as the lightest \emph{charged} fermion, is identified with the $F_\zeta$ minimum eigenvalue. Neutrinos acquire mass via $\ker(N_5) \subset \ker(F_\zeta)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\lambda_{\min}$.
+The electron, as the lightest \emph{charged} fermion, is identified with the $F_\zeta$ minimum eigenvalue. Neutrinos acquire mass via $\ker(\mathrm{Diff}_5) \subset \ker(F_\zeta)$ perturbation (see \S\ref{sec:mass_neutrino}) and are not bounded by $\lambda_{\min}$.
 \end{theorem}
 
 \begin{theorem}[Proton Mass]
@@ -161,8 +161,8 @@ Experimental: 1836.15 (error 0.045\%). Derived as quotient of independent dimens
 Structural decomposition of $120/13$:
 \begin{itemize}
 \item $C(6,3) = 20$: spatial normalization ($C(D_{\max}, \dim\ker F_\zeta)$)
-\item $C(4,2) = 6$: baryon pair count from $N_4$ hierarchy
-\item $C(3,2)+C(5,2) = 13$: kernel and $N_5$ pair normalization
+\item $C(4,2) = 6$: baryon pair count from $\mathrm{Diff}_4$ hierarchy
+\item $C(3,2)+C(5,2) = 13$: kernel and $\mathrm{Diff}_5$ pair normalization
 \end{itemize}
 
 Each particle has a unique FDim determined by its $\varphi$-scaling index:
@@ -192,8 +192,8 @@ The $\mathbb{R}$-evaluation (\texttt{.eval}) recovers the physical mass value.
 \section{Gauge Boson Masses}
 \label{sec:mass_gauge_bosons}
 
-The W boson mass is derived from the kernel hierarchy $\ker(N_5) \subsetneq \ker(F_\zeta)$.
-The key degree of freedom is $x^2 \in \ker(F_\zeta) \setminus \ker(N_5)$: this acts as the Higgs mechanism,
+The W boson mass is derived from the kernel hierarchy $\ker(\mathrm{Diff}_5) \subsetneq \ker(F_\zeta)$.
+The key degree of freedom is $x^2 \in \ker(F_\zeta) \setminus \ker(\mathrm{Diff}_5)$: this acts as the Higgs mechanism,
 giving W/Z bosons their mass while gluons (in $\ker(F_\zeta)$) and photons (from grading symmetry) remain massless.
 
 \subsection{Z Boson Mass}
@@ -299,12 +299,12 @@ The distinction arises from the sector base: $(-4,0,1)$ for $\Phi_S$ vs.\ $(-5,1
 \label{sec:mass_neutrino}
 
 Neutrinos have 3 flavors (from $\dim\ker(F_\zeta) = 3$ via SU(2) doublet with charged leptons)
-but their mass structure is governed by $\ker(N_5) \subset \ker(F_\zeta)$:
+but their mass structure is governed by $\ker(\mathrm{Diff}_5) \subset \ker(F_\zeta)$:
 
 \begin{itemize}
-\item $\ker(N_5) = \{1, x\}$ ($\dim = 2$): solar pair $\nu_1, \nu_2$ (nearly degenerate)
-\item $\ker(F_\zeta) \setminus \ker(N_5) = \{x^2\}$ ($\dim = 1$): atmospheric state $\nu_3$ (separated)
-\item $N_5(x^2) \neq 0$: $x^2$ is not in $\ker(N_5)$, giving $\nu_3$ its distinct mass
+\item $\ker(\mathrm{Diff}_5) = \{1, x\}$ ($\dim = 2$): solar pair $\nu_1, \nu_2$ (nearly degenerate)
+\item $\ker(F_\zeta) \setminus \ker(\mathrm{Diff}_5) = \{x^2\}$ ($\dim = 1$): atmospheric state $\nu_3$ (separated)
+\item $\mathrm{Diff}_5(x^2) \neq 0$: $x^2$ is not in $\ker(\mathrm{Diff}_5)$, giving $\nu_3$ its distinct mass
 \end{itemize}
 
 \begin{theorem}[Neutrino Mass Squared Ratio]
@@ -312,9 +312,9 @@ but their mass structure is governed by $\ker(N_5) \subset \ker(F_\zeta)$:
 \lean{FUST.NeutrinoMass.neutrinoMassSqRatio_eq}
 \leanok
 \[
-\frac{\Delta m^2_{21}}{\Delta m^2_{31}} = \frac{1}{\dim\ker(N_5) \times C(6,2)} = \frac{1}{2 \times 15} = \frac{1}{30}
+\frac{\Delta m^2_{21}}{\Delta m^2_{31}} = \frac{1}{\dim\ker(\mathrm{Diff}_5) \times C(6,2)} = \frac{1}{2 \times 15} = \frac{1}{30}
 \]
-where $\dim\ker(N_5) = 2$ counts the solar pair states and $C(6,2) = 15$ is the $F_\zeta$ pair count.
+where $\dim\ker(\mathrm{Diff}_5) = 2$ counts the solar pair states and $C(6,2) = 15$ is the $F_\zeta$ pair count.
 Experimental: $\sim 1/33$ (error $\sim 10\%$).
 \end{theorem}
 
@@ -322,16 +322,16 @@ Experimental: $\sim 1/33$ (error $\sim 10\%$).
 \label{thm:mass_neutrino_hierarchy}
 \lean{FUST.NeutrinoMass.neutrino_hierarchy_from_kernel}
 \leanok
-The kernel filtration $\ker(N_2) \subset \ker(N_5) \subset \ker(F_\zeta)$ with $\dim = 1, 2, 3$
+The kernel filtration $\ker(\mathrm{Diff}_2) \subset \ker(\mathrm{Diff}_5) \subset \ker(F_\zeta)$ with $\dim = 1, 2, 3$
 determines the neutrino mass hierarchy:
 \begin{enumerate}
-\item $\dim\ker(N_5) = 2$: two nearly-degenerate states (solar pair)
-\item $N_5(x^2) \neq 0$: one separated state (atmospheric)
-\item $\text{neutrinoMassSqDenom} = \dim\ker(N_5) \times C(6,2) = 30$
+\item $\dim\ker(\mathrm{Diff}_5) = 2$: two nearly-degenerate states (solar pair)
+\item $\mathrm{Diff}_5(x^2) \neq 0$: one separated state (atmospheric)
+\item $\text{neutrinoMassSqDenom} = \dim\ker(\mathrm{Diff}_5) \times C(6,2) = 30$
 \end{enumerate}
 \end{theorem}
 
-Neutrino masses are not bounded by $\lambda_{\min}$: neutrinos acquire mass via $N_5$-level perturbation from $\ker(F_\zeta)$. The $F_\zeta$ minimum eigenvalue $\lambda_{\min}$ applies only to charged fermions that couple directly to $F_\zeta$ output.
+Neutrino masses are not bounded by $\lambda_{\min}$: neutrinos acquire mass via $\mathrm{Diff}_5$-level perturbation from $\ker(F_\zeta)$. The $F_\zeta$ minimum eigenvalue $\lambda_{\min}$ applies only to charged fermions that couple directly to $F_\zeta$ output.
 
 \section{Baryon Asymmetry}
 \label{sec:mass_baryon}
@@ -384,7 +384,7 @@ $m_t/m_b = \varphi^7 + \varphi^5$ & ScaleQ$(0,0,0)$ (dimensionless) & \texttt{mt
 $m_u/m_d = C(2,2)/2 = 1/2$ & RatioQuantity & \texttt{muMdRatio} \\
 $m_b/m_c = C(3,2) = 3$ & CountQuantity & \texttt{mbMcValue} \\
 $m_c/m_s = C(5,2)+2 = 12$ & CountQuantity & \texttt{mcMsValue} \\
-$\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(N_5) \times C(6,2)) = 1/30$ & RatioQuantity & \texttt{neutrinoMassSqRatio} \\
+$\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(\mathrm{Diff}_5) \times C(6,2)) = 1/30$ & RatioQuantity & \texttt{neutrinoMassSqRatio} \\
 \hline
 \end{tabular}
 \end{center}

@@ -30,19 +30,19 @@ We clearly distinguish:
 
 \textbf{Important}: FUST has no ``principles.'' Minimal action is not a principle assumed externally, but \textbf{derived as a theorem} from $F_\zeta$ structure.
 
-\section{Overview of FUST and $F_\zeta$ Structure}
+\section{Overview of FUST and \texorpdfstring{$F_\zeta$}{Fζ} Structure}
 \label{sec:mat_d6_overview}
 
-\subsection{Definition of the N6 Operator}
+\subsection{Definition of the Diff6 Operator}
 
-The $N_6$ operator is defined using the golden ratio $\varphi = (1+\sqrt{5})/2$ and its conjugate $\psi = (1-\sqrt{5})/2$:
+The $\mathrm{Diff}_6$ operator is defined using the golden ratio $\varphi = (1+\sqrt{5})/2$ and its conjugate $\psi = (1-\sqrt{5})/2$:
 
-\begin{definition}[$N_6$ Operator]
+\begin{definition}[$\mathrm{Diff}_6$ Operator]
 \label{def:mat_D6}
-\lean{FUST.N6}
+\lean{FUST.Diff6}
 \leanok
 \[
-N_6[f](x) = \frac{f(\varphi^3 x) - 3f(\varphi^2 x) + f(\varphi x) - f(\psi x) + 3f(\psi^2 x) - f(\psi^3 x)}{(\varphi - \psi)^5 x}
+\mathrm{Diff}_6[f](x) = \frac{f(\varphi^3 x) - 3f(\varphi^2 x) + f(\varphi x) - f(\psi x) + 3f(\psi^2 x) - f(\psi^3 x)}{(\varphi - \psi)^5 x}
 \]
 \end{definition}
 
@@ -64,9 +64,9 @@ $\varphi - \psi$ & $\sqrt{5}$ & Difference (normalization factor) \\
 \end{tabular}
 \end{center}
 
-$N_7$ and higher do not introduce new structure. $F_\zeta$ determines the ``minimal and complete'' causal structure.
+$\mathrm{Diff}_7$ and higher do not introduce new structure. $F_\zeta$ determines the ``minimal and complete'' causal structure.
 
-\textbf{Numerical verification}: Coefficient $C_n$ for monomials $t^n$ under $N_6$:
+\textbf{Numerical verification}: Coefficient $C_n$ for monomials $t^n$ under $\mathrm{Diff}_6$:
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
@@ -87,7 +87,7 @@ This structure automatically decomposes the state space into ``invisible/reversi
 
 \subsection{Gauge Parameter x}
 
-The parameter $x$ in the definition of $N_6$ is a gauge choice, not a physical quantity.
+The parameter $x$ in the definition of $\mathrm{Diff}_6$ is a gauge choice, not a physical quantity.
 
 \begin{itemize}
 \item $x \neq 0$: Technical condition for the gauge to be well-defined
@@ -96,10 +96,10 @@ The parameter $x$ in the definition of $N_6$ is a gauge choice, not a physical q
 
 \begin{theorem}[Gauge Scaling]
 \label{thm:mat_gauge_scaling}
-\lean{FUST.GravitationalCoupling.N6_homogeneous}
+\lean{FUST.GravitationalCoupling.Diff6_homogeneous}
 \leanok
 \[
-N_6[f(c \cdot)](x) = c \cdot N_6[f](cx)
+\mathrm{Diff}_6[f(c \cdot)](x) = c \cdot \mathrm{Diff}_6[f](cx)
 \]
 \end{theorem}
 
@@ -107,7 +107,7 @@ N_6[f(c \cdot)](x) = c \cdot N_6[f](cx)
 
 For homogeneous functions $f(t) = t^n$:
 \[
-N_6[t^n](x) \propto x^{n-1}
+\mathrm{Diff}_6[t^n](x) \propto x^{n-1}
 \]
 
 Thus, \textbf{degree $n$ serves as an eigenvalue label under scaling}.

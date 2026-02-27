@@ -6,8 +6,6 @@ where Z, N, e are total proton, neutron, electron counts.
 
 H₂ isotopologues: H₂, HD, HT, D₂, DT, T₂ and their ions.
 -/
-
-import FUST.DifferenceOperators
 import FUST.Chemistry.OxygenIsotopes
 
 namespace FUST.Chemistry.Dihydrogen

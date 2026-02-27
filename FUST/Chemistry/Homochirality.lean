@@ -105,23 +105,23 @@ theorem phi_ne_psi : φ ≠ ψ := by
   have : (5 : ℝ) ≤ 0 := by nlinarith [Real.sq_sqrt (show (5 : ℝ) ≥ 0 by norm_num)]
   linarith
 
-/-! ## Section 6: N6 Operator Anti-Symmetry
+/-! ## Section 6: Diff6 Operator Anti-Symmetry
 
-N6 f x = f(φ³x) - 3f(φ²x) + f(φx) - f(ψx) + 3f(ψ²x) - f(ψ³x).
+Diff6 f x = f(φ³x) - 3f(φ²x) + f(φx) - f(ψx) + 3f(ψ²x) - f(ψ³x).
 The φ-side coefficients [+1, -3, +1] and ψ-side [-1, +3, -1]
-have opposite signs: the N6 operator is intrinsically chiral.
+have opposite signs: the Diff6 operator is intrinsically chiral.
 -/
 
--- N6 coefficients sum to zero: 1 - 3 + 1 - 1 + 3 - 1 = 0
-theorem N6_coefficients_sum_zero :
+-- Diff6 coefficients sum to zero: 1 - 3 + 1 - 1 + 3 - 1 = 0
+theorem Diff6_coefficients_sum_zero :
     (1 : ℤ) + (-3) + 1 + (-1) + 3 + (-1) = 0 := by decide
 
 -- φ-side sum = -1, ψ-side sum = +1 (anti-symmetric)
-theorem N6_phi_side_sum : (1 : ℤ) + (-3) + 1 = -1 := by decide
-theorem N6_psi_side_sum : (-1 : ℤ) + 3 + (-1) = 1 := by decide
+theorem Diff6_phi_side_sum : (1 : ℤ) + (-3) + 1 = -1 := by decide
+theorem Diff6_psi_side_sum : (-1 : ℤ) + 3 + (-1) = 1 := by decide
 
 -- The two sides are negatives of each other
-theorem N6_antisymmetric_sides :
+theorem Diff6_antisymmetric_sides :
     (1 : ℤ) + (-3) + 1 = -((-1) + 3 + (-1)) := by decide
 
 /-! ## Section 7: Biological Homochirality

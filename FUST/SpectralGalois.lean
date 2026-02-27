@@ -9,7 +9,7 @@ import FUST.FrourioAlgebra.GoldenEisensteinInt
 
 namespace FUST.SpectralGalois
 
-open Complex FUST FUST.Zeta6 FUST.FζOperator FUST.FrourioAlgebra
+open Complex FUST FUST.DζOperator FUST.FζOperator FUST.FrourioAlgebra
 open FUST.FibonacciArithmetic FUST.SpectralCoefficients
 
 /-! ## SY channel integrality: Re(λ) ∈ ℤ[φ]

@@ -3,11 +3,11 @@ Golden-Eisenstein integer ring ℤ[φ,ζ₆] = ring of integers of ℚ(√5,√(
 Elements: a + bφ + cζ₆ + dφζ₆ with φ²=φ+1, ζ₆²=ζ₆-1. Class number h=1 (UFD).
 -/
 import FUST.FrourioAlgebra.GoldenIntegerRing
-import FUST.Zeta6
+import FUST.DζOperator
 
 namespace FUST.FrourioAlgebra
 
-open FUST FUST.Zeta6
+open FUST FUST.DζOperator
 
 /-- ℤ[φ,ζ₆]: a + bφ + cζ₆ + dφζ₆ -/
 @[ext]
@@ -369,7 +369,7 @@ theorem galois_fixed_unit_iff (x : GoldenEisensteinInt) :
     linarith [mul_self_nonneg x.a]
 
 theorem AF_coeff_gei_eq :
-    toComplex AF_coeff_gei = Zeta6.AF_coeff := by
+    toComplex AF_coeff_gei = DζOperator.AF_coeff := by
   unfold toComplex AF_coeff_gei AF_coeff
   push_cast
   have h3 : ζ₆ ^ 3 = -1 := zeta6_cubed

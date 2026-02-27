@@ -27,7 +27,7 @@ FζLagrangian = 0 & Fζ\_lagrangian\_zero\_iff & Membership in $\ker(F_\zeta)$ \
 \hline
 Quantity & Dependent parameter \\
 \hline
-Value of $N_6 f(x)$ & Gauge $x$ \\
+Value of $\mathrm{Diff}_6 f(x)$ & Gauge $x$ \\
 Time delay ratio between different degrees & Gauge $x$ \\
 Concrete value of perpProjection & Choice of interpolation points (but zero set is invariant) \\
 \hline
@@ -42,10 +42,10 @@ Concrete value of perpProjection & Choice of interpolation points (but zero set 
 \hline
 Item & Content & Status \\
 \hline
-Action functional & $\mathcal{A}[f] = \int_0^\infty \|N_6 f\|^2 \frac{dx}{x}$ & Derived \\
+Action functional & $\mathcal{A}[f] = \int_0^\infty \|\mathrm{Diff}_6 f\|^2 \frac{dx}{x}$ & Derived \\
 $\varphi$-invariant measure & $dx/x$ (Haar measure) & Uniqueness proven \\
 Variational structure & $F_\zeta$ linearity, perturbation, critical point & Lean4 proven \\
-Euler-Lagrange & $\ker(N_6^\dagger N_6) = \ker(F_\zeta)$ & Derived \\
+Euler-Lagrange & $\ker(\mathrm{Diff}_6^\dagger \mathrm{Diff}_6) = \ker(F_\zeta)$ & Derived \\
 Time existence equivalence & $\mathcal{A}[f] > 0 \iff \mathrm{TimeExists}\, f$ & Consistency confirmed \\
 Numerical verification & $A \approx 0$ in $\ker(F_\zeta)$, $A > 0$ outside & Verified \\
 \hline
@@ -57,13 +57,13 @@ Numerical verification & $A \approx 0$ in $\ker(F_\zeta)$, $A > 0$ outside & Ver
 
 \begin{enumerate}
 \item \textbf{Time--Mass--Lagrangian Unification}: $f \notin \ker(F_\zeta) \iff$ time exists $\iff$ $L[f] > 0$ $\iff$ $m^2 > 0$
-\item \textbf{Higher Order Reduction Theorem} (N7\_kernel\_equals\_N6\_kernel): $\ker(N_7) = \ker(F_\zeta)$
+\item \textbf{Higher Order Reduction Theorem} (Diff7\_kernel\_equals\_Diff6\_kernel): $\ker(\mathrm{Diff}_7) = \ker(F_\zeta)$
 \item \textbf{Homogeneous Decomposition Theorem} (same\_degree\_ratio\_gauge\_invariant): Time delay ratio is gauge-invariant only within same degree
 \item \textbf{Causal Boundary Theorem} (causal\_boundary\_theorem): $\ker(F_\zeta) =$ Light cone
-\item \textbf{Gauge Transformation Rule} (N6\_homogeneous): $N_6[f(c\cdot)](x) = c \cdot N_6[f](cx)$. $\varphi$-scaling is time evolution via Poincar\'{e} $I_4$ temporal channel (Gravity.lean: $\Phi$\_A\_coeff\_one, $\eta$\_temporal, temporal\_nonzero)
+\item \textbf{Gauge Transformation Rule} (Diff6\_homogeneous): $\mathrm{Diff}_6[f(c\cdot)](x) = c \cdot \mathrm{Diff}_6[f](cx)$. $\varphi$-scaling is time evolution via Poincar\'{e} $I_4$ temporal channel (Gravity.lean: $\Phi$\_A\_coeff\_one, $\eta$\_temporal, temporal\_nonzero)
 \item \textbf{Interpolation Uniqueness Theorem} (kernel\_interpolation\_unique): Projection to $\ker(F_\zeta)$ is unique at 3 points
 \item \textbf{Lagrangian Zero Equivalence} (Fζ\_lagrangian\_zero\_iff): FζLagrangian = 0 is equivalent to $\ker(F_\zeta)$
-\item \textbf{Mass Gap Theorem} (yangMills\_massGap): $F_\zeta$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$; Casimir mass gap $m^2 = 14$ from $D_\zeta$ 4-momentum; SU(2) mass gap via $N_5(x^2) \neq 0$; algebraic confinement from $\ker(F_\zeta)$ not being a subalgebra
+\item \textbf{Mass Gap Theorem} (yangMills\_massGap): $F_\zeta$ minimum eigenvalue $\lambda_{\min} = 12/25 > 0$; Casimir mass gap $m^2 = 14$ from $D_\zeta$ 4-momentum; SU(2) mass gap via $\mathrm{Diff}_5(x^2) \neq 0$; algebraic confinement from $\ker(F_\zeta)$ not being a subalgebra
 \item \textbf{Variational Structure} (lagrangian\_perturbation, critical\_point\_of\_witness): $F_\zeta$ linearity $\Rightarrow$ first variation $\Rightarrow$ $\delta L = 0$ iff $f \in \ker(F_\zeta)$
 \end{enumerate}
 

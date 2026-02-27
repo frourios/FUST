@@ -10,14 +10,14 @@ New predictions for neutrino mixing angles derived from FUST probability structu
 
 1. **sin²θ₁₃ = φ⁻⁸** (improved from 1/15, error: 2.4% vs 206%)
 2. **sin²θ₂₃ = 1/2 + φ⁻⁵/2** (maximal mixing + φ correction, error: 0.02%)
-3. **sin²θ₁₂ = 1/3** (N3 triplet symmetry, existing)
+3. **sin²θ₁₂ = 1/3** (Diff3 triplet symmetry, existing)
 
 ## Probability-Theoretic Interpretation
 
 The mixing angles arise from transition probabilities:
-- θ₁₃: Direct N2→N6 transition (8 = 6 + 2 steps)
-- θ₂₃: Maximal mixing with N5 correction
-- θ₁₂: Triplet symmetry from N3
+- θ₁₃: Direct Diff2→Diff6 transition (8 = 6 + 2 steps)
+- θ₂₃: Maximal mixing with Diff5 correction
+- θ₁₂: Triplet symmetry from Diff3
 
 ## Cosmological Density Parameters
 

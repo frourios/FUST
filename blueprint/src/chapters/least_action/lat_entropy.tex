@@ -88,7 +88,7 @@ Given the Poincar\'{e} identification of $\varphi$-scaling with the temporal dir
 \item \textbf{$\psi$ direction ($|\psi| < 1$)}: Past (information converges)
 \end{itemize}
 
-Behavior of $N_6$ evaluation points:
+Behavior of $\mathrm{Diff}_6$ evaluation points:
 \begin{itemize}
 \item $\varphi^3 x, \varphi^2 x, \varphi x \to$ Divergent direction when $x > 0$
 \item $\psi^3 x, \psi^2 x, \psi x \to$ Convergent direction when $|x| > 0$
@@ -190,9 +190,9 @@ Irreversible process & Transition to $\ker(F_\zeta)^\perp$ \\
 
 Entropy $S(f)(t) = (\mathrm{perpProjection}(f)(t))^2$ has the same dimension as the Lagrangian:
 \[
-\dim(S) = \dim((N_6 f)^2) = (-10, 2) \quad (\text{ScaleQuantity})
+\dim(S) = \dim((\mathrm{Diff}_6 f)^2) = (-10, 2) \quad (\text{ScaleQuantity})
 \]
-Time evolution amplifies $N_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
+Time evolution amplifies $\mathrm{Diff}_6 f$ by $\varphi$, so $S' = \varphi^2 \cdot S$ in coordinate time, consistent with the proper-time energy conservation $E_{\mathrm{conserved}} = H / \varphi^{2 \cdot \mathrm{step}}$.
 
 Lean: \texttt{FUST.TimeStructure.entropyAtFζ} with type \texttt{FζLagrangian}.
 

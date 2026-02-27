@@ -30,10 +30,10 @@ open FUST.WaveEquation
 m_H/m_W = φ - 1/C(5,2) = φ - 1/10
 
 Derivation:
-- Higgs is spin-0, associated with N2 structure
-- W is spin-1, associated with N3 structure
-- The transition N2 → N3 involves C(5,2) correction
-- φ is the fundamental scale, 1/C(5,2) is the N5 suppression
+- Higgs is spin-0, associated with Diff2 structure
+- W is spin-1, associated with Diff3 structure
+- The transition Diff2 → Diff3 involves C(5,2) correction
+- φ is the fundamental scale, 1/C(5,2) is the Diff5 suppression
 -/
 
 /-- Higgs/W mass ratio: φ - 1/C(5,2) -/

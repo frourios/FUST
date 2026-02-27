@@ -13,7 +13,7 @@ properties, particularly the kernel structure of difference operators.
 ## Main Results
 
 - α_s = 3/25 from C(3,2)/(C(5,2)+C(6,2)) structure
-- Cabibbo angle from N3/N4 direction ratio
+- Cabibbo angle from Diff3/Diff4 direction ratio
 - CP phase = 2π/5 from active D-levels
 -/
 
@@ -39,10 +39,10 @@ theorem strong_coupling_value : (Nat.choose 3 2 : ℚ) / 25 = 3 / 25 := by
 
 θ_C = arctan(1/φ³) ≈ 13.28°
 
-Derived from N3/N4 direction ratio using golden ratio structure.
+Derived from Diff3/Diff4 direction ratio using golden ratio structure.
 -/
 
-/-- Cabibbo angle exponent 3 = C(3,2) from N3 pair count -/
+/-- Cabibbo angle exponent 3 = C(3,2) from Diff3 pair count -/
 theorem cabibbo_exponent_derivation : Nat.choose 3 2 = 3 := rfl
 
 noncomputable abbrev cabibbo_angle : ℝ := Real.arctan (1 / φ ^ Nat.choose 3 2)
@@ -100,10 +100,10 @@ theorem fine_structure_exponent_derivation :
 /-! ## CKM Decay Structure
 
 CKM matrix elements decay as φ^(-3n) where n is the D-structure step distance.
-The exponent 3 = C(3,2) comes from N3 interaction count.
+The exponent 3 = C(3,2) comes from Diff3 interaction count.
 -/
 
-/-- CKM decay exponent = C(3,2) = 3 from N3 pair count -/
+/-- CKM decay exponent = C(3,2) = 3 from Diff3 pair count -/
 theorem ckm_decay_exponent : Nat.choose 3 2 = 3 := rfl
 
 /-- CKM amplitude decay: φ^{-C(3,2) × steps} -/

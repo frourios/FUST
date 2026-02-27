@@ -7,8 +7,6 @@ CH₄ (methane): Z=10, N=6, e=10 -- closed shell (isoelectronic with H₂O and N
 CO₂ (carbon dioxide): Z=22, N=22, e=22 -- triply symmetric (Z=N=e).
 CO (carbon monoxide): Z=14, N=14, e=14 -- symmetric (Z=N=e).
 -/
-
-import FUST.DifferenceOperators
 import FUST.Physics.Nuclear
 import FUST.Chemistry.CarbonIsotopes
 import FUST.Chemistry.DihydrogenMolecules

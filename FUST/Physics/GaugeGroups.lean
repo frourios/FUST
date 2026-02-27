@@ -3,14 +3,13 @@ Standard gauge group SU(3)×SU(2)×U(1) derived uniquely from the Fζ channel st
 The ℤ/6ℤ Fourier decomposition into SymNum (even parity) and AFNum (odd parity) channels
 is canonical, and the rank/dimension matching forces the gauge group without free parameters.
 -/
-import FUST.Zeta6
-import FUST.DifferenceOperators
+import FUST.DζOperator
 import FUST.DimensionalAnalysis
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
 namespace FUST
 
-open Complex FUST.Zeta6
+open Complex FUST.DζOperator
 
 /-! ## ζ₆ lies outside the φ-dilation eigenspectrum
 
@@ -160,16 +159,16 @@ end PhiDilationCommutant
 
 /-! ## Symmetric channel (SymNum) rank = 3 → SU(3) on syWeight = 3 space
 
-Φ_S = 2·N5 + N3 + μ·N2 has 3 linearly independent sub-operators.
+Φ_S = 2·Diff5 + Diff3 + μ·Diff2 has 3 linearly independent sub-operators.
 This is proven by Φ_S_rank_three: the 3×3 determinant at s=1,5,7 is -6952(φ-ψ) ≠ 0.
 Symmetric rank 3 on Fζ SY channel space (dim = syWeight = 3) → SU(3). -/
 
 section SymmetricChannelSU3
 
 theorem symmetric_channel_SU3 :
-    (σ_N5 1 * (σ_N3 5 * σ_N2 7 - σ_N2 5 * σ_N3 7) -
-     σ_N3 1 * (σ_N5 5 * σ_N2 7 - σ_N2 5 * σ_N5 7) +
-     σ_N2 1 * (σ_N5 5 * σ_N3 7 - σ_N3 5 * σ_N5 7) ≠ 0) ∧
+    (σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
+     σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
+     σ_Diff2 1 * (σ_Diff5 5 * σ_Diff3 7 - σ_Diff3 5 * σ_Diff5 7) ≠ 0) ∧
     (∀ n : ℕ, ζ₆ ≠ (↑φ : ℂ) ^ n) ∧
     (3 ^ 2 - 1 = 8) := by
   exact ⟨Φ_S_rank_three, zeta6_ne_phi_pow, by norm_num⟩
@@ -204,9 +203,9 @@ theorem weight_ratio_3_1 (a b : ℝ) :
 
 /-- Standard Model gauge group is uniquely determined by Fζ channel structure. -/
 theorem standard_gauge_group_unique :
-    (σ_N5 1 * (σ_N3 5 * σ_N2 7 - σ_N2 5 * σ_N3 7) -
-     σ_N3 1 * (σ_N5 5 * σ_N2 7 - σ_N2 5 * σ_N5 7) +
-     σ_N2 1 * (σ_N5 5 * σ_N3 7 - σ_N3 5 * σ_N5 7) ≠ 0) ∧
+    (σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
+     σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
+     σ_Diff2 1 * (σ_Diff5 5 * σ_Diff3 7 - σ_Diff3 5 * σ_Diff5 7) ≠ 0) ∧
     (3 ^ 2 - 1 = 8) ∧
     (AF_coeff ≠ 0 ∧ AF_coeff.re = 0) ∧
     (2 ^ 2 - 1 = 3) ∧

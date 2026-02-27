@@ -10,7 +10,7 @@ is in LeastAction.lean.
 
 namespace FUST.WaveEquation
 
-open FUST.LeastAction FUST.FζOperator FUST.Zeta6 Complex
+open FUST.LeastAction FUST.FζOperator FUST.DζOperator Complex
 
 /-! ## Critical Point: Fζ f = 0
 

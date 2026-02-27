@@ -8,7 +8,7 @@ import FUST.Physics.Poincare
 namespace FUST.Physics.Gravity
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz Physics.Poincare Zeta6
+open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz Physics.Poincare DζOperator
 
 /-! ## Lorentz connection: localized so(3,1) -/
 
@@ -125,9 +125,9 @@ theorem temporal_nonzero : Φ_A_coeff 1 ≠ 0 := by
 /-- 4-component extraction: 3 spatial (from Φ_S) + 1 temporal (from Φ_A) -/
 noncomputable def Dζ_components (s : ℕ) : I4 → ℂ :=
   fun idx => match idx with
-  | Sum.inl 0 => σ_N5 s
-  | Sum.inl 1 => σ_N3 s
-  | Sum.inl 2 => σ_N2 s
+  | Sum.inl 0 => σ_Diff5 s
+  | Sum.inl 1 => σ_Diff3 s
+  | Sum.inl 2 => σ_Diff2 s
   | Sum.inr 0 => Φ_A_coeff s
 
 /-- Spatial (Fin 3) + temporal (Fin 1) = I4 -/
@@ -158,14 +158,14 @@ noncomputable def Dζ_momentum (s : ℕ) : I4 → ℝ :=
   fun idx => (Dζ_components s idx).re
 
 theorem Dζ_momentum_one_inl0 : Dζ_momentum 1 (Sum.inl 0) = 0 := by
-  simp only [Dζ_momentum, Dζ_components, σ_N5_one, zero_re]
+  simp only [Dζ_momentum, Dζ_components, σ_Diff5_one, zero_re]
 
 theorem Dζ_momentum_one_inl1 : Dζ_momentum 1 (Sum.inl 1) = -1 := by
-  simp only [Dζ_momentum, Dζ_components, σ_N3_one]
+  simp only [Dζ_momentum, Dζ_components, σ_Diff3_one]
   simp [Complex.neg_re, Complex.one_re]
 
 theorem Dζ_momentum_one_inl2 : Dζ_momentum 1 (Sum.inl 2) = φ - ψ := by
-  simp only [Dζ_momentum, Dζ_components, σ_N2_one]
+  simp only [Dζ_momentum, Dζ_components, σ_Diff2_one]
   simp [Complex.ofReal_re, Complex.sub_re]
 
 theorem Dζ_momentum_one_inr0 : Dζ_momentum 1 (Sum.inr 0) = 2 * (φ - ψ) := by

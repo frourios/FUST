@@ -40,7 +40,7 @@ t(x) := \log_{\mathfrak{f}}(x) = \frac{\log x}{\log \mathfrak{f}}
 \leanok
 In real space:
 \[
-L(f, x) := (N_6[f](x))^2
+L(f, x) := (\mathrm{Diff}_6[f](x))^2
 \]
 \end{definition}
 
@@ -50,7 +50,7 @@ L(f, x) := (N_6[f](x))^2
 \leanok
 In Frourio coordinates:
 \[
-L_{\mathfrak{f}}(f, t) := (N_6[f](\mathfrak{f}^t))^2
+L_{\mathfrak{f}}(f, t) := (\mathrm{Diff}_6[f](\mathfrak{f}^t))^2
 \]
 \end{definition}
 
@@ -169,7 +169,7 @@ In Frourio coordinates, the least action theorem becomes:
 
 \begin{enumerate}
     \item \textbf{Time = Frourio coordinate}: $t = \log_{\mathfrak{f}}(x)$
-    \item \textbf{Lagrangian}: $L(t) = (N_6[f](\mathfrak{f}^t))^2$ is uniform in $t$
+    \item \textbf{Lagrangian}: $L(t) = (\mathrm{Diff}_6[f](\mathfrak{f}^t))^2$ is uniform in $t$
     \item \textbf{Action}: $A = \int L(t) \, dt$ measures deviation from timelessness
     \item \textbf{Timeless states}: $L(t) = 0$ for all $t$ $\Leftrightarrow$ $f \in \ker(F_\zeta)$
     \item \textbf{Massive states}: $\exists t: L(t) > 0$ $\Leftrightarrow$ proper time exists
@@ -206,7 +206,7 @@ In Frourio coordinates, the least action theorem becomes:
 \lean{FUST.LeastAction.TimeExistsAtPoint}
 \leanok
 \[
-\mathrm{TimeExistsAtPoint}(f) := \exists x \neq 0: N_6[f](x) \neq 0
+\mathrm{TimeExistsAtPoint}(f) := \exists x \neq 0: \mathrm{Diff}_6[f](x) \neq 0
 \]
 \end{definition}
 

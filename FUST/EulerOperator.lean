@@ -2,13 +2,13 @@
 D₁₂: 12-point alternating DFT on ζ₁₂ = e^{iπ/6}, detecting mode 6.
 Euler operator θ = z·d/dz: the unique complete detector (ker = {constants}).
 -/
-import FUST.Zeta6
+import FUST.DζOperator
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.Calculus.Deriv.Mul
 
 namespace FUST.EulerOperator
 
-open Complex FUST.Zeta6
+open Complex FUST.DζOperator
 
 attribute [local ext] Complex.ext
 

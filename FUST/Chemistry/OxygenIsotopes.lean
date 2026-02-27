@@ -4,8 +4,6 @@ Oxygen Isotopes and Ionization from D-operator Kernel Structure
 FDim for each species: dimAtom(Z, N, e) with effectiveDegree = 16Z + 15N + 2e + 1.
 O-16 (Z=8, N=8) is doubly magic, connecting to Nuclear.lean.
 -/
-
-import FUST.DifferenceOperators
 import FUST.Physics.Nuclear
 import FUST.Chemistry.AtomDim
 

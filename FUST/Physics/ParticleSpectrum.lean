@@ -16,17 +16,17 @@ open FUST.WeinbergAngle
 
 /-! ## Quantum Number Types -/
 
-/-- Weak isospin T₃ from N3 structure -/
+/-- Weak isospin T₃ from Diff3 structure -/
 inductive WeakIsospin where
   | minus_half | zero | plus_half
   deriving DecidableEq, Repr
 
-/-- Hypercharge Y from N3-N4 embedding -/
+/-- Hypercharge Y from Diff3-Diff4 embedding -/
 inductive Hypercharge where
   | minus_one | minus_one_third | plus_one_third | plus_two_thirds | plus_one
   deriving DecidableEq, Repr
 
-/-- Color charge from N4 structure -/
+/-- Color charge from Diff4 structure -/
 inductive ColorCharge where
   | singlet | triplet | octet
   deriving DecidableEq, Repr
@@ -122,7 +122,7 @@ Fermion count from Fζ channel structure:
 - Total fermions: 6 + 18 = 24
 
 Boson count from Fζ channel structure:
-- Photon: 1 (U(1) from N3 singlet)
+- Photon: 1 (U(1) from Diff3 singlet)
 - W±, Z: 3 (SU(2) from C(3,2) = 3)
 - Gluons: C(3,2)² - 1 = 8 (SU(3) adjoint)
 - Higgs: 1
@@ -205,7 +205,7 @@ theorem all_constants_derived :
     (fermionFlavorCount = syWeight) ∧
     -- Spin count
     (allowedSpinCount = 4) ∧
-    -- Charges from N3 pair count
+    -- Charges from Diff3 pair count
     (allowedChargeCount = 2 * Nat.choose 3 2 + 1) ∧
     -- Fermions from flavor count × color
     (SM_fermion_count = 2 * fermionFlavorCount + 2 * fermionFlavorCount * Nat.choose 3 2) ∧
@@ -382,7 +382,7 @@ theorem particleDim_from_phi_power :
 Every particle FDim decomposes as deriveFDim(m)^a × dimTimeD2^n.
 The state function g(x) = x^d is detected by D_m if d > kerDim(D_m).
 
-Mixed sectors involve N2 corrections: neutron, ν₂, Z² comp2. -/
+Mixed sectors involve Diff2 corrections: neutron, ν₂, Z² comp2. -/
 
 section SectorClassification
 
@@ -502,7 +502,7 @@ theorem lepton_generation_exponents :
     Nat.choose 5 2 + Nat.choose 2 2 + Nat.choose 4 2 = 17 :=
   ⟨rfl, rfl, rfl⟩
 
-/-- Proton exponent from N5+N3+N2 pair counts: baryon = lepton-scale + color -/
+/-- Proton exponent from Diff5+Diff3+Diff2 pair counts: baryon = lepton-scale + color -/
 theorem proton_exponent :
     Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 = 14 := rfl
 

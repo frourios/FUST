@@ -1,4 +1,4 @@
-import FUST.DifferenceOperators
+import FUST.DζOperator
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
@@ -23,7 +23,7 @@ namespace FUST.QuarkMassRatios
 
 /-! ## Part 1: m_u/m_d = 1/2 (Isospin Symmetry) -/
 
-/-- N2 has C(2,2) = 1 pair, 2 evaluation points -/
+/-- Diff2 has C(2,2) = 1 pair, 2 evaluation points -/
 theorem mu_md_justification : Nat.choose 2 2 = 1 := rfl
 
 /-! ## Part 2: m_s/m_d = φ^6
@@ -40,8 +40,8 @@ theorem ms_md_structural_eq : ms_md_structural = φ ^ 6 := rfl
 /-! ## Part 3: m_c/m_s = C(5,2) + 2 = 12
 
 The value 12 = C(5,2) + 2 = 10 + 2:
-- C(5,2) = 10 from N5 pair count
-- 2 from isospin (N2 evaluation points)
+- C(5,2) = 10 from Diff5 pair count
+- 2 from isospin (Diff2 evaluation points)
 -/
 
 /-- Charm/strange quark mass ratio components -/
@@ -153,7 +153,7 @@ theorem quark_mass_ratios_from_d_structure :
     (mc_ms_component + mc_ms_isospin_component = 12) ∧
     -- m_b/m_c = C(3,2) = 3
     (Nat.choose 3 2 = 3) ∧
-    -- m_t/m_b exponents from N4±N2 pairs
+    -- m_t/m_b exponents from Diff4±Diff2 pairs
     (mt_mb_exp_high = Nat.choose 4 2 + Nat.choose 2 2) ∧
     (mt_mb_exp_low = Nat.choose 4 2 - Nat.choose 2 2) ∧
     -- Neutrino ratio denominator = 2 × C(6,2) = 30

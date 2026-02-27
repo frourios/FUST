@@ -1,20 +1,18 @@
 /-
 φ-Bloch Structure
 
-The N6 operator has a φ-quasi-commutation property analogous to Bloch's theorem
-in solid-state physics. The numerator operator N6 commutes exactly with
-φ-dilation, while N6 acquires a factor φ due to its 1/x normalization.
+The Diff6 operator has a φ-quasi-commutation property analogous to Bloch's theorem
+in solid-state physics. The numerator operator Diff6 commutes exactly with
+φ-dilation, while Diff6 acquires a factor φ due to its 1/x normalization.
 In log-coordinates, this becomes translation invariance by log(φ).
 -/
-
-import FUST.Basic
-import FUST.DifferenceOperators
+import FUST.DζOperator
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Complex.Basic
 
 namespace FUST.PhiBloch
 
-open FUST Complex
+open FUST FUST.DζOperator Complex
 
 /-! ## φ-Dilation Operator -/
 
@@ -36,12 +34,12 @@ theorem phiDilate_iter (f : ℂ → ℂ) (k : ℕ) (z : ℂ) :
     rw [ih ((↑φ : ℂ) * z)]
     ring_nf
 
-/-! ## N6 Commutation with φ-Dilation -/
+/-! ## Diff6 Commutation with φ-Dilation -/
 
-/-- N6 commutes exactly with φ-dilation: N6 ∘ U_φ = U_φ ∘ N6 -/
-theorem N6_phiDilate_comm (f : ℂ → ℂ) (z : ℂ) :
-    N6 (phiDilate f) z = phiDilate (N6 f) z := by
-  simp only [N6, phiDilate]
+/-- Diff6 commutes exactly with φ-dilation: Diff6 ∘ U_φ = U_φ ∘ Diff6 -/
+theorem Diff6_phiDilate_comm (f : ℂ → ℂ) (z : ℂ) :
+    Diff6 (phiDilate f) z = phiDilate (Diff6 f) z := by
+  simp only [Diff6, phiDilate]
   ring_nf
 
 /-! ## φ-Bloch Eigenfunction Characterization -/
@@ -50,21 +48,21 @@ theorem N6_phiDilate_comm (f : ℂ → ℂ) (z : ℂ) :
 def IsPhiBlochEigenfunction (f : ℂ → ℂ) (c : ℂ) : Prop :=
   ∀ z, phiDilate f z = c * f z
 
-/-- N6 preserves Bloch eigenfunctions: if U_φ f = c·f, then U_φ(N6 f) = c·(N6 f) -/
-theorem N6_preserves_Bloch (f : ℂ → ℂ) (c : ℂ)
+/-- Diff6 preserves Bloch eigenfunctions: if U_φ f = c·f, then U_φ(Diff6 f) = c·(Diff6 f) -/
+theorem Diff6_preserves_Bloch (f : ℂ → ℂ) (c : ℂ)
     (hf : IsPhiBlochEigenfunction f c) :
-    IsPhiBlochEigenfunction (N6 f) c := by
+    IsPhiBlochEigenfunction (Diff6 f) c := by
   intro z
-  rw [← N6_phiDilate_comm]
+  rw [← Diff6_phiDilate_comm]
   have h : ∀ w, f ((↑φ : ℂ) * w) = c * f w := fun w => hf w
-  simp only [N6, phiDilate]
+  simp only [Diff6, phiDilate]
   rw [h ((↑φ : ℂ)^3 * z), h ((↑φ : ℂ)^2 * z), h ((↑φ : ℂ) * z),
       h ((↑ψ : ℂ) * z), h ((↑ψ : ℂ)^2 * z), h ((↑ψ : ℂ)^3 * z)]
   ring
 
 /-! ## Unified Spectral Order Classification
 
-The N6 commutation theorem holds for ALL functions (no periodicity assumption).
+The Diff6 commutation theorem holds for ALL functions (no periodicity assumption).
 Matter order types are classified by the Mellin spectral support of f,
 providing a unified framework for crystals, quasicrystals, and amorphous materials.
 -/
@@ -75,37 +73,37 @@ def HasCrystallineOrder (f : ℂ → ℂ) : Prop :=
     (∀ i, IsPhiBlochEigenfunction (fs i) (eigenvals i)) ∧
     (∀ z, f z = ∑ i : Fin N, cs i * fs i z)
 
-/-- N6 commutation is unconditional: holds for crystal, quasicrystal, AND amorphous -/
-theorem N6_commutation_unconditional :
-    ∀ (f : ℂ → ℂ) (z : ℂ), N6 (phiDilate f) z = phiDilate (N6 f) z :=
-  N6_phiDilate_comm
+/-- Diff6 commutation is unconditional: holds for crystal, quasicrystal, AND amorphous -/
+theorem Diff6_commutation_unconditional :
+    ∀ (f : ℂ → ℂ) (z : ℂ), Diff6 (phiDilate f) z = phiDilate (Diff6 f) z :=
+  Diff6_phiDilate_comm
 
-/-- N6 distributes over finite sums -/
-theorem N6_finset_sum {ι : Type*}
+/-- Diff6 distributes over finite sums -/
+theorem Diff6_finset_sum {ι : Type*}
     (s : Finset ι) (cs : ι → ℂ) (fs : ι → ℂ → ℂ) (z : ℂ) :
-    N6 (fun w => ∑ i ∈ s, cs i * fs i w) z = ∑ i ∈ s, cs i * N6 (fs i) z := by
+    Diff6 (fun w => ∑ i ∈ s, cs i * fs i w) z = ∑ i ∈ s, cs i * Diff6 (fs i) z := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp [N6]
+  | empty => simp [Diff6]
   | insert a s' ha ih =>
     rw [Finset.sum_insert ha]
-    have step1 : N6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
-        cs a * N6 (fs a) z + N6 (fun w => ∑ i ∈ s', cs i * fs i w) z := by
-      have : N6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
-          N6 (fun w => cs a * fs a w + ∑ i ∈ s', cs i * fs i w) z := by
+    have step1 : Diff6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
+        cs a * Diff6 (fs a) z + Diff6 (fun w => ∑ i ∈ s', cs i * fs i w) z := by
+      have : Diff6 (fun w => ∑ i ∈ insert a s', cs i * fs i w) z =
+          Diff6 (fun w => cs a * fs a w + ∑ i ∈ s', cs i * fs i w) z := by
         congr 1; ext w; exact Finset.sum_insert ha
-      rw [this]; simp only [N6]; ring
+      rw [this]; simp only [Diff6]; ring
     rw [step1, ih]
 
-/-- Crystalline order implies N6 f inherits the Bloch structure -/
-theorem crystalline_N6_preserves (f : ℂ → ℂ)
-    (hf : HasCrystallineOrder f) : HasCrystallineOrder (N6 f) := by
+/-- Crystalline order implies Diff6 f inherits the Bloch structure -/
+theorem crystalline_Diff6_preserves (f : ℂ → ℂ)
+    (hf : HasCrystallineOrder f) : HasCrystallineOrder (Diff6 f) := by
   obtain ⟨N, cs, fs, eigenvals, hbloch, hdecomp⟩ := hf
-  refine ⟨N, cs, fun i => N6 (fs i), eigenvals,
-    fun i => N6_preserves_Bloch (fs i) (eigenvals i) (hbloch i), fun z => ?_⟩
-  have hN6f : N6 f z = N6 (fun w => ∑ i : Fin N, cs i * fs i w) z := by
+  refine ⟨N, cs, fun i => Diff6 (fs i), eigenvals,
+    fun i => Diff6_preserves_Bloch (fs i) (eigenvals i) (hbloch i), fun z => ?_⟩
+  have hDiff6f : Diff6 f z = Diff6 (fun w => ∑ i : Fin N, cs i * fs i w) z := by
     congr 1; ext w; exact hdecomp w
-  rw [hN6f, N6_finset_sum]
+  rw [hDiff6f, Diff6_finset_sum]
 
 /-! ## φ-Lattice and φ-Dilation Connection -/
 

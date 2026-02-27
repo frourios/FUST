@@ -39,7 +39,7 @@ massScale = |AF_coeff|²/5² = 12/25.
 
 section MassScaleSection
 
-open FUST.Zeta6
+open FUST.DζOperator
 
 /-- Mass scale Δ = |AF_coeff|²/5² derived from Fζ/Dζ structural constants -/
 noncomputable def massScale : ℝ := Complex.normSq AF_coeff / 5 ^ 2

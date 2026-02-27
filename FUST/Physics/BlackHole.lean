@@ -112,12 +112,12 @@ theorem scaleResolution_decreasing (k : ℕ) :
 /-! ## State Space Dimension from Fζ
 
 The number of independent degrees of freedom at scale level k
-is determined by the N6 kernel dimension (= 3, via Φ_A = N6+N2-N4 in Fζ)
+is determined by the Diff6 kernel dimension (= 3, via Φ_A = Diff6+Diff2-Diff4 in Fζ)
 and the number of scale steps.
 This replaces Bekenstein-Hawking S ∝ A without importing continuous GR.
 -/
 
-/-- Degrees of freedom at k scale levels: N6 kernel dim × k levels = 3k
+/-- Degrees of freedom at k scale levels: Diff6 kernel dim × k levels = 3k
     (This counts spatial modes per scale step from Fζ AF channel structure) -/
 abbrev degreesOfFreedom (k : ℕ) : ℕ := 3 * k
 

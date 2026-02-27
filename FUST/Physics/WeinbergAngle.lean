@@ -1,4 +1,4 @@
-import FUST.Zeta6
+import FUST.DζOperator
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
@@ -25,7 +25,7 @@ This is the unification-scale prediction, matching SU(5) GUT tree-level value.
 
 namespace FUST.WeinbergAngle
 
-open FUST.Zeta6
+open FUST.DζOperator
 
 /-! ## Fζ Channel Weights from normSq decomposition
 

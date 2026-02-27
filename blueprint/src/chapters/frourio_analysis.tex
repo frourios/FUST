@@ -20,7 +20,7 @@ with product $\varphi\psi = -1$ and sum $\varphi + \psi = 1$.
 
 \begin{definition}[Elliptic pair: $c = -1$]
 \label{def:elliptic}
-\lean{FUST.Zeta6.zeta6}
+\lean{FUST.DζOperator.zeta6}
 \leanok
 The equation $x^2 = x - 1$ has roots:
 \[
@@ -65,7 +65,7 @@ All three types share the trace $\sigma_1 = 1$ (sum of roots), but differ in det
 
 \begin{theorem}[$\zeta_6$ Properties]
 \label{thm:zeta6_properties}
-\lean{FUST.Zeta6.zeta6_sq, FUST.Zeta6.zeta6_mul_conj}
+\lean{FUST.DζOperator.zeta6_sq, FUST.DζOperator.zeta6_mul_conj}
 \leanok
 \begin{align}
 \zeta_6^2 &= \zeta_6 - 1, \quad \zeta_6 \cdot \bar{\zeta}_6 = 1, \quad \zeta_6 - \bar{\zeta}_6 = i\sqrt{3}
@@ -151,7 +151,7 @@ Define the Fibonacci factorial as $n!_{\mathsf{F}} := \prod_{k=1}^{n} F_k$.
 
 \textbf{Alternative representation} (Binet type):
 \[
-\mathfrak{f} = \frac{\exp_{\mathsf{F}}(\varphi) - \exp_{\mathsf{F}}(\psi)}{\sqrt{5}} = \frac{N_2[\exp_{\mathsf{F}}](1)}{\sqrt{5}}
+\mathfrak{f} = \frac{\exp_{\mathsf{F}}(\varphi) - \exp_{\mathsf{F}}(\psi)}{\sqrt{5}} = \frac{\mathrm{Diff}_2[\exp_{\mathsf{F}}](1)}{\sqrt{5}}
 \]
 
 This is a constant that gives a natural scale to the golden ratio.

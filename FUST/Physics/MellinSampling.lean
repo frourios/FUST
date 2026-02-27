@@ -1,5 +1,3 @@
-import FUST.Basic
-import FUST.DifferenceOperators
 import FUST.SpectralCoefficients
 import FUST.Physics.PhiBloch
 import FUST.Physics.GravitationalCoupling

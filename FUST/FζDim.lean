@@ -14,7 +14,7 @@ import FUST.FζOperator
 
 namespace FUST.FζDim
 
-open FUST FUST.Zeta6 FUST.FrourioAlgebra FUST.FζOperator
+open FUST FUST.DζOperator FUST.FrourioAlgebra FUST.FζOperator
 
 /-! ## Channel decomposition: eigenvalue = α·AF_coeff + β
 

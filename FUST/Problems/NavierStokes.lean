@@ -100,16 +100,6 @@ theorem dissipationCoeff_two : dissipationCoeff 2 = 0 := by
         rw [hφ6, hφ4, hφ2, hψ2, hψ4, hψ6]
     _ = 0 := by ring
 
-/-- Fibonacci decomposition: C_n = √5·(F(3n) - 3F(2n) + F(n)) -/
-theorem dissipation_fibonacci_decomposition (n : ℕ) :
-    dissipationCoeff n =
-    (φ - ψ) * (FStructureConst (3*n) - 3 * FStructureConst (2*n) + FStructureConst n) := by
-  simp only [dissipationCoeff, FStructureConst]
-  have hsqrt5_ne : Real.sqrt 5 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
-  rw [phi_sub_psi]
-  field_simp
-  ring
-
 /-- C_3 ≠ 0: first mode beyond ker(Fζ), onset of dissipation -/
 theorem dissipationCoeff_three_ne_zero : dissipationCoeff 3 ≠ 0 := by
   simp only [dissipationCoeff]

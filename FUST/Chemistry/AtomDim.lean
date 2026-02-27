@@ -164,17 +164,7 @@ theorem norm_factor_root_phi : 1 + φ - φ ^ 2 = 0 := by
 theorem norm_factor_root_psi : 1 + ψ - ψ ^ 2 = 0 := by
   linarith [psi_sq]
 
-/-! ## Section 6: Conjugation Swaps Time Direction
-
-φ > 1 drives forward time evolution (expansion).
-ψ: |ψ| < 1 drives backward (contraction).
-Galois conjugation σ: φ ↔ ψ reverses the arrow of time. -/
-
-theorem conjugation_reverses_time :
-    φ > 1 ∧ |ψ| < 1 ∧ φ * |ψ| = 1 :=
-  ⟨φ_gt_one, abs_psi_lt_one, FUST.TimeStructure.phi_mul_abs_psi⟩
-
-/-! ## Section 7: Automorphism Uniqueness
+/-! ## Section 6: Automorphism Uniqueness
 
 The only ring endomorphism σ: ℤ[φ] → ℤ[φ] fixing ℤ and satisfying σ(φ)² = σ(φ) + 1
 is either id or conjugation. Since φ² = φ + 1, σ(φ) must be a root of x² - x - 1 = 0.
@@ -191,7 +181,7 @@ theorem golden_equation_roots (r : ℝ) (h : r ^ 2 = r + 1) :
   · left; linarith
   · right; linarith
 
-/-! ## Section 8: Minimal Complete Root Cluster
+/-! ## Section 7: Minimal Complete Root Cluster
 
 atomStateFn(Z,N,e) has root at 0 iff Z≥1, root at -1 iff N≥1, root at φ iff e≥1.
 The minimum (Z,N,e) with ALL three roots is (1,1,1). -/
@@ -234,7 +224,7 @@ theorem complete_cluster_minimal (Z N e : ℕ) (h : hasCompleteRootCluster Z N e
     Z + N + e ≥ 3 := by
   obtain ⟨hZ, hN, he⟩ := h; omega
 
-/-! ## Section 9: Galois Norm Irreducible Factor
+/-! ## Section 8: Galois Norm Irreducible Factor
 
 The norm factor (1+x-x²) = -(x²-x-1) is the minimal polynomial of φ over ℤ.
 It appears in the galois norm iff e ≥ 1. -/
@@ -279,7 +269,7 @@ theorem galois_norm_has_irrational_factor (Z N e : ℕ) (he : e ≥ 1) :
   · simp [atomStateFn_vanishes_at_phi Z N e he]
   · simp [conjStateFn_vanishes_at_psi Z N e he]
 
-/-! ## Section 10: Scale Action and Recursive Root Orbit
+/-! ## Section 9: Scale Action and Recursive Root Orbit
 
 U: g(x) → g(φx) maps roots of g to their φ-preimages.
 Proton root 0 is scale-fixed. Neutron root -1 maps to -1/φ = ψ.
@@ -349,7 +339,7 @@ theorem norm_factor_scale_golden (x : ℝ) :
     (1 - x) * (1 + φ ^ 2 * x) = (1 - x) * (1 + (φ + 1) * x) := by
   rw [golden_ratio_property]
 
-/-! ## Section 11: Electron Factor Uniqueness
+/-! ## Section 10: Electron Factor Uniqueness
 
 The electron factor (1+ψx) is uniquely determined among (1+αx) where α ∈ {φ, ψ, -φ, -ψ}
 (the four units with Norm(α)=-1 and minimal |Trace|=1) by requiring the root to exceed 1.
@@ -399,7 +389,7 @@ theorem electron_factor_unique (α : ℝ) (hα : α = φ ∨ α = ψ ∨ α = -�
     rw [this] at hroot
     linarith [neg_psi_factor_root_neg]
 
-/-! ## Section 12: Rational Root Selection
+/-! ## Section 11: Rational Root Selection
 
 Among rational linear factors (1+rx) with r ∈ ℤ, r ≠ 0:
   root = -1/r. The sign-spanning condition (roots include both < 0 and > 0)
@@ -414,7 +404,7 @@ theorem rational_root_is_neg_one (r : ℤ) (hr : r = 1 ∨ r = -1)
   · rfl
   · exfalso; push_cast at hroot_neg; linarith
 
-/-! ## Section 13: Complete atomStateFn Form Theorem
+/-! ## Section 12: Complete atomStateFn Form Theorem
 
 Combining all constraints: origin root, chirality, sign-spanning, minimality.
 
@@ -442,7 +432,7 @@ theorem root_triple_unique :
     (-1 : ℝ) < 0 ∧ 0 < φ :=
   ⟨by norm_num, rfl, φ_gt_one, by norm_num, phi_pos⟩
 
-/-! ## Section 14: Polynomial Necessity
+/-! ## Section 13: Polynomial Necessity
 
 Finite Observability: a particle's state has finitely many nonzero detectable coefficients.
 So finite observability forces the state function to be polynomial. -/

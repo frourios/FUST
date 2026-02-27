@@ -39,7 +39,7 @@ Physical property & Correspondence in $F_\zeta$ structure \\
 \hline
 Mass $m = 0$ & No components of degree 3 or higher (belongs to $\ker(F_\zeta)$) \\
 Energy $E \neq 0$ & Non-constant ($a_1 \neq 0$ or $a_2 \neq 0$) \\
-Proper time $d\tau = 0$ & $N_6 f = 0$ \\
+Proper time $d\tau = 0$ & $\mathrm{Diff}_6 f = 0$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -126,9 +126,9 @@ Any analytic state function $f$ decomposes into homogeneous components:
 f(t) = \sum_{n=0}^{\infty} a_n t^n
 \]
 
-By linearity of $N_6$ and the scaling law:
+By linearity of $\mathrm{Diff}_6$ and the scaling law:
 \[
-N_6[f](x) = \sum_{n \geq 3} a_n N_6[t^n](x)
+\mathrm{Diff}_6[f](x) = \sum_{n \geq 3} a_n \mathrm{Diff}_6[t^n](x)
 \]
 
 \subsection{Gauge Invariance of Time Delay Ratio}
@@ -139,7 +139,7 @@ N_6[f](x) = \sum_{n \geq 3} a_n N_6[t^n](x)
 \leanok
 For $f_A = a \cdot f$, $f_B = b \cdot f$ (scalar multiples of the same function),
 \[
-\frac{|N_6 f_A(x)|}{|N_6 f_B(x)|} = \frac{|a|}{|b|}
+\frac{|\mathrm{Diff}_6 f_A(x)|}{|\mathrm{Diff}_6 f_B(x)|} = \frac{|a|}{|b|}
 \]
 This is independent of $x$ $\Rightarrow$ \textbf{gauge-invariant}
 \end{theorem}
@@ -148,7 +148,7 @@ This is independent of $x$ $\Rightarrow$ \textbf{gauge-invariant}
 \label{thm:mat_diff_degree}
 For $f_A = t^n$, $f_B = t^m$ ($n \neq m$),
 \[
-\frac{|N_6 f_A(x)|}{|N_6 f_B(x)|} \propto x^{n-m}
+\frac{|\mathrm{Diff}_6 f_A(x)|}{|\mathrm{Diff}_6 f_B(x)|} \propto x^{n-m}
 \]
 This depends on $x$ $\Rightarrow$ \textbf{gauge-dependent}
 \end{theorem}

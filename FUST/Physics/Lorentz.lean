@@ -5,14 +5,14 @@ Non-compact part (φψ=-1): boosts K₁,K₂,K₃, dim=3.
 Combined: so(3,1), dim = 3+3 = 6.
 Both share: trace=1 (φ+ψ=ζ₆+ζ₆'=1), ker dim=3, detect x³/z³.
 -/
-import FUST.Zeta6
+import FUST.DζOperator
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Dimension.Constructions
 
 namespace FUST.Physics.Lorentz
 
-open LieAlgebra.Orthogonal Matrix FUST Zeta6
+open LieAlgebra.Orthogonal Matrix FUST DζOperator
 
 /-! ## so(3) ≃ ℝ³: rotation subalgebra -/
 
