@@ -1,6 +1,6 @@
 import FUST.Physics.MassGap
 import FUST.Physics.WeinbergAngle
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 
 /-!
 # Neutrino Mass Structure from Fζ Channel Dimensions

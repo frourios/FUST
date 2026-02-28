@@ -1,5 +1,4 @@
 import FUST.Physics.TimeStructure
-import FUST.Physics.Cosmology
 import FUST.Physics.Probability
 import FUST.Physics.SchrodingerEquation
 import FUST.Physics.MassGap
@@ -25,7 +24,7 @@ The three laws of thermodynamics derived from the unified operator Fζ = 5z·Dζ
 
 namespace FUST.Thermodynamics
 
-open FUST FUST.TimeStructure FUST.FζOperator FUST.Cosmology
+open FUST FUST.TimeStructure FUST.FζOperator
 open FUST.Probability FUST.SchrodingerEquation Complex
 
 /-! ## Zeroth Law: Thermal Equilibrium as ker(Fζ)

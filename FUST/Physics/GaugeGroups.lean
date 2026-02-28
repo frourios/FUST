@@ -4,7 +4,7 @@ The ℤ/6ℤ Fourier decomposition into SymNum (even parity) and AFNum (odd pari
 is canonical, and the rank/dimension matching forces the gauge group without free parameters.
 -/
 import FUST.DζOperator
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
 namespace FUST

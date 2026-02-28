@@ -1,3 +1,8 @@
+import FUST.Astronomy.BlackHole
+import FUST.Astronomy.Cosmology
+import FUST.Astronomy.ScaleStructure
+import FUST.Astronomy.VacuumStability
+
 import FUST.Chemistry.Metals.Aluminum
 import FUST.Chemistry.Metals.Chromium
 import FUST.Chemistry.Metals.Copper
@@ -36,19 +41,20 @@ import FUST.Chemistry.Translation
 import FUST.Chemistry.WaterAnomalies
 import FUST.Chemistry.WaterMolecules
 
+import FUST.Engineering.FusionReactor
+import FUST.Engineering.Superconductivity
+
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FrourioAlgebra.GoldenIntegerRing
 import FUST.FrourioAlgebra.GoldenValuation
 
 import FUST.Math.EulerOperator
 import FUST.Math.FibonacciArithmetic
+import FUST.Math.MellinSampling
 import FUST.Math.SpectralGalois
 import FUST.Math.SpectralObstruction
 
-import FUST.Physics.BlackHole
-import FUST.Physics.Cosmology
 import FUST.Physics.CouplingConstants
-import FUST.Physics.FusionReactor
 import FUST.Physics.GaugeGroups
 import FUST.Physics.GravitationalCoupling
 import FUST.Physics.Gravity
@@ -58,7 +64,6 @@ import FUST.Physics.MassGap
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassRatios
-import FUST.Physics.MellinSampling
 import FUST.Physics.NeutrinoMass
 import FUST.Physics.Nuclear
 import FUST.Physics.MixingAngles
@@ -68,20 +73,16 @@ import FUST.Physics.PMNSMixingAngles
 import FUST.Physics.Poincare
 import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
-import FUST.Physics.ScaleStructure
 import FUST.Physics.SchrodingerEquation
-import FUST.Physics.Superconductivity
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeStructure
-import FUST.Physics.VacuumStability
 import FUST.Physics.WeinbergAngle
 
 import FUST.Problems.NavierStokes
 import FUST.Problems.YangMills
 
 import FUST.Basic
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 import FUST.DζOperator
-import FUST.FζDim
 import FUST.FζOperator
 import FUST.SpectralCoefficients

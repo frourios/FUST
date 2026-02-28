@@ -1,7 +1,7 @@
-import FUST.Physics.Cosmology
-import FUST.Physics.BlackHole
+import FUST.Astronomy.Cosmology
+import FUST.Astronomy.BlackHole
 import FUST.Physics.GravitationalCoupling
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 
 namespace FUST.Dim
 

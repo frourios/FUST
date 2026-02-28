@@ -6,13 +6,6 @@ import Mathlib.Data.Finset.Basic
 # FUST Probability Theory
 
 Probability emerges structurally from the Fζ = 5z·Dζ operator and φ-scale iteration.
-
-## Key Results
-
-1. **Theorem 3.1**: Same-degree ratio is gauge-invariant
-2. **φ-scale iteration**: Generates observation sequences
-3. **Empirical distribution**: Frequency-based probability
-4. **Born rule**: Structural consequence of Fζ action
 -/
 
 namespace FUST.Probability
@@ -22,7 +15,7 @@ open FUST Complex FUST.FζOperator
 attribute [local instance] Classical.propDecidable
 
 /-!
-## Theorem 3.1: Same-Degree Ratio Gauge Invariance
+## Same-Degree Ratio Gauge Invariance
 
 For same-degree monomials f_A = a·x^n and f_B = b·x^n:
   normSq(Fζ[f_A](x)) / normSq(Fζ[f_B](x)) = normSq(a) / normSq(b)

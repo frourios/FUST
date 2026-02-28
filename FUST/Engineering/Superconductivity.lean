@@ -16,7 +16,7 @@ import FUST.Chemistry.Metals.Copper
 import FUST.Chemistry.Metals.Niobium
 import FUST.Physics.LeastAction
 
-namespace FUST.Physics.Superconductivity
+namespace FUST.Superconductivity
 
 open FUST FUST.Dim FUST.Chemistry
 open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
@@ -227,4 +227,4 @@ theorem coordination_hierarchy :
     cuprateCoordination < bccCoordination ∧
     bccCoordination < fccCoordination := by decide
 
-end FUST.Physics.Superconductivity
+end FUST.Superconductivity

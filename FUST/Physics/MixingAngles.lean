@@ -1,5 +1,5 @@
 import FUST.Physics.PMNSMixingAngles
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 
 namespace FUST.Dim
 

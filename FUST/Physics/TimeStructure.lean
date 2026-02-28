@@ -1,5 +1,5 @@
 import FUST.FζOperator
-import FUST.DimensionalAnalysis
+import FUST.Dimension
 
 /-!
 # Time Structure from φ-Scaling

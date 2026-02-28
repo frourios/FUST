@@ -8,7 +8,7 @@ Four fundamental obstacles in fusion reactor engineering, formalized:
 4. Superconducting magnet = flux quantization
 -/
 
-import FUST.Physics.Superconductivity
+import FUST.Engineering.Superconductivity
 import FUST.Physics.Thermodynamics
 import FUST.Problems.NavierStokes
 import FUST.Chemistry.CarbonIsotopes
@@ -18,7 +18,7 @@ namespace FUST.Physics.FusionReactor
 open FUST FUST.Dim FUST.Chemistry FUST.NavierStokes FUST.Thermodynamics
 open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Carbon
-open FUST.Chemistry.Niobium FUST.Physics.Superconductivity
+open FUST.Chemistry.Niobium FUST.Superconductivity
 
 /-! ## Section 1: Fusion Fuel — D-T FDim Structure
 
