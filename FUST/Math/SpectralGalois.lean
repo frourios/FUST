@@ -6,7 +6,7 @@ the algebraic structure of zeros in the critical strip.
 -/
 import FUST.FζOperator
 import FUST.Math.FibonacciArithmetic
-import FUST.SpectralCoefficients
+import FUST.Math.SpectralCoefficients
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 
 namespace FUST.SpectralGalois

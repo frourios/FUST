@@ -2,7 +2,7 @@
 \chapter{Time and Space from Poincar\'{e} Structure}
 \label{chap:mat_time_space}
 
-Time and space are not external parameters but consequences of the $D_\zeta$ decomposition into $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (Chapter~\ref{chap:mat_poincare}).
+Time and space are not external parameters but consequences of the $D_\zeta$ decomposition into $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$ (Chapter~\ref{chap:mat_poincare}).
 
 \section{Time = \texorpdfstring{$\varphi$}{φ}-Scaling (Poincar\'{e} Temporal Channel)}
 \label{sec:mat_time_definition}
@@ -18,14 +18,7 @@ The temporal direction is identified via the $\Phi_A$ channel of $D_\zeta$:
 \]
 \end{theorem}
 
-\begin{theorem}[Temporal Channel is Non-Degenerate]
-\label{thm:mat_temporal_nonzero}
-\lean{FUST.Physics.Gravity.temporal_nonzero}
-\leanok
-$\Phi_A\text{-coeff}(1) \neq 0$.
-\end{theorem}
-
-Combined with $\eta(\mathrm{Sum.inr}\,0, \mathrm{Sum.inr}\,0) = -1$ (Theorem~\ref{thm:mat_eta_temporal}), the $\mathrm{Sum.inr}\,0$ component is timelike. The $\Phi_A$ channel is built from $\varphi, \psi$ powers, so $\varphi$-scaling is intrinsically temporal.
+Combined with $\eta(\mathrm{Sum.inl}\,0, \mathrm{Sum.inl}\,0) = +1$ (Theorem~\ref{thm:mat_eta_temporal}), the $\mathrm{Sum.inl}\,0$ component is timelike. The $\Phi_A$ channel is built from $\varphi, \psi$ powers, so $\varphi$-scaling is intrinsically temporal.
 
 \begin{definition}[Time Evolution]
 \label{def:mat_time_evolution}
@@ -42,8 +35,8 @@ Combined with $\eta(\mathrm{Sum.inr}\,0, \mathrm{Sum.inr}\,0) = -1$ (Theorem~\re
 The 3 spatial directions correspond to the $\Phi_S$ sub-operators:
 
 \begin{itemize}
-\item $\sigma_{\mathrm{Diff}_5}(s)$, $\sigma_{\mathrm{Diff}_3}(s)$, $\sigma_{\mathrm{Diff}_2}(s)$ at $\mathrm{Sum.inl}\,0,1,2$
-\item $\eta(\mathrm{Sum.inl}\,i, \mathrm{Sum.inl}\,i) = +1$ (spacelike, Theorem~\ref{thm:mat_eta_spatial})
+\item $\sigma_{\mathrm{Diff}_5}(s)$, $\sigma_{\mathrm{Diff}_3}(s)$, $\sigma_{\mathrm{Diff}_2}(s)$ at $\mathrm{Sum.inr}\,0,1,2$
+\item $\eta(\mathrm{Sum.inr}\,i, \mathrm{Sum.inr}\,i) = -1$ (spacelike, Theorem~\ref{thm:mat_eta_spatial})
 \item $\ker(F_\zeta) = \mathrm{span}\{1, z, z^2\}$ has dimension 3, matching spatial dimension
 \end{itemize}
 
@@ -146,8 +139,10 @@ The derivation chain:
 where $12 = |\mathrm{AF\_coeff}|^2$ and $10\sqrt{5} = 5 \cdot \Phi_A\text{-coeff}(1)$.
 \end{theorem}
 
-\section{Spacetime Dimension}
+\section{Spacetime Dimension Uniqueness}
 \label{sec:mat_spacetime_dim}
+
+The 4-dimensional Lorentzian spacetime with signature $(1,3)$ is uniquely determined by $D_\zeta$:
 
 \begin{theorem}[Spacetime Dimension from Channel Weights]
 \label{thm:mat_spacetime_dimension}
@@ -158,6 +153,27 @@ where $12 = |\mathrm{AF\_coeff}|^2$ and $10\sqrt{5} = 5 \cdot \Phi_A\text{-coeff
 \]
 \end{theorem}
 
+\begin{theorem}[$D_\zeta$ Determines Spacetime Uniquely]
+\label{thm:mat_spacetime_uniqueness}
+\lean{FUST.SpacetimeUniqueness.spacetime_from_Dζ}
+\leanok
+Without any additional assumption beyond ZF+DC:
+\begin{enumerate}
+\item $\mathrm{AF\_coeff}$ is purely imaginary with positive imaginary part, forcing a 1+3 decomposition
+\item The spatial $\Phi_S$ channel has rank 3 (3 independent sub-operators)
+\item The temporal $\Phi_A$ channel is nontrivial
+\item Signature $(1,3)$: temporal positive, spatial negative
+\item $O(3,1)$ preserves the $D_\zeta$-derived Minkowski metric
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Poincar\'{e} Group Construction]
+\label{thm:mat_poincare_group_constructed}
+\lean{FUST.SpacetimeUniqueness.instGroupPoincareGroup}
+\leanok
+$\mathrm{ISO}(3,1) = \mathbb{R}^4 \rtimes O(3,1)$ is a group, constructed as a semidirect product where $O(3,1)$ acts on $\mathbb{R}^4$ by matrix-vector multiplication. The group operation $(a_1, \Lambda_1) \cdot (a_2, \Lambda_2) = (a_1 + \Lambda_1 a_2, \Lambda_1 \Lambda_2)$ is verified by Lean's type checker.
+\end{theorem}
+
 \section{Summary}
 \label{sec:mat_time_space_summary}
 
@@ -166,12 +182,13 @@ where $12 = |\mathrm{AF\_coeff}|^2$ and $10\sqrt{5} = 5 \cdot \Phi_A\text{-coeff
 \hline
 Physical concept & $D_\zeta$ origin & Lean reference \\
 \hline
-Time direction & $\Phi_A$-channel, $\eta(\mathrm{inr}\,0,\mathrm{inr}\,0) = -1$ & \texttt{Φ\_A\_coeff\_one}, \texttt{η\_temporal} \\
-Spatial dimensions & $\Phi_S$ sub-operators, $\eta(\mathrm{inl}\,i,\mathrm{inl}\,i) = +1$ & \texttt{η\_spatial} \\
+Time direction & $\Phi_A$-channel, $\eta(\mathrm{inl}\,0,\mathrm{inl}\,0) = +1$ & \texttt{Φ\_A\_coeff\_one}, \texttt{η\_temporal} \\
+Spatial dimensions & $\Phi_S$ sub-operators, $\eta(\mathrm{inr}\,i,\mathrm{inr}\,i) = -1$ & \texttt{η\_spatial} \\
 Time evolution & $f \mapsto f(\varphi \cdot)$ & \texttt{timeEvolution} \\
 Arrow of time & $\varphi > 1 > |\psi|$, $\varphi \cdot |\psi| = 1$ & \texttt{phi\_gt\_one}, \texttt{phi\_mul\_abs\_psi} \\
 Planck second & $t_P = 1/(20\sqrt{15})$ & \texttt{planckSecond} \\
 Spacetime dim & $3 + 1 = 4$ & \texttt{totalWeight\_eq} \\
+Poincar\'{e} group & $\mathbb{R}^4 \rtimes O(3,1)$ & \texttt{PoincareGroup} \\
 \hline
 \end{tabular}
 \end{center}

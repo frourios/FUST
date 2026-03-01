@@ -14,19 +14,19 @@ open FUST.TimeStructure FUST.LeastAction FUST.SchrodingerEquation FUST.WeinbergA
 
 /-! ## Killing form on so(3,1) via matrix trace -/
 
-noncomputable def killingTrace (A B : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) : ℝ :=
+noncomputable def killingTrace (A B : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) : ℝ :=
   Matrix.trace ((A : Matrix I4 I4 ℝ) * (B : Matrix I4 I4 ℝ))
 
-theorem killingTrace_comm (A B : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) :
+theorem killingTrace_comm (A B : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) :
     killingTrace A B = killingTrace B A := by
   unfold killingTrace; exact Matrix.trace_mul_comm _ _
 
-theorem killingTrace_add_left (A B C : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) :
+theorem killingTrace_add_left (A B C : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) :
     killingTrace (A + B) C = killingTrace A C + killingTrace B C := by
   unfold killingTrace
   simp only [Submodule.coe_add, Matrix.add_mul, Matrix.trace_add]
 
-theorem killingTrace_add_right (A B C : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) :
+theorem killingTrace_add_right (A B C : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) :
     killingTrace A (B + C) = killingTrace A B + killingTrace A C := by
   unfold killingTrace
   simp only [Submodule.coe_add, Matrix.mul_add, Matrix.trace_add]
@@ -41,23 +41,23 @@ theorem killingTrace_lie_invariant (A B C : Matrix I4 I4 ℝ) :
 
 /-! ## Yang-Mills action -/
 
-noncomputable def ymAction (ω : I4 → so' (Fin 3) (Fin 1) ℝ) : ℝ :=
+noncomputable def ymAction (ω : I4 → so' (Fin 1) (Fin 3) ℝ) : ℝ :=
   ∑ μ : I4, ∑ ν : I4,
     killingTrace
       ⟨(curvature ω μ ν).val, (curvature ω μ ν).prop⟩
       ⟨(curvature ω μ ν).val, (curvature ω μ ν).prop⟩
 
-theorem ymAction_flat (ω : I4 → so' (Fin 3) (Fin 1) ℝ)
+theorem ymAction_flat (ω : I4 → so' (Fin 1) (Fin 3) ℝ)
     (hflat : ∀ μ ν, curvature ω μ ν = 0) :
     ymAction ω = 0 := by
   unfold ymAction killingTrace
   simp only [hflat]; simp [Matrix.trace_zero]
 
-theorem constant_connection_flat (A : so' (Fin 3) (Fin 1) ℝ) :
+theorem constant_connection_flat (A : so' (Fin 1) (Fin 3) ℝ) :
     ∀ μ ν : I4, curvature (fun _ => A) μ ν = 0 := by
   intro μ ν; unfold curvature; exact lie_self A
 
-theorem ymAction_const_zero (A : so' (Fin 3) (Fin 1) ℝ) :
+theorem ymAction_const_zero (A : so' (Fin 1) (Fin 3) ℝ) :
     ymAction (fun _ => A) = 0 :=
   ymAction_flat _ (constant_connection_flat A)
 
@@ -83,22 +83,22 @@ theorem gauge_invariance_ym
 
 /-! ## Hamiltonian -/
 
-noncomputable def curvatureEnergy (A : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) : ℝ :=
+noncomputable def curvatureEnergy (A : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) : ℝ :=
   killingTrace A A
 
-noncomputable def ymHamiltonian (ω : I4 → so' (Fin 3) (Fin 1) ℝ) : ℝ :=
+noncomputable def ymHamiltonian (ω : I4 → so' (Fin 1) (Fin 3) ℝ) : ℝ :=
   ∑ μ : I4, ∑ ν : I4,
     curvatureEnergy ⟨(curvature ω μ ν).val, (curvature ω μ ν).prop⟩
 
-theorem ymHamiltonian_eq_action (ω : I4 → so' (Fin 3) (Fin 1) ℝ) :
+theorem ymHamiltonian_eq_action (ω : I4 → so' (Fin 1) (Fin 3) ℝ) :
     ymHamiltonian ω = ymAction ω := rfl
 
-theorem ymHamiltonian_vacuum (ω : I4 → so' (Fin 3) (Fin 1) ℝ)
+theorem ymHamiltonian_vacuum (ω : I4 → so' (Fin 1) (Fin 3) ℝ)
     (hflat : ∀ μ ν, curvature ω μ ν = 0) :
     ymHamiltonian ω = 0 :=
   ymAction_flat ω hflat
 
-theorem curvatureEnergy_antisymm (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ ν : I4) :
+theorem curvatureEnergy_antisymm (ω : I4 → so' (Fin 1) (Fin 3) ℝ) (μ ν : I4) :
     curvatureEnergy ⟨(curvature ω μ ν).val, (curvature ω μ ν).prop⟩ =
     curvatureEnergy ⟨(curvature ω ν μ).val, (curvature ω ν μ).prop⟩ := by
   unfold curvatureEnergy killingTrace
@@ -121,26 +121,26 @@ theorem bianchi_constraints :
 
 theorem curvature_total_dof :
     Nat.choose (Fintype.card I4) 2 *
-    Module.finrank ℝ (so' (Fin 3) (Fin 1) ℝ).toSubmodule = 36 := by
+    Module.finrank ℝ (so' (Fin 1) (Fin 3) ℝ).toSubmodule = 36 := by
   rw [curvature_components, finrank_so31]
 
 theorem gauge_dof :
-    Module.finrank ℝ (so' (Fin 3) (Fin 1) ℝ).toSubmodule = 6 := finrank_so31
+    Module.finrank ℝ (so' (Fin 1) (Fin 3) ℝ).toSubmodule = 6 := finrank_so31
 
 theorem physical_dof :
-    Module.finrank ℝ (I4 → (so' (Fin 3) (Fin 1) ℝ).toSubmodule) -
-    Module.finrank ℝ (so' (Fin 3) (Fin 1) ℝ).toSubmodule = 18 := by
+    Module.finrank ℝ (I4 → (so' (Fin 1) (Fin 3) ℝ).toSubmodule) -
+    Module.finrank ℝ (so' (Fin 1) (Fin 3) ℝ).toSubmodule = 18 := by
   rw [finrank_connection, finrank_so31]
 
 theorem zero_is_vacuum :
-    ymHamiltonian (fun _ => (0 : so' (Fin 3) (Fin 1) ℝ)) = 0 :=
+    ymHamiltonian (fun _ => (0 : so' (Fin 1) (Fin 3) ℝ)) = 0 :=
   ymHamiltonian_vacuum _ (fun μ ν => by unfold curvature; simp [lie_self])
 
-theorem curvature_diagonal_zero (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ : I4) :
+theorem curvature_diagonal_zero (ω : I4 → so' (Fin 1) (Fin 3) ℝ) (μ : I4) :
     curvature ω μ μ = 0 := by
   unfold curvature; exact lie_self (ω μ)
 
-theorem curvatureEnergy_diagonal_zero (ω : I4 → so' (Fin 3) (Fin 1) ℝ) (μ : I4) :
+theorem curvatureEnergy_diagonal_zero (ω : I4 → so' (Fin 1) (Fin 3) ℝ) (μ : I4) :
     curvatureEnergy ⟨(curvature ω μ μ).val, (curvature ω μ μ).prop⟩ = 0 := by
   unfold curvatureEnergy killingTrace
   have h := curvature_diagonal_zero ω μ

@@ -1,4 +1,4 @@
-import FUST.SpectralCoefficients
+import FUST.Math.SpectralCoefficients
 import FUST.Physics.PhiBloch
 import FUST.Physics.GravitationalCoupling
 import Mathlib.Analysis.SpecialFunctions.Pow.Real

@@ -261,6 +261,33 @@ def tauNorm (x : GoldenEisensteinInt) : GoldenInt :=
 /-- Full norm: N(x) = N_{ℤ[φ]}(x·τ(x)) -/
 def norm (x : GoldenEisensteinInt) : ℤ := GoldenInt.norm (tauNorm x)
 
+/-! ## σ-Norm: x·σ(x) ∈ ℤ[ζ₆]
+
+The product x·σ(x) always has b=0, d=0, hence lies in the ℤ[ζ₆] sublattice.
+This gives the canonical projection ℤ[φ,ζ₆] → ℤ[ζ₆] removing scale structure. -/
+
+def sigmaProduct (x : GoldenEisensteinInt) : GoldenEisensteinInt := mul x (sigma x)
+
+theorem sigmaProduct_b_zero (x : GoldenEisensteinInt) : (sigmaProduct x).b = 0 := by
+  unfold sigmaProduct mul sigma; ring
+
+theorem sigmaProduct_d_zero (x : GoldenEisensteinInt) : (sigmaProduct x).d = 0 := by
+  unfold sigmaProduct mul sigma; ring
+
+/-- σ-norm projected to (ℤ × ℤ) ≅ ℤ[ζ₆], where (p, q) represents p + q·ζ₆ -/
+def sigmaNorm (x : GoldenEisensteinInt) : ℤ × ℤ :=
+  (x.a ^ 2 + x.a * x.b - x.b ^ 2 - x.c ^ 2 - x.c * x.d + x.d ^ 2,
+   2 * x.a * x.c + x.a * x.d + x.b * x.c + x.c ^ 2 + x.c * x.d
+     - 2 * x.b * x.d - x.d ^ 2)
+
+theorem sigmaNorm_fst (x : GoldenEisensteinInt) :
+    (sigmaNorm x).1 = GoldenInt.norm ⟨x.a, x.b⟩ - GoldenInt.norm ⟨x.c, x.d⟩ := by
+  unfold sigmaNorm GoldenInt.norm; ring
+
+theorem sigmaProduct_eq_sigmaNorm (x : GoldenEisensteinInt) :
+    sigmaProduct x = ⟨(sigmaNorm x).1, 0, (sigmaNorm x).2, 0⟩ := by
+  unfold sigmaProduct mul sigma sigmaNorm; ext <;> ring
+
 /-! ## Embedding from ℤ[φ] -/
 
 def ofGoldenInt (x : GoldenInt) : GoldenEisensteinInt := ⟨x.a, x.b, 0, 0⟩

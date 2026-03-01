@@ -149,19 +149,19 @@ For flat connection ($\omega = 0$): $G_{\mu\nu} = 0$.
 $\eta^{\mu\nu} G_{\mu\nu} = -R$.
 \end{theorem}
 
-\section{Gauge Groups from \texorpdfstring{$F_\zeta$}{Fζ} Channels}
+\section{Gauge Groups from \texorpdfstring{$F_\zeta$}{Fζ} Factorization}
 \label{sec:mat_gauge_groups}
 
-The Standard Model gauge group is uniquely determined by $F_\zeta$'s channel decomposition:
+The gauge group arises from the factorization freedom of the input state function. The derivation defect $\delta(f,g) = F_\zeta(fg) - f F_\zeta(g) - F_\zeta(f)g$ is invariant under $(f,g) \mapsto (cf, c^{-1}g)$, giving the fundamental gauge invariance.
 
-\begin{theorem}[Standard Gauge Group Uniqueness]
-\label{thm:mat_gauge_unique}
-\lean{FUST.standard_gauge_group_unique}
+\begin{theorem}[Gauge Channel Dimensions]
+\label{thm:mat_gauge_dimensions}
+\lean{FUST.gauge_channel_dimensions}
 \leanok
-$F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ channel structure uniquely determines $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
+The gauge group representation dimensions $(3, 2, 1)$ are determined by:
 \begin{enumerate}
-\item $\Phi_S$ rank 3 (SY channel, $\mathrm{syWeight} = 3$) $\Rightarrow$ $\mathrm{SU}(3)$
-\item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ purely imaginary (AF channel) $\Rightarrow$ $\mathrm{SU}(2)$
+\item Mode vectors $v(s) \in \mathbb{R}^3$ with $\Phi_S$ rank 3 $\Rightarrow$ gauge saturates at $\mathrm{SU}(3)$
+\item $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ (quaternionic type) $\Rightarrow$ $\mathrm{SU}(2)$
 \item Trivial channel ($\dim = 1$) $\Rightarrow$ $\mathrm{U}(1)$
 \end{enumerate}
 \end{theorem}
@@ -170,7 +170,7 @@ $F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ channel structure uniquely determines $\mat
 \label{thm:mat_zeta6_separation}
 \lean{FUST.zeta6_ne_phi_pow}
 \leanok
-$\zeta_6 \neq \varphi^n$ for all $n$, ensuring non-reducibility.
+$\zeta_6 \neq \varphi^n$ for all $n$, ensuring channel independence.
 \end{theorem}
 
 \section{Yang-Mills Mass Gap}

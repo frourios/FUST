@@ -15,7 +15,7 @@ open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz DζOperator
 /-! ## Module.Finite instance for so(3,1) -/
 
 noncomputable instance : Module.Finite ℝ
-    (so' (Fin 3) (Fin 1) ℝ).toSubmodule :=
+    (so' (Fin 1) (Fin 3) ℝ).toSubmodule :=
   Module.Finite.equiv so31EquivR6.symm
 
 /-! ## Translation space ℝ⁴ -/
@@ -30,22 +30,22 @@ theorem finrank_translations :
 /-- dim iso(3,1) = dim so(3,1) + dim ℝ⁴ = 6 + 4 = 10 -/
 theorem finrank_poincare :
     Module.finrank ℝ
-      ((so' (Fin 3) (Fin 1) ℝ).toSubmodule × (I4 → ℝ)) = 10 := by
+      ((so' (Fin 1) (Fin 3) ℝ).toSubmodule × (I4 → ℝ)) = 10 := by
   rw [Module.finrank_prod, finrank_so31, finrank_translations]
 
 /-! ## Casimir invariant: Minkowski bilinear form on I4 → ℝ
 
-Signature (3,1): 3 positive from ζ₆ compact structure, 1 negative from φψ = -1. -/
+Signature (1,3): 1 positive from φψ = -1, 3 negative from ζ₆ compact structure. -/
 
 /-- Minkowski bilinear form B(v,w) = v ⬝ᵥ (η *ᵥ w) -/
 noncomputable def minkowskiBilin : BilinForm ℝ (I4 → ℝ) :=
-  Matrix.toBilin' (indefiniteDiagonal (Fin 3) (Fin 1) ℝ)
+  Matrix.toBilin' (indefiniteDiagonal (Fin 1) (Fin 3) ℝ)
 
 /-- Aᵀη + ηA = 0 for A ∈ so(3,1) -/
 theorem skewAdj_sum_zero
-    (A : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) :
-    (A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 3) (Fin 1) ℝ +
-    indefiniteDiagonal (Fin 3) (Fin 1) ℝ * (A : Matrix I4 I4 ℝ) = 0 := by
+    (A : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) :
+    (A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 1) (Fin 3) ℝ +
+    indefiniteDiagonal (Fin 1) (Fin 3) ℝ * (A : Matrix I4 I4 ℝ) = 0 := by
   have hA := A.prop
   simp only [so', LieSubalgebra.mem_toSubmodule,
     mem_skewAdjointMatricesLieSubalgebra,
@@ -54,24 +54,24 @@ theorem skewAdj_sum_zero
 
 /-- Infinitesimal Lorentz invariance: B(Av, w) + B(v, Aw) = 0 -/
 theorem lorentz_infinitesimal_invariance
-    (A : (so' (Fin 3) (Fin 1) ℝ).toSubmodule) (v w : I4 → ℝ) :
+    (A : (so' (Fin 1) (Fin 3) ℝ).toSubmodule) (v w : I4 → ℝ) :
     minkowskiBilin ((A : Matrix I4 I4 ℝ) *ᵥ v) w +
     minkowskiBilin v ((A : Matrix I4 I4 ℝ) *ᵥ w) = 0 := by
   simp only [minkowskiBilin]
-  have h1 : Matrix.toBilin' (indefiniteDiagonal (Fin 3) (Fin 1) ℝ)
+  have h1 : Matrix.toBilin' (indefiniteDiagonal (Fin 1) (Fin 3) ℝ)
     ((A : Matrix I4 I4 ℝ) *ᵥ v) w =
-    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 3) (Fin 1) ℝ) v w := by
+    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 1) (Fin 3) ℝ) v w := by
     simp only [Matrix.toBilin'_apply']
     rw [← vecMul_transpose, dotProduct_mulVec, vecMul_vecMul, ← dotProduct_mulVec]
-  have h2 : Matrix.toBilin' (indefiniteDiagonal (Fin 3) (Fin 1) ℝ)
+  have h2 : Matrix.toBilin' (indefiniteDiagonal (Fin 1) (Fin 3) ℝ)
     v ((A : Matrix I4 I4 ℝ) *ᵥ w) =
-    Matrix.toBilin' (indefiniteDiagonal (Fin 3) (Fin 1) ℝ * (A : Matrix I4 I4 ℝ)) v w := by
+    Matrix.toBilin' (indefiniteDiagonal (Fin 1) (Fin 3) ℝ * (A : Matrix I4 I4 ℝ)) v w := by
     rw [Matrix.toBilin'_apply', Matrix.toBilin'_apply', ← mulVec_mulVec]
   rw [h1, h2, show
-    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 3) (Fin 1) ℝ) v w +
-    Matrix.toBilin' (indefiniteDiagonal (Fin 3) (Fin 1) ℝ * (A : Matrix I4 I4 ℝ)) v w =
-    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 3) (Fin 1) ℝ +
-      indefiniteDiagonal (Fin 3) (Fin 1) ℝ * (A : Matrix I4 I4 ℝ)) v w from by
+    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 1) (Fin 3) ℝ) v w +
+    Matrix.toBilin' (indefiniteDiagonal (Fin 1) (Fin 3) ℝ * (A : Matrix I4 I4 ℝ)) v w =
+    Matrix.toBilin' ((A : Matrix I4 I4 ℝ)ᵀ * indefiniteDiagonal (Fin 1) (Fin 3) ℝ +
+      indefiniteDiagonal (Fin 1) (Fin 3) ℝ * (A : Matrix I4 I4 ℝ)) v w from by
     rw [map_add]; rfl]
   rw [skewAdj_sum_zero, map_zero, LinearMap.zero_apply, LinearMap.zero_apply]
 
@@ -242,7 +242,7 @@ iso(3,1) = so(3,1) ⋉ ℝ⁴ where:
   [K_i, P_j] = δ_{ij} P₀ (boost-momentum → energy) -/
 
 theorem poincare_algebra :
-    Module.finrank ℝ ((so' (Fin 3) (Fin 1) ℝ).toSubmodule × (I4 → ℝ)) = 10 ∧
+    Module.finrank ℝ ((so' (Fin 1) (Fin 3) ℝ).toSubmodule × (I4 → ℝ)) = 10 ∧
     (∀ μ ν : Fin 4, P5 μ * P5 ν - P5 ν * P5 μ = 0) ∧
     (∀ i : Fin 3, Rot5 i * P5 3 - P5 3 * Rot5 i = 0) ∧
     (∀ i : Fin 3, Boost5 i * P5 3 - P5 3 * Boost5 i = P5 ⟨i, by omega⟩) ∧

@@ -2,15 +2,15 @@
 \chapter{Poincar\'{e} Group from \texorpdfstring{$D_\zeta$}{Dζ}}
 \label{chap:mat_poincare}
 
-The Poincar\'{e} group $\mathrm{ISO}(3,1) = \mathrm{SO}(3,1) \ltimes \mathbb{R}^4$ is not assumed but \textbf{derived} from the algebraic structure of $D_\zeta$. This chapter establishes the complete derivation chain:
+The Poincar\'{e} group $\mathrm{ISO}(3,1) = \mathbb{R}^4 \rtimes O(3,1)$ is not assumed but \textbf{derived} from the algebraic structure of $D_\zeta$. This chapter establishes the complete derivation chain:
 \[
-D_\zeta \;\longrightarrow\; I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1 \;\longrightarrow\; \eta = \mathrm{diag}(+1,+1,+1,-1) \;\longrightarrow\; \mathfrak{so}(3,1) \;\longrightarrow\; \mathfrak{iso}(3,1)
+D_\zeta \;\longrightarrow\; I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3 \;\longrightarrow\; \eta = \mathrm{diag}(+1,-1,-1,-1) \;\longrightarrow\; \mathfrak{so}(3,1) \;\longrightarrow\; \mathrm{ISO}(3,1)
 \]
 
 \section{\texorpdfstring{$D_\zeta$}{Dζ} 3+1 Decomposition}
 \label{sec:mat_31_decomposition}
 
-The unified operator $D_\zeta$ decomposes into 4 independent channels indexed by $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$:
+The unified operator $D_\zeta$ decomposes into 4 independent channels indexed by $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$:
 
 \begin{definition}[$D_\zeta$ Components]
 \label{def:mat_Dzeta_components}
@@ -20,20 +20,20 @@ For each mode $s \in \mathbb{N}$:
 \[
 D_\zeta\text{-components}(s) : I_4 \to \mathbb{C}, \quad
 \begin{cases}
-\mathrm{Sum.inl}\,0 \mapsto \sigma_{\mathrm{Diff}_5}(s) \\
-\mathrm{Sum.inl}\,1 \mapsto \sigma_{\mathrm{Diff}_3}(s) \\
-\mathrm{Sum.inl}\,2 \mapsto \sigma_{\mathrm{Diff}_2}(s) \\
-\mathrm{Sum.inr}\,0 \mapsto \Phi_A\text{-coeff}(s)
+\mathrm{Sum.inl}\,0 \mapsto \Phi_A\text{-coeff}(s) \\
+\mathrm{Sum.inr}\,0 \mapsto \sigma_{\mathrm{Diff}_5}(s) \\
+\mathrm{Sum.inr}\,1 \mapsto \sigma_{\mathrm{Diff}_3}(s) \\
+\mathrm{Sum.inr}\,2 \mapsto \sigma_{\mathrm{Diff}_2}(s)
 \end{cases}
 \]
-The first 3 components (spatial) come from $\Phi_S$; the last (temporal) from $\Phi_A$.
+The $\mathrm{inl}$ component (temporal) comes from $\Phi_A$; the 3 $\mathrm{inr}$ components (spatial) from $\Phi_S$.
 \end{definition}
 
-\begin{theorem}[Spatial + Temporal = $I_4$]
+\begin{theorem}[Temporal + Spatial = $I_4$]
 \label{thm:mat_dim_matches}
 \lean{FUST.Physics.Gravity.Dζ_dim_matches_I4}
 \leanok
-$|\mathrm{Fin}\,3| + |\mathrm{Fin}\,1| = |I_4|$.
+$|\mathrm{Fin}\,1| + |\mathrm{Fin}\,3| = |I_4|$.
 \end{theorem}
 
 \begin{theorem}[Weight Ratio 3:1 Matches $I_4$]
@@ -52,7 +52,7 @@ The weight ratio is determined by the $|D_\zeta|^2$ decomposition:
 \[
 |6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
 \]
-The weight ratio $3:1$ between symmetric ($a$) and antisymmetric ($b$) channels forces $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$.
+The weight ratio $3:1$ between symmetric ($a$) and antisymmetric ($b$) channels forces $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$.
 \end{theorem}
 
 \section{Minkowski Metric \texorpdfstring{$\eta$}{η} from Channel Weights}
@@ -65,22 +65,22 @@ The 3:1 weight ratio determines the spacetime signature:
 \lean{FUST.Physics.Gravity.η}
 \leanok
 \[
-\eta_{\mu\nu} = \mathrm{diag}(+1, +1, +1, -1)
+\eta_{\mu\nu} = \mathrm{diag}(+1, -1, -1, -1)
 \]
 \end{definition}
-
-\begin{theorem}[Spatial Signature]
-\label{thm:mat_eta_spatial}
-\lean{FUST.Physics.Gravity.η_spatial}
-\leanok
-$\eta(\mathrm{Sum.inl}\,i, \mathrm{Sum.inl}\,i) = +1$ for $i \in \mathrm{Fin}\,3$.
-\end{theorem}
 
 \begin{theorem}[Temporal Signature]
 \label{thm:mat_eta_temporal}
 \lean{FUST.Physics.Gravity.η_temporal}
 \leanok
-$\eta(\mathrm{Sum.inr}\,0, \mathrm{Sum.inr}\,0) = -1$.
+$\eta(\mathrm{Sum.inl}\,0, \mathrm{Sum.inl}\,0) = +1$.
+\end{theorem}
+
+\begin{theorem}[Spatial Signature]
+\label{thm:mat_eta_spatial}
+\lean{FUST.Physics.Gravity.η_spatial}
+\leanok
+$\eta(\mathrm{Sum.inr}\,i, \mathrm{Sum.inr}\,i) = -1$ for $i \in \mathrm{Fin}\,3$.
 \end{theorem}
 
 \begin{theorem}[Diagonal]
@@ -206,6 +206,49 @@ The full Poincar\'{e} algebra structure:
 \end{enumerate}
 \end{theorem}
 
+\section{Poincar\'{e} Group \texorpdfstring{$\mathrm{ISO}(3,1) = \mathbb{R}^4 \rtimes O(3,1)$}{ISO(3,1)}}
+\label{sec:mat_poincare_group}
+
+The Poincar\'{e} group is constructed as a semidirect product at the group level.
+
+\begin{theorem}[Lorentz Bilinear Invariance]
+\label{thm:mat_lorentz_bilin}
+\lean{FUST.SpacetimeUniqueness.lorentz_bilin_invariance}
+\leanok
+For all $\Lambda \in O(3,1)$ and $v, w \in \mathbb{R}^4$:
+\[
+B(\Lambda v, \Lambda w) = B(v, w)
+\]
+The Lorentz group preserves the $D_\zeta$-derived Minkowski bilinear form.
+\end{theorem}
+
+\begin{definition}[Lorentz Action on $\mathbb{R}^4$]
+\label{def:mat_lorentz_action}
+\lean{FUST.SpacetimeUniqueness.lorentzAddEquiv}
+\leanok
+Each $\Lambda \in O(3,1)$ defines an additive automorphism of $\mathbb{R}^4$ via matrix-vector multiplication $v \mapsto \Lambda v$, with inverse $v \mapsto \Lambda^{-1} v$.
+\end{definition}
+
+\begin{definition}[Poincar\'{e} Group]
+\label{def:mat_poincare_group}
+\lean{FUST.SpacetimeUniqueness.PoincareGroup}
+\leanok
+\[
+\mathrm{ISO}(3,1) := \mathbb{R}^4 \rtimes_\Lambda O(3,1)
+\]
+where $O(3,1)$ acts on $\mathbb{R}^4$ by matrix-vector multiplication. The group operation is:
+\[
+(a_1, \Lambda_1) \cdot (a_2, \Lambda_2) = (a_1 + \Lambda_1 a_2, \, \Lambda_1 \Lambda_2)
+\]
+\end{definition}
+
+\begin{theorem}[$\mathrm{ISO}(3,1)$ is a Group]
+\label{thm:mat_poincare_group_instance}
+\lean{FUST.SpacetimeUniqueness.instGroupPoincareGroup}
+\leanok
+The Poincar\'{e} group $\mathrm{ISO}(3,1)$ has a group structure, derived automatically from Mathlib's semidirect product construction.
+\end{theorem}
+
 \section{Poincar\'{e} Casimir Invariant and Mass}
 \label{sec:mat_casimir}
 
@@ -216,7 +259,7 @@ The Poincar\'{e} group has a quadratic Casimir invariant that defines mass:
 \lean{FUST.poincareCasimir}
 \leanok
 \[
-C(p) = \eta_{\mu\nu} p^\mu p^\nu = p_1^2 + p_2^2 + p_3^2 - p_0^2
+C(p) = \eta_{\mu\nu} p^\mu p^\nu = p_0^2 - p_1^2 - p_2^2 - p_3^2
 \]
 \end{definition}
 
@@ -224,14 +267,14 @@ C(p) = \eta_{\mu\nu} p^\mu p^\nu = p_1^2 + p_2^2 + p_3^2 - p_0^2
 \label{def:mat_on_shell}
 \lean{FUST.onMassShell}
 \leanok
-A 4-momentum $p$ is on mass shell with mass $m$ if $-C(p) = m^2$.
+A 4-momentum $p$ is on mass shell with mass $m$ if $C(p) = m^2$.
 \end{definition}
 
 \begin{theorem}[Vacuum is Massless]
 \label{thm:mat_vacuum_massless}
 \lean{FUST.vacuum_massless}
 \leanok
-$p = 0 \implies -C(p) = 0$. The vacuum is on the mass shell with $m = 0$.
+$p = 0 \implies C(p) = 0$. The vacuum is on the mass shell with $m = 0$.
 \end{theorem}
 
 \begin{definition}[Minkowski Bilinear Form]
@@ -241,6 +284,24 @@ $p = 0 \implies -C(p) = 0$. The vacuum is on the mass shell with $m = 0$.
 $B(v, w) = v^\top \eta \, w$ is the Minkowski inner product on $\mathbb{R}^4$.
 \end{definition}
 
+\section{Spacetime Uniqueness from \texorpdfstring{$D_\zeta$}{Dζ}}
+\label{sec:mat_spacetime_uniqueness}
+
+\begin{theorem}[$D_\zeta$ Determines $O(3,1)$ Spacetime]
+\label{thm:mat_spacetime_from_Dzeta}
+\lean{FUST.SpacetimeUniqueness.spacetime_from_Dζ}
+\leanok
+The following are proved without additional assumptions:
+\begin{enumerate}
+\item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ (purely imaginary, positive imaginary part)
+\item The spatial channel $\Phi_S$ has rank 3 (3 linearly independent sub-operators)
+\item The temporal channel $\Phi_A$ is nontrivial ($\Phi_A(1) \neq 0$)
+\item Temporal directions give positive norm: $(6a)^2 > 0$ for $a \neq 0$
+\item Spatial directions give negative norm: $(\mathrm{AF\_coeff} \cdot b)^2 < 0$ for $b \neq 0$
+\item The Lorentz group $O(3,1)$ preserves the $D_\zeta$-derived metric
+\end{enumerate}
+\end{theorem}
+
 \section{Summary: Derivation Chain}
 \label{sec:mat_poincare_summary_chain}
 
@@ -249,14 +310,15 @@ $B(v, w) = v^\top \eta \, w$ is the Minkowski inner product on $\mathbb{R}^4$.
 \hline
 $D_\zeta$ structure & Derived object & Dimension \\
 \hline
-$\Phi_S$ (3 sub-operators) + $\Phi_A$ (1 channel) & $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ & 4 \\
-$|D_\zeta|^2 = 12(3a^2 + b^2)$ weight ratio & $\eta = \mathrm{diag}(+1,+1,+1,-1)$ & signature $(3,1)$ \\
+$\Phi_A$ (1 channel) + $\Phi_S$ (3 sub-operators) & $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$ & 4 \\
+$|D_\zeta|^2 = 12(3a^2 + b^2)$ weight ratio & $\eta = \mathrm{diag}(+1,-1,-1,-1)$ & signature $(1,3)$ \\
 $A^\top \eta + \eta A = 0$ & $\mathfrak{so}(3,1)$ & 6 \\
 $I_4 \to \mathbb{R}$ abelian ideal & $\mathbb{R}^4$ & 4 \\
 $\mathfrak{so}(3,1) \ltimes \mathbb{R}^4$ & $\mathfrak{iso}(3,1)$ & 10 \\
+$\mathbb{R}^4 \rtimes O(3,1)$ & $\mathrm{ISO}(3,1)$ (Group) & -- \\
 $\eta_{\mu\nu} p^\mu p^\nu$ & Casimir $\to$ mass $m^2$ & invariant \\
 \hline
 \end{tabular}
 \end{center}
 
-Every entry in this table is a \textbf{theorem}, not an assumption.
+Every entry in this table is a \textbf{theorem}, not an assumption. The only axioms used are Lean 4 foundations (propext, Quot.sound, Classical.choice), equivalent to ZFC.

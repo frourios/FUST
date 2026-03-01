@@ -769,7 +769,7 @@ theorem SymNum_pow_mod6_4 (k : ℕ) (z : ℂ) :
 The unified Dζ output for monomial z^s decomposes as:
   Re(Dζ) = 6·Φ_S (symmetric/rotation channel, weight 3)
   Im(Dζ) = ±2√3·Φ_A (antisymmetric/boost channel, weight 1)
-The 3:1 weight ratio in |Dζ|² encodes I4 = Fin 3 ⊕ Fin 1. -/
+The 3:1 weight ratio in |Dζ|² encodes I4 = Fin 1 ⊕ Fin 3. -/
 
 /-- |6a + AF_coeff·b|² = 12(3a² + b²) for real a, b -/
 theorem Dζ_normSq_decomposition (a b : ℝ) :
@@ -908,53 +908,84 @@ private lemma one_sub_phi_pow14 : (1 - (↑φ : ℂ)) ^ 14 = -(377 * ↑φ) + 61
 /-! ### Sub-operator coefficient values -/
 
 /-- σ_Diff5(s) = L_{2s} + L_s - 4, σ_Diff3(s) = L_s - 2, σ_Diff2(s) = √5·F_s -/
-noncomputable def σ_Diff5 (s : ℕ) : ℂ :=
-  (↑φ : ℂ) ^ (2 * s) + (↑φ : ℂ) ^ s - 4 + (↑ψ : ℂ) ^ s + (↑ψ : ℂ) ^ (2 * s)
+noncomputable def σ_Diff5 (s : ℕ) : ℝ :=
+  φ ^ (2 * s) + φ ^ s - 4 + ψ ^ s + ψ ^ (2 * s)
 
-noncomputable def σ_Diff3 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - 2 + (↑ψ : ℂ) ^ s
+noncomputable def σ_Diff3 (s : ℕ) : ℝ := φ ^ s - 2 + ψ ^ s
 
-noncomputable def σ_Diff2 (s : ℕ) : ℂ := (↑φ : ℂ) ^ s - (↑ψ : ℂ) ^ s
+noncomputable def σ_Diff2 (s : ℕ) : ℝ := φ ^ s - ψ ^ s
 
--- s = 1
+private lemma psi_eq : ψ = 1 - φ := by unfold ψ φ; ring
+
+private lemma phi_pow3 : φ ^ 3 = 2 * φ + 1 := by
+  nlinarith [golden_ratio_property]
+
+private lemma phi_pow4 : φ ^ 4 = 3 * φ + 2 := by
+  nlinarith [golden_ratio_property, phi_pow3]
+
+private lemma phi_pow5 : φ ^ 5 = 5 * φ + 3 := by
+  nlinarith [golden_ratio_property, phi_pow4]
+
+private lemma phi_pow7 : φ ^ 7 = 13 * φ + 8 := by
+  nlinarith [golden_ratio_property, phi_pow5]
+
+private lemma phi_pow10 : φ ^ 10 = 55 * φ + 34 := by
+  have : φ ^ 10 = (φ ^ 5) ^ 2 := by ring
+  rw [this, phi_pow5]; nlinarith [golden_ratio_property]
+
+private lemma phi_pow14 : φ ^ 14 = 377 * φ + 233 := by
+  have : φ ^ 14 = (φ ^ 7) ^ 2 := by ring
+  rw [this, phi_pow7]; nlinarith [golden_ratio_property]
+
+private lemma psi_pow5 : (1 - φ) ^ 5 = -(5 * φ) + 8 := by
+  have : (1 - φ) ^ 5 = 1 - 5*φ + 10*φ^2 - 10*φ^3 + 5*φ^4 - φ^5 := by ring
+  rw [this, phi_pow5]; nlinarith [golden_ratio_property]
+
+private lemma psi_pow7 : (1 - φ) ^ 7 = -(13 * φ) + 21 := by
+  have : (1 - φ) ^ 7 = (1 - φ) ^ 5 * (1 - φ) ^ 2 := by ring
+  rw [this, psi_pow5]; nlinarith [golden_ratio_property]
+
+private lemma psi_pow10 : (1 - φ) ^ 10 = -(55 * φ) + 89 := by
+  have : (1 - φ) ^ 10 = ((1 - φ) ^ 5) ^ 2 := by ring
+  rw [this, psi_pow5]; nlinarith [golden_ratio_property]
+
+private lemma psi_pow14 : (1 - φ) ^ 14 = -(377 * φ) + 610 := by
+  have : (1 - φ) ^ 14 = ((1 - φ) ^ 7) ^ 2 := by ring
+  rw [this, psi_pow7]; nlinarith [golden_ratio_property]
+
 theorem σ_Diff5_one : σ_Diff5 1 = 0 := by
-  simp only [σ_Diff5, Nat.mul_one, pow_one, phi_sq_c, psi_eq_c]
-  have : (1 - (↑φ : ℂ)) ^ 2 = (↑φ : ℂ) ^ 2 - 2 * ↑φ + 1 := by ring
-  rw [this, phi_sq_c]; ring
+  simp only [σ_Diff5, Nat.mul_one, pow_one, psi_eq]; nlinarith [golden_ratio_property]
 
 theorem σ_Diff3_one : σ_Diff3 1 = -1 := by
-  simp only [σ_Diff3, pow_one, psi_eq_c]; ring
+  simp only [σ_Diff3, pow_one, psi_eq]; ring
 
-theorem σ_Diff2_one : σ_Diff2 1 = (↑φ : ℂ) - ↑ψ := by
+theorem σ_Diff2_one : σ_Diff2 1 = φ - ψ := by
   simp only [σ_Diff2, pow_one]
 
--- s = 5
 theorem σ_Diff5_five : σ_Diff5 5 = 130 := by
-  simp only [σ_Diff5, show 2 * 5 = 10 from by ring, psi_eq_c]
-  rw [phi_pow10_c, phi_pow5_c, one_sub_phi_pow5, one_sub_phi_pow10]; ring
+  simp only [σ_Diff5, show 2 * 5 = 10 from by ring, psi_eq]
+  rw [phi_pow5, phi_pow10, psi_pow5, psi_pow10]; ring
 
 theorem σ_Diff3_five : σ_Diff3 5 = 9 := by
-  simp only [σ_Diff3, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+  simp only [σ_Diff3, psi_eq]; rw [phi_pow5, psi_pow5]; ring
 
-theorem σ_Diff2_five : σ_Diff2 5 = 5 * ((↑φ : ℂ) - ↑ψ) := by
-  simp only [σ_Diff2, psi_eq_c]; rw [phi_pow5_c, one_sub_phi_pow5]; ring
+theorem σ_Diff2_five : σ_Diff2 5 = 5 * (φ - ψ) := by
+  simp only [σ_Diff2, psi_eq]; rw [phi_pow5, psi_pow5]; ring
 
--- s = 7
 theorem σ_Diff5_seven : σ_Diff5 7 = 868 := by
-  simp only [σ_Diff5, show 2 * 7 = 14 from by ring, psi_eq_c]
-  rw [phi_pow14_c, phi_pow7_c, one_sub_phi_pow7, one_sub_phi_pow14]; ring
+  simp only [σ_Diff5, show 2 * 7 = 14 from by ring, psi_eq]
+  rw [phi_pow7, phi_pow14, psi_pow7, psi_pow14]; ring
 
 theorem σ_Diff3_seven : σ_Diff3 7 = 27 := by
-  simp only [σ_Diff3, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+  simp only [σ_Diff3, psi_eq]; rw [phi_pow7, psi_pow7]; ring
 
-theorem σ_Diff2_seven : σ_Diff2 7 = 13 * ((↑φ : ℂ) - ↑ψ) := by
-  simp only [σ_Diff2, psi_eq_c]; rw [phi_pow7_c, one_sub_phi_pow7]; ring
+theorem σ_Diff2_seven : σ_Diff2 7 = 13 * (φ - ψ) := by
+  simp only [σ_Diff2, psi_eq]; rw [phi_pow7, psi_pow7]; ring
 
-private lemma phi_sub_psi_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := by
-  rw [← ofReal_sub, ne_eq, ofReal_eq_zero, sub_eq_zero]
-  intro h; linarith [phi_pos, psi_neg]
+private lemma phi_sub_psi_ne : φ - ψ ≠ 0 := by
+  rw [psi_eq]; exact ne_of_gt (by linarith [φ_gt_one])
 
-/-- The 3×3 det of [σ_Diff5, σ_Diff3, σ_Diff2] at s=1,5,7 is -6952(φ-ψ) ≠ 0: rank 3.
-    This proves Φ_S carries Fin 3 worth of independent information. -/
+/-- The 3×3 det of [σ_Diff5, σ_Diff3, σ_Diff2] at s=1,5,7 is -6952(φ-ψ) ≠ 0: rank 3. -/
 theorem Φ_S_rank_three :
     σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
     σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
@@ -962,14 +993,7 @@ theorem Φ_S_rank_three :
   rw [σ_Diff5_one, σ_Diff3_one, σ_Diff2_one,
       σ_Diff5_five, σ_Diff3_five, σ_Diff2_five,
       σ_Diff5_seven, σ_Diff3_seven, σ_Diff2_seven]
-  have hne := phi_sub_psi_ne
-  intro h; apply hne
-  have : (0 : ℂ) * (9 * (13 * ((↑φ : ℂ) - ↑ψ)) - 5 * ((↑φ : ℂ) - ↑ψ) * 27) -
-    (-1 : ℂ) * ((130 : ℂ) * (13 * ((↑φ : ℂ) - ↑ψ)) - 5 * ((↑φ : ℂ) - ↑ψ) * 868) +
-    ((↑φ : ℂ) - ↑ψ) * ((130 : ℂ) * 27 - 9 * 868) = -6952 * ((↑φ : ℂ) - ↑ψ) := by ring
-  rw [this] at h
-  by_contra hc
-  exact absurd (mul_ne_zero (by norm_num : (-6952 : ℂ) ≠ 0) hc) (not_not.mpr h)
+  intro h; exact phi_sub_psi_ne (by nlinarith)
 
 /-! ## Dζ Gauge Covariance
 

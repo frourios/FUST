@@ -16,6 +16,11 @@ scope = "leanprover-community"
 rev   = "v4.26.0"
 
 [[require]]
+name = "PhysLean"
+git  = "https://github.com/HEPLean/PhysLean.git"
+rev   = "v4.26.0"
+
+[[require]]
 name = "doc-gen4"
 scope = "leanprover"
 rev   = "v4.26.0"

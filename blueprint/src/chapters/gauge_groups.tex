@@ -1,27 +1,40 @@
-% Chapter 7: Standard Gauge Group from Fζ
-\chapter{Standard Gauge Group from \texorpdfstring{$F_\zeta$}{Fζ}}
+% Chapter 7: Standard Gauge Group from Fζ Factorization Gauge Freedom
+\chapter{Standard Gauge Group from \texorpdfstring{$F_\zeta$}{Fζ} Factorization}
 \label{chap:gauge_groups}
 
-\section{Overview: Unique Derivation from \texorpdfstring{$F_\zeta$}{Fζ}}
+\section{Overview: Gauge Freedom from Factorization}
 \label{sec:gauge_overview}
 
-This chapter proves that the Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is \textbf{uniquely determined} by the $F_\zeta$ channel structure, with no free parameters or selection principles. The derivation uses the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition into SY (symmetric, weight 3) and AF (antisymmetric, weight 1) channels.
+The gauge group arises from the \textbf{input side}: the ambiguity in factoring a state function $f = f_1 \cdot f_2 \cdots f_k$. The derivation defect
+\[
+\delta(f,g) := F_\zeta(fg) - f \cdot F_\zeta(g) - F_\zeta(f) \cdot g
+\]
+measures how $F_\zeta$ fails to be a derivation. The key gauge invariance is:
 
-\begin{theorem}[Standard Gauge Group Uniqueness]
-\label{thm:standard_gauge_unique}
-\lean{FUST.standard_gauge_group_unique}
+\begin{theorem}[Factorization Gauge Invariance]
+\label{thm:factorization_gauge}
+\lean{FUST.FζOperator.derivDefect_const_gauge}
 \leanok
-The following properties of $F_\zeta$ uniquely determine the gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$:
+For $c \in \mathbb{C}^\times$, $\delta(cf, c^{-1}g) = \delta(f,g)$.
+\end{theorem}
+
+This means the physics encoded in $\delta$ is invariant under $(f,g) \mapsto (cf, c^{-1}g)$, giving a $\mathrm{U}(1)$ scalar gauge. For multi-mode superpositions with $k$ modes, the mode coefficients can be mixed by $\mathrm{GL}(k)$ while preserving the product, giving $\mathrm{SU}(k)$ after unitarity. The maximum $k$ is bounded by the rank of the mode vector space.
+
+\begin{theorem}[Gauge Channel Dimensions]
+\label{thm:gauge_channel_dimensions}
+\lean{FUST.gauge_channel_dimensions}
+\leanok
+The following properties of $F_\zeta$ determine the gauge group representation dimensions $(3, 2, 1)$:
 \begin{enumerate}
-\item $\Phi_S$ has rank 3 (3 linearly independent sub-operators) $\Rightarrow$ $\mathrm{SU}(3)$
-\item $\mathrm{AF\_coeff} = 2i\sqrt{3} \neq 0$ is purely imaginary $\Rightarrow$ $\mathrm{SU}(2)$
-\item Residual U(1) from 1-dimensional trivial channel $\Rightarrow$ $\mathrm{U}(1)$
-\item $\zeta_6 \neq \varphi^n$ for all $n$ (ensures non-reducibility)
-\item $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio 3:1)
+\item $\Phi_S$ has rank 3 (mode vectors span $\mathbb{R}^3$) $\Rightarrow$ gauge saturates at $\mathrm{SU}(3)$
+\item $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ (quaternionic type) $\Rightarrow$ $\mathrm{SU}(2) \cong \mathrm{Sp}(1)$
+\item Residual 1-dimensional trivial channel $\Rightarrow$ $\mathrm{U}(1)$
+\item $\zeta_6 \neq \varphi^n$ for all $n$ (channel independence)
+\item $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio $3:1$)
 \end{enumerate}
 \end{theorem}
 
-\section{\texorpdfstring{$\zeta_6$}{ζ6} Separation from \texorpdfstring{$\varphi$}{φ}-Eigenspectrum}
+\section{\texorpdfstring{$\zeta_6$}{ζ₆} Separation: Channel Independence}
 \label{sec:zeta6_separation}
 
 \begin{theorem}[$\zeta_6 \neq \varphi^n$]
@@ -31,188 +44,109 @@ The following properties of $F_\zeta$ uniquely determine the gauge group $\mathr
 For all $n \in \mathbb{N}$, $\zeta_6 \neq \varphi^n$, since $\mathrm{Im}(\zeta_6) = \sqrt{3}/2 \neq 0$ while $\varphi^n \in \mathbb{R}$.
 \end{theorem}
 
-This separation guarantees that $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces, preventing gauge group reduction. On the SY channel space (dim $= \mathrm{syWeight} = 3$) with basis $\{1, z, z^2\}$, the $\varphi$-dilation eigenvalues are $\{1, \varphi, \varphi^2\}$ (all real and distinct), but $\zeta_6$ acts non-diagonally on this basis, providing the off-diagonal mixing necessary for non-abelian gauge structure.
+This separation guarantees that the SY channel ($\varphi$-eigenspectrum) and the AF channel ($\zeta_6$-rotation) act independently, preventing gauge group reduction.
 
-\section{Channel Non-Degeneracy}
-\label{sec:channel_nondegeneracy}
+\section{SY Channel: Mode Vector Rank \texorpdfstring{$\to \mathrm{SU}(3)$}{→ SU(3)}}
+\label{sec:SU3_derivation}
 
-\begin{theorem}[AF Channel is Non-Degenerate]
+For each active mode $s$, the SY sub-operator eigenvalues give a \textbf{mode vector}:
+\[
+v(s) = (\sigma_{\mathrm{Diff}_5}(s),\; \sigma_{\mathrm{Diff}_3}(s),\; \sigma_{\mathrm{Diff}_2}(s)) \in \mathbb{R}^3
+\]
+where $\sigma_{\mathrm{Diff}_5}(s) = \varphi^{2s} + \varphi^s - 4 + \psi^s + \psi^{2s}$, $\sigma_{\mathrm{Diff}_3}(s) = \varphi^s - 2 + \psi^s$, $\sigma_{\mathrm{Diff}_2}(s) = \varphi^s - \psi^s$.
+
+\begin{theorem}[Mode Space Rank Three]
+\label{thm:mode_space_rank}
+\lean{FUST.mode_space_rank_three}
+\leanok
+The $3 \times 3$ determinant
+\[
+\det \begin{pmatrix} \sigma_{\mathrm{Diff}_5}(1) & \sigma_{\mathrm{Diff}_3}(1) & \sigma_{\mathrm{Diff}_2}(1) \\
+\sigma_{\mathrm{Diff}_5}(5) & \sigma_{\mathrm{Diff}_3}(5) & \sigma_{\mathrm{Diff}_2}(5) \\
+\sigma_{\mathrm{Diff}_5}(7) & \sigma_{\mathrm{Diff}_3}(7) & \sigma_{\mathrm{Diff}_2}(7)
+\end{pmatrix} \neq 0
+\]
+so the mode vectors $v(1), v(5), v(7)$ are linearly independent in $\mathbb{R}^3$.
+\end{theorem}
+
+Since $\dim \mathbb{R}^3 = 3$, any 4th mode vector is a linear combination of the first 3. Mode-mixing gauge transformations on $k$ independent modes give $\mathrm{GL}(k) \to \mathrm{SU}(k)$. With at most 3 independent mode vectors, the gauge group saturates at $\mathrm{SU}(3)$.
+
+$\mathrm{SU}(3)$ has dimension $3^2 - 1 = 8$ (8 gluons).
+
+\section{AF Channel: \texorpdfstring{$\tau$}{τ}-Anti-invariance \texorpdfstring{$\to \mathrm{SU}(2)$}{→ SU(2)}}
+\label{sec:SU2_derivation}
+
+\begin{theorem}[$\tau$-Anti-invariance of AF Coefficient]
+\label{thm:AF_tau_neg}
+\lean{FUST.AF_coeff_tau_neg}
+\leanok
+$\tau(\mathrm{AF\_coeff\_gei}) = -\mathrm{AF\_coeff\_gei}$, where $\mathrm{AF\_coeff\_gei} = \langle -2, 0, 4, 0 \rangle \in \mathbb{Z}[\varphi, \zeta_6]$.
+\end{theorem}
+
+The Galois automorphism $\tau: \zeta_6 \mapsto 1 - \zeta_6$ fixes $\varphi$ and acts on $\mathbb{Z}[\varphi, \zeta_6]$. The condition $\tau(x) = -x$ is the signature of a \textbf{quaternionic representation type}, which by Frobenius' theorem uniquely determines $\mathrm{SU}(2) \cong \mathrm{Sp}(1)$ as the gauge group on the 2-dimensional AF space.
+
+\begin{theorem}[AF Channel Non-Degeneracy]
 \label{thm:AF_nondegenerate}
-\lean{FUST.AF_channel_nondegenerate}
+\lean{FUST.AF_coeff_nonzero}
 \leanok
 $\mathrm{AF\_coeff} \neq 0$, since $|\mathrm{AF\_coeff}|^2 = 12 \neq 0$.
 \end{theorem}
 
-\begin{theorem}[AF Channel is Purely Imaginary]
+\begin{theorem}[AF Coefficient Purely Imaginary]
 \label{thm:AF_imaginary}
-\lean{FUST.AF_coeff_re_zero}
+\lean{FUST.AF_coeff_purely_imaginary}
 \leanok
 $\mathrm{Re}(\mathrm{AF\_coeff}) = 0$, i.e., $\mathrm{AF\_coeff} = 2i\sqrt{3}$.
 \end{theorem}
 
-The AF channel being purely imaginary means it acts \textbf{orthogonally} to the real $\varphi$-dilation diagonal. On the AF channel space (dim $= \mathrm{spinDegeneracy} = 2$) with basis $\{1, z\}$, the AF direction provides the off-diagonal generator needed for $\mathrm{su}(2)$.
-
-\section{\texorpdfstring{$\varphi$}{φ}-Dilation Eigenvalue Structure}
-\label{sec:phi_dilation}
-
-\begin{theorem}[$\varphi$-Dilation Eigenvalues are Pairwise Distinct]
-\label{thm:eigenvalues_distinct}
-\lean{FUST.phi_eigenvalues_distinct_3}
-\leanok
-On the SY channel space (dim $= \mathrm{syWeight} = 3$), the $\varphi$-dilation $U_\varphi: f(z) \mapsto f(\varphi z)$ has eigenvalues:
-\[
-\varphi^0 = 1, \quad \varphi^1 = \varphi, \quad \varphi^2 = \varphi + 1
-\]
-These are pairwise distinct since $\varphi > 1$.
-\end{theorem}
-
-\begin{theorem}[$\varphi$-Dilation Commutant is Diagonal]
-\label{thm:commutant_diagonal}
-\lean{FUST.phiDilation_commutant_diagonal}
-\leanok
-Let $S = \mathrm{diag}(1, \varphi, \varphi^2)$ be the scaling matrix on the syWeight $= 3$ space. If $M \in \mathrm{GL}(3, \mathbb{C})$ satisfies $MS = SM$, then $M$ is diagonal.
-\end{theorem}
-
-\begin{proof}
-From $MS = SM$, entry-wise: $M_{ij} \cdot \varphi^j = \varphi^i \cdot M_{ij}$, so $M_{ij}(\varphi^j - \varphi^i) = 0$. Since eigenvalues are pairwise distinct, $M_{ij} = 0$ for $i \neq j$.
-\end{proof}
-
-\section{Symmetric Channel \texorpdfstring{$\Phi_S \to \mathrm{SU}(3)$}{Φ_S → SU(3)}}
-\label{sec:SU3_derivation}
-
-\begin{theorem}[Symmetric Channel Determines SU(3)]
-\label{thm:symmetric_SU3}
-\lean{FUST.DζOperator.Phi_S_rank_three}
-\leanok
-$\Phi_S = 2 \cdot \mathrm{Diff}_5 + \mathrm{Diff}_3 + \mu \cdot \mathrm{Diff}_2$ decomposes into 3 linearly independent sub-operators.
-\begin{itemize}
-\item The $3 \times 3$ determinant of $(\sigma_{\mathrm{Diff}_5}, \sigma_{\mathrm{Diff}_3}, \sigma_{\mathrm{Diff}_2})$ at $s = 1, 5, 7$ equals $-6952(\varphi - \psi) \neq 0$
-\item These 3 independent components act on the SY channel space $\mathrm{span}\{1, z, z^2\}$ (dim $= \mathrm{syWeight} = 3$)
-\item Rank $=$ dim $\Rightarrow$ irreducible action on a 3-dimensional space
-\item $\zeta_6 \neq \varphi^n$ ensures $\zeta_6$-rotation mixes $\varphi$-eigenspaces non-diagonally
-\item The unique compact simple Lie group acting irreducibly on $\mathbb{C}^3$ is $\mathrm{SU}(3)$
-\end{itemize}
-\end{theorem}
-
-$\mathrm{SU}(3)$ has dimension $3^2 - 1 = 8$ (8 gluons).
-
-\section{Antisymmetric Channel \texorpdfstring{$\Phi_A \to \mathrm{SU}(2)$}{Φ_A → SU(2)}}
-\label{sec:SU2_derivation}
-
-\begin{theorem}[Antisymmetric Channel Determines SU(2)]
-\label{thm:antisymmetric_SU2}
-\lean{FUST.AF_channel_nondegenerate, FUST.AF_coeff_re_zero}
-\leanok
-\begin{itemize}
-\item $\mathrm{AF\_coeff} = 2i\sqrt{3}$ is nonzero and purely imaginary
-\item On the AF channel space $\mathrm{span}\{1, z\}$ (dim $= \mathrm{spinDegeneracy} = 2$), $\varphi$-dilation has eigenvalues $\{1, \varphi\}$ (diagonal, real)
-\item The AF direction provides the off-diagonal, purely imaginary generator
-\item One real direction ($\varphi$-dilation Cartan) $+$ one imaginary direction (AF root) $=$ $\mathrm{su}(2)$ algebra
-\item The unique compact simple Lie group on $\mathbb{C}^2$ is $\mathrm{SU}(2)$
-\end{itemize}
-\end{theorem}
-
 $\mathrm{SU}(2)$ has dimension $2^2 - 1 = 3$ ($W^\pm, Z$ bosons).
-
-\subsection{su(2) Commutation Relations}
-
-View $V_0 := \mathrm{span}\{1, z\}$ (AF channel, dim $= \mathrm{spinDegeneracy} = 2$) with basis $|{\uparrow}\rangle = 1$, $|{\downarrow}\rangle = z$.
-
-Ladder operators: $\sigma_+ := d/dz|_{V_0}$, $\sigma_- := P_0 \circ M_z|_{V_0}$, $\sigma_z := [\sigma_+, \sigma_-]$.
-
-These satisfy $[\sigma_z, \sigma_+] = 2\sigma_+$, $[\sigma_z, \sigma_-] = -2\sigma_-$, $[\sigma_+, \sigma_-] = \sigma_z$ --- the standard $\mathrm{su}(2)$ commutation relations (spin-1/2).
 
 \section{Trivial Channel \texorpdfstring{$\to \mathrm{U}(1)$}{→ U(1)}}
 \label{sec:U1_derivation}
 
-\begin{theorem}[Trivial Channel Determines U(1)]
-\label{thm:trivial_U1}
-On the trivial channel $\mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
-\end{theorem}
+On the trivial channel (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$. This is also the scalar gauge from the basic factorization invariance $\delta(cf, c^{-1}g) = \delta(f,g)$.
 
-\section{Weight Ratio and Spacetime Structure}
+\section{Norm Decomposition: Weight Ratio 3:1}
 \label{sec:weight_ratio}
 
 \begin{theorem}[$F_\zeta$ Norm-Squared Decomposition]
 \label{thm:normSq_decomposition}
-\lean{FUST.DζOperator.Dzeta_normSq_decomposition}
+\lean{FUST.norm_weight_ratio}
 \leanok
 \[
 |6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)
 \]
 \end{theorem}
 
-The weight ratio $3 : 1$ between symmetric ($a$, SU(3)) and antisymmetric ($b$, SU(2)) channels encodes the spacetime decomposition $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (3 spatial + 1 temporal dimension).
+The weight ratio $3 : 1$ between the SY channel ($a$, weight 3) and the AF channel ($b$, weight 1) encodes the spacetime decomposition $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ (3 spatial + 1 temporal dimension).
 
 \section{Dimension Matching}
 \label{sec:dimension_matching}
 
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-$F_\zeta$ channel & Space & $\dim$ & Gauge group & $\dim(G)$ \\
+$F_\zeta$ channel & Gauge mechanism & Gauge group & $\dim(G)$ \\
 \hline
-SY (symmetric, $\Phi_S$) & $\mathrm{span}\{1, z, z^2\}$ & syWeight $= 3$ & SU(3) & 8 \\
-AF (antisymmetric, $\Phi_A$) & $\mathrm{span}\{1, z\}$ & spinDegeneracy $= 2$ & SU(2) & 3 \\
-Trivial & $\mathrm{span}\{1\}$ & 1 & U(1) & 1 \\
+SY ($\Phi_S$, rank 3) & Mode mixing, $k \leq 3$ & SU(3) & 8 \\
+AF ($\Phi_A$, $\tau$-anti-inv.) & Quaternionic type & SU(2) & 3 \\
+Trivial (dim 1) & Scalar gauge & U(1) & 1 \\
 \hline
-\multicolumn{4}{|r|}{Total gauge dimensions:} & 12 \\
+\multicolumn{3}{|r|}{Total gauge dimensions:} & 12 \\
 \hline
 \end{tabular}
 \end{center}
 
 $12 = 8 + 3 + 1$: matching the 12 gauge bosons of the Standard Model (8 gluons $+ W^\pm + Z +$ photon).
 
-\section{Gauge Boson Mass Mechanism}
-\label{sec:gauge_mass_mechanism}
-
-The SY/AF channel inclusion (spinDegeneracy $= 2 <$ syWeight $= 3$) provides a structural mass mechanism:
-
-\[
-z^2 \in \text{SY channel} \setminus \text{AF channel}: \quad \mathrm{Diff}_6(z^2) = 0 \text{ but } \mathrm{Diff}_5(z^2) \neq 0.
-\]
-
-This extra degree of freedom $z^2$ acts as the \textbf{Higgs field}: it belongs to the SU(3) space (SY channel) but not to the SU(2) space (AF channel), breaking electroweak symmetry.
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Gauge boson & Origin in $F_\zeta$ & Mass mechanism & Mass \\
-\hline
-Gluon (8) & $\Phi_S$ on SY channel & $\mathrm{Diff}_6 = 0$ & massless \\
-Photon & U(1) grading & All $\mathrm{Diff}_m$ preserve & massless \\
-$W^\pm$ & $\Phi_A$ on AF channel & $\mathrm{Diff}_5(z^2) \neq 0$ & massive \\
-$Z$ & $\Phi_A$ on AF channel & via $\theta_W$ mixing & massive \\
-$H$ & SY $\setminus$ AF & Higgs DOF & massive \\
-\hline
-\end{tabular}
-\end{center}
-
-\section{Extremal Properties of the Golden Ratio}
-\label{sec:extremal_properties}
-
-In the metallic ratio family $\Lambda_p = \frac{p + \sqrt{p^2+4}}{2}$, $p = 1$ (golden ratio $\varphi$) has:
-
-\begin{enumerate}
-\item \textbf{Worst approximable irrational}: By Hurwitz's theorem, the constant $\sqrt{5}$ is optimal for $\varphi$
-\item \textbf{Minimal operator norm}: $\|D_\Phi\|$ is minimal in the metallic ratio family
-\item \textbf{Maximal zero spacing in Mellin symbol}: Simplest spectral structure
-\end{enumerate}
-
-\section{Infinite Dihedral Group}
-\label{sec:dihedral}
-
-The symmetry group of Frourio algebra is $D_\infty = \langle u, r \mid r^2 = 1,\; rur = u^{-1} \rangle$
-where $U: f(z) \mapsto f(\varphi z)$ and $R: f(z) \mapsto f(-z)$. The Weyl reflection $u \mapsto u^{-1}$ corresponds to the Weyl group $\mathbb{Z}_2$ of $\mathrm{SU}(2)$.
-
 \section{Summary}
 \label{sec:gauge_summary}
 
-\textbf{No free parameters}: The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is the unique output of $F_\zeta$'s channel structure. The derivation uses:
+The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ arises from the \textbf{factorization freedom} of the input state function:
 \begin{itemize}
-\item $\Phi_S$ rank 3 (from $F_\zeta$'s $\mathbb{Z}/6\mathbb{Z}$ symmetric channel, syWeight $= 3$)
-\item AF$\_$coeff $= 2i\sqrt{3}$ (from $F_\zeta$'s antisymmetric channel, afWeight $= 1$)
-\item Channel dimension hierarchy $1 \to 2 \to 3$ (trivial $\subset$ AF $\subset$ SY)
-\item $\zeta_6 \neq \varphi^n$ (elliptic-hyperbolic separation)
-\item $|6a + 2i\sqrt{3} \cdot b|^2 = 12(3a^2 + b^2)$ (spacetime weight ratio)
+\item \textbf{SU(3)}: Mode-mixing on the SY channel is bounded by $\Phi_S$ rank 3 (mode vectors $v(s) \in \mathbb{R}^3$, $\dim \mathbb{R}^3 = 3$)
+\item \textbf{SU(2)}: $\tau$-anti-invariance of AF\_coeff ($\tau(x) = -x$, quaternionic type $\Rightarrow$ $\mathrm{Sp}(1) \cong \mathrm{SU}(2)$)
+\item \textbf{U(1)}: Trivial channel (1-dim) and scalar factorization gauge $\delta(cf, c^{-1}g) = \delta(f,g)$
+\item Channel independence: $\zeta_6 \neq \varphi^n$ (imaginary part separation)
+\item Weight ratio: $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$ encodes $3{+}1$ spacetime
 \end{itemize}

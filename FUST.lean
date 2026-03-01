@@ -51,6 +51,7 @@ import FUST.FrourioAlgebra.GoldenValuation
 import FUST.Math.EulerOperator
 import FUST.Math.FibonacciArithmetic
 import FUST.Math.MellinSampling
+import FUST.Math.SpectralCoefficients
 import FUST.Math.SpectralGalois
 import FUST.Math.SpectralObstruction
 
@@ -74,6 +75,7 @@ import FUST.Physics.Poincare
 import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.SchrodingerEquation
+import FUST.Physics.SpacetimeUniqueness
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeStructure
 import FUST.Physics.WeinbergAngle
@@ -85,4 +87,3 @@ import FUST.Basic
 import FUST.Dimension
 import FUST.DζOperator
 import FUST.FζOperator
-import FUST.SpectralCoefficients

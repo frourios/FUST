@@ -8,7 +8,7 @@ import FUST.Physics.Gravity
 2. Active modes: n ≡ 1,5 mod 6 → Fζ(zⁿ) = λ(n)·zⁿ
 3. massScale = |AF_coeff|²/5² = 12/25 (from Fζ = 5z·Dζ and AF_coeff = 2i√3)
 4. Fζ action on scale lattice: S[f] = Σ ‖Fζ f(φⁿ)‖²
-5. Casimir mass gap: m²(1) = -P^μP_μ = 14
+5. Casimir mass gap: m²(1) = P^μP_μ = 14
 -/
 
 namespace FUST
@@ -90,7 +90,7 @@ end FζAction
 
 /-! ## Poincaré Mass Connection
 
-P^μP_μ via Minkowski bilinear form. Signature (3,1). -/
+P^μP_μ via Minkowski bilinear form. Signature (1,3). -/
 
 section PoincareMass
 
@@ -98,10 +98,10 @@ open FUST.Physics.Poincare FUST.Physics.Gravity Physics.Lorentz
 
 noncomputable def poincareCasimir (p : I4 → ℝ) : ℝ := minkowskiBilin p p
 
-def onMassShell (p : I4 → ℝ) (m : ℝ) : Prop := -poincareCasimir p = m ^ 2
+def onMassShell (p : I4 → ℝ) (m : ℝ) : Prop := poincareCasimir p = m ^ 2
 
 theorem vacuum_massless : onMassShell (fun _ => 0) 0 := by
-  simp only [onMassShell, poincareCasimir, sq, mul_zero, neg_eq_zero]
+  simp only [onMassShell, poincareCasimir, sq, mul_zero]
   unfold minkowskiBilin
   simp [Matrix.toBilin'_apply', dotProduct, Matrix.mulVec]
 
@@ -109,7 +109,7 @@ end PoincareMass
 
 /-! ## Mass Gap from Dζ Casimir Invariant
 
-m²(s) = -P^μP_μ where P^μ = Re(Dζ_components(s)).
+m²(s) = P^μP_μ where P^μ = Re(Dζ_components(s)).
 Minimum active mode s=1: m² = 14. -/
 
 section CasimirMassGap
@@ -119,15 +119,15 @@ open FUST.Physics.Poincare FUST.Physics.Gravity Physics.Lorentz LieAlgebra.Ortho
 private lemma phi_sub_psi_sq : (φ - ψ) ^ 2 = 5 := by
   rw [phi_sub_psi, sq, Real.mul_self_sqrt (by norm_num : (5:ℝ) ≥ 0)]
 
-noncomputable def casimirMassSq (s : ℕ) : ℝ := -poincareCasimir (Dζ_momentum s)
+noncomputable def casimirMassSq (s : ℕ) : ℝ := poincareCasimir (Dζ_momentum s)
 
 theorem casimirMassSq_one : casimirMassSq 1 = 14 := by
   unfold casimirMassSq poincareCasimir minkowskiBilin
   rw [Matrix.toBilin'_apply']
   simp only [dotProduct, Matrix.mulVec, Fintype.sum_sum_type,
     Fin.sum_univ_three, Fin.sum_univ_one]
-  simp only [Dζ_momentum_one_inl0, Dζ_momentum_one_inl1,
-    Dζ_momentum_one_inl2, Dζ_momentum_one_inr0]
+  simp only [Dζ_momentum_one_inl0, Dζ_momentum_one_inr0,
+    Dζ_momentum_one_inr1, Dζ_momentum_one_inr2]
   simp (config := { decide := true }) only [indefiniteDiagonal, Matrix.diagonal_apply,
     Sum.elim_inl, Sum.elim_inr, ↓reduceIte]
   nlinarith [phi_sub_psi_sq]

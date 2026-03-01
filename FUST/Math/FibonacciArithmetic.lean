@@ -1,4 +1,4 @@
-import FUST.SpectralCoefficients
+import FUST.Math.SpectralCoefficients
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
