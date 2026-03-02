@@ -11,8 +11,7 @@ import FUST.Chemistry.Mutation
 
 namespace FUST.Chemistry.ProteinFolding
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Nucleotide
-open FUST.Chemistry.GeneticCode
+open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode FUST.ParticleSpectrum
 open FUST.Chemistry.AminoAcid FUST.Chemistry.Translation
 open FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Nitrogen
@@ -27,7 +26,7 @@ abbrev peptidePlaneAtoms : ℕ := carbonZ
 
 theorem peptidePlaneAtoms_eq : peptidePlaneAtoms = 6 := rfl
 
-abbrev backboneDihedrals : ℕ := Nuclear.spinDegeneracy
+abbrev backboneDihedrals : ℕ := spinDegeneracy
 
 theorem backboneDihedrals_eq : backboneDihedrals = 2 := rfl
 
@@ -43,7 +42,7 @@ Helix types defined by H-bond span (residue i to residue i+n).
 abbrev helix310Span : ℕ := 3
 abbrev alphaHelixSpan : ℕ := baseCount
 abbrev piHelixSpan : ℕ := baseCount + 1
-abbrev betaSheetRepeat : ℕ := Nuclear.spinDegeneracy
+abbrev betaSheetRepeat : ℕ := spinDegeneracy
 
 theorem helix310Span_eq : helix310Span = 3 := rfl
 theorem alphaHelixSpan_eq : alphaHelixSpan = 4 := rfl
@@ -55,7 +54,7 @@ theorem helix_span_consecutive :
     piHelixSpan = alphaHelixSpan + 1 := ⟨rfl, rfl⟩
 
 theorem alpha_helix_from_spin :
-    alphaHelixSpan = 2 ^ Nuclear.spinDegeneracy := rfl
+    alphaHelixSpan = 2 ^ spinDegeneracy := rfl
 
 /-! ## Section 3: Hydrogen Bond in Folding
 
@@ -90,16 +89,16 @@ theorem charged_count :
     [lysZ, argZ, aspZ, gluZ].length = baseCount := rfl
 
 theorem positive_count :
-    [lysZ, argZ].length = Nuclear.spinDegeneracy := rfl
+    [lysZ, argZ].length = spinDegeneracy := rfl
 
 theorem negative_count :
-    [aspZ, gluZ].length = Nuclear.spinDegeneracy := rfl
+    [aspZ, gluZ].length = spinDegeneracy := rfl
 
 theorem charge_balance :
     [lysZ, argZ].length = [aspZ, gluZ].length := rfl
 
 theorem sulfur_count :
-    [metZ, cysZ].length = Nuclear.spinDegeneracy := rfl
+    [metZ, cysZ].length = spinDegeneracy := rfl
 
 /-! ## Section 5: Salt Bridges
 
@@ -159,7 +158,7 @@ theorem insulin_disulfide_eq : insulinDisulfideCount = 3 := rfl
 
 theorem protein_folding_classification :
     peptidePlaneAtoms = carbonZ ∧
-    backboneDihedrals = Nuclear.spinDegeneracy ∧
+    backboneDihedrals = spinDegeneracy ∧
     alphaHelixSpan = baseCount ∧
     helix310Span = 3 ∧
     hbondDonorZ = oxygenZ ∧
@@ -175,14 +174,14 @@ Each dihedral has ~baseCount=4 stable rotamers.
 Conformations per residue = baseCount^spinDeg = 16.
 -/
 
-abbrev rotamersPerResidue : ℕ := baseCount ^ Nuclear.spinDegeneracy
+abbrev rotamersPerResidue : ℕ := baseCount ^ spinDegeneracy
 
 theorem rotamersPerResidue_eq :
     rotamersPerResidue = 16 := rfl
 
 theorem rotamersPerResidue_structure :
     rotamersPerResidue =
-    (2 ^ Nuclear.spinDegeneracy) ^ Nuclear.spinDegeneracy := rfl
+    (2 ^ spinDegeneracy) ^ spinDegeneracy := rfl
 
 def levinthalSpace (nResidues : ℕ) : ℕ :=
   rotamersPerResidue ^ nResidues
@@ -201,7 +200,7 @@ theorem kernel_growth_spin_to_spatial :
     Fintype.card (Fin 3) = Fintype.card (Fin 2) + 1 := rfl
 
 theorem interpolation_hierarchy :
-    Fintype.card (Fin 2) = Nuclear.spinDegeneracy ∧
+    Fintype.card (Fin 2) = spinDegeneracy ∧
     Fintype.card (Fin 3) = 3 := ⟨rfl, rfl⟩
 
 end FUST.Chemistry.ProteinFolding

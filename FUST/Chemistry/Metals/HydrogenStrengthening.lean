@@ -24,7 +24,7 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.HydrogenStrengthening
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Vanadium FUST.Chemistry.Zirconium
 open FUST.Chemistry.Niobium FUST.Chemistry.Palladium

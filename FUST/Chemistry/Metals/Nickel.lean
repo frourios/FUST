@@ -8,7 +8,7 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Nickel
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST.Chemistry.Oxygen FUST.Chemistry.Iron
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Nickel Parameters

@@ -9,8 +9,6 @@ import FUST.Chemistry.AtomDim
 
 namespace FUST.Chemistry.Oxygen
 
-open FUST FUST.Dim FUST.Chemistry
-
 /-! ## Section 1: Oxygen Parameters
 
 oxygenZ = 8 = nuclearMagic(1), so oxygen's proton number is a nuclear magic number.

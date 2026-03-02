@@ -10,7 +10,7 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Vanadium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 
 /-! ## Section 1: Vanadium Parameters

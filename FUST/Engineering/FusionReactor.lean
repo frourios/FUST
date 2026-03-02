@@ -15,8 +15,8 @@ import FUST.Chemistry.CarbonIsotopes
 
 namespace FUST.Physics.FusionReactor
 
-open FUST FUST.Dim FUST.Chemistry FUST.NavierStokes FUST.Thermodynamics
-open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry FUST.NavierStokes FUST.Thermodynamics
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium FUST.ParticleSpectrum
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Carbon
 open FUST.Chemistry.Niobium FUST.Superconductivity
 
@@ -27,14 +27,6 @@ D⁺ and T⁺ are massive with distinct FDim.
 
 theorem fuel_deuteron_effDeg : (dimAtom 1 1 0).effectiveDegree = 32 := by decide
 theorem fuel_triton_effDeg : (dimAtom 1 2 0).effectiveDegree = 47 := by decide
-
-open FUST.Dim in
-theorem deuteron_distinct : dimDeuteronIon ≠ dimProton ∧ dimDeuteronIon ≠ dimNeutron := by
-  decide
-
-open FUST.Dim in
-theorem triton_distinct : dimTritonIon ≠ dimProton ∧ dimTritonIon ≠ dimDeuteronIon := by
-  decide
 
 /-! ## Section 2: D-T Reaction Conservation
 
@@ -77,7 +69,6 @@ the extra neutron in tritium, which is the structural origin of
 differential permeation.
 -/
 
-open FUST.Dim in
 theorem differential_permeation :
     dimDeuteronIon ≠ dimTritonIon ∧
     (dimAtom 1 2 0).effectiveDegree - (dimAtom 1 1 0).effectiveDegree = 15 := by
@@ -122,7 +113,7 @@ theorem alpha_doubly_magic :
 
 -- Flux quantum denominator = cooperPairSize = spinDeg = 2
 theorem flux_quantum_structure :
-    cooperPairSize = Nuclear.spinDegeneracy := rfl
+    cooperPairSize = spinDegeneracy := rfl
 
 -- Condensate dimension = 1
 theorem magnet_condensate_dim :
@@ -132,7 +123,7 @@ theorem magnet_condensate_dim :
 
 -- Nb-93: N = nuclearMagic(4) + spinDeg = 52
 theorem Nb_magnet_stability :
-    neutrons_Nb93 = Nuclear.nuclearMagic 4 + Nuclear.spinDegeneracy := rfl
+    neutrons_Nb93 = Nuclear.nuclearMagic 4 + spinDegeneracy := rfl
 
 -- REBCO stability: Y-89 N = nuclearMagic(4), La-139 N = nuclearMagic(5)
 theorem REBCO_magic_stability :

@@ -418,11 +418,6 @@ theorem subDemon_complete_inherits
   · exact subDemon_root_in_subsystem [(Z, N, e, q)] E _
       (by rw [demonPos_unfold]; simp [List.foldl, demonFoldFn, shifted_root_electron _ _ _ _ he])
 
--- The minimum complete particle: (1,1,1) at effectiveDegree 34
-theorem minimal_complete_effectiveDegree :
-    (dimAtom 1 1 1).effectiveDegree = 34 := by
-  rw [dimAtom_effectiveDegree]; ring
-
 -- Norm degree of (1,1,1) is 6 — the Fζ AF channel detection threshold
 theorem minimal_norm_degree :
     2 * (1 + 1 + 1) = 6 := by norm_num
@@ -622,26 +617,6 @@ theorem comparisons_bound (n : ℕ) (hn : n ≥ 2) :
   have h1 : n - 1 ≥ 1 := by omega
   have h2 : n * (n - 1) ≥ 2 := by nlinarith
   exact Nat.le_div_iff_mul_le (by norm_num) |>.mpr (by omega)
-
--- Computational hierarchy: degree and mod-6 residue determine Fζ visibility
--- gcd(n,6) > 1 → Fζ(wⁿ) = 0 (annihilated by ζ₆ cancellation)
--- n ≡ 1,5 (mod 6) → Fζ(wⁿ) ≠ 0 (detected by AF + SY channels)
--- n complete clusters at distinct positions → n independent Fibonacci orbits
-theorem computation_requires_completeness
-    (Z N e : ℕ)
-    (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :
-    -- Has Fibonacci orbit (electron root under scale)
-    scaleStateFn Z N e 1 = 0 ∧
-    -- Has fixed reference point (proton root)
-    scaleStateFn Z N e 0 = 0 ∧
-    -- Has environment probe (neutron root under scale)
-    scaleStateFn Z N e ψ = 0 ∧
-    -- Has sufficient degree for Fζ AF channel detection
-    Z + N + e ≥ 3 := by
-  exact ⟨scale_electron_to_one Z N e he,
-         scale_proton_fixed Z N e hZ,
-         scale_neutron_to_psi Z N e hN,
-         complete_particle_degree_ge Z N e hZ hN he⟩
 
 /-! ## Section 19: Intelligence Phase Transition — Fζ Resolution Limit
 
@@ -912,7 +887,8 @@ degree ≤ 2 but detects degree 3 = the first non-trivial particle. -/
 section SpatialDimensionDerivation
 
 /-- Number of irreducible factor families in shiftedStateFn -/
-noncomputable abbrev rootFamilyCount : ℕ := FUST.Chemistry.rootFamilyCount
+noncomputable def rootFamilies : List ℝ := [0, -1, φ]
+noncomputable def rootFamilyCount : ℕ := rootFamilies.length
 
 /-- The three factor families are: (x-q)^Z, (1+(x-q))^N, (1+ψ(x-q))^e -/
 theorem three_root_families (Z N e : ℕ) (q : GoldenInt) (hZ : Z ≥ 1) (hN : N ≥ 1) (he : e ≥ 1) :

@@ -9,7 +9,7 @@ import FUST.Chemistry.Metals.Nickel
 
 namespace FUST.Chemistry.Copper
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST.Chemistry.Oxygen FUST.Chemistry.Iron
 open FUST.Chemistry.Nickel FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen
 

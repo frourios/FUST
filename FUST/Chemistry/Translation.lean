@@ -10,9 +10,7 @@ import FUST.Chemistry.GeneticCode
 
 namespace FUST.Chemistry.Translation
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Nucleotide
-open FUST.Chemistry.GeneticCode
-open FUST.Chemistry.AminoAcid
+open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode FUST.Chemistry.AminoAcid
 
 set_option maxRecDepth 8192
 

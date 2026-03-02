@@ -10,9 +10,9 @@ import FUST.Chemistry.Metals.Zirconium
 
 namespace FUST.Chemistry.Niobium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
-open FUST.Chemistry.Zirconium
+open FUST.Chemistry.Zirconium FUST.ParticleSpectrum
 
 /-! ## Section 1: Niobium Parameters
 
@@ -47,7 +47,7 @@ theorem neutrons_Nb93_eq : neutrons_Nb93 = 52 := rfl
 
 -- N = nuclearMagic(4) + spinDegeneracy = 50 + 2
 theorem Nb93_N_from_magic :
-    Nuclear.nuclearMagic 4 + Nuclear.spinDegeneracy = neutrons_Nb93 := rfl
+    Nuclear.nuclearMagic 4 + spinDegeneracy = neutrons_Nb93 := rfl
 
 /-! ## Section 3: State Functions -/
 
@@ -74,7 +74,7 @@ set_option maxRecDepth 4096 in
 theorem niobium_classification :
     niobiumZ = 41 ∧
     zirconiumZ + hydrogenZ = niobiumZ ∧
-    Nuclear.nuclearMagic 4 + Nuclear.spinDegeneracy = neutrons_Nb93 ∧
+    Nuclear.nuclearMagic 4 + spinDegeneracy = neutrons_Nb93 ∧
     (dimAtom 41 52 0).effectiveDegree > 2 ∧
     (dimAtom 41 52 41).effectiveDegree > 2 := by
   exact ⟨rfl, rfl, rfl, by decide, by decide⟩

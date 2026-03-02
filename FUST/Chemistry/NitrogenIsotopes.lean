@@ -11,7 +11,7 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.Nitrogen
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
+open FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Nitrogen Parameters

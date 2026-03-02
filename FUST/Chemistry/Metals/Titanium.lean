@@ -10,8 +10,8 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Titanium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
-open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen FUST.ParticleSpectrum
 
 /-! ## Section 1: Titanium Parameters
 
@@ -22,7 +22,7 @@ Aufbau: [Ar] 3d² 4s².
 abbrev titaniumZ : ℕ := 22
 
 theorem titaniumZ_from_magic :
-    Nuclear.nuclearMagic 2 + Nuclear.spinDegeneracy = titaniumZ := rfl
+    Nuclear.nuclearMagic 2 + spinDegeneracy = titaniumZ := rfl
 
 -- [Ar] 3d² 4s²
 abbrev titanium_3d_electrons : ℕ := 2
@@ -71,7 +71,7 @@ theorem Ti48_mass_number : titaniumZ + neutrons_Ti48 = 48 := rfl
 
 theorem titanium_classification :
     titaniumZ = 22 ∧
-    Nuclear.nuclearMagic 2 + Nuclear.spinDegeneracy = titaniumZ ∧
+    Nuclear.nuclearMagic 2 + spinDegeneracy = titaniumZ ∧
     neutrons_Ti48 = ironZ ∧
     22 + 26 + 22 = Nuclear.hoMagic 4 ∧
     (dimAtom 22 26 0).effectiveDegree > 2 ∧

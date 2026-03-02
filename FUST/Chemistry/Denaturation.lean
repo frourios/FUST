@@ -12,8 +12,7 @@ import FUST.Chemistry.ProteinFolding
 
 namespace FUST.Chemistry.Denaturation
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Nucleotide
-open FUST.Chemistry.GeneticCode
+open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode
 open FUST.Chemistry.AminoAcid FUST.Chemistry.Translation
 open FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Nitrogen

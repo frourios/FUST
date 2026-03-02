@@ -1,5 +1,6 @@
 import FUST.Physics.ParticleSpectrum
 import FUST.Physics.MassRatios
+import FUST.Physics.CouplingConstants
 import FUST.Physics.WeinbergAngle
 import FUST.Physics.GaugeGroups
 import Mathlib.Data.Nat.Choose.Basic
@@ -14,28 +15,12 @@ SY channel weight = 3 (spatial dimension).
 
 namespace FUST.Nuclear
 
-open FUST FUST.Dim FUST.WeinbergAngle
-
-/-! ## Section 1: Physical Dimensions from Fζ Channels -/
-
--- SU(2) fundamental representation dimension from AF channel
-abbrev spinDegeneracy : ℕ := 2
-
-theorem spinDegeneracy_eq : spinDegeneracy = 2 := rfl
-
-/-- spinDegeneracy = WeinbergAngle.spinDegeneracy -/
-theorem spinDegeneracy_from_channel :
-    spinDegeneracy = FUST.WeinbergAngle.spinDegeneracy := rfl
-
--- SY channel weight = spatial dimension
-abbrev spatialDim : ℕ := syWeight
-
-theorem spatialDim_eq : spatialDim = 3 := rfl
+open FUST FUST.Dim FUST.WeinbergAngle FUST.ParticleSpectrum
 
 /-! ## Section 2: Harmonic Polynomial Dimensions
 
 In d dimensions, spherical harmonics of degree l have dimension
-C(l+d-1, d-1) - C(l+d-3, d-1). For d = spatialDim = 3, this simplifies to 2l+1.
+C(l+d-1, d-1) - C(l+d-3, d-1). For d = syWeight = 3, this simplifies to 2l+1.
 -/
 
 -- d=3 specialization: harmonicDim(l) = 2l+1
@@ -198,9 +183,9 @@ Nuclei are identified by (Z, N) via DTagged .protonNum / .neutronNum
 in DiscreteTag.lean. No separate Nucleus structure needed.
 Mass number A = Z + N. FDim provided by dimAtom(Z, N, e) from AtomDim.lean. -/
 
--- 3D harmonic oscillator degeneracy: C(N + spatialDim - 1, spatialDim - 1)
+-- 3D harmonic oscillator degeneracy: C(N + syWeight - 1, syWeight - 1)
 def hoDegeneracy (N : ℕ) : ℕ :=
-  Nat.choose (N + spatialDim - 1) (spatialDim - 1)
+  Nat.choose (N + syWeight - 1) (syWeight - 1)
 
 theorem hoDeg_formula (N : ℕ) : hoDegeneracy N = Nat.choose (N + 2) 2 := rfl
 
@@ -216,9 +201,9 @@ theorem hoCapacity_values :
   hoLevelCapacity 2 = 12 ∧ hoLevelCapacity 3 = 20 ∧
   hoLevelCapacity 4 = 30 ∧ hoLevelCapacity 5 = 42 := by decide
 
--- Cumulative: spinDegeneracy × C(N + spatialDim, spatialDim)
+-- Cumulative: spinDegeneracy × C(N + syWeight, syWeight)
 def hoMagic (N : ℕ) : ℕ :=
-  spinDegeneracy * Nat.choose (N + spatialDim) spatialDim
+  spinDegeneracy * Nat.choose (N + syWeight) syWeight
 
 theorem hoMagic_values :
   hoMagic 0 = 2 ∧ hoMagic 1 = 8 ∧ hoMagic 2 = 20 ∧
@@ -233,11 +218,9 @@ theorem hoMagic_cumulative :
 
 /-! ## Section 7: Intruder State Correction
 
-HO shell N has max angular momentum l = N. The SY channel (rank 3 = spatialDim)
-annihilates polynomial degree ≤ 2. N < spatialDim → pure HO;
-N ≥ spatialDim → intruder state splits the j = l+1/2 stretched state. -/
-
-theorem intruder_threshold_is_spatialDim : spatialDim = 3 := rfl
+HO shell N has max angular momentum l = N. The SY channel (rank 3 = syWeight)
+annihilates polynomial degree ≤ 2. N < syWeight → pure HO;
+N ≥ syWeight → intruder state splits the j = l+1/2 stretched state. -/
 
 def intruderDeg (N : ℕ) : ℕ := spinDegeneracy * (N + 1)
 
@@ -250,7 +233,7 @@ theorem intruderDeg_values :
   intruderDeg 3 = 8 ∧ intruderDeg 4 = 10 ∧ intruderDeg 5 = 12 ∧
   intruderDeg 6 = 14 := by decide
 
--- N < spatialDim: pure HO; N ≥ spatialDim = 3: intruder state correction
+-- N < syWeight: pure HO; N ≥ syWeight = 3: intruder state correction
 def nuclearMagic : ℕ → ℕ
   | 0 => hoMagic 0
   | 1 => hoMagic 1
@@ -262,15 +245,15 @@ theorem nuclearMagic_values :
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 := by decide
 
--- N < spatialDim: all angular states in SY kernel, pure HO
+-- N < syWeight: all angular states in SY kernel, pure HO
 theorem low_magic_from_ho :
   nuclearMagic 0 = hoMagic 0 ∧
   nuclearMagic 1 = hoMagic 1 ∧
   nuclearMagic 2 = hoMagic 2 := ⟨rfl, rfl, rfl⟩
 
--- For N ≥ spatialDim = 3: intruder correction applies
-theorem intruder_threshold_from_spatialDim :
-    spatialDim = 3 ∧
+-- For N ≥ syWeight = 3: intruder correction applies
+theorem intruder_threshold_from_syWeight :
+    syWeight = 3 ∧
     (∀ n, n + 3 < 10 →
       nuclearMagic (n + 3) = hoMagic (n + 2) + intruderDeg (n + 3)) := by
   exact ⟨rfl, fun n _ => rfl⟩
@@ -307,15 +290,15 @@ theorem iron_peak_near_magic : nuclearMagic 3 = 28 := rfl
 SY weight = 3 gives spatial orbital types {s, p, d} (l = 0, 1, 2).
 SU(2) fundamental rep dim = 2 gives spin degeneracy. Shell capacity = 2n². -/
 
-theorem max_orbital_from_spatialDim :
-    Fintype.card (Fin spatialDim) - 1 = 2 := rfl
+theorem max_orbital_from_syWeight :
+    Fintype.card (Fin syWeight) - 1 = 2 := rfl
 
-theorem orbital_type_count : Fintype.card (Fin spatialDim) = spatialDim := rfl
+theorem orbital_type_count : Fintype.card (Fin syWeight) = syWeight := rfl
 
 theorem shell_from_channel_dimensions :
     Fintype.card (Fin spinDegeneracy) = spinDegeneracy ∧
-    Fintype.card (Fin spatialDim) = spatialDim ∧
-    spatialDim - 1 = 2 ∧
+    Fintype.card (Fin syWeight) = syWeight ∧
+    syWeight - 1 = 2 ∧
     shellCapacity 1 = 2 ∧ shellCapacity 2 = 8 ∧
     shellCapacity 3 = 18 :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
@@ -327,6 +310,8 @@ A hypothetical neutron-electron bound state has dim ≠ hydrogen dim. -/
 
 theorem dimNeutron_eq_dimProton_mul_dimScale_inv :
     dimNeutron = dimProton * dimScale⁻¹ := by decide
+
+def dimFineStructure : FDim := ⟨3, -1⟩
 
 theorem em_binding_dimension :
     dimFineStructure * dimFineStructure * dimElectron = dimScale := by decide
@@ -344,11 +329,6 @@ For n ≥ 3: gap = nuclearMagic(n+1) - nuclearMagic(n) = hoLevelCapacity(n) + sp
 The "+2" term = spinDegeneracy arises from the constant intruder growth rate.
 Shell degeneracy C(n+2,2) is the D_{n+2} pair count — the same structure underlying
 particle mass exponents and the spectral zeta function. -/
-
--- Intruder degeneracy grows by spinDegeneracy per shell
-theorem intruder_growth_rate (n : ℕ) :
-    intruderDeg (n + 1) - intruderDeg n = spinDegeneracy := by
-  simp [intruderDeg, spinDegeneracy]; omega
 
 -- Magic number gap for n ≥ 3: hoLevelCapacity(n) + spinDegeneracy
 theorem magic_gap_formula :
@@ -387,9 +367,6 @@ theorem magic_gap_uses_mass_pair_counts :
 /-! ## Section 11: Summary -/
 
 theorem nuclear_structure_from_Fζ_channels :
-  -- Channel dimensions match physical constants
-  spinDegeneracy = 2 ∧
-  spatialDim = syWeight ∧
   -- Subshell capacities: spinDeg × harmonicDim(l) = 2(2l+1)
   subshellCapacity 0 = 2 ∧
   subshellCapacity 1 = 6 ∧
@@ -398,7 +375,7 @@ theorem nuclear_structure_from_Fζ_channels :
   -- 7 periods = 118 elements
   periodLength 1 + periodLength 2 + periodLength 3 + periodLength 4 +
   periodLength 5 + periodLength 6 + periodLength 7 = 118 ∧
-  -- Nuclear magic numbers (HO for N < spatialDim, intruder for N ≥ spatialDim)
+  -- Nuclear magic numbers (HO for N < syWeight, intruder for N ≥ syWeight)
   nuclearMagic 0 = 2 ∧ nuclearMagic 1 = 8 ∧ nuclearMagic 2 = 20 ∧
   nuclearMagic 3 = 28 ∧ nuclearMagic 4 = 50 ∧ nuclearMagic 5 = 82 ∧
   nuclearMagic 6 = 126 ∧

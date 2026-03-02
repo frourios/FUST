@@ -2,6 +2,7 @@ import FUST.Physics.QuarkMassRatios
 import FUST.Physics.MassRatioDerivation
 import FUST.Physics.MassRatioPredictions
 import FUST.Physics.MassGap
+import FUST.Dimension
 
 namespace FUST.Dim
 
@@ -94,9 +95,20 @@ def dimProton : FDim := dimSector * dimScale ^ (14 : ℤ)
 def dimNeutron : FDim := dimProton * deriveFDim 2
 def dimWBoson : FDim := dimSector * dimScale ^ (25 : ℤ)
 
+theorem dimElectron_eq : dimElectron = ⟨-5, 1⟩ := by decide
+theorem dimProton_eq : dimProton = ⟨9, -13⟩ := by decide
+theorem dimNeutron_eq : dimNeutron = ⟨8, -12⟩ := by decide
+
 /-! ## Dimensioned Masses: each with its unique FDim
 
 Each particle has a unique dimension deriveFDim(6)^a × dimScale^n. -/
+
+noncomputable def massScale : ScaleQ dimSector := ⟨FUST.massScale⟩
+
+theorem massScale_val : massScale.val = 12 / 25 := by
+  simp only [massScale, FUST.massScale_eq]
+
+theorem massScale_pos : 0 < massScale.val := by rw [massScale_val]; norm_num
 
 /-- Electron mass: m_e = Δ (lightest charged fermion = mass scale) -/
 noncomputable def electronMass : ScaleQ dimElectron := massScale

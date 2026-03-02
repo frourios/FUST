@@ -10,9 +10,9 @@ import FUST.Chemistry.Metals.Zirconium
 
 namespace FUST.Chemistry.Palladium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
-open FUST.Chemistry.Zirconium
+open FUST.Chemistry.Zirconium FUST.ParticleSpectrum
 
 /-! ## Section 1: Palladium Parameters
 
@@ -23,7 +23,7 @@ Aufbau anomaly: [Kr] 4d¹⁰ (NOT 4d⁸ 5s²). Filled 4d shell, no 5s.
 abbrev palladiumZ : ℕ := 46
 
 theorem palladiumZ_from_magic :
-    Nuclear.nuclearMagic 4 - 2 * Nuclear.spinDegeneracy = palladiumZ := by decide
+    Nuclear.nuclearMagic 4 - 2 * spinDegeneracy = palladiumZ := by decide
 
 -- [Kr] 4d¹⁰ (anomalous: all electrons in 4d, no 5s)
 abbrev palladium_4d_electrons : ℕ := 10

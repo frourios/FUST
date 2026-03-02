@@ -146,14 +146,3 @@ theorem massGap_onMassShell : onMassShell (Dζ_momentum 1) (Real.sqrt 14) := by
 end CasimirMassGap
 
 end FUST
-
-namespace FUST.Dim
-
-noncomputable def massScale : ScaleQ dimSector := ⟨FUST.massScale⟩
-
-theorem massScale_val : massScale.val = 12 / 25 := by
-  simp only [massScale, FUST.massScale_eq]
-
-theorem massScale_pos : 0 < massScale.val := by rw [massScale_val]; norm_num
-
-end FUST.Dim

@@ -9,8 +9,8 @@ import FUST.Chemistry.SulfurAtom
 
 namespace FUST.Chemistry.Iron
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
-open FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Dihydrogen FUST.ParticleSpectrum
 
 /-! ## Section 1: Iron Parameters
 
@@ -21,7 +21,7 @@ Aufbau: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶.
 abbrev ironZ : ℕ := 26
 
 theorem ironZ_from_magic :
-    Nuclear.nuclearMagic 3 - Nuclear.spinDegeneracy = ironZ := rfl
+    Nuclear.nuclearMagic 3 - spinDegeneracy = ironZ := rfl
 
 -- Ar core (1s² 2s² 2p⁶ 3s² 3p⁶) = 18
 abbrev arCoreElectrons : ℕ := 18
@@ -90,7 +90,7 @@ theorem Fe58_mass_number : ironZ + neutrons_Fe58 = 58 := rfl
 
 theorem iron_classification :
     ironZ = 26 ∧
-    Nuclear.nuclearMagic 3 - Nuclear.spinDegeneracy = ironZ ∧
+    Nuclear.nuclearMagic 3 - spinDegeneracy = ironZ ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_Fe54) ∧
     26 + 30 + 26 = Nuclear.nuclearMagic 5 ∧
     (dimAtom 26 30 0).effectiveDegree > 2 ∧

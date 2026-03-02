@@ -20,8 +20,8 @@ import FUST.Chemistry.DihydrogenMolecules
 
 namespace FUST.Chemistry.HydrogenEmbrittlement
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
-open FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Dihydrogen FUST.ParticleSpectrum
 open FUST.Chemistry.Iron FUST.Chemistry.Nickel
 open FUST.Chemistry.Titanium FUST.Chemistry.Aluminum
 open FUST.Chemistry.Copper FUST.Chemistry.Chromium
@@ -43,7 +43,7 @@ theorem interstitial_nH_particleCount (Z N n : ℕ) :
 
 -- Δ(particle count) per H = spinDegeneracy
 theorem interstitial_H_delta_eq_spinDeg :
-    2 = Nuclear.spinDegeneracy := rfl
+    2 = spinDegeneracy := rfl
 
 /-! ## Section 2: Iron — Magic Particle Count Destruction
 
@@ -120,7 +120,7 @@ theorem iron_nickel_neutron_identity :
 
 -- Fe-Ni have consecutive Z (differing by spinDegeneracy)
 theorem iron_nickel_Z_diff :
-    nickelZ - ironZ = Nuclear.spinDegeneracy := rfl
+    nickelZ - ironZ = spinDegeneracy := rfl
 
 -- Iron-nickel effectiveDegree gap
 theorem iron_nickel_effDeg_gap :

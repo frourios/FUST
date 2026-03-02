@@ -1,6 +1,5 @@
 import FUST.Astronomy.BlackHole
 import FUST.Astronomy.Cosmology
-import FUST.Astronomy.ScaleStructure
 import FUST.Astronomy.VacuumStability
 
 import FUST.Chemistry.Metals.Aluminum
@@ -28,7 +27,6 @@ import FUST.Chemistry.GeneticCode
 import FUST.Chemistry.HeliumInertness
 import FUST.Chemistry.Homochirality
 import FUST.Chemistry.HydrogenIsotopes
-import FUST.Chemistry.HydrogenOrbital
 import FUST.Chemistry.LaplaceDemon
 import FUST.Chemistry.Mutation
 import FUST.Chemistry.NitrogenIsotopes
@@ -76,6 +74,7 @@ import FUST.Physics.Probability
 import FUST.Physics.QuarkMassRatios
 import FUST.Physics.SchrodingerEquation
 import FUST.Physics.SpacetimeUniqueness
+import FUST.Physics.StateFunctions
 import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeStructure
 import FUST.Physics.WeinbergAngle

@@ -11,8 +11,7 @@ import FUST.Chemistry.Translation
 
 namespace FUST.Chemistry.Mutation
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Nucleotide
-open FUST.Chemistry.GeneticCode
+open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode FUST.ParticleSpectrum
 open FUST.Chemistry.AminoAcid FUST.Chemistry.Oxygen
 open FUST.Chemistry.Carbon FUST.Chemistry.Dihydrogen
 
@@ -66,7 +65,7 @@ theorem total_substitution_types :
 
 theorem transition_transversion_ratio :
     transversionCount / transitionCount =
-    Nuclear.spinDegeneracy := rfl
+    spinDegeneracy := rfl
 
 /-! ## Section 4: Mutation Space of Sense Codons
 
@@ -123,8 +122,7 @@ theorem mutation_classification :
     adenineZ + thymineZ = guanineZ + cytosineZ ∧
     synonymousMutationCount + missenseMutationCount +
       nonsenseMutationCount = 549 ∧
-    transversionCount / transitionCount =
-      Nuclear.spinDegeneracy ∧
+    transversionCount / transitionCount = spinDegeneracy ∧
     gluZ - valZ = 14 :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 

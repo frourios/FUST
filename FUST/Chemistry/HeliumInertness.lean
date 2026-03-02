@@ -9,7 +9,7 @@ import FUST.Chemistry.OxygenIsotopes
 
 namespace FUST.Chemistry.Helium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
+open FUST.Chemistry.Oxygen FUST.ParticleSpectrum
 
 /-! ## Section 1: Helium Species State Functions -/
 
@@ -91,8 +91,7 @@ theorem closedShell_2 : closedShellElectronCount 2 = 10 := by decide
 private theorem shellCapacity_ge_two (n : ℕ) (hn : n ≥ 1) :
     Nuclear.shellCapacity n ≥ 2 := by
   unfold Nuclear.shellCapacity
-  have h2 : Nuclear.spinDegeneracy = 2 := Nuclear.spinDegeneracy_eq
-  rw [h2]
+  rw [spinDegeneracy]
   nlinarith [Nat.one_le_iff_ne_zero.mpr (by omega : n ≠ 0)]
 
 -- closedShellElectronCount is strictly increasing for n ≥ 1
@@ -117,7 +116,7 @@ theorem helium_closed_shell_eq :
     closedShellElectronCount 1 = Nuclear.shellCapacity 1 := by decide
 
 -- shellCapacity(1) = spinDegeneracy = 2
-theorem shell1_eq_spinDeg : Nuclear.shellCapacity 1 = Nuclear.spinDegeneracy := by
+theorem shell1_eq_spinDeg : Nuclear.shellCapacity 1 = spinDegeneracy := by
   unfold Nuclear.shellCapacity; ring
 
 /-! ## Section 7: Hydrogen and Oxygen Have Vacancies -/

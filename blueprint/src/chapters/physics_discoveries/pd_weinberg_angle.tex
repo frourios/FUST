@@ -58,15 +58,6 @@ This is the unification-scale value, matching the $\mathrm{SU}(5)$ GUT tree-leve
 The experimental value $\sin^2\theta_W(M_Z) \approx 0.231$ is the low-energy value
 after renormalization group running.
 
-\begin{theorem}[Cosine-Squared Weinberg]
-\label{thm:weinberg_cos2}
-\lean{FUST.WeinbergAngle.cos2_weinberg}
-\leanok
-\[
-\cos^2\theta_W = \frac{\text{SY weight}}{\text{total weight}} = \frac{3}{4}
-\]
-\end{theorem}
-
 \section{Derivation Chain}
 \label{sec:weinberg_derivation}
 
@@ -115,10 +106,3 @@ The $\mathbb{R}$-evaluation recovers the physical $m_Z^2 = m_W^2 \times 4/3$.
 \item $\sin^2\theta_W = 1/(3+1) = 1/4$
 \end{enumerate}
 \end{theorem}
-
-\section{Dimensional Type}
-\label{sec:weinberg_dim}
-
-$\sin^2\theta_W = 1/4$ is a \textbf{RatioQuantity}: the AF channel weight fraction of the total $F_\zeta$ norm-squared weight, inherently dimensionless.
-
-Lean: \texttt{FUST.Dim.weinbergAngle} with type \texttt{RatioQ}. The value theorem \texttt{weinbergAngle\_val} verifies the structural derivation from $F_\zeta$ channel weights.

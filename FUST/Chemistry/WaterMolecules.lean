@@ -13,7 +13,6 @@ import FUST.Chemistry.HeliumInertness
 
 namespace FUST.Chemistry.Water
 
-open FUST FUST.Dim FUST.Chemistry
 open FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Molecular Parameter Derivation

@@ -18,7 +18,7 @@ import FUST.Physics.LeastAction
 
 namespace FUST.Superconductivity
 
-open FUST FUST.Dim FUST.Chemistry
+open FUST.Chemistry FUST.ParticleSpectrum
 open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Iron
 open FUST.Chemistry.Copper FUST.Chemistry.Niobium
@@ -29,12 +29,12 @@ A Cooper pair consists of spinDeg = 2 electrons with opposite spins.
 The paired state is a boson (integer spin) with charge 2e.
 -/
 
-abbrev cooperPairSize : ℕ := Nuclear.spinDegeneracy
+abbrev cooperPairSize : ℕ := spinDegeneracy
 
 theorem cooperPairSize_eq : cooperPairSize = 2 := rfl
 
 theorem cooperPair_charge_eq_spinDeg :
-    cooperPairSize = Nuclear.spinDegeneracy := rfl
+    cooperPairSize = spinDegeneracy := rfl
 
 theorem flux_quantum_denominator :
     cooperPairSize = 2 := rfl
@@ -55,7 +55,7 @@ Cu²⁺ has 3d⁹ configuration: d-vacancy = 1 = hydrogenZ.
 -/
 
 -- CuO₂ in-plane coordination = baseCount = 4
-abbrev cuprateCoordination : ℕ := 2 ^ Nuclear.spinDegeneracy
+abbrev cuprateCoordination : ℕ := 2 ^ spinDegeneracy
 
 theorem cuprate_coordination_eq_baseCount :
     cuprateCoordination = 4 := rfl
@@ -87,18 +87,18 @@ The gap has baseCount = 4 nodes on the Fermi surface.
 -/
 
 -- d-orbital angular momentum quantum number
-abbrev dOrbitalL : ℕ := Nuclear.spinDegeneracy
+abbrev dOrbitalL : ℕ := spinDegeneracy
 
 theorem d_orbital_l_eq_spinDeg : dOrbitalL = 2 := rfl
 
 -- d-wave gap nodes = baseCount = 4 (along diagonal directions)
-abbrev dWaveNodes : ℕ := 2 ^ Nuclear.spinDegeneracy
+abbrev dWaveNodes : ℕ := 2 ^ spinDegeneracy
 
 theorem dWave_nodes_eq_baseCount : dWaveNodes = 4 := rfl
 
 -- d-wave has spinDeg positive and spinDeg negative lobes
 theorem dWave_lobe_partition :
-    dWaveNodes = Nuclear.spinDegeneracy + Nuclear.spinDegeneracy := rfl
+    dWaveNodes = spinDegeneracy + spinDegeneracy := rfl
 
 /-! ## Section 6: Conventional Superconductors — Niobium
 
@@ -156,7 +156,7 @@ theorem LaH10_particleCount_increase :
 theorem LaH10_particleCount_structure :
     LaH10_Z + LaH10_N + LaH10_Z -
     (lanthanumZ + neutrons_La139 + lanthanumZ) =
-    10 * Nuclear.spinDegeneracy := rfl
+    10 * spinDegeneracy := rfl
 
 /-! ## Section 8: YBCO (YBa₂Cu₃O₇) — Prototypical High-Tc
 
@@ -199,15 +199,15 @@ theorem effDeg_YBCO :
 
 -- Number of CuO₂ planes per unit cell = spinDeg = 2 (for YBCO)
 theorem YBCO_CuO2_planes :
-    (2 : ℕ) = Nuclear.spinDegeneracy := rfl
+    (2 : ℕ) = spinDegeneracy := rfl
 
 /-! ## Section 9: Coordination Number Hierarchy
 
 Crystal coordination numbers are multiples of baseCount = 4.
 -/
 
-abbrev bccCoordination : ℕ := 2 * (2 ^ Nuclear.spinDegeneracy)
-abbrev fccCoordination : ℕ := 3 * (2 ^ Nuclear.spinDegeneracy)
+abbrev bccCoordination : ℕ := 2 * (2 ^ spinDegeneracy)
+abbrev fccCoordination : ℕ := 3 * (2 ^ spinDegeneracy)
 
 theorem bcc_coordination_eq : bccCoordination = 8 := rfl
 theorem fcc_coordination_eq : fccCoordination = 12 := rfl

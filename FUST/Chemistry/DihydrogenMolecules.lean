@@ -10,7 +10,7 @@ import FUST.Chemistry.OxygenIsotopes
 
 namespace FUST.Chemistry.Dihydrogen
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
+open FUST.Chemistry.Oxygen
 
 /-! ## Section 1: H₂ Isotopologue Parameters
 

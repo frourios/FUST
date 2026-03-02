@@ -9,8 +9,8 @@ import FUST.Chemistry.Metals.Iron
 
 namespace FUST.Chemistry.Chromium
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Iron
-open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Iron
+open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen FUST.ParticleSpectrum
 
 /-! ## Section 1: Chromium Parameters
 
@@ -21,7 +21,7 @@ Aufbau anomaly: [Ar] 3d⁵ 4s¹ (not 3d⁴ 4s²). Half-filled d-shell.
 abbrev chromiumZ : ℕ := 24
 
 theorem chromiumZ_from_magic :
-    Nuclear.nuclearMagic 2 + 2 * Nuclear.spinDegeneracy = chromiumZ := rfl
+    Nuclear.nuclearMagic 2 + 2 * spinDegeneracy = chromiumZ := rfl
 
 -- [Ar] 3d⁵ 4s¹ (anomalous: half-filled d-shell preferred)
 abbrev chromium_3d_electrons : ℕ := 5
@@ -75,7 +75,7 @@ theorem Cr53_mass_number : chromiumZ + neutrons_Cr53 = 53 := rfl
 
 theorem chromium_classification :
     chromiumZ = 24 ∧
-    Nuclear.nuclearMagic 2 + 2 * Nuclear.spinDegeneracy = chromiumZ ∧
+    Nuclear.nuclearMagic 2 + 2 * spinDegeneracy = chromiumZ ∧
     (∃ i, i < 7 ∧ Nuclear.nuclearMagic i = neutrons_Cr52) ∧
     Nuclear.subshellCapacity 2 / 2 = chromium_3d_electrons ∧
     (dimAtom 24 28 0).effectiveDegree > 2 ∧

@@ -12,8 +12,7 @@ import FUST.Chemistry.Nucleotides
 
 namespace FUST.Chemistry.GeneticCode
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
-open FUST.Chemistry.Nucleotide
+open FUST.Chemistry.Oxygen FUST.Chemistry.Nucleotide FUST.ParticleSpectrum
 open FUST.Chemistry.Carbon FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Codon Structure
@@ -32,7 +31,7 @@ theorem codonCount_eq : codonCount = 64 := rfl
 
 -- 64 = 4³ = (2^spinDeg)^spatialDim = 2^(spinDeg × spatialDim) = 2^6
 theorem codonCount_binary :
-    codonCount = 2 ^ (Nuclear.spinDegeneracy * 3) := rfl
+    codonCount = 2 ^ (spinDegeneracy * 3) := rfl
 
 -- codonCount = 2^carbonZ (carbonZ = spinDeg × spatialDim = 6)
 theorem codonCount_eq_two_pow_carbonZ :
@@ -121,12 +120,12 @@ Information per base = log₂(baseCount) = log₂(4) = 2 bits = spinDegeneracy.
 Information per codon = codonLength × 2 = 6 bits = carbonZ.
 -/
 
-theorem info_per_base : Nuclear.spinDegeneracy = 2 := rfl
+theorem info_per_base : spinDegeneracy = 2 := rfl
 theorem info_per_codon :
-    codonLength * Nuclear.spinDegeneracy = carbonZ := rfl
+    codonLength * spinDegeneracy = carbonZ := rfl
 
 theorem genetic_code_info_bits :
-    codonLength * Nuclear.spinDegeneracy = 6 := rfl
+    codonLength * spinDegeneracy = 6 := rfl
 
 /-! ## Section 6: Summary -/
 
@@ -138,7 +137,7 @@ theorem genetic_code_classification :
     stopCodonCount = 3 ∧
     codonCount = 2 ^ carbonZ ∧
     thymineZ - uracilZ = 8 ∧
-    codonLength * Nuclear.spinDegeneracy = carbonZ :=
+    codonLength * spinDegeneracy = carbonZ :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end FUST.Chemistry.GeneticCode

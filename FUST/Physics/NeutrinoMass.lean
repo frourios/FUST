@@ -1,5 +1,5 @@
 import FUST.Physics.MassGap
-import FUST.Physics.WeinbergAngle
+import FUST.Physics.ParticleSpectrum
 import FUST.Dimension
 
 /-!
@@ -14,7 +14,7 @@ All neutrino mass predictions from Fζ structure:
 
 namespace FUST.NeutrinoMass
 
-open FUST.Dim FUST.WeinbergAngle
+open FUST.Dim FUST.WeinbergAngle FUST.ParticleSpectrum
 
 /-! ## Part 1: Neutrino Mass Squared Ratio
 

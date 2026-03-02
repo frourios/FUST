@@ -15,7 +15,7 @@ import FUST.Physics.CouplingConstants
 namespace FUST.Chemistry.Homochirality
 
 open FUST FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
-open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode
+open FUST.Chemistry.Nucleotide FUST.Chemistry.GeneticCode FUST.ParticleSpectrum
 
 /-! ## Section 1: Chirality Requires Three Spatial Dimensions
 
@@ -138,14 +138,14 @@ theorem homochiral_amino_acids :
     aminoAcidCount = 20 := rfl
 
 -- Sugar types in nucleic acids = spinDeg (ribose in RNA, deoxyribose in DNA)
-abbrev nucleicAcidSugarTypes : ℕ := Nuclear.spinDegeneracy
+abbrev nucleicAcidSugarTypes : ℕ := spinDegeneracy
 
 theorem sugar_types_eq_spinDeg :
     nucleicAcidSugarTypes = 2 := rfl
 
 -- Nucleic acid types (DNA, RNA) = spinDeg
 theorem nucleic_acid_types_eq_spinDeg :
-    nucleicAcidSugarTypes = Nuclear.spinDegeneracy := rfl
+    nucleicAcidSugarTypes = spinDegeneracy := rfl
 
 /-! ## Section 8: Why L and Not D
 

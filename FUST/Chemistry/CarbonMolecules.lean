@@ -14,7 +14,6 @@ import FUST.Chemistry.WaterMolecules
 
 namespace FUST.Chemistry.CarbonMol
 
-open FUST FUST.Dim FUST.Chemistry
 open FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Carbon FUST.Chemistry.Helium
 

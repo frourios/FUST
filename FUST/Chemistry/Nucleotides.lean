@@ -11,9 +11,9 @@ import FUST.Chemistry.PhosphorusAtom
 
 namespace FUST.Chemistry.Nucleotide
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
 open FUST.Chemistry.Phosphorus FUST.Chemistry.Dihydrogen
-open FUST.Chemistry.Carbon
+open FUST.Chemistry.Carbon ParticleSpectrum
 
 /-! ## Section 1: Nucleobase Molecular Parameters
 
@@ -79,7 +79,7 @@ A-T: 2 hydrogen bonds = spinDegeneracy
 G-C: 3 hydrogen bonds = spatialDim
 -/
 
-abbrev AT_hbonds : ℕ := Nuclear.spinDegeneracy
+abbrev AT_hbonds : ℕ := spinDegeneracy
 abbrev GC_hbonds : ℕ := 3
 
 theorem AT_hbonds_eq : AT_hbonds = 2 := rfl
@@ -102,12 +102,12 @@ theorem chargaff_Z_value : adenineZ + thymineZ = 136 := rfl
 4 DNA bases = 2^spinDegeneracy.
 -/
 
-abbrev baseCount : ℕ := 2 ^ Nuclear.spinDegeneracy
+abbrev baseCount : ℕ := 2 ^ spinDegeneracy
 
 theorem baseCount_eq : baseCount = 4 := rfl
 
 theorem purine_pyrimidine_split :
-    Nuclear.spinDegeneracy + Nuclear.spinDegeneracy = baseCount := rfl
+    spinDegeneracy + spinDegeneracy = baseCount := rfl
 
 /-! ## Section 7: GC-AT effectiveDegree Difference
 
@@ -164,7 +164,7 @@ theorem nucleobase_classification :
     adenineZ + thymineZ = guanineZ + cytosineZ ∧
     adenineZ + thymineZ = 136 ∧
     -- H-bond counts from D-operator kernels
-    AT_hbonds = Nuclear.spinDegeneracy ∧
+    AT_hbonds = spinDegeneracy ∧
     GC_hbonds = 3 ∧
     -- Base count from spin
     baseCount = 4 ∧

@@ -14,8 +14,7 @@ import FUST.Chemistry.WaterMolecules
 
 namespace FUST.Chemistry.BondGeometry
 
-open FUST FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
-open FUST.Chemistry.Helium Real
+open Chemistry.Oxygen Chemistry.Carbon Chemistry.Helium Real ParticleSpectrum
 
 /-! ## Section 1: Valence and Vacancy for Period-2 Atoms
 
@@ -39,7 +38,7 @@ For hydrides: bondingElectrons = number of H bonds (each H contributes 1 pair).
 -/
 
 def lonePairCount (Z : ℕ) (nBonds : ℕ) : ℕ :=
-  (valenceElectrons Z - nBonds) / Nuclear.spinDegeneracy
+  (valenceElectrons Z - nBonds) / spinDegeneracy
 
 -- CO₂: C forms 4 bonds (2 double), all valence electrons in bonds → 0 lone pairs
 theorem CO2_lonePairs : lonePairCount carbonZ 4 = 0 := by decide
@@ -117,7 +116,7 @@ noncomputable def waterBondAngle : ℝ := arccos (-1 / 4 : ℝ)
 
 -- Derivation: oxygenZ / spinDegeneracy = 4
 theorem water_electron_pairs :
-    oxygenZ / Nuclear.spinDegeneracy = 4 := by decide
+    oxygenZ / spinDegeneracy = 4 := by decide
 
 -- arccos antimonotone: -1/3 < -1/4 → arccos(-1/4) < arccos(-1/3)
 theorem waterAngle_lt_tetrahedral : waterBondAngle < tetrahedralAngle := by
@@ -134,7 +133,7 @@ noncomputable def methaneBondAngle : ℝ := arccos (-1 / 3 : ℝ)
 
 -- Derivation: carbonZ / spinDegeneracy = 3
 theorem methane_electron_pairs :
-    carbonZ / Nuclear.spinDegeneracy = 3 := by decide
+    carbonZ / spinDegeneracy = 3 := by decide
 
 theorem methaneBondAngle_eq_tetrahedral : methaneBondAngle = tetrahedralAngle := rfl
 
@@ -208,4 +207,3 @@ theorem bond_geometry_from_shell_structure :
   · exact angle_ordering.2
 
 end FUST.Chemistry.BondGeometry
-

@@ -13,8 +13,7 @@ import FUST.Chemistry.Nucleotides
 
 namespace FUST.Chemistry.AminoAcid
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen
-open FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Carbon FUST.Chemistry.Nitrogen
 open FUST.Chemistry.Sulfur FUST.Chemistry.Nucleotide
 

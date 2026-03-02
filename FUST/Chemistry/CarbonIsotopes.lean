@@ -8,14 +8,14 @@ import FUST.Chemistry.HeliumInertness
 
 namespace FUST.Chemistry.Carbon
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open Chemistry Chemistry.Oxygen Chemistry.Helium ParticleSpectrum
 
 /-! ## Section 1: Carbon Parameters
 
 carbonZ = spinDegeneracy × spatialDim = 2 × 3 = 6.
 -/
 
-abbrev carbonZ : ℕ := Nuclear.spinDegeneracy * 3
+abbrev carbonZ : ℕ := spinDegeneracy * 3
 
 theorem carbonZ_eq : carbonZ = 6 := rfl
 

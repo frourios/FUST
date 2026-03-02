@@ -8,7 +8,7 @@ import FUST.Chemistry.SulfurAtom
 
 namespace FUST.Chemistry.Aluminum
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium
 open FUST.Chemistry.Dihydrogen FUST.Chemistry.Nitrogen
 
 /-! ## Section 1: Aluminum Parameters

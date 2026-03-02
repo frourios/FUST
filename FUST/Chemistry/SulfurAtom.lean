@@ -10,8 +10,7 @@ import FUST.Chemistry.PhosphorusAtom
 
 namespace FUST.Chemistry.Sulfur
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Helium
-open FUST.Chemistry.Dihydrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Sulfur Parameters
 
@@ -87,4 +86,3 @@ theorem sulfur_classification :
   exact ⟨rfl, rfl, rfl, by decide⟩
 
 end FUST.Chemistry.Sulfur
-

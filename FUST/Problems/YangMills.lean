@@ -263,10 +263,8 @@ theorem yangMills_massGap_SU3 :
    ⟨FUST.massGapSq_pos, FUST.massGapSq_eq⟩,
    ker_Fζ_not_subalgebra⟩
 
-/-- SU(2) mass gap from Fζ: spinDegeneracy = 2 → SU(2), Fζ(z⁵) ≠ 0 -/
+/-- SU(2) mass gap from Fζ: Fζ(z⁵) ≠ 0 -/
 theorem yangMills_massGap_SU2 :
-    -- SU(2) from spin degeneracy = AF_weight + 1 = 2
-    (spinDegeneracy = 2) ∧
     -- Fζ kernel: 4 of 6 modes annihilated
     (∀ k z, Fζ (fun w => w ^ (6 * k)) z = 0 ∧
             Fζ (fun w => w ^ (6 * k + 2)) z = 0 ∧
@@ -274,7 +272,7 @@ theorem yangMills_massGap_SU2 :
             Fζ (fun w => w ^ (6 * k + 4)) z = 0) ∧
     -- Active mode n ≡ 5 mod 6 detects mass
     (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0) :=
-  ⟨rfl, fun k z => FUST.kernel_mod6 k z, Fζ_detects_fifth⟩
+  ⟨fun k z => FUST.kernel_mod6 k z, Fζ_detects_fifth⟩
 
 /-- Yang-Mills mass gap: Fζ channel structure determines gauge groups and mass gaps -/
 theorem yangMills_massGap :
@@ -283,13 +281,13 @@ theorem yangMills_massGap :
     -- SU(3) mass gap: Δ = 12/25 > 0, Casimir m² = 14 > 0
     (0 < FUST.massScale ∧ FUST.massScale = 12 / 25 ∧
      0 < FUST.massGapSq ∧ FUST.massGapSq = 14) ∧
-    -- SU(2): spinDegeneracy = 2, active mode detects mass
-    (spinDegeneracy = 2 ∧ (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0)) ∧
+    -- SU(2): active mode detects mass
+    (∀ z : ℂ, z ≠ 0 → Fζ (fun t => t ^ 5) z ≠ 0) ∧
     -- Confinement: ker(Fζ) not a subalgebra
     (∃ f g, IsInKerFζ f ∧ IsInKerFζ g ∧ ¬IsInKerFζ (fun t => f t * g t)) :=
   ⟨⟨rfl, rfl, rfl⟩,
    ⟨FUST.massScale_pos, FUST.massScale_eq, FUST.massGapSq_pos, FUST.massGapSq_eq⟩,
-   ⟨rfl, Fζ_detects_fifth⟩, ker_Fζ_not_subalgebra⟩
+   Fζ_detects_fifth, ker_Fζ_not_subalgebra⟩
 
 end MainTheorem
 

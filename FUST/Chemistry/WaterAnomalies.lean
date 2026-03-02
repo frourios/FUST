@@ -15,11 +15,10 @@ import FUST.Chemistry.SulfurAtom
 
 namespace FUST.Chemistry.WaterAnomalies
 
-open FUST FUST.Dim FUST.Chemistry
 open FUST.Chemistry.Oxygen FUST.Chemistry.Carbon
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 open FUST.Chemistry.Sulfur FUST.Chemistry.BondGeometry
-open FUST.Chemistry.Water
+open FUST.Chemistry.Water FUST.ParticleSpectrum
 
 /-! ## Section 1: Hydrogen Bond Capacity from Shell Structure
 
@@ -32,7 +31,7 @@ Total = 4 = baseCount = 2^spinDegeneracy.
 abbrev hbondDonors : ℕ := 2
 
 theorem hbondDonors_eq_spinDeg :
-    hbondDonors = Nuclear.spinDegeneracy := rfl
+    hbondDonors = spinDegeneracy := rfl
 
 theorem hbondDonors_eq_vacancy :
     hbondDonors = shellVacancy oxygenZ := by decide
@@ -44,7 +43,7 @@ theorem hbondAcceptors_eq_lonePairs :
     hbondAcceptors = lonePairCount oxygenZ 2 := by decide
 
 theorem hbondAcceptors_eq_spinDeg :
-    hbondAcceptors = Nuclear.spinDegeneracy := rfl
+    hbondAcceptors = spinDegeneracy := rfl
 
 -- Total H-bond capacity per molecule = baseCount = 4
 abbrev hbondCapacity : ℕ := 4
@@ -53,7 +52,7 @@ theorem hbondCapacity_eq :
     hbondDonors + hbondAcceptors = hbondCapacity := rfl
 
 theorem hbondCapacity_eq_baseCount :
-    hbondCapacity = 2 ^ Nuclear.spinDegeneracy := by decide
+    hbondCapacity = 2 ^ spinDegeneracy := by decide
 
 theorem hbondCapacity_eq_electronRegions :
     hbondCapacity = electronRegions oxygenZ 2 := by decide
@@ -73,7 +72,7 @@ This open structure makes ice less dense than liquid water.
 abbrev iceCoordination : ℕ := hbondCapacity
 
 theorem iceCoordination_eq_baseCount :
-    iceCoordination = 2 ^ Nuclear.spinDegeneracy := by decide
+    iceCoordination = 2 ^ spinDegeneracy := by decide
 
 -- Close packing has coordination 12
 abbrev closePackCoordination : ℕ := 12
@@ -163,11 +162,11 @@ The inequality spatialDim < baseCount captures this transition.
 
 -- spatialDim (3) < baseCount (4): liquid can break 1 H-bond and densify
 theorem spatialDim_lt_baseCount :
-    3 < 2 ^ Nuclear.spinDegeneracy := by decide
+    3 < 2 ^ spinDegeneracy := by decide
 
 -- spatialDim + 1 = baseCount
 theorem spatialDim_succ_eq_baseCount :
-    3 + 1 = 2 ^ Nuclear.spinDegeneracy := by decide
+    3 + 1 = 2 ^ spinDegeneracy := by decide
 
 /-! ## Section 6: Grotthuss Proton Transfer
 
@@ -244,7 +243,7 @@ theorem degreeGap_grows :
 
 theorem water_anomaly_classification :
     -- H-bond capacity = baseCount
-    hbondCapacity = 2 ^ Nuclear.spinDegeneracy ∧
+    hbondCapacity = 2 ^ spinDegeneracy ∧
     -- Water particle count Z+N+e = 28 is magic
     10 + 8 + 10 = Nuclear.nuclearMagic 3 ∧
     -- Only water among Group-16 hydrides has magic particle count
@@ -254,7 +253,7 @@ theorem water_anomaly_classification :
     -- Ice coordination < close-pack (open structure)
     iceCoordination < closePackCoordination ∧
     -- spatialDim < baseCount
-    3 < 2 ^ Nuclear.spinDegeneracy ∧
+    3 < 2 ^ spinDegeneracy ∧
     -- Autoionization conserves effectiveDegree
     (dimAtom 10 8 10).effectiveDegree +
       (dimAtom 10 8 10).effectiveDegree =

@@ -11,7 +11,7 @@ import FUST.Chemistry.NitrogenIsotopes
 
 namespace FUST.Chemistry.Phosphorus
 
-open FUST FUST.Dim FUST.Chemistry FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
+open FUST.Chemistry.Oxygen FUST.Chemistry.Nitrogen
 open FUST.Chemistry.Helium FUST.Chemistry.Dihydrogen
 
 /-! ## Section 1: Phosphorus Parameters
