@@ -179,7 +179,7 @@ theorem quark_flip_is_one : (2 : ℕ) - 1 = 1 ∧ (2 : ℕ) - 1 = 1 := ⟨rfl, r
 
 -- m_u/m_d = 1/2 from MassRatios
 theorem quark_mass_ratio_from_isospin :
-    muMdRatio.val = 1 / 2 := muMdRatio_val
+    muMdRatio = 1 / 2 := muMdRatio_val
 
 -- Splitting connects to isospin: φ² = φ + C(2,2) where C(2,2) = m_u/m_d numerator
 theorem splitting_isospin_connection :
@@ -322,20 +322,20 @@ theorem shell_from_channel_dimensions :
 
 /-! ## Section 9: Neutron Cannot Form Electron Shell
 
-dimNeutron = dimProton × dimTimeD2⁻¹
+dimNeutron = dimProton × dimScale⁻¹
 A hypothetical neutron-electron bound state has dim ≠ hydrogen dim. -/
 
-theorem dimNeutron_eq_dimProton_mul_dimTimeD2_inv :
-    dimNeutron = dimProton * dimTimeD2⁻¹ := by decide
+theorem dimNeutron_eq_dimProton_mul_dimScale_inv :
+    dimNeutron = dimProton * dimScale⁻¹ := by decide
 
 theorem em_binding_dimension :
-    dimFineStructure * dimFineStructure * dimElectron = dimTimeD2 := by decide
+    dimFineStructure * dimFineStructure * dimElectron = dimScale := by decide
 
 theorem neutron_shell_obstruction :
-    dimNeutron = dimProton * dimTimeD2⁻¹ ∧
-    dimFineStructure * dimFineStructure * dimElectron = dimTimeD2 ∧
+    dimNeutron = dimProton * dimScale⁻¹ ∧
+    dimFineStructure * dimFineStructure * dimElectron = dimScale ∧
     dimFineStructure ≠ (1 : FDim) ∧
-    dimNeutron * dimElectron * dimTimeD2⁻¹ ≠ dimProton * dimElectron * dimTimeD2⁻¹ := by
+    dimNeutron * dimElectron * dimScale⁻¹ ≠ dimProton * dimElectron * dimScale⁻¹ := by
   exact ⟨by decide, by decide, by decide, by decide⟩
 
 /-! ## Section 10: Magic Number Gap Analysis

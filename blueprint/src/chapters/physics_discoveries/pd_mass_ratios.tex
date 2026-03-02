@@ -124,7 +124,7 @@ The exponent $11 = C(5,2) + C(2,2) = 10 + 1$ combines $\mathrm{Diff}_5$ and $\ma
 \section{Dimensioned Particle Masses}
 \label{sec:mass_dimensioned}
 
-Each particle has a unique FDim $= \mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$.
+Each particle has a unique FDim $= \mathrm{deriveFDim}(6)^a \times \mathrm{dimScale}^n$.
 The electron baseline $(-5, 1, -1)$ corresponds to $a=1, n=0$;
 other particles acquire distinct FDim via the $\varphi$-scaling index $n$.
 All $\mathbb{R}$-valued mass ratios are invariant under FDim relabeling.
@@ -289,7 +289,7 @@ $\gamma$ & 0 (grading symmetry) & 0 & 0 & exact \\
 (WIMP scale $\sim 100$ GeV). The $\varphi$-exponent 25 is the same as for $m_W/m_e$,
 but dark matter belongs to the $\Phi_S$ sector:
 \[
-\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(\Phi_S) \times \mathrm{dimTimeD2}^{25} = (21, -25, -24)
+\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(\Phi_S) \times \mathrm{dimScale}^{25} = (21, -25, -24)
 \neq (20, -24, -26) = \mathrm{dimWBoson}.
 \]
 The distinction arises from the sector base: $(-4,0,1)$ for $\Phi_S$ vs.\ $(-5,1,-1)$ for $F_\zeta$.
@@ -391,5 +391,5 @@ $\Delta m^2_{21}/\Delta m^2_{31} = 1/(\dim\ker(\mathrm{Diff}_5) \times C(6,2)) =
 
 The exponents are CountQuantity: $C(4,2) = 6$ (\texttt{msMdExponent}), $C(4,2)+C(2,2) = 7$ (\texttt{mtMbExpHigh}), $C(4,2)-C(2,2) = 5$ (\texttt{mtMbExpLow}). All exponents trace to numerator operator pair counts, never hardcoded numerals.
 
-$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\lambda_{\min} = 12/25$ (ScaleQuantity at dimTime$^{-1}$, $F_\zeta$ minimum eigenvalue from gauge-invariant output).
+$m_s/m_d = \varphi^6$ (ScaleQuantity, $\approx 17.94$) is structurally distinct from $\lambda_{\min} = 12/25$ (ScaleQuantity at dimSector, $F_\zeta$ minimum eigenvalue from gauge-invariant output).
 

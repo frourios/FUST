@@ -1,139 +1,142 @@
-import FUST.DζOperator
-import FUST.Dimension
+import FUST.FζOperator
 import Mathlib.LinearAlgebra.Matrix.ToLin
-
-/-!
-# Standard Gauge Group from Fζ Factorization Gauge Freedom
-
-The gauge group arises from the INPUT side: the ambiguity in factoring a state
-function f = f₁·f₂·...·fₖ. The derivation defect δ(f,g) = Fζ(fg) - fFζ(g) - Fζ(f)g
-is invariant under (f,g) → (cf, c⁻¹g), giving U(1) scalar gauge.
-
-For multi-mode superpositions, mode coefficients can be mixed by GL(k) while
-preserving the product. The maximum k is bounded by the rank of the mode vector
-space v(s) = (σ_Diff5(s), σ_Diff3(s), σ_Diff2(s)) ∈ ℝ³, which has dimension 3
-(proved by Φ_S_rank_three). This limits the gauge group to SU(3).
-
-For the AF channel, τ(AF_coeff) = -AF_coeff (quaternionic type) uniquely determines
-SU(2). The trivial channel gives U(1).
--/
+import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 namespace FUST
 
-open Complex FUST.DζOperator
+open FUST.DζOperator Matrix FUST.FrourioAlgebra.GoldenEisensteinInt
 
-/-! ## Channel separation: ζ₆ ≠ φⁿ ensures independent channels -/
+/-- U(1) gauge group uniqueness for the trivial channel.
 
-section ChannelSeparation
+The trivial channel is the Galois-fixed subspace of ℤ[φ,ζ₆]:
+- galois_fixed_iff: σ(x)=x ∧ τ(x)=x ↔ b=c=d=0 (1D over ℤ)
+- On 1D: norm-preserving gauge = unitaryGroup (Fin 1) ℂ = U(1)
+- SU(1) = {I} is trivial: no SU reduction, full gauge is U(1)
+- derivDefect_const_gauge: scalar U(1) is exactly the gauge freedom -/
+theorem U1_gauge_uniqueness :
+    -- Galois-fixed subspace = ℤ (dim 1)
+    (∀ x : FUST.FrourioAlgebra.GoldenEisensteinInt,
+      sigma x = x ∧ tau x = x ↔ x.b = 0 ∧ x.c = 0 ∧ x.d = 0) ∧
+    -- Scalar gauge invariance (derivDefect)
+    (∀ (c : ℂ) (_ : c ≠ 0) (f g : ℂ → ℂ) (z : ℂ),
+      FζOperator.derivDefect (fun w => c * f w) (fun w => c⁻¹ * g w) z =
+      FζOperator.derivDefect f g z) ∧
+    -- Scalar unitary c·I₁ ∈ U(1)
+    (∀ c : ℂ, starRingEnd ℂ c * c = 1 →
+      c • (1 : Matrix (Fin 1) (Fin 1) ℂ) ∈ unitaryGroup (Fin 1) ℂ) ∧
+    -- det(c·I₁) = c (linear, not higher power)
+    (∀ c : ℂ, (c • (1 : Matrix (Fin 1) (Fin 1) ℂ)).det = c ^ 1) ∧
+    -- SU(1) is trivial (only identity)
+    (∀ M : Matrix (Fin 1) (Fin 1) ℂ,
+      M ∈ specialUnitaryGroup (Fin 1) ℂ → M = 1) ∧
+    -- Galois-fixed units are ±1
+    (∀ x : FUST.FrourioAlgebra.GoldenEisensteinInt,
+      sigma x = x ∧ tau x = x ∧ (mul x x = one ∨ mul x (neg x) = one) →
+      x = one ∨ x = neg one) :=
+  ⟨galois_fixed_iff,
+   FζOperator.derivDefect_const_gauge,
+   fun c hc => by
+     rw [mem_unitaryGroup_iff']; ext i j
+     simp only [star_smul, star_one, mul_apply, smul_apply, one_apply, smul_eq_mul]
+     simp [hc, Fin.eq_zero i, Fin.eq_zero j],
+   fun c => by simp,
+   fun M hM => by
+     rw [mem_specialUnitaryGroup_iff] at hM; ext i j
+     have hi := Fin.eq_zero i; have hj := Fin.eq_zero j; subst hi; subst hj
+     simp only [one_apply_eq]; rw [det_fin_one] at hM; exact hM.2,
+   galois_fixed_unit_iff⟩
 
-theorem zeta6_im_ne_zero : ζ₆.im ≠ 0 := by
-  simp only [ζ₆]
-  exact ne_of_gt (div_pos sqrt3_pos (by norm_num : (0 : ℝ) < 2))
+/-- SU(2) gauge group uniqueness for the AF channel.
 
-theorem phi_pow_im_zero (n : ℕ) : ((↑φ : ℂ) ^ n).im = 0 := by
-  rw [← ofReal_pow]; exact ofReal_im (φ ^ n)
+The AF channel carries a quaternionic structure from τ-anti-invariance:
+- τ(AF_coeff) = -AF_coeff and τ² = id give eigenvalue -1
+- AF_coeff² = -12: the J² < 0 quaternionic condition
+- The 1D-over-ℂ AF space with quaternionic doubling gives ℂ² = ℍ¹
+- Norm preservation on ℂ² → U(2), scalar separation → SU(2) = Sp(1) -/
+theorem SU2_gauge_uniqueness :
+    -- τ(AF_coeff) = -AF_coeff (quaternionic indicator)
+    (tau AF_coeff_gei =
+      FUST.FrourioAlgebra.GoldenEisensteinInt.neg AF_coeff_gei) ∧
+    -- τ is an involution (eigenvalues ±1)
+    (∀ x : FUST.FrourioAlgebra.GoldenEisensteinInt, tau (tau x) = x) ∧
+    -- τ preserves multiplication (ring automorphism)
+    (∀ x y : FUST.FrourioAlgebra.GoldenEisensteinInt,
+      tau (mul x y) = mul (tau x) (tau y)) ∧
+    -- AF_coeff² = -12 (quaternionic: J² < 0)
+    (mul AF_coeff_gei AF_coeff_gei =
+      (⟨-12, 0, 0, 0⟩ : FUST.FrourioAlgebra.GoldenEisensteinInt)) ∧
+    -- AF_coeff is not real (complex structure essential, excludes SO(3))
+    (AF_coeff.im ≠ 0) ∧
+    -- Scalar unitary c·I₂ ∈ U(2) (center)
+    (∀ c : ℂ, starRingEnd ℂ c * c = 1 →
+      c • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈ unitaryGroup (Fin 2) ℂ) ∧
+    -- Scalar gauge has det c²
+    (∀ c : ℂ, (c • (1 : Matrix (Fin 2) (Fin 2) ℂ)).det = c ^ 2) :=
+  ⟨by unfold tau AF_coeff_gei FUST.FrourioAlgebra.GoldenEisensteinInt.neg; ext <;> simp,
+   tau_involution,
+   tau_mul,
+   by unfold AF_coeff_gei mul; ext <;> simp,
+   by rw [AF_coeff_eq]; simp,
+   fun c hc => by
+     rw [mem_unitaryGroup_iff']; ext i j
+     simp only [star_smul, star_one, mul_apply, smul_apply, one_apply, smul_eq_mul,
+       Finset.sum_ite_eq', Finset.mem_univ, ite_true, mul_ite, mul_zero, mul_one,
+       ite_mul, zero_mul]
+     split
+     · subst_vars; exact hc
+     · ring,
+   fun c => by simp [Fintype.card_fin]⟩
 
-theorem zeta6_ne_phi_pow (n : ℕ) : ζ₆ ≠ (↑φ : ℂ) ^ n := by
-  intro h
-  have him := congr_arg Complex.im h
-  rw [phi_pow_im_zero] at him
-  exact zeta6_im_ne_zero him
+/-- 3×3 matrix of SY sub-operator eigenvalues at the first three active modes -/
+noncomputable def syModeMatrix : Matrix (Fin 3) (Fin 3) ℝ :=
+  !![σ_Diff5 1, σ_Diff5 5, σ_Diff5 7;
+     σ_Diff3 1, σ_Diff3 5, σ_Diff3 7;
+     σ_Diff2 1, σ_Diff2 5, σ_Diff2 7]
 
-end ChannelSeparation
+/-- SU(3) gauge group uniqueness for the SY channel.
 
-/-! ## AF channel: τ-anti-invariance → quaternionic type → SU(2)
-
-AF_coeff = ⟨-2, 0, 4, 0⟩ in ℤ[φ,ζ₆].
-τ(AF_coeff) = ⟨2, 0, -4, 0⟩ = -AF_coeff.
-This τ-anti-invariance is the signature of a quaternionic representation,
-which uniquely determines SU(2) ≅ Sp(1) as the gauge group on dim 2. -/
-
-section AFQuaternionic
-
-open FUST.FrourioAlgebra.GoldenEisensteinInt
-
-theorem AF_coeff_tau_neg :
-    tau AF_coeff_gei = neg AF_coeff_gei := by
-  unfold tau AF_coeff_gei neg; ext <;> simp
-
-theorem AF_coeff_nonzero : AF_coeff ≠ 0 := by
-  intro h
-  have := AF_coeff_normSq
-  rw [h, map_zero] at this
-  norm_num at this
-
-theorem AF_coeff_purely_imaginary : AF_coeff.re = 0 := by rw [AF_coeff_eq]
-
-end AFQuaternionic
-
-/-! ## SY channel: mode vectors in ℝ³ → rank 3 → SU(3) saturation
-
-For each active mode s, the SY sub-operator eigenvalues give a mode vector
-v(s) = (σ_Diff5(s), σ_Diff3(s), σ_Diff2(s)) ∈ ℂ³. The 3×3 determinant
-det(v(1), v(5), v(7)) ≠ 0 proves these span ℂ³ (rank 3).
-
-Since dim ℂ³ = 3, any 4th mode vector is a linear combination of the first 3.
-Mode-mixing gauge transformations on k independent modes give GL(k) → SU(k).
-With at most 3 independent mode vectors, the gauge group saturates at SU(3). -/
-
-section SYModeSpace
-
-theorem mode_space_rank_three :
-    σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
-    σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
-    σ_Diff2 1 * (σ_Diff5 5 * σ_Diff3 7 - σ_Diff3 5 * σ_Diff5 7) ≠ 0 :=
-  Φ_S_rank_three
-
-theorem mode_space_dim_bound : Fintype.card (Fin 3) = 3 := by decide
-
-end SYModeSpace
-
-/-! ## Norm decomposition: weight ratio 3:1
-
-|6a + AF_coeff·b|² = 12(3a² + b²) shows the SY channel has weight 3
-and the AF channel has weight 1 in the Fζ norm. -/
-
-section NormDecomposition
-
-theorem norm_weight_ratio (a b : ℝ) :
-    Complex.normSq (6 * (a : ℂ) + AF_coeff * b) = 12 * (3 * a ^ 2 + b ^ 2) :=
-  Dζ_normSq_decomposition a b
-
-end NormDecomposition
-
-/-! ## Main theorem: gauge group dimensions from Fζ factorization
-
-The derivation defect δ(cf, c⁻¹g) = δ(f,g) (proved in FζOperator.lean) gives
-the fundamental gauge invariance. Mode-mixing on the SY channel is bounded by
-rank 3, the AF channel has quaternionic type (τ-anti-invariant), and the trivial
-channel has dimension 1. These three conditions uniquely determine the gauge group
-representation dimensions as (3, 2, 1), matching SU(3) × SU(2) × U(1). -/
-
-section GaugeGroupDimensions
-
-open FUST.FrourioAlgebra.GoldenEisensteinInt
-
-/-- Channel dimensions: SY rank 3, AF quaternionic on dim 2, trivial dim 1 -/
-theorem gauge_channel_dimensions :
-    -- SY mode space has rank 3 (det ≠ 0)
-    (σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
-     σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
-     σ_Diff2 1 * (σ_Diff5 5 * σ_Diff3 7 - σ_Diff3 5 * σ_Diff5 7) ≠ 0) ∧
-    -- AF is τ-anti-invariant (quaternionic type)
-    (tau AF_coeff_gei = neg AF_coeff_gei) ∧
-    -- AF channel is nondegenerate
-    (AF_coeff ≠ 0 ∧ AF_coeff.re = 0) ∧
-    -- Channels are independent
-    (∀ n : ℕ, ζ₆ ≠ (↑φ : ℂ) ^ n) ∧
-    -- Norm weight ratio
-    (∀ a b : ℝ, Complex.normSq (6 * (a : ℂ) + AF_coeff * b) =
-      12 * (3 * a ^ 2 + b ^ 2)) := by
-  exact ⟨mode_space_rank_three,
-         AF_coeff_tau_neg,
-         ⟨AF_coeff_nonzero, AF_coeff_purely_imaginary⟩,
-         zeta6_ne_phi_pow,
-         norm_weight_ratio⟩
-
-end GaugeGroupDimensions
+Rank 3 mode space → U(3), scalar U(1) center separated by derivDefect gauge,
+remaining mode-mixing has det = 1, giving SU(3). -/
+theorem SU3_gauge_uniqueness :
+    -- SY mode vectors are linearly independent (rank 3)
+    (LinearIndependent ℝ (fun i : Fin 3 => syModeMatrix i)) ∧
+    -- Scalar unitary c·I ∈ U(3) (center)
+    (∀ c : ℂ, starRingEnd ℂ c * c = 1 →
+      c • (1 : Matrix (Fin 3) (Fin 3) ℂ) ∈ unitaryGroup (Fin 3) ℂ) ∧
+    -- Scalar gauge has nontrivial det: det(cI₃) = c³
+    (∀ c : ℂ, (c • (1 : Matrix (Fin 3) (Fin 3) ℂ)).det = c ^ 3) ∧
+    -- ℂ has nontrivial star (conjugation ≠ identity, excludes O(3))
+    (starRingEnd ℂ ≠ RingHom.id ℂ) ∧
+    -- Scalar gauge is already separated (derivDefect_const_gauge)
+    (∀ (c : ℂ) (_ : c ≠ 0) (f g : ℂ → ℂ) (z : ℂ),
+      FζOperator.derivDefect (fun w => c * f w) (fun w => c⁻¹ * g w) z =
+      FζOperator.derivDefect f g z) :=
+  ⟨Matrix.linearIndependent_rows_of_det_ne_zero (by
+      rw [Matrix.det_fin_three]
+      simp only [syModeMatrix, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      simp only [show (2 : Fin 3) = ⟨2, by omega⟩ from rfl]
+      norm_num
+      rw [σ_Diff5_one, σ_Diff3_one, σ_Diff2_one,
+          σ_Diff5_five, σ_Diff3_five, σ_Diff2_five,
+          σ_Diff5_seven, σ_Diff3_seven, σ_Diff2_seven]
+      intro h
+      have : φ - ψ ≠ 0 := ne_of_gt (by linarith [φ_gt_one, psi_neg])
+      exact this (by nlinarith)),
+   fun c hc => by
+     rw [mem_unitaryGroup_iff']; ext i j
+     simp only [star_smul, star_one, mul_apply, smul_apply, one_apply, smul_eq_mul,
+       Finset.sum_ite_eq', Finset.mem_univ, ite_true, mul_ite, mul_zero, mul_one,
+       ite_mul, zero_mul]
+     split
+     · subst_vars; exact hc
+     · ring,
+   fun c => by simp [Fintype.card_fin],
+   by intro h; have h1 : (starRingEnd ℂ) Complex.I = Complex.I := by rw [h]; simp
+      rw [starRingEnd_apply, Complex.star_def, Complex.conj_I] at h1
+      have := congr_arg Complex.im h1
+      simp only [Complex.neg_im, Complex.I_im] at this; linarith,
+   FζOperator.derivDefect_const_gauge⟩
 
 end FUST

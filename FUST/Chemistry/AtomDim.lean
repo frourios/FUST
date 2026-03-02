@@ -1,12 +1,12 @@
 /-
 Atomic FDim and State Function
 
-dimAtom(Z, N, e) = dimProton^Z × dimNeutron^N × dimElectron^e × dimTimeD2^(-(Z+N+e-1))
+dimAtom(Z, N, e) = dimProton^Z × dimNeutron^N × dimElectron^e × dimScale^(-(Z+N+e-1))
 atomStateFn(Z, N, e, x) = x^Z · (1+x)^N · (1+ψx)^e
 
 General theorems for ALL (Z, N, e):
 - effectiveDegree = 16Z + 15N + 2e + 1
-- merge: dimAtom(A) * dimAtom(B) = dimAtom(A+B) * dimTimeD2
+- merge: dimAtom(A) * dimAtom(B) = dimAtom(A+B) * dimScale
 -/
 
 import FUST.Chemistry.HydrogenIsotopes
@@ -49,7 +49,7 @@ theorem atomStateFn_mul (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) (x : ℝ) :
 
 def dimAtom (Z N e : ℕ) : FDim :=
   dimProton ^ (Z : ℤ) * dimNeutron ^ (N : ℤ) *
-  dimElectron ^ (e : ℤ) * dimTimeD2 ^ (-(↑Z + ↑N + ↑e - 1 : ℤ))
+  dimElectron ^ (e : ℤ) * dimScale ^ (-(↑Z + ↑N + ↑e - 1 : ℤ))
 
 def dimNucleus (Z N : ℕ) : FDim := dimAtom Z N 0
 
@@ -71,16 +71,16 @@ theorem dimAtom_effectiveDegree (Z N e : ℕ) :
     (dimAtom Z N e).effectiveDegree = 16 * Z + 15 * N + 2 * e + 1 := by
   unfold dimAtom FDim.effectiveDegree
   simp only [mul_p, mul_delta, zpow_p, zpow_delta]
-  rw [dimProton_eq, dimNeutron_eq, dimElectron_eq, dimTimeD2_eq]
+  unfold dimScale
+  rw [dimProton_eq, dimNeutron_eq, dimElectron_eq]
   push_cast; ring
 
 /-! ## Section 3: Merge -/
 
 theorem dimAtom_merge (Z₁ N₁ e₁ Z₂ N₂ e₂ : ℕ) :
     dimAtom Z₁ N₁ e₁ * dimAtom Z₂ N₂ e₂ =
-    dimAtom (Z₁ + Z₂) (N₁ + N₂) (e₁ + e₂) * dimTimeD2 := by
-  unfold dimAtom
-  rw [dimTimeD2_eq]
+    dimAtom (Z₁ + Z₂) (N₁ + N₂) (e₁ + e₂) * dimScale := by
+  unfold dimAtom dimScale
   apply FDim.ext <;>
     simp only [mul_p, mul_delta, zpow_p, zpow_delta] <;>
     push_cast <;> ring

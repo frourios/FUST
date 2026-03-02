@@ -177,21 +177,21 @@ namespace FUST.Dim
 
 open FUST.VacuumStability
 
-noncomputable def lambdaFUST : RatioQ := ⟨144 / 25000⟩
+noncomputable def lambdaFUST : ℚ := 144 / 25000
 
-theorem lambdaFUST_val : lambdaFUST.val = 144 / 25000 := rfl
+theorem lambdaFUST_val : lambdaFUST = 144 / 25000 := rfl
 
-theorem lambdaFUST_pos : (0 : ℚ) < lambdaFUST.val := by
+theorem lambdaFUST_pos : (0 : ℚ) < lambdaFUST := by
   simp only [lambdaFUST]; norm_num
 
-def spectralGapSq : RatioQ := ⟨144 / 625⟩
+def spectralGapSq : ℚ := 144 / 625
 
-theorem spectralGapSq_val : spectralGapSq.val = 144 / 625 := rfl
+theorem spectralGapSq_val : spectralGapSq = 144 / 625 := rfl
 
 theorem vacuum_stability_summary :
-    (lambdaFUST.val = 144 / 25000) ∧
-    (0 < lambdaFUST.val) ∧
-    (spectralGapSq.val = 144 / 625) :=
+    (lambdaFUST = 144 / 25000) ∧
+    (0 < lambdaFUST) ∧
+    (spectralGapSq = 144 / 625) :=
   ⟨rfl, lambdaFUST_pos, rfl⟩
 
 end FUST.Dim

@@ -144,13 +144,13 @@ end FUST.CouplingConstants
 
 namespace FUST.Dim
 
-/-! ## Strong Coupling: α_s = 3/25 as RatioQ (§4.3) -/
+/-! ## Strong Coupling: α_s = 3/25 (§4.3) -/
 
-def strongCoupling : RatioQ :=
-  ⟨(Nat.choose 3 2 : ℚ) /
-   (Nat.choose 5 2 + Nat.choose 6 2)⟩
+def strongCoupling : ℚ :=
+  (Nat.choose 3 2 : ℚ) /
+   (Nat.choose 5 2 + Nat.choose 6 2)
 
-theorem strongCoupling_val : strongCoupling.val = 3 / 25 := by
+theorem strongCoupling_val : strongCoupling = 3 / 25 := by
   simp only [strongCoupling, Nat.choose]; norm_num
 
 /-! ## Weinberg Angle: sin²θ_W = 1/4 from Fζ channel weight ratio
@@ -158,21 +158,21 @@ theorem strongCoupling_val : strongCoupling.val = 3 / 25 := by
 |Dζ|² = 12(3a² + b²): SY weight 3 + AF weight 1 = 4.
 sin²θ_W = AF_weight / total_weight = 1/4. -/
 
-def weinbergAngle : RatioQ :=
-  ⟨(FUST.WeinbergAngle.afWeight : ℚ) /
-   FUST.WeinbergAngle.totalWeight⟩
+def weinbergAngle : ℚ :=
+  (FUST.WeinbergAngle.afWeight : ℚ) /
+   FUST.WeinbergAngle.totalWeight
 
-theorem weinbergAngle_val : weinbergAngle.val = 1 / 4 := by
+theorem weinbergAngle_val : weinbergAngle = 1 / 4 := by
   simp only [weinbergAngle, FUST.WeinbergAngle.afWeight,
     FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.syWeight]; norm_num
 
-/-! ## Active D-Levels as CountQ -/
+/-! ## Active D-Levels -/
 
-def activeDLevels : CountQ := ⟨FUST.CouplingConstants.activeDLevels⟩
+def activeDLevels : ℕ := FUST.CouplingConstants.activeDLevels
 
-theorem activeDLevels_val : activeDLevels.val = 5 := rfl
+theorem activeDLevels_val : activeDLevels = 5 := rfl
 
-theorem activeDLevels_derivation : activeDLevels.val = 6 - 2 + 1 := rfl
+theorem activeDLevels_derivation : activeDLevels = 6 - 2 + 1 := rfl
 
 /-! ## CP Phase as ScaleQ (involves π, transcendental) -/
 
@@ -183,8 +183,8 @@ theorem cpPhase_val : cpPhase.val = 2 * Real.pi / 5 := rfl
 /-! ## Fine Structure Constant — Unique FDim from EM Binding Constraint
 
 α₀ = φ⁻⁴/C(6,3) has nontrivial FDim, uniquely determined by:
-  E_bind = α₀² × m_e must have dim = dimTimeD2 (binding defect dimension).
-  dim(α₀²) = dimTimeD2 × dimElectron⁻¹ = (6,-2,0)
+  E_bind = α₀² × m_e must have dim = dimScale (binding defect dimension).
+  dim(α₀²) = dimScale × dimElectron⁻¹ = (6,-2,0)
   dim(α₀) = (3,-1,0), pure sector, effectiveDegree = -1.
 
 Other φ-involving constants (CKM, PMNS, Ω) are forced to dim = 1
@@ -194,14 +194,14 @@ def dimFineStructure : FDim := ⟨3, -1⟩
 
 theorem dimFineStructure_eq : dimFineStructure = ⟨3, -1⟩ := rfl
 
--- α₀² × m_e = dimTimeD2 (EM binding energy dimension)
+-- α₀² × m_e = dimScale (EM binding energy dimension)
 theorem fineStructure_binding_consistency :
-    dimFineStructure * dimFineStructure * dimTime⁻¹ = dimTimeD2 := by decide
+    dimFineStructure * dimFineStructure * dimSector = dimScale := by decide
 
--- dim(α₀) ≠ dimTimeD2, dim(α₀) ≠ 1, dim(α₀) ≠ dimElectron
-theorem dimFineStructure_ne_dimTimeD2 : dimFineStructure ≠ dimTimeD2 := by decide
+-- dim(α₀) ≠ dimScale, dim(α₀) ≠ 1, dim(α₀) ≠ dimElectron
+theorem dimFineStructure_ne_dimScale : dimFineStructure ≠ dimScale := by decide
 theorem dimFineStructure_ne_one : dimFineStructure ≠ (1 : FDim) := by decide
-theorem dimFineStructure_ne_dimElectron : dimFineStructure ≠ dimTime⁻¹ := by decide
+theorem dimFineStructure_ne_dimElectron : dimFineStructure ≠ dimSector := by decide
 
 noncomputable def fineStructure : ScaleQ dimFineStructure :=
   ⟨FUST.CouplingConstants.fine_structure⟩
@@ -219,21 +219,21 @@ theorem ckmDecay_geometric :
     (ckmDecay 3).val = (ckmDecay 1).val * (ckmDecay 2).val :=
   FUST.CouplingConstants.ckm_geometric_decay
 
-/-! ## Solar Mixing Angle as RatioQ -/
+/-! ## Solar Mixing Angle -/
 
-def solarMixing : RatioQ :=
-  ⟨1 / (Nat.choose 3 2 : ℚ)⟩
+def solarMixing : ℚ :=
+  1 / (Nat.choose 3 2 : ℚ)
 
-theorem solarMixing_val : solarMixing.val = 1 / 3 := by
+theorem solarMixing_val : solarMixing = 1 / 3 := by
   simp only [solarMixing, Nat.choose]; norm_num
 
-/-! ## W/Z Ratio as RatioQ: cos²θ_W = 3/4 -/
+/-! ## W/Z Ratio: cos²θ_W = 3/4 -/
 
-def wzRatioSq : RatioQ :=
-  ⟨(FUST.WeinbergAngle.syWeight : ℚ) /
-   FUST.WeinbergAngle.totalWeight⟩
+def wzRatioSq : ℚ :=
+  (FUST.WeinbergAngle.syWeight : ℚ) /
+   FUST.WeinbergAngle.totalWeight
 
-theorem wzRatioSq_val : wzRatioSq.val = 3 / 4 := by
+theorem wzRatioSq_val : wzRatioSq = 3 / 4 := by
   simp only [wzRatioSq, FUST.WeinbergAngle.syWeight,
     FUST.WeinbergAngle.totalWeight, FUST.WeinbergAngle.afWeight]; norm_num
 
@@ -244,11 +244,11 @@ noncomputable def cabibboAngle : ScaleQ 1 := ⟨FUST.CouplingConstants.cabibbo_a
 /-! ## Summary -/
 
 theorem coupling_type_hierarchy :
-    (strongCoupling.val = 3 / 25) ∧
-    (weinbergAngle.val = 1 / 4) ∧
-    (solarMixing.val = 1 / 3) ∧
-    (wzRatioSq.val = 3 / 4) ∧
-    (activeDLevels.val = 5) := by
+    (strongCoupling = 3 / 25) ∧
+    (weinbergAngle = 1 / 4) ∧
+    (solarMixing = 1 / 3) ∧
+    (wzRatioSq = 3 / 4) ∧
+    (activeDLevels = 5) := by
   exact ⟨strongCoupling_val, weinbergAngle_val, solarMixing_val, wzRatioSq_val, rfl⟩
 
 end FUST.Dim

@@ -219,43 +219,43 @@ end FUST.ParticleSpectrum
 
 namespace FUST.Dim
 
-/-! ## Particle Counts as CountQ -/
+/-! ## Particle Counts -/
 
-def fermionFlavorCount : CountQ := ⟨FUST.ParticleSpectrum.fermionFlavorCount⟩
-def leptonCount : CountQ := ⟨FUST.ParticleSpectrum.leptonCount⟩
-def quarkCount : CountQ := ⟨FUST.ParticleSpectrum.quarkCount⟩
-def smFermionCount : CountQ := ⟨FUST.ParticleSpectrum.SM_fermion_count⟩
-def gluonCount : CountQ := ⟨FUST.ParticleSpectrum.gluonCount⟩
-def weakBosonCount : CountQ := ⟨FUST.ParticleSpectrum.weakBosonCount⟩
-def smBosonCount : CountQ := ⟨FUST.ParticleSpectrum.SM_boson_count⟩
-def smParticleCount : CountQ := ⟨FUST.ParticleSpectrum.SM_particle_count⟩
+def fermionFlavorCount : ℕ := FUST.ParticleSpectrum.fermionFlavorCount
+def leptonCount : ℕ := FUST.ParticleSpectrum.leptonCount
+def quarkCount : ℕ := FUST.ParticleSpectrum.quarkCount
+def smFermionCount : ℕ := FUST.ParticleSpectrum.SM_fermion_count
+def gluonCount : ℕ := FUST.ParticleSpectrum.gluonCount
+def weakBosonCount : ℕ := FUST.ParticleSpectrum.weakBosonCount
+def smBosonCount : ℕ := FUST.ParticleSpectrum.SM_boson_count
+def smParticleCount : ℕ := FUST.ParticleSpectrum.SM_particle_count
 
-theorem fermionFlavorCount_val : fermionFlavorCount.val = 3 := rfl
-theorem leptonCount_val : leptonCount.val = 6 := rfl
-theorem quarkCount_val : quarkCount.val = 18 := rfl
-theorem smFermionCount_val : smFermionCount.val = 24 := rfl
-theorem gluonCount_val : gluonCount.val = 8 := rfl
-theorem weakBosonCount_val : weakBosonCount.val = 3 := rfl
-theorem smBosonCount_val : smBosonCount.val = 13 := rfl
-theorem smParticleCount_val : smParticleCount.val = 37 := rfl
+theorem fermionFlavorCount_val : fermionFlavorCount = 3 := rfl
+theorem leptonCount_val : leptonCount = 6 := rfl
+theorem quarkCount_val : quarkCount = 18 := rfl
+theorem smFermionCount_val : smFermionCount = 24 := rfl
+theorem gluonCount_val : gluonCount = 8 := rfl
+theorem weakBosonCount_val : weakBosonCount = 3 := rfl
+theorem smBosonCount_val : smBosonCount = 13 := rfl
+theorem smParticleCount_val : smParticleCount = 37 := rfl
 
-/-! ## Charge Constraints as CountQ -/
+/-! ## Charge Constraints -/
 
-def allowedChargeCount : CountQ := ⟨FUST.ParticleSpectrum.allowedChargeCount⟩
-def allowedSpinCount : CountQ := ⟨FUST.ParticleSpectrum.allowedSpinCount⟩
+def allowedChargeCount : ℕ := FUST.ParticleSpectrum.allowedChargeCount
+def allowedSpinCount : ℕ := FUST.ParticleSpectrum.allowedSpinCount
 
-theorem allowedChargeCount_val : allowedChargeCount.val = 7 := rfl
-theorem allowedSpinCount_val : allowedSpinCount.val = 4 := rfl
+theorem allowedChargeCount_val : allowedChargeCount = 7 := rfl
+theorem allowedSpinCount_val : allowedSpinCount = 4 := rfl
 
 /-! ## Derivation consistency -/
 
 theorem fermion_count_derivation :
-    smFermionCount.val = leptonCount.val + quarkCount.val := rfl
+    smFermionCount = leptonCount + quarkCount := rfl
 
 theorem particle_count_derivation :
-    smParticleCount.val = smFermionCount.val + smBosonCount.val := rfl
+    smParticleCount = smFermionCount + smBosonCount := rfl
 
-theorem allowedSpinCount_eq_four : allowedSpinCount.val = 4 := rfl
+theorem allowedSpinCount_eq_four : allowedSpinCount = 4 := rfl
 
 /-! ## Unique FDim for Every Massive Particle
 
@@ -278,24 +278,24 @@ theorem dimNu3_eq : FUST.NeutrinoMass.dimNu3 = ⟨-42, 34⟩ := by decide
 theorem dimNu2_eq : FUST.NeutrinoMass.dimNu2 = ⟨-43, 35⟩ := by decide
 
 -- Quark mass ratio m_t/m_b = φ⁷ + φ⁵: DimSum2
-def dimTopBottomHigh : FDim := dimTimeD2 ^ (7 : ℤ)
-def dimTopBottomLow : FDim := dimTimeD2 ^ (5 : ℤ)
+def dimTopBottomHigh : FDim := dimScale ^ (7 : ℤ)
+def dimTopBottomLow : FDim := dimScale ^ (5 : ℤ)
 
 theorem dimTopBottomHigh_eq : dimTopBottomHigh = ⟨7, -7⟩ := by decide
 theorem dimTopBottomLow_eq : dimTopBottomLow = ⟨5, -5⟩ := by decide
 
 -- Quark mass ratio m_s/m_d = φ⁶
-def dimStrangeDown : FDim := dimTimeD2 ^ (6 : ℤ)
+def dimStrangeDown : FDim := dimScale ^ (6 : ℤ)
 
 theorem dimStrangeDown_eq : dimStrangeDown = ⟨6, -6⟩ := by decide
 
--- Quark mass ratio m_b/m_c = C(3,2) = 3, dim = k × dimPhi = 2 × dimTimeD2
-def dimBottomCharm : FDim := dimTimeD2 ^ (2 : ℤ)
+-- Quark mass ratio m_b/m_c = C(3,2) = 3, dim = k × dimPhi = 2 × dimScale
+def dimBottomCharm : FDim := dimScale ^ (2 : ℤ)
 
 theorem dimBottomCharm_eq : dimBottomCharm = ⟨2, -2⟩ := by decide
 
 -- Baryon asymmetry: η = φ^(-44) × sin(2π/5)
-def dimBaryonAsymmetry : FDim := dimTimeD2 ^ (-(44 : ℤ))
+def dimBaryonAsymmetry : FDim := dimScale ^ (-(44 : ℤ))
 
 theorem dimBaryonAsymmetry_eq : dimBaryonAsymmetry = ⟨-44, 44⟩ := by decide
 
@@ -365,57 +365,45 @@ theorem scaleQ_ne_dimSum2 :
 
 end ParticleFDimDistinctness
 
-/-- Structural derivation: each FDim arises from a specific φ-power. -/
-theorem particleDim_from_phi_power :
-    dimElectron = dimTime⁻¹ ∧
-    dimMuon = dimTime⁻¹ * dimTimeD2 ^ (11 : ℤ) ∧
-    dimTau = dimTime⁻¹ * dimTimeD2 ^ (17 : ℤ) ∧
-    FUST.NeutrinoMass.dimNu3 = dimLagrangian * dimTimeD2 ^ (-(32 : ℤ)) ∧
-    FUST.NeutrinoMass.dimNu2 = FUST.NeutrinoMass.dimNu3 * deriveFDim 2 ∧
-    dimProton = dimTime⁻¹ * dimTimeD2 ^ (14 : ℤ) ∧
-    dimNeutron = dimProton * deriveFDim 2 ∧
-    dimWBoson = dimTime⁻¹ * dimTimeD2 ^ (25 : ℤ) :=
-  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
-
 /-! ## Sector Classification by State Function
 
-Every particle FDim decomposes as deriveFDim(m)^a × dimTimeD2^n.
+Every particle FDim decomposes as deriveFDim(m)^a × dimScale^n.
 The state function g(x) = x^d is detected by D_m if d > kerDim(D_m).
 
 Mixed sectors involve Diff2 corrections: neutron, ν₂, Z² comp2. -/
 
 section SectorClassification
 
-theorem electron_sector : dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) := by decide
-theorem muon_sector : dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) := by decide
-theorem tau_sector : dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) := by decide
-theorem proton_sector : dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) := by decide
-theorem wBoson_sector : dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) := by decide
-theorem higgsVac_sector : dimHiggsVacuum = deriveFDim 6 * dimTimeD2 ^ (26 : ℤ) := by decide
+theorem electron_sector : dimElectron = deriveFDim 6 * dimScale ^ (0 : ℤ) := by decide
+theorem muon_sector : dimMuon = deriveFDim 6 * dimScale ^ (11 : ℤ) := by decide
+theorem tau_sector : dimTau = deriveFDim 6 * dimScale ^ (17 : ℤ) := by decide
+theorem proton_sector : dimProton = deriveFDim 6 * dimScale ^ (14 : ℤ) := by decide
+theorem wBoson_sector : dimWBoson = deriveFDim 6 * dimScale ^ (25 : ℤ) := by decide
+theorem higgsVac_sector : dimHiggsVacuum = deriveFDim 6 * dimScale ^ (26 : ℤ) := by decide
 theorem higgsCorr_sector :
-    dimHiggsCorrection = deriveFDim 6 * dimTimeD2 ^ (23 : ℤ) := by decide
+    dimHiggsCorrection = deriveFDim 6 * dimScale ^ (23 : ℤ) := by decide
 
 theorem nu3_sector :
-    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) := by decide
+    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimScale ^ (-(32 : ℤ)) := by decide
 theorem zSqComp1_sector :
-    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) := by decide
+    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimScale ^ (50 : ℤ) := by decide
 
--- Ratio sector: dim = dimTimeD2^n (no D operator dimension)
-theorem topBottomH_ratio_sector : dimTopBottomHigh = dimTimeD2 ^ (7 : ℤ) := by decide
-theorem topBottomL_ratio_sector : dimTopBottomLow = dimTimeD2 ^ (5 : ℤ) := by decide
-theorem strangeDown_ratio_sector : dimStrangeDown = dimTimeD2 ^ (6 : ℤ) := by decide
-theorem bottomCharm_ratio_sector : dimBottomCharm = dimTimeD2 ^ (2 : ℤ) := by decide
-theorem baryonAsym_ratio_sector : dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) := by decide
+-- Ratio sector: dim = dimScale^n (no D operator dimension)
+theorem topBottomH_ratio_sector : dimTopBottomHigh = dimScale ^ (7 : ℤ) := by decide
+theorem topBottomL_ratio_sector : dimTopBottomLow = dimScale ^ (5 : ℤ) := by decide
+theorem strangeDown_ratio_sector : dimStrangeDown = dimScale ^ (6 : ℤ) := by decide
+theorem bottomCharm_ratio_sector : dimBottomCharm = dimScale ^ (2 : ℤ) := by decide
+theorem baryonAsym_ratio_sector : dimBaryonAsymmetry = dimScale ^ (-(44 : ℤ)) := by decide
 
 theorem neutron_mixed_sector :
-    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) := by decide
+    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimScale ^ (14 : ℤ) := by decide
 theorem nu2_mixed_sector :
     FUST.NeutrinoMass.dimNu2 = deriveFDim 6 * deriveFDim 6 * deriveFDim 2 *
-    dimTimeD2 ^ (-(32 : ℤ)) := by decide
+    dimScale ^ (-(32 : ℤ)) := by decide
 theorem zSqComp2_mixed_sector :
     dimZSqComp2 = deriveFDim 6 * deriveFDim 6 *
     deriveFDim 2 * deriveFDim 2 * (deriveFDim 3 * deriveFDim 3)⁻¹ *
-    dimTimeD2 ^ (50 : ℤ) := by decide
+    dimScale ^ (50 : ℤ) := by decide
 
 -- Fine structure constant: dim(α₀) = (3,-1), effectiveDegree = -1
 theorem fineStructure_sector :
@@ -425,19 +413,19 @@ theorem fineStructure_sector :
 
 -- Complete sector summary
 theorem sector_classification :
-    dimElectron = deriveFDim 6 * dimTimeD2 ^ (0 : ℤ) ∧
-    dimMuon = deriveFDim 6 * dimTimeD2 ^ (11 : ℤ) ∧
-    dimTau = deriveFDim 6 * dimTimeD2 ^ (17 : ℤ) ∧
-    dimProton = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) ∧
-    dimWBoson = deriveFDim 6 * dimTimeD2 ^ (25 : ℤ) ∧
-    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (-(32 : ℤ)) ∧
-    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimTimeD2 ^ (50 : ℤ) ∧
-    dimTopBottomHigh = dimTimeD2 ^ (7 : ℤ) ∧
-    dimStrangeDown = dimTimeD2 ^ (6 : ℤ) ∧
-    dimBaryonAsymmetry = dimTimeD2 ^ (-(44 : ℤ)) ∧
-    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimTimeD2 ^ (14 : ℤ) ∧
+    dimElectron = deriveFDim 6 * dimScale ^ (0 : ℤ) ∧
+    dimMuon = deriveFDim 6 * dimScale ^ (11 : ℤ) ∧
+    dimTau = deriveFDim 6 * dimScale ^ (17 : ℤ) ∧
+    dimProton = deriveFDim 6 * dimScale ^ (14 : ℤ) ∧
+    dimWBoson = deriveFDim 6 * dimScale ^ (25 : ℤ) ∧
+    FUST.NeutrinoMass.dimNu3 = deriveFDim 6 * deriveFDim 6 * dimScale ^ (-(32 : ℤ)) ∧
+    dimZSqComp1 = deriveFDim 6 * deriveFDim 6 * dimScale ^ (50 : ℤ) ∧
+    dimTopBottomHigh = dimScale ^ (7 : ℤ) ∧
+    dimStrangeDown = dimScale ^ (6 : ℤ) ∧
+    dimBaryonAsymmetry = dimScale ^ (-(44 : ℤ)) ∧
+    dimNeutron = deriveFDim 6 * deriveFDim 2 * dimScale ^ (14 : ℤ) ∧
     FUST.NeutrinoMass.dimNu2 = deriveFDim 6 * deriveFDim 6 * deriveFDim 2 *
-             dimTimeD2 ^ (-(32 : ℤ)) := by decide
+             dimScale ^ (-(32 : ℤ)) := by decide
 
 end SectorClassification
 
@@ -528,12 +516,12 @@ theorem all_particle_exponents :
 
 /-- dimProton derived from pair count sum -/
 theorem dimProton_from_pair_counts :
-    dimProton = deriveFDim 6 * dimTimeD2 ^
+    dimProton = deriveFDim 6 * dimScale ^
       (Nat.choose 5 2 + Nat.choose 3 2 + Nat.choose 2 2 : ℤ) := by decide
 
-/-- dimProton = dimMuon × dimTimeD2^C(3,2): muon-scale + color confinement -/
+/-- dimProton = dimMuon × dimScale^C(3,2): muon-scale + color confinement -/
 theorem dimProton_from_muon_and_color :
-    dimProton = dimMuon * dimTimeD2 ^ (Nat.choose 3 2 : ℤ) := by decide
+    dimProton = dimMuon * dimScale ^ (Nat.choose 3 2 : ℤ) := by decide
 
 /-- Complete generation structure theorem -/
 theorem generation_structure :

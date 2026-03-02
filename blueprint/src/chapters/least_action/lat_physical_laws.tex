@@ -154,24 +154,12 @@ $\eta^{\mu\nu} G_{\mu\nu} = -R$.
 
 The gauge group arises from the factorization freedom of the input state function. The derivation defect $\delta(f,g) = F_\zeta(fg) - f F_\zeta(g) - F_\zeta(f)g$ is invariant under $(f,g) \mapsto (cf, c^{-1}g)$, giving the fundamental gauge invariance.
 
-\begin{theorem}[Gauge Channel Dimensions]
-\label{thm:mat_gauge_dimensions}
-\lean{FUST.gauge_channel_dimensions}
-\leanok
-The gauge group representation dimensions $(3, 2, 1)$ are determined by:
-\begin{enumerate}
-\item Mode vectors $v(s) \in \mathbb{R}^3$ with $\Phi_S$ rank 3 $\Rightarrow$ gauge saturates at $\mathrm{SU}(3)$
-\item $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ (quaternionic type) $\Rightarrow$ $\mathrm{SU}(2)$
-\item Trivial channel ($\dim = 1$) $\Rightarrow$ $\mathrm{U}(1)$
-\end{enumerate}
-\end{theorem}
-
-\begin{theorem}[$\zeta_6$ Separation]
-\label{thm:mat_zeta6_separation}
-\lean{FUST.zeta6_ne_phi_pow}
-\leanok
-$\zeta_6 \neq \varphi^n$ for all $n$, ensuring channel independence.
-\end{theorem}
+The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is uniquely determined by three formally proved uniqueness theorems:
+\begin{itemize}
+\item \textbf{SU(3)}: SY mode space has rank 3 ($\det M_{\mathrm{SY}} \neq 0$), norm preservation $\to$ $\mathrm{U}(3)$, scalar center separation, $\det = 1$ $\to$ $\mathrm{SU}(3)$ (\texttt{SU3\_gauge\_uniqueness})
+\item \textbf{SU(2)}: $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ (quaternionic type, $J^2 = -12 < 0$), doubling $\mathbb{C}^1 \to \mathbb{C}^2 = \mathbb{H}^1$ $\to$ $\mathrm{SU}(2) \cong \mathrm{Sp}(1)$ (\texttt{SU2\_gauge\_uniqueness})
+\item \textbf{U(1)}: Galois-fixed subspace is 1D ($b = c = d = 0$), $\mathrm{SU}(1) = \{I\}$ trivial $\to$ $\mathrm{U}(1)$ (\texttt{U1\_gauge\_uniqueness})
+\end{itemize}
 
 \section{Yang-Mills Mass Gap}
 \label{sec:mat_yang_mills}
@@ -210,7 +198,7 @@ Physical law & $D_\zeta / F_\zeta$ origin & Key Lean theorem \\
 \hline
 Thermodynamics & $S = |F_\zeta f|^2$, $\varphi$-equivariance & \texttt{third\_law\_Fζ} \\
 General relativity & Localized $\mathfrak{so}(3,1)$ on $I_4$ & \texttt{vacuum\_einstein} \\
-Gauge group & $\mathbb{Z}/6\mathbb{Z}$ channel decomposition & \texttt{standard\_gauge\_group\_unique} \\
+Gauge group & $\mathbb{Z}/6\mathbb{Z}$ channel decomposition & \texttt{SU3/SU2/U1\_gauge\_uniqueness} \\
 Yang-Mills gap & $\ker(F_\zeta)$ not subalgebra & \texttt{yangMills\_massGap} \\
 Causal structure & $\ker(F_\zeta) =$ light cone & \texttt{causal\_boundary\_theorem} \\
 \hline

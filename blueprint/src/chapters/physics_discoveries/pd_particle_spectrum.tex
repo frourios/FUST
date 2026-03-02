@@ -7,8 +7,8 @@
 
 The $F_\zeta$ normSq decomposition $|D_\zeta|^2 = 12(3a^2 + b^2)$ yields two channel weights:
 \begin{itemize}
-\item SY channel: weight 3 (carries SU(3) color, rank 3)
-\item AF channel: weight 1 (carries SU(2) weak, rank 1)
+\item SY channel: weight 3 (carries SU(3) color, mode space rank 3)
+\item AF channel: weight 1 (carries SU(2) weak, quaternionic dim 2)
 \item Total weight = $3 + 1 = 4$ = spacetimeDim
 \end{itemize}
 
@@ -152,7 +152,7 @@ but $\ker\dim = 1$ gives $\tau = 2 - 1 = 1$ (vs.\ $\mathrm{Diff}_5$: $\tau = 0$,
 \lean{FUST.ParticleSpectrum.dimDarkMatter_ne_dimWBoson}
 \leanok
 \[
-\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(\Phi_S) \times \mathrm{dimTimeD2}^{25} = (21, -25, -24)
+\mathrm{dimDarkMatter} = \mathrm{deriveFDim}(\Phi_S) \times \mathrm{dimScale}^{25} = (21, -25, -24)
 \]
 This is distinct from $\mathrm{dimWBoson} = (20, -24, -26)$: the $\Phi_S$ sector base
 $(-4,0,1)$ differs from the $F_\zeta$ sector base $(-5,1,-1)$.
@@ -191,7 +191,7 @@ $H$ comp2 & $(18,-22,-24)$ & 23 & $F_\zeta$ \\
 \subsection{Massless Particles and FDim}
 
 Mass $= 0$ means $f \in \ker(F_\zeta)$, but this does \emph{not} imply FDim $= (0,0,0)$.
-Each $\ker(F_\zeta)$ basis element $x^d$ has $\mathrm{FDim} = \mathrm{dimTimeD2}^d$,
+Each $\ker(F_\zeta)$ basis element $x^d$ has $\mathrm{FDim} = \mathrm{dimScale}^d$,
 and the numerator operator detection matrix separates them:
 
 \begin{center}
@@ -226,7 +226,7 @@ This 3-layer structure within $\ker(F_\zeta)$ distinguishes massless particle ty
   Neutrinos, $Z^2$ comp1.
 \item \textbf{Mixed sector}: $Z^2$ comp2.
   Involves $\mathrm{Diff}_2$ and $\mathrm{Diff}_3$ corrections.
-\item \textbf{Ratio sector}: pure $\mathrm{dimTimeD2}^n$.
+\item \textbf{Ratio sector}: pure $\mathrm{dimScale}^n$.
   Dimensionless mass ratios $m_s/m_d$, coupling constants.
 \end{itemize}
 
@@ -237,7 +237,7 @@ This 3-layer structure within $\ker(F_\zeta)$ distinguishes massless particle ty
 \lean{FUST.ParticleSpectrum.particleDims_all_distinct}
 \leanok
 All particle FDim values are pairwise distinct.
-This follows from the injectivity of the map $(a, n) \mapsto \mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$.
+This follows from the injectivity of the map $(a, n) \mapsto \mathrm{deriveFDim}(6)^a \times \mathrm{dimScale}^n$.
 \end{theorem}
 
 \section{Generation Structure}

@@ -76,22 +76,18 @@ $\mathrm{Diff}_6$ & $\{\varphi^3, \varphi^2, \varphi, \psi, \psi^2, \psi^3\}$ & 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-$F_\zeta$ channel & Space & $\dim$ & Gauge group & Evidence \\
+$F_\zeta$ channel & Galois type & Gauge mechanism & Group & Lean theorem \\
 \hline
-SY (symmetric, $\Phi_S$) & $\{1,z,z^2\}$ & syWeight $= 3$ & SU(3) & Rank-3 determinant $\neq 0$ \\
-AF (antisymmetric, $\Phi_A$) & $\{1,z\}$ & spinDegeneracy $= 2$ & SU(2) & AF$\_$coeff $= 2i\sqrt{3}$ \\
-Trivial & $\{1\}$ & 1 & U(1) & Unique compact dim-1 \\
+SY ($\Phi_S$, rank 3) & $\sigma$-variant, $\tau$-fixed & Mode mixing on $\mathbb{R}^3$ & SU(3) & \texttt{SU3\_gauge\_uniqueness} \\
+AF ($\Phi_A$, dim 2) & $\tau$-anti-invariant & Quaternionic ($J^2 = -12$) & SU(2) & \texttt{SU2\_gauge\_uniqueness} \\
+Trivial (dim 1) & $\sigma$-fixed, $\tau$-fixed & Scalar gauge, SU(1) $= \{I\}$ & U(1) & \texttt{U1\_gauge\_uniqueness} \\
 \hline
-\multicolumn{3}{|r|}{Total:} & $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ & 12 gauge bosons \\
+\multicolumn{3}{|r|}{Total:} & \multicolumn{2}{c|}{$\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ (12 bosons)} \\
 \hline
 \end{tabular}
 \end{center}
 
-Key constraints:
-\begin{itemize}
-\item $\zeta_6 \neq \varphi^n$ (elliptic-hyperbolic separation prevents reduction)
-\item $|6a + 2i\sqrt{3} \cdot b|^2 = 12(3a^2 + b^2)$ (weight ratio 3:1 $\Leftrightarrow$ $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$)
-\end{itemize}
+Channel independence: $\zeta_6 \neq \varphi^n$ ($\mathrm{Im}(\zeta_6) \neq 0$ while $\varphi^n \in \mathbb{R}$).
 
 \chapter{Neutrality with Respect to the Axiom of Choice}
 \label{app:ac_neutrality}

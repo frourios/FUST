@@ -52,15 +52,13 @@ The unified $D_\zeta$ achieves a remarkable structural result: the Standard Mode
 The derivation proceeds through the $\mathbb{Z}/6\mathbb{Z}$ channel decomposition of $D_\zeta$:
 
 \begin{enumerate}
-\item \textbf{Symmetric channel $\Phi_S$} (even parity): Acts on $\ker(F_\zeta) = \mathrm{span}\{1, z, z^2\}$ (dimension 3). The rank-3 theorem ($\Phi_S = 2 \cdot \mathrm{Diff}_5 + \mathrm{Diff}_3 + \mu \cdot \mathrm{Diff}_2$ with 3 linearly independent components) gives an irreducible action on a 3-dimensional space, yielding $\mathrm{SU}(3)$.
+\item \textbf{SY channel} ($\sigma$-variant, $\tau$-fixed): The SY mode matrix $M_{\mathrm{SY}}$ has $\det \neq 0$, proving the mode space has rank 3. Norm preservation gives $\mathrm{U}(3)$; scalar $\mathrm{U}(1)$ center separation (from $\delta(cf, c^{-1}g) = \delta(f,g)$) and $\det = 1$ give $\mathrm{SU}(3)$.
 
-\item \textbf{Antisymmetric channel $\Phi_A$} (odd parity): The Fourier coefficient $\mathrm{AF\_coeff} = 2i\sqrt{3}$ is purely imaginary and nonzero. On $\ker(\mathrm{Diff}_5) = \mathrm{span}\{1, z\}$ (dimension 2), this provides a non-diagonal mixing orthogonal to $\varphi$-dilation, yielding $\mathrm{SU}(2)$.
+\item \textbf{AF channel} ($\tau$-anti-invariant): $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ with $\mathrm{AF\_coeff}^2 = -12 < 0$ (quaternionic $J^2$ condition). The 1D-over-$\mathbb{C}$ AF space with quaternionic doubling gives $\mathbb{C}^2 = \mathbb{H}^1$, yielding $\mathrm{SU}(2) \cong \mathrm{Sp}(1)$.
 
-\item \textbf{Trivial channel}: On $\ker(\mathrm{Diff}_2) = \mathrm{span}\{1\}$ (dimension 1), the only compact connected gauge group is $\mathrm{U}(1)$.
+\item \textbf{Trivial channel} ($\sigma$-fixed, $\tau$-fixed): The Galois-fixed subspace has $b = c = d = 0$ (1-dimensional). $\mathrm{SU}(1) = \{I\}$ is trivial, so the full gauge group is $\mathrm{U}(1)$.
 
-\item \textbf{Non-reducibility}: $\zeta_6 \neq \varphi^n$ for any $n \in \mathbb{N}$ (since $\zeta_6$ has nonzero imaginary part while $\varphi^n$ is real), ensuring $\zeta_6$-rotation mixes $\varphi$-dilation eigenspaces and prevents reduction to smaller groups.
-
-\item \textbf{Weight ratio}: $|6a + \mathrm{AF\_coeff} \cdot b|^2 = 12(3a^2 + b^2)$, encoding the $I_4 = \mathrm{Fin}\,3 \oplus \mathrm{Fin}\,1$ spacetime decomposition as a 3:1 weight ratio.
+\item \textbf{Channel independence}: $\zeta_6 \neq \varphi^n$ for any $n \in \mathbb{N}$ (since $\mathrm{Im}(\zeta_6) \neq 0$ while $\varphi^n \in \mathbb{R}$), ensuring the channels act independently and preventing gauge group reduction.
 \end{enumerate}
 
 \section{On the Choice of the Golden Ratio}

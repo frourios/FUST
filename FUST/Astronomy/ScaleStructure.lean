@@ -35,18 +35,18 @@ noncomputable def dissipationRate (n : ℕ) : ScaleQ 1 :=
 noncomputable def scaleResolution (k : ℕ) : ScaleQ 1 :=
   ⟨FUST.BlackHole.scaleResolution k⟩
 
-def degreesOfFreedom (k : ℕ) : CountQ :=
-  ⟨FUST.BlackHole.degreesOfFreedom k⟩
+def degreesOfFreedom (k : ℕ) : ℕ :=
+  FUST.BlackHole.degreesOfFreedom k
 
-/-! ## Gravitational Coupling Exponents as CountQ -/
+/-! ## Gravitational Coupling Exponents -/
 
-def leptonExponent : CountQ := ⟨FUST.GravitationalCoupling.leptonExponent⟩
-def cosmologicalExponent : CountQ := ⟨FUST.GravitationalCoupling.cosmologicalExponent⟩
-def cmbTemperatureExponent : CountQ := ⟨FUST.GravitationalCoupling.cmbTemperatureExponent⟩
+def leptonExponent : ℕ := FUST.GravitationalCoupling.leptonExponent
+def cosmologicalExponent : ℕ := FUST.GravitationalCoupling.cosmologicalExponent
+def cmbTemperatureExponent : ℕ := FUST.GravitationalCoupling.cmbTemperatureExponent
 
-theorem leptonExponent_val : leptonExponent.val = 107 := rfl
-theorem cosmologicalExponent_val : cosmologicalExponent.val = 582 := rfl
-theorem cmbTemperatureExponent_val : cmbTemperatureExponent.val = 152 := rfl
+theorem leptonExponent_val : leptonExponent = 107 := rfl
+theorem cosmologicalExponent_val : cosmologicalExponent = 582 := rfl
+theorem cmbTemperatureExponent_val : cmbTemperatureExponent = 152 := rfl
 
 /-! ## Gravitational Coupling as ScaleQ (φ-power) -/
 
@@ -74,12 +74,12 @@ theorem unitarity (n : ℤ) :
 /-! ## Exponent Derivation Consistency -/
 
 theorem leptonExponent_derivation :
-    leptonExponent.val =
+    leptonExponent =
     Nat.choose 5 2 * (Nat.choose 5 2 + 1) - Nat.choose 3 2 := by decide
 
 theorem cosmologicalExponent_derivation :
-    cosmologicalExponent.val =
-    4 * leptonExponent.val +
+    cosmologicalExponent =
+    4 * leptonExponent +
     Nat.choose 6 2 * Nat.choose 5 2 + 4 := by decide
 
 end FUST.Dim

@@ -149,7 +149,7 @@ end FUST
 
 namespace FUST.Dim
 
-noncomputable def massScale : ScaleQ dimTime⁻¹ := ⟨FUST.massScale⟩
+noncomputable def massScale : ScaleQ dimSector := ⟨FUST.massScale⟩
 
 theorem massScale_val : massScale.val = 12 / 25 := by
   simp only [massScale, FUST.massScale_eq]

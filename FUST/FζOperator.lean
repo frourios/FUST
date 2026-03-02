@@ -833,6 +833,39 @@ theorem emergence_mod2_mod3 (z : ℂ) :
     show (3 : ℕ) = 6 * 0 + 3 from by ring, Fζ_vanish_mod6_3 0]
   ring
 
+/-! ## General emergence: δ(ker, ker) = Fζ at active sum
+
+For ANY kernel pair whose sum is active, the derivation defect equals
+the full Fζ eigenvalue. The two emergence channels are:
+- mod 3 + mod 4 → mod 1 (matter)
+- mod 2 + mod 3 → mod 5 (antimatter) -/
+
+/-- General matter emergence: δ(z^{6j+3}, z^{6k+4}) = Fζ(z^{6(j+k)+7}) -/
+theorem emergence_matter (j k : ℕ) (z : ℂ) :
+    derivDefect (fun w => w ^ (6 * j + 3)) (fun w => w ^ (6 * k + 4)) z =
+    Fζ (fun w => w ^ (6 * j + 3 + (6 * k + 4))) z := by
+  rw [derivDefect_monomial, Fζ_vanish_mod6_3, Fζ_vanish_mod6_4]
+  ring
+
+/-- General antimatter emergence: δ(z^{6j+2}, z^{6k+3}) = Fζ(z^{6(j+k)+5}) -/
+theorem emergence_antimatter (j k : ℕ) (z : ℂ) :
+    derivDefect (fun w => w ^ (6 * j + 2)) (fun w => w ^ (6 * k + 3)) z =
+    Fζ (fun w => w ^ (6 * j + 2 + (6 * k + 3))) z := by
+  rw [derivDefect_monomial, Fζ_vanish_mod6_2, Fζ_vanish_mod6_3]
+  ring
+
+/-- Emergence norm identity: |δ(ker,ker)(z)|² = |Fζ(z^{a+b})(z)|²
+    Combined with eigenvalue evaluation, this gives |δ|² = massSq. -/
+theorem emergence_normSq_matter (j k : ℕ) (z : ℂ) :
+    Complex.normSq (derivDefect (fun w => w ^ (6 * j + 3)) (fun w => w ^ (6 * k + 4)) z) =
+    Complex.normSq (Fζ (fun w => w ^ (6 * j + 3 + (6 * k + 4))) z) := by
+  rw [emergence_matter]
+
+theorem emergence_normSq_antimatter (j k : ℕ) (z : ℂ) :
+    Complex.normSq (derivDefect (fun w => w ^ (6 * j + 2)) (fun w => w ^ (6 * k + 3)) z) =
+    Complex.normSq (Fζ (fun w => w ^ (6 * j + 2 + (6 * k + 3))) z) := by
+  rw [emergence_antimatter]
+
 /-! ## Minimum steps to antimatter
 
 From z¹, reaching the first antimatter mode z⁵ requires exactly 3

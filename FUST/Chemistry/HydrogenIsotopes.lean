@@ -2,16 +2,16 @@
 Hydrogen Isotopes: FDim Structure with Mass Defect
 
 Each bound state has FDim = product of constituent dims / binding defect dim.
-The binding defect dimTimeD2 per bond accounts for mass defect energy,
+The binding defect dimScale per bond accounts for mass defect energy,
 preventing zero-cost binding/unbinding.
 
   H⁺ = dimProton                              (bare proton, no binding)
-  H  = dimProton × dimElectron / dimTimeD2     (EM binding, 1 bond)
-  D⁺ = dimProton × dimNeutron / dimTimeD2      (nuclear binding, 1 bond)
-  D  = D⁺ × dimElectron / dimTimeD2            (nuclear + EM, 2 bonds)
-  T⁺ = D⁺ × dimNeutron / dimTimeD2             (nuclear, 2 bonds)
-  T  = T⁺ × dimElectron / dimTimeD2            (nuclear + EM, 3 bonds)
-  H⁻ = H × dimElectron / dimTimeD2             (EM, 2 bonds)
+  H  = dimProton × dimElectron / dimScale     (EM binding, 1 bond)
+  D⁺ = dimProton × dimNeutron / dimScale      (nuclear binding, 1 bond)
+  D  = D⁺ × dimElectron / dimScale            (nuclear + EM, 2 bonds)
+  T⁺ = D⁺ × dimNeutron / dimScale             (nuclear, 2 bonds)
+  T  = T⁺ × dimElectron / dimScale            (nuclear + EM, 3 bonds)
+  H⁻ = H × dimElectron / dimScale             (EM, 2 bonds)
 -/
 
 import FUST.Physics.MassRatios
@@ -22,12 +22,12 @@ open FUST.Dim
 
 /-! ## Section 1: Binding Defect
 
-Each bound state pays a dimensional cost dimTimeD2 per binding bond.
+Each bound state pays a dimensional cost dimScale per binding bond.
 This prevents the paradox of zero-cost binding/unbinding:
 without the defect, dimH = dimProton × dimElectron would mean
 H ↔ p + e is dimensionally free. -/
 
-abbrev dimBindingDefect : FDim := dimTimeD2
+abbrev dimBindingDefect : FDim := dimScale
 
 /-! ## Section 2: Hydrogen Species FDim
 
@@ -62,22 +62,22 @@ theorem dimTritiumAtom_eq : dimTritiumAtom = ⟨17, -33⟩ := by decide
 
 /-! ## Section 4: Sector Decomposition
 
-All species decompose as deriveFDim(6)^k × dimTimeD2^n. -/
+All species decompose as deriveFDim(6)^k × dimScale^n. -/
 
 theorem hydrogenIon_sector :
-    dimHydrogenIon = deriveFDim 6 * dimTimeD2 ^ (14 : ℤ) := by decide
+    dimHydrogenIon = deriveFDim 6 * dimScale ^ (14 : ℤ) := by decide
 theorem hydrogenAtom_sector :
-    dimHydrogenAtom = (deriveFDim 6) ^ (2 : ℤ) * dimTimeD2 ^ (13 : ℤ) := by decide
+    dimHydrogenAtom = (deriveFDim 6) ^ (2 : ℤ) * dimScale ^ (13 : ℤ) := by decide
 theorem hydrideAnion_sector :
-    dimHydrideAnion = (deriveFDim 6) ^ (3 : ℤ) * dimTimeD2 ^ (12 : ℤ) := by decide
+    dimHydrideAnion = (deriveFDim 6) ^ (3 : ℤ) * dimScale ^ (12 : ℤ) := by decide
 theorem deuteronIon_sector :
-    dimDeuteronIon = (deriveFDim 6) ^ (2 : ℤ) * dimTimeD2 ^ (26 : ℤ) := by decide
+    dimDeuteronIon = (deriveFDim 6) ^ (2 : ℤ) * dimScale ^ (26 : ℤ) := by decide
 theorem deuteriumAtom_sector :
-    dimDeuteriumAtom = (deriveFDim 6) ^ (3 : ℤ) * dimTimeD2 ^ (25 : ℤ) := by decide
+    dimDeuteriumAtom = (deriveFDim 6) ^ (3 : ℤ) * dimScale ^ (25 : ℤ) := by decide
 theorem tritonIon_sector :
-    dimTritonIon = (deriveFDim 6) ^ (3 : ℤ) * dimTimeD2 ^ (38 : ℤ) := by decide
+    dimTritonIon = (deriveFDim 6) ^ (3 : ℤ) * dimScale ^ (38 : ℤ) := by decide
 theorem tritiumAtom_sector :
-    dimTritiumAtom = (deriveFDim 6) ^ (4 : ℤ) * dimTimeD2 ^ (37 : ℤ) := by decide
+    dimTritiumAtom = (deriveFDim 6) ^ (4 : ℤ) * dimScale ^ (37 : ℤ) := by decide
 
 /-! ## Section 5: Effective Degree (Spectral Index) -/
 

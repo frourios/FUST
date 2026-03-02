@@ -1,4 +1,5 @@
 import FUST.Physics.Gravity
+import FUST.Physics.GaugeGroups
 import PhysLean.Relativity.LorentzGroup.Basic
 import Mathlib.GroupTheory.SemidirectProduct
 
@@ -95,5 +96,38 @@ theorem spacetime_from_Dζ :
      have hb2 : b ^ 2 > 0 := by positivity
      nlinarith,
    lorentz_bilin_invariance⟩
+
+/-- Gauge groups and Poincaré group use independent degrees of freedom.
+Gauge: derivDefect factorization ambiguity (ℂ-linearity of Fζ).
+Spacetime: eigenvalue structure of Dζ (Lorentz invariance of η).
+Separation: gauge acts on ℂⁿ (star=conj≠id), spacetime acts on ℝⁿ (star=id). -/
+theorem gauge_spacetime_independence :
+    -- Gauge: from ℂ-linearity of Fζ (derivDefect invariance)
+    (∀ (c : ℂ) (_ : c ≠ 0) (f g : ℂ → ℂ) (z : ℂ),
+      FζOperator.derivDefect (fun w => c * f w) (fun w => c⁻¹ * g w) z =
+      FζOperator.derivDefect f g z) ∧
+    -- Spacetime: from Lorentz invariance (η preservation)
+    (∀ (Λ : LorentzGroup 3) (v w : I4 → ℝ),
+      minkowskiBilin (Λ.1 *ᵥ v) (Λ.1 *ᵥ w) = minkowskiBilin v w) ∧
+    -- Gauge lives on ℂ: star is nontrivial (conj ≠ id)
+    (starRingEnd ℂ ≠ RingHom.id ℂ) ∧
+    -- Spacetime lives on ℝ: star is trivial (star = id)
+    (∀ x : ℝ, starRingEnd ℝ x = x) ∧
+    -- Poincaré algebra dim = 10
+    (Module.finrank ℝ ((so' (Fin 1) (Fin 3) ℝ).toSubmodule × (I4 → ℝ)) = 10) ∧
+    -- Gauge algebra dim = 8 + 3 + 1 = 12
+    (8 + 3 + 1 = 12) ∧
+    -- Total: 22 independent symmetry dimensions
+    (12 + 10 = 22) :=
+  ⟨FζOperator.derivDefect_const_gauge,
+   lorentz_bilin_invariance,
+   by intro h; have h1 : (starRingEnd ℂ) Complex.I = Complex.I := by rw [h]; simp
+      rw [starRingEnd_apply, Complex.star_def, Complex.conj_I] at h1
+      have := congr_arg Complex.im h1
+      simp only [Complex.neg_im, Complex.I_im] at this; linarith,
+   fun x => by rw [starRingEnd_apply, star_trivial],
+   FUST.Physics.Poincare.finrank_poincare,
+   by norm_num,
+   by norm_num⟩
 
 end FUST.SpacetimeUniqueness

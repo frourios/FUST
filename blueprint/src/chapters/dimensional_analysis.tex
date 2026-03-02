@@ -113,32 +113,14 @@ For $i \neq j$, $\dim(N_i f) \neq \dim(N_j f)$, so $N_i f(x) + N_j f(x)$ is a ty
 \section{Structural Constants}
 \label{sec:dim_structural_constants}
 
-\begin{definition}[Time Dimension]
-\label{def:dim_time}
-\lean{FUST.Dim.dimTime}
-\leanok
-\[
-\dim(t_P) := (\dim(\mathrm{Diff}_6 f))^{-1} = (5, -1)
-\]
-\end{definition}
-
 \begin{definition}[Per-Operator Time Dimension: $\mathrm{Diff}_2$]
 \label{def:dim_time_D2}
-\lean{FUST.Dim.dimTimeD2}
+\lean{FUST.Dim.dimScale}
 \leanok
 \[
-\mathrm{dimTimeD2} := (\dim(\mathrm{Diff}_2 f))^{-1} = (1, -1)
+\mathrm{dimScale} := (\dim(\mathrm{Diff}_2 f))^{-1} = (1, -1)
 \]
 This is the fundamental $\varphi$-scaling unit used in particle mass decomposition.
-\end{definition}
-
-\begin{definition}[Lagrangian Dimension]
-\label{def:dim_lagrangian}
-\lean{FUST.Dim.dimLagrangian}
-\leanok
-\[
-\dim((\mathrm{Diff}_6 f)^2) = 2 \cdot (-5, 1) = (-10, 2)
-\]
 \end{definition}
 
 \section{\texorpdfstring{$\Phi_S$}{Φ_S} Direct Sum Structure}
@@ -159,7 +141,7 @@ This is a \textbf{dimension bridge operator} connecting the two sectors.
 
 \subsection{ScaleQuantity Instances}
 
-Each particle has a unique FDim $= \mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$, where
+Each particle has a unique FDim $= \mathrm{deriveFDim}(6)^a \times \mathrm{dimScale}^n$, where
 $a$ is the sector exponent and $n$ is the $\varphi$-scaling index.
 
 \begin{center}
@@ -169,7 +151,7 @@ Quantity & $(p, \delta)$ & Sector & Lean reference \\
 \hline
 $t_P = 1/(20\sqrt{15})$ & $(5, -1)$ & --- & \texttt{planckSecond} \\
 $\mathrm{Diff}_6 f(x)$ & $(-5, 1)$ & $\mathrm{Diff}_6$ & \texttt{D6\_dim} \\
-$(\mathrm{Diff}_6 f)^2$ & $(-10, 2)$ & $F_\zeta^2$ & \texttt{dimLagrangian} \\
+$(\mathrm{Diff}_6 f)^2$ & $(-10, 2)$ & $F_\zeta^2$ & \verb|dimSector^2| \\
 $\Delta = m_e$ & $(-5, 1)$ & $\mathrm{Diff}_6$ & \texttt{dimElectron} \\
 $m_\mu = \Delta \cdot \varphi^{11}$ & $(6, -10)$ & $\mathrm{Diff}_6$ & \texttt{dimMuon} \\
 $m_\tau = \Delta \cdot \varphi^{17}$ & $(12, -16)$ & $\mathrm{Diff}_6$ & \texttt{dimTau} \\
@@ -287,7 +269,7 @@ which is dimensionally consistent.
 \section{State Class Decomposition}
 \label{sec:dim_state_class}
 
-Every FDim decomposes as $\mathrm{deriveFDim}(6)^a \times \mathrm{dimTimeD2}^n$ with $(a,n) \in \mathbb{Z}^2$:
+Every FDim decomposes as $\mathrm{deriveFDim}(6)^a \times \mathrm{dimScale}^n$ with $(a,n) \in \mathbb{Z}^2$:
 \begin{itemize}
 \item \textbf{effectiveDegree} $d = -p - 2\delta$: polynomial degree of state function representative
 \item \textbf{sectorPower} $a = (-p - \delta) / 4$: which $F_\zeta^a$ detects it

@@ -41,7 +41,7 @@ theorem hydrogenMass_eval :
 
 /-! ## Binding Lowers Effective Degree
 
-The binding defect dimTimeD2 per bond ensures bound states have
+The binding defect dimScale per bond ensures bound states have
 strictly lower effective degree than free constituent products. -/
 
 theorem binding_breaks_dimensional_symmetry :

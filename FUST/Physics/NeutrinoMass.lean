@@ -81,15 +81,15 @@ theorem nu3ElectronRatio_pos : nu3ElectronRatio > 0 := by
 Neutrinos have unique FDim:
 m_ν₃ = Δ² × φ^(-32), m_ν₂ = m_ν₃ × √(1/30). -/
 
-def dimNu3 : FDim := dimLagrangian * dimTimeD2 ^ (-(32 : ℤ))
+def dimNu3 : FDim := dimSector * dimSector * dimScale ^ (-(32 : ℤ))
 def dimNu2 : FDim := dimNu3 * deriveFDim 2
 
-/-- Neutrino mass squared ratio as RatioQ -/
-def neutrinoMassSqRatio_dimQ : RatioQ :=
-  ⟨1 / (spinDegeneracy * Nat.choose 6 2 : ℚ)⟩
+/-- Neutrino mass squared ratio -/
+def neutrinoMassSqRatio_dimQ : ℚ :=
+  1 / (spinDegeneracy * Nat.choose 6 2 : ℚ)
 
 theorem neutrinoMassSqRatio_dimQ_val :
-    neutrinoMassSqRatio_dimQ.val = 1 / 30 := by
+    neutrinoMassSqRatio_dimQ = 1 / 30 := by
   simp only [neutrinoMassSqRatio_dimQ, spinDegeneracy, afWeight, Nat.choose]; norm_num
 
 /-- m_ν₃ = Δ × Δ × φ^(-32) = Δ² × φ^(-2⁵) -/
