@@ -1,20 +1,19 @@
 import FUST.Physics.TimeStructure
 import FUST.Physics.GaugeGroups
 import FUST.Physics.Thermodynamics
-import FUST.Physics.WeinbergAngle
+import FUST.Physics.Poincare
 
 /-!
 # Navier-Stokes Global Regularity via Fζ 4D Spacetime
 
-|Dζ|² = 12(3a² + b²) determines 4D spacetime:
-  syWeight = 3 (spatial) + afWeight = 1 (temporal) = totalWeight = 4.
+dim iso(3,1) = 10, translation space I4 = Fin 1 ⊕ Fin 3, dim ℝ⁴ = 4.
 
-## Fζ Spacetime Structure
+## Spacetime Structure (Poincaré)
 
-- |6a + AF_coeff·b|² = 12(3a² + b²): weight ratio 3:1
-- syWeight = 3: spatial degrees of freedom
-- afWeight = 1: temporal direction
-- totalWeight = 4: spacetime dimension
+- I4 = Fin 1 ⊕ Fin 3: spacetime index from so(3,1) signature
+- dim(I4 → ℝ) = 4: spacetime dimension from finrank_translations
+- Fin 3: spatial DOF (rotation subalgebra so(3))
+- Fin 1: temporal direction (boost non-compact part)
 
 ## Dissipation Mechanism
 
@@ -65,7 +64,7 @@ theorem dissipationCoeff_one : dissipationCoeff 1 = 0 := by
     = (2*φ + 1) - 3*(φ + 1) + φ - ψ + 3*(ψ + 1) - (2*ψ + 1) := by rw [hφ3, hφ2, hψ2, hψ3]
     _ = 0 := by ring
 
-/-- C_2 = 0: quadratics ∈ ker(Fζ), dim = syWeight = 3 -/
+/-- C_2 = 0: quadratics ∈ ker(Fζ), spatial dim = 3 (Fin 3 in I4) -/
 theorem dissipationCoeff_two : dissipationCoeff 2 = 0 := by
   simp only [dissipationCoeff]
   have hφ2 : φ^2 = φ + 1 := golden_ratio_property
@@ -678,15 +677,13 @@ theorem high_mode_dissipation_dominates :
 
 end DissipationDominance
 
-/-! ## Energy Decay in Fζ 4D Spacetime
+/-! ## Energy Decay in Poincaré 4D Spacetime
 
-In the 4D spacetime (totalWeight = syWeight + afWeight = 3 + 1 = 4):
+In the 4D spacetime (I4 = Fin 1 ⊕ Fin 3, dim = 4):
   d/dt û_n = -C_n² û_n + (nonlinear terms)
 
-The syWeight = 3 spatial modes are stationary;
-higher modes dissipate with C_n² > 0 for n ≥ 3. Nonlinear terms
-redistribute energy but do not create it.
--/
+The 3 spatial modes (Fin 3) are stationary;
+higher modes dissipate with C_n² > 0 for n ≥ 3. -/
 
 section EnergyDecay
 
@@ -775,7 +772,7 @@ theorem energy_decay_rate_linear (û : ℕ → ℝ) (N : ℕ) :
   · intro n _ _
     apply mul_nonneg (sq_nonneg _) (sq_nonneg _)
 
-/-- Energy outside ker(Fζ) (syWeight = 3 spatial DOF) decays -/
+/-- Energy outside ker(Fζ) (3 spatial DOF from Fin 3) decays -/
 theorem energy_decay_outside_kernel :
     ∀ û : ℕ → ℝ, ∀ N ≥ 3,
     highModeDissipation û N ≥ 0 ∧
@@ -798,19 +795,17 @@ theorem energy_decay_outside_kernel :
 
 end EnergyDecay
 
-/-! ## Clay NS Global Regularity in Fζ 4D Spacetime
+/-! ## Clay NS Global Regularity in Poincaré 4D Spacetime
 
-|Dζ|² = 12(3a² + b²): syWeight = 3 (spatial) + afWeight = 1 (temporal) = totalWeight = 4.
-The AF-channel provides the dissipation structure.
+Spacetime dim = 4 from Poincaré: I4 = Fin 1 ⊕ Fin 3, finrank_translations = 4.
 
 At planckSecond = 1/(20√15), sampling falls below resolution,
 making the mode system finite-dimensional and guaranteeing global existence:
 
-1. Fζ determines spacetimeDim = totalWeight = syWeight + afWeight = 3 + 1 = 4
+1. Poincaré determines spacetimeDim = dim(I4 → ℝ) = 4
 2. Planck scale: below structural minimum, unresolvable
 3. Third law: massive states always dissipate (C_n² > 0 for n ≥ 3)
-4. Finite-dimensional truncation → global solution
--/
+4. Finite-dimensional truncation → global solution -/
 
 namespace PlanckCutoff
 
@@ -985,10 +980,10 @@ structure ClayInitialData where
   finiteEnergy : ∀ N, totalEnergy modes N ≥ 0
   rapidDecay : ∀ k : ℕ, ∃ C > 0, ∀ n ≥ 3, |modes n| ≤ C / φ^(k * n)
 
-/-- Clay NS Problem in Fζ 4D spacetime (totalWeight = syWeight + afWeight = 3 + 1 = 4) -/
+/-- Clay NS Problem in Fζ 4D spacetime (Poincaré: dim(I4 → ℝ) = 4) -/
 structure ClayNSProblem where
   spacetimeDim : ℕ
-  spacetimeDim_eq : spacetimeDim = FUST.WeinbergAngle.totalWeight
+  spacetimeDim_eq : spacetimeDim = Module.finrank ℝ (Physics.Lorentz.I4 → ℝ)
   systemSize : ℝ
   systemSize_pos : systemSize > 0
   initialData : ClayInitialData
@@ -1051,12 +1046,10 @@ end MainProof
 
 section Verification
 
-/-- Complete verification: Fζ 4D spacetime + Planck cutoff + global existence -/
+/-- Complete verification: Poincaré 4D spacetime + Planck cutoff + global existence -/
 theorem clay_conditions_verified :
-    -- Fζ channel weights determine 4D spacetime: syWeight + afWeight = 3 + 1 = 4
-    (FUST.WeinbergAngle.syWeight = 3) ∧
-    (FUST.WeinbergAngle.afWeight = 1) ∧
-    (FUST.WeinbergAngle.totalWeight = 4) ∧
+    -- Poincaré: I4 = Fin 1 ⊕ Fin 3, dim(I4 → ℝ) = 4
+    (Module.finrank ℝ (Physics.Lorentz.I4 → ℝ) = 4) ∧
     (∀ n ≥ 3, (dissipationCoeff n)^2 > 0) ∧
     (nonlinearCoeff 1 2 ≠ 0) ∧
     (∀ n, |dissipationCoeff n| ≤ 10 * φ^(3*n)) ∧
@@ -1067,7 +1060,7 @@ theorem clay_conditions_verified :
     (planckSecond > 0) ∧
     (∀ L > 0, ∃ N : ℕ, ∀ n ≥ N, L / φ^n < planckSecond) ∧
     ClayNSStatement :=
-  ⟨rfl, rfl, rfl,
+  ⟨Physics.Poincare.finrank_translations,
    dissipation_positive_outside_kernel,
    nonlinearCoeff_1_2_ne_zero,
    polynomial_growth,
@@ -1098,7 +1091,7 @@ theorem accepts_arbitrary_initial_data (modes : ℕ → ℝ)
     (hdecay : ∀ k : ℕ, ∃ C > 0, ∀ n ≥ 3, |modes n| ≤ C / φ^(k * n)) :
     ∃ prob : ClayNSProblem, Nonempty (ClayNSSolution prob) := by
   let initData := mk_ClayInitialData modes hdiv hdecay
-  let prob : ClayNSProblem := ⟨4, rfl, 1, one_pos, initData⟩
+  let prob : ClayNSProblem := ⟨4, Physics.Poincare.finrank_translations.symm, 1, one_pos, initData⟩
   exact ⟨prob, clay_ns_from_planck_cutoff prob⟩
 
 end ArbitraryInitialData

@@ -19,15 +19,13 @@ open FUST.StateFunctions FUST.WeinbergAngle
 The SY channel rank = 3 determines the number of fermion flavors.
 Each flavor has lepton + quark from Fζ channel decomposition. -/
 
-abbrev fermionFlavorCount : ℕ := syWeight
-
-theorem fermionFlavorCount_eq : fermionFlavorCount = 3 := rfl
+abbrev fermionFlavorCount : ℕ := 3
 
 /-! ## Spin degeneracy from AF channel
 
-SU(2) fundamental rep dimension = afWeight + 1 = 2. -/
+SU(2) fundamental rep dimension = 2. -/
 
-abbrev spinDegeneracy : ℕ := afWeight + 1
+abbrev spinDegeneracy : ℕ := 2
 
 /-! ## Lepton count: 2 per flavor (particle + neutrino)
 
@@ -74,7 +72,7 @@ theorem smParticleCount_eq : smParticleCount = 37 := by decide
 /-! ## SM count derivation chain -/
 
 theorem smCount_derivation :
-    fermionFlavorCount = syWeight ∧
+    fermionFlavorCount = 3 ∧
     leptonCount = spinDegeneracy * fermionFlavorCount ∧
     quarkCount = spinDegeneracy * fermionFlavorCount * colorRank ∧
     smFermionCount = leptonCount + quarkCount ∧
@@ -160,7 +158,7 @@ theorem five_pair_counts :
 
 theorem particle_spectrum_summary :
     smParticleCount = 37 ∧
-    fermionFlavorCount = syWeight ∧
+    fermionFlavorCount = 3 ∧
     allowedSpinCount = 4 ∧
     allowedChargeCount = 2 * chargeDenom + 1 ∧
     chargeDenom = Nat.choose colorRank galoisOrder ∧

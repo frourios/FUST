@@ -1,4 +1,4 @@
-import FUST.Physics.CouplingConstants
+import FUST.Basic
 /-!
 # PMNS Mixing Angles
 

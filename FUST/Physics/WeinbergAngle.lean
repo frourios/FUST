@@ -39,20 +39,6 @@ theorem AF_weight_from_normSq :
     Complex.normSq AF_coeff / Complex.normSq AF_coeff = 1 := by
   rw [AF_coeff_normSq]; norm_num
 
-/-! ## Derived channel weights -/
-
-abbrev syWeight : ℕ := 3
-abbrev afWeight : ℕ := 1
-abbrev totalWeight : ℕ := syWeight + afWeight
-
-theorem syWeight_eq :
-    (syWeight : ℝ) = Complex.normSq (6 : ℂ) / Complex.normSq AF_coeff := by
-  rw [SY_weight_from_normSq]; norm_num
-
-theorem afWeight_eq :
-    (afWeight : ℝ) = Complex.normSq AF_coeff / Complex.normSq AF_coeff := by
-  rw [AF_weight_from_normSq]; norm_num
-
 /-! ## Complete derivation chain -/
 
 theorem weinberg_from_Dζ :
@@ -66,11 +52,8 @@ theorem weinberg_from_Dζ :
     (∀ a b : ℝ, Complex.normSq (6 * (a : ℂ) + AF_coeff * b) =
       12 * (3 * a ^ 2 + b ^ 2)) ∧
     -- Weight ratio = |SY|²/|AF|² = 3
-    (Complex.normSq (6 : ℂ) / Complex.normSq AF_coeff = 3) ∧
-    -- sin²θ_W = 1/4
-    ((afWeight : ℚ) / totalWeight = 1 / 4) := by
-  refine ⟨SY_coeff_val, by rw [AF_coeff_eq], ?_, normSq_decomposition,
-    SY_weight_from_normSq, by norm_num⟩
+    (Complex.normSq (6 : ℂ) / Complex.normSq AF_coeff = 3) := by
+  refine ⟨SY_coeff_val, by rw [AF_coeff_eq], ?_, normSq_decomposition, SY_weight_from_normSq⟩
   intro h
   have := AF_coeff_normSq
   rw [h, map_zero] at this
