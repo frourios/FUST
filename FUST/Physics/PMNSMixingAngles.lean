@@ -1,12 +1,10 @@
 import FUST.Physics.CouplingConstants
-import FUST.Physics.Probability
-
 /-!
-# PMNS Mixing Angles from FUST Probability Theory
+# PMNS Mixing Angles
 
-New predictions for neutrino mixing angles derived from FUST probability structure.
+New predictions for neutrino mixing angles derived.
 
-## Key Results (from probability theory analysis)
+## Key Results
 
 1. **sin²θ₁₃ = φ⁻⁸** (improved from 1/15, error: 2.4% vs 206%)
 2. **sin²θ₂₃ = 1/2 + φ⁻⁵/2** (maximal mixing + φ correction, error: 0.02%)
@@ -44,7 +42,7 @@ Probability interpretation: 8 = D_max + D_min = 6 + 2
 
 section ReactorAngle
 
-/-- sin²θ₁₃ = φ⁻⁸ from probability transition -/
+/-- sin²θ₁₃ = φ⁻⁸ -/
 noncomputable def sin2_theta13_new : ℝ := φ ^ (-8 : ℤ)
 
 /-- The exponent 8 comes from D_max + D_min -/
@@ -56,7 +54,7 @@ theorem sin2_theta13_pos : sin2_theta13_new > 0 := by
   apply zpow_pos
   exact phi_pos
 
-/-- φ⁻⁸ is less than 1 (valid probability) -/
+/-- φ⁻⁸ is less than 1 -/
 theorem sin2_theta13_lt_one : sin2_theta13_new < 1 := by
   unfold sin2_theta13_new
   calc φ ^ (-8 : ℤ) < φ ^ (0 : ℤ) := zpow_lt_zpow_right₀ φ_gt_one (by omega : (-8 : ℤ) < 0)
@@ -277,7 +275,7 @@ end CKMMatrix
 ## Section 6: Complete PMNS Predictions Summary
 -/
 
-/-- Complete PMNS mixing angle predictions from FUST probability theory -/
+/-- Complete PMNS mixing angle predictions -/
 theorem pmns_predictions_complete :
     -- (A) sin²θ₁₃ = φ⁻⁸ (reactor angle)
     sin2_theta13_new = φ ^ (-8 : ℤ) ∧

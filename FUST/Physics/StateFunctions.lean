@@ -240,10 +240,7 @@ theorem Diff5_nonzero_at_mode5 :
   have hφ10 : φ ^ 10 > 25 := by nlinarith [sq_nonneg (φ ^ 5 - 5)]
   nlinarith [sq_nonneg ((1 - φ) ^ 5)]
 
-/-! ## Quarks: Fζ-kernel modes (confined)
-
-Quarks have modes 2,3,4 ≡ 0 mod 6 class kernel. Fζ(z^n) = 0 for these
-modes → zero isolated mass → confinement. -/
+/-! ## Quarks: Fζ-kernel modes (confined) -/
 
 noncomputable def upQuarkState : ℂ → ℂ := fun z => z ^ 2
 
@@ -269,7 +266,11 @@ theorem strangeQuark_confined : IsInKerFζ strangeQuarkState := by
 /-! ## Baryons: quarks + gluon-mediated emergence
 
 Each quark is Fζ-invisible. Their product mode can be Fζ-active,
-realized by nonzero derivDefect = gluon exchange. -/
+realized by nonzero derivDefect = gluon exchange.
+
+CompositeState encodes both UV and IR descriptions:
+- microstate z^productMode: internal structure, Fζ classification, proper time
+- massProjection massCoeff·z: IR point-particle view for mass computation -/
 
 /-- Color binding pairs: C(colorRank,2) = 3. Pairwise gluon-exchange constraints. -/
 abbrev colorBindingPairs : ℕ := Nat.choose colorRank galoisOrder
@@ -297,7 +298,7 @@ def CompositeState.productMode (s : CompositeState) : ℕ := s.modes.sum
 noncomputable def CompositeState.microstate (s : CompositeState) : ℂ → ℂ :=
   fun z => z ^ s.productMode
 
-noncomputable def CompositeState.effectiveState (s : CompositeState) : ℂ → ℂ :=
+noncomputable def CompositeState.massProjection (s : CompositeState) : ℂ → ℂ :=
   fun z => (↑s.massCoeff : ℂ) * electronState z
 
 /-- Proton: uud = z²·z²·z³ = z⁷ (mode 7 ≡ 1 mod 6).
@@ -333,8 +334,8 @@ theorem proton_emergence (z : ℂ) :
     Fζ (protonComposite.microstate) z := by
   rw [proton_microstate_eq]; exact emergence_3_4 z
 
-theorem Fζ_proton_effective (z : ℂ) :
-    Fζ protonComposite.effectiveState z =
+theorem Fζ_proton_massProjection (z : ℂ) :
+    Fζ protonComposite.massProjection z =
     (↑protonComposite.massCoeff : ℂ) * Fζ electronState z := by
   change Fζ (fun z => (↑protonComposite.massCoeff : ℂ) * electronState z) z = _
   rw [electronState_eq]

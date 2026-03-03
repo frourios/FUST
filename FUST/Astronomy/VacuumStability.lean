@@ -1,5 +1,4 @@
 import FUST.Physics.MassGap
-import FUST.Physics.MassRatios
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!

@@ -13,6 +13,7 @@ import FUST.Math.SpectralCoefficients
 import FUST.Math.SpectralGalois
 import FUST.Math.SpectralObstruction
 
+import FUST.Physics.CoarseningOperator
 import FUST.Physics.CouplingConstants
 import FUST.Physics.GaugeGroups
 import FUST.Physics.GravitationalCoupling
@@ -32,6 +33,17 @@ import FUST.Physics.Thermodynamics
 import FUST.Physics.TimeStructure
 import FUST.Physics.WeinbergAngle
 
+import FUST.Problems.RH.Basic
+import FUST.Problems.RH.CompleteDifferential
+import FUST.Problems.RH.GoldenPrimeSumNonneg
+import FUST.Problems.RH.GoldenZeroFree
+import FUST.Problems.RH.HilbertPolya
+import FUST.Problems.RH.HurwitzTransfer
+import FUST.Problems.RH.LFunctionSeparation
+import FUST.Problems.RH.SpectralProduct
+import FUST.Problems.RH.SpectralZeta
+
+import FUST.Problems.BSD
 import FUST.Problems.NavierStokes
 import FUST.Problems.YangMills
 

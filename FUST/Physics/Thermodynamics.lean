@@ -1,5 +1,4 @@
 import FUST.Physics.TimeStructure
-import FUST.Physics.Probability
 import FUST.Physics.SchrodingerEquation
 import FUST.Physics.MassGap
 
@@ -25,7 +24,7 @@ The three laws of thermodynamics derived from the unified operator Fζ = 5z·Dζ
 namespace FUST.Thermodynamics
 
 open FUST FUST.TimeStructure FUST.FζOperator
-open FUST.Probability FUST.SchrodingerEquation Complex
+open FUST.SchrodingerEquation Complex
 
 /-! ## Zeroth Law: Thermal Equilibrium as ker(Fζ)
 
@@ -68,11 +67,6 @@ theorem first_law_equivariance (f : ℂ → ℂ) (z : ℂ) :
 theorem first_law_vacuum_energy (f : ℂ → ℂ) (hf : IsInKerFζ f) (n : ℤ) :
     actionFζ f n = 0 :=
   actionFζ_ker_zero f hf n
-
-/-- Action (energy) is non-negative -/
-theorem first_law_energy_nonneg (f : ℂ → ℂ) (x₀ : ℝ) (N : ℕ) :
-    FUST.Probability.discreteAction f x₀ N ≥ 0 :=
-  FUST.Probability.discreteAction_nonneg f x₀ N
 
 /-- Partial action is monotone: enlarging the scale window cannot decrease energy -/
 theorem first_law_action_monotone (f : ℂ → ℂ) (N M : ℕ) (h : N ≤ M) :
