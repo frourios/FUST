@@ -1,0 +1,79 @@
+\chapter{Algebraic Foundations}
+\label{ch:algebra}
+
+\section{Golden Ratio and Conjugate}
+
+\begin{definition}[Golden ratio]
+\label{def:phi}
+\lean{FUST.φ}
+$\vp = (1+\sqrt5)/2$.
+\end{definition}
+
+\begin{definition}[Golden conjugate]
+\label{def:psi}
+\lean{FUST.ψ}
+$\ps = (1-\sqrt5)/2$.
+\end{definition}
+
+\begin{lemma}[Fundamental identities]
+\label{lem:golden-identities}
+\lean{FUST.golden_ratio_property, FUST.psi_sq, FUST.phi_add_psi, FUST.phi_mul_psi}
+\begin{enumerate}
+  \item $\vp^2 = \vp + 1$, \quad $\ps^2 = \ps + 1$.
+  \item $\vp + \ps = 1$ (trace), \quad $\vp\ps = -1$ (norm, non-compact).
+  \item $\vp - \ps = \sqrt5$, \quad $|\ps| < 1 < \vp$.
+\end{enumerate}
+\end{lemma}
+
+\section{Primitive 6th Root of Unity}
+
+\begin{definition}[$\zs$]
+\label{def:zeta6}
+\lean{FUST.ζ₆}
+$\zs = e^{i\pi/3} = (1 + i\sqrt3)/2$.
+\end{definition}
+
+\begin{definition}[$\zsc$]
+\label{def:zeta6c}
+\lean{FUST.ζ₆'}
+$\zsc = e^{-i\pi/3} = (1 - i\sqrt3)/2$.
+\end{definition}
+
+\begin{lemma}[Eisenstein identities]
+\label{lem:eisenstein-identities}
+\lean{FUST.zeta6_sq, FUST.zeta6_cubed, FUST.zeta6_pow_six, FUST.zeta6_add_conj, FUST.zeta6_mul_conj}
+\begin{enumerate}
+  \item $\zs^2 = \zs - 1$ (contrast: $\vp^2 = \vp + 1$).
+  \item $\zs^3 = -1$, \quad $\zs^6 = 1$.
+  \item $\zs + \zsc = 1$ (same trace as $\vp + \ps$).
+  \item $\zs\zsc = +1$ (compact, $|\zs|=1$; contrast: $\vp\ps = -1$).
+\end{enumerate}
+\end{lemma}
+
+\begin{remark}
+The sign difference $\vp\ps = -1$ vs.\ $\zs\zsc = +1$
+separates non-compact (boost) from compact (rotation) structure,
+which determines the Lorentz signature $(1,3)$ in Chapter~\ref{ch:spacetime}.
+\end{remark}
+
+\section{Golden--Eisenstein Integer Ring}
+
+\begin{definition}[$\GEI$]
+\label{def:gei}
+\lean{FUST.FrourioAlgebra.GoldenEisensteinInt}
+$\GEI = \Z[\vp,\zs]$: the ring of integers in $\Q(\sqrt5, \sqrt{-3})$.
+Elements are represented as $(a, b, c, d) \in \Z^4$
+corresponding to $a + b\vp + c\zs + d\vp\zs$.
+\end{definition}
+
+\begin{definition}[Galois automorphisms]
+\label{def:galois}
+\lean{FUST.FrourioAlgebra.GoldenEisensteinInt.sigma, FUST.FrourioAlgebra.GoldenEisensteinInt.tau}
+The Galois group $\mathrm{Gal}(\Q(\sqrt5,\sqrt{-3})/\Q) \cong (\Z/2)^2$
+acts on $\GEI$ via:
+\[
+  \sigma: \vp \mapsto \ps,\; \zs \mapsto \zs,
+  \qquad
+  \tau: \vp \mapsto \vp,\; \zs \mapsto \zsc.
+\]
+\end{definition}

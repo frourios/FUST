@@ -1,0 +1,138 @@
+\chapter{\texorpdfstring{The $\Fz$ Operator}{The Fζ Operator}}
+\label{ch:fz}
+
+\section{Difference Operators and Coefficient Uniqueness}
+
+\begin{definition}[Symmetric difference operator]
+\label{def:diff5}
+\lean{FUST.DζOperator.Diff5}
+\[
+  \mathrm{Diff}_5[f](z) =
+    f(\vp^2 z) + f(\vp z) - 4f(z) + f(\ps z) + f(\ps^2 z).
+\]
+\end{definition}
+
+\begin{definition}[Antisymmetric difference operator]
+\label{def:diff6}
+\lean{FUST.DζOperator.Diff6}
+\[
+  \mathrm{Diff}_6[f](z) =
+    f(\vp^3 z) - 3f(\vp^2 z) + f(\vp z) - f(\ps z) + 3f(\ps^2 z) - f(\ps^3 z).
+\]
+\end{definition}
+
+\begin{theorem}[Coefficient uniqueness]
+\label{thm:coeff-unique}
+\lean{FUST.DζOperator.FUST_coefficient_uniqueness}
+The kernel conditions
+$\mathrm{Diff}_5[1]=\mathrm{Diff}_5[\mathrm{id}]=0$ uniquely determine
+the coefficients $(a,b)=(-1,-4)$. Similarly,
+$\mathrm{Diff}_6[\mathrm{id}]=\mathrm{Diff}_6[x^2]=0$ uniquely determine
+$(A,B)=(3,1)$.
+\end{theorem}
+
+\begin{theorem}[Diff7 reduction]
+\label{thm:diff7-reduction}
+\lean{FUST.DζOperator.Diff7_kernel_equals_Diff6_kernel}
+Any order-7 antisymmetric operator satisfying the same kernel conditions
+has $\ker(\mathrm{Diff}_7) = \ker(\mathrm{Diff}_6) = \{1, z, z^2\}$.
+\end{theorem}
+
+\section{\texorpdfstring{$\Dz$ and $\Fz$}{Dζ and Fζ}}
+
+\begin{definition}[$\Dz$ operator]
+\label{def:dz}
+\lean{FUST.DζOperator.Dζ}
+\[
+  \Dz[f](z) = \frac{\AFNum(\phiA\,f)(z) + \SymNum(\phiS\,f)(z)}{z},
+\]
+where $\AFNum$ and $\SymNum$ are 6-point convolutions over $\zs^k$ ($k=0,\ldots,5$).
+The $\vp$-channels $\phiA$ and $\phiS$ are built from $\mathrm{Diff}_k$.
+\end{definition}
+
+\begin{definition}[$\Fz$ operator]
+\label{def:fz}
+\lean{FUST.FζOperator.Fζ}
+\[
+  \Fz[f](z) = \AFNum(5\,\phiA\,f)(z) + \SymNum(\phiS^{\mathrm{int}}\,f)(z),
+\]
+where $\phiS^{\mathrm{int}} = 5\,\phiS$ has $\GEI$-integral coefficients.
+\end{definition}
+
+\begin{theorem}
+\label{thm:fz-eq}
+\lean{FUST.FζOperator.Fζ_eq}
+For $z\ne0$: $\Fz[f](z) = 5z\,\Dz[f](z)$.
+\end{theorem}
+
+\begin{theorem}[Gauge covariance]
+\label{thm:gauge-covariance}
+\lean{FUST.DζOperator.Dζ_gauge_covariance}
+$\Dz[f(c\,\cdot\,)](z) = c\cdot\Dz[f](cz)$ for $c,z\ne 0$.
+\end{theorem}
+
+\section{\texorpdfstring{Kernel of $\Fz$}{Kernel of Fζ}}
+
+\begin{theorem}[Mod~6 selection rule]
+\label{thm:kernel-mod6}
+\lean{FUST.FζOperator.Fζ_vanish_mod6_0,
+  FUST.FζOperator.Fζ_vanish_mod6_2,
+  FUST.FζOperator.Fζ_vanish_mod6_3,
+  FUST.FζOperator.Fζ_vanish_mod6_4}
+For all $k\in\N$:
+\[
+  \Fz[w^{6k}] = \Fz[w^{6k+2}] = \Fz[w^{6k+3}] = \Fz[w^{6k+4}] = 0.
+\]
+4 of every 6 monomial modes lie in $\ker(\Fz)$.
+Active modes: $n\equiv 1,5\pmod6$.
+\end{theorem}
+
+\begin{theorem}[Eigenvalue formula]
+\label{thm:eigenvalue}
+\lean{FUST.FζOperator.Fζ_eigenvalue_mod6_1,
+  FUST.FζOperator.Fζ_eigenvalue_mod6_5}
+For $n\equiv1\pmod6$:
+$\Fz[w^n](z) = (5\,c_A(n)\cdot\afcoeff + 6\,c_S(n))\,z^n$,
+where $c_A(n)$, $c_S(n)$ are $\vp$-channel coefficients.
+For $n\equiv5\pmod6$ the AF sign is negated.
+\end{theorem}
+
+\section{Hermitian Structure}
+
+\begin{theorem}[AF anti-Hermitian, SY Hermitian]
+\label{thm:hermitian}
+\lean{FUST.FζOperator.AFNum_anti_hermitian,
+  FUST.FζOperator.SymNum_hermitian}
+$\AFNum(g)(\bar s) = -\overline{\AFNum(g)(s)}$ and
+$\SymNum(g)(\bar s) = \overline{\SymNum(g)(s)}$
+for Schwarz-reflective $g$.
+On the real axis, $\AFNum$ is pure imaginary and $\SymNum$ is real.
+\end{theorem}
+
+\begin{theorem}[$\sqrt{15}$ factorization]
+\label{thm:sqrt15}
+\lean{FUST.FζOperator.eigenvalue_im_eq_sqrt15,
+  FUST.FζOperator.eigenvalue_re_eq_phiS}
+$\im(\lambda) = 10\sqrt{15}\,c_A$ (space),
+$\re(\lambda) = 6\,c_S$ (time).
+\end{theorem}
+
+\section{Derivation Defect and Emergence}
+
+\begin{definition}[Derivation defect]
+\label{def:deriv-defect}
+\lean{FUST.FζOperator.derivDefect}
+\[
+  \delta_{\Fz}(f,g)(z) = \Fz[fg](z) - f(z)\,\Fz[g](z) - \Fz[f](z)\,g(z).
+\]
+\end{definition}
+
+\begin{theorem}[Emergence from kernel]
+\label{thm:emergence}
+\lean{FUST.FζOperator.emergence_matter,
+  FUST.FζOperator.emergence_antimatter}
+When $a,b$ are kernel modes but $a+b$ is active:
+$\delta_{\Fz}(z^a, z^b) = \Fz[z^{a+b}]$.
+Matter: $(6j+3)+(6k+4) \equiv 1\pmod6$.
+Antimatter: $(6j+2)+(6k+3) \equiv 5\pmod6$.
+\end{theorem}

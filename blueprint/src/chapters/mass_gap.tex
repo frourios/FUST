@@ -1,0 +1,86 @@
+\chapter{Mass Gap}
+\label{ch:mass}
+
+\section{Mass Scale from \texorpdfstring{$\Fz$}{Fζ} Spectral Structure}
+
+\begin{definition}[Mass scale]
+\label{def:mass-scale}
+\lean{FUST.massScale}
+\[
+  \Delta = \frac{|\afcoeff|^2}{5^2} = \frac{12}{25}.
+\]
+Here $|\afcoeff|^2 = |2i\sqrt3|^2 = 12$ and $5^2$
+comes from $\Fz = 5z\,\Dz$.
+\end{definition}
+
+\begin{theorem}
+\label{thm:mass-scale}
+\lean{FUST.massScale_eq, FUST.massScale_pos}
+$\Delta = 12/25 > 0$.
+\end{theorem}
+
+\section{Casimir Mass Gap}
+
+\begin{definition}[4-momentum from $\Dz$]
+\label{def:4-momentum}
+\lean{FUST.Physics.Gravity.Dζ_momentum}
+For mode $s$, the real 4-momentum is
+$p^\mu(s) = \re(\Dz_{\text{components}}(s))_\mu$, where
+the components are indexed by $I_4$:
+\[
+  p^0 = \phiA\text{-coeff}(s),\quad
+  p^1 = \sigma_5(s),\quad
+  p^2 = \sigma_3(s),\quad
+  p^3 = \sigma_2(s).
+\]
+\end{definition}
+
+\begin{theorem}[Casimir mass squared]
+\label{thm:casimir}
+\lean{FUST.casimirMassSq_one, FUST.massGapSq_eq}
+At the minimum active mode $s=1$:
+\[
+  m^2 = \eta_{\mu\nu}\,p^\mu p^\nu
+      = (2\sqrt5)^2 - 0^2 - (-1)^2 - (\sqrt5)^2
+      = 20 - 0 - 1 - 5 = 14.
+\]
+Hence $m^2 = 14 > 0$.
+\end{theorem}
+
+\section{Time Structure}
+
+\begin{definition}[Time evolution]
+\label{def:time-evolution}
+\lean{FUST.TimeStructure.timeEvolution}
+\[
+  f \mapsto f(\vp\,\cdot\,),
+\]
+derived from $\Fz$ gauge covariance
+$\Fz[f(c\,\cdot)](z) = \Fz[f](cz)$.
+\end{definition}
+
+\begin{theorem}[Kernel invariance]
+\label{thm:ker-invariant}
+\lean{FUST.TimeStructure.ker_Fζ_invariant}
+$f\in\ker(\Fz) \implies f(\vp\,\cdot)\in\ker(\Fz)$.
+\end{theorem}
+
+\section{Entropy and Planck Second}
+
+\begin{definition}[Entropy]
+\label{def:entropy}
+\lean{FUST.TimeStructure.entropyAtFζ}
+\[
+  S(f)(z) := |\Fz f(z)|^2.
+\]
+\end{definition}
+
+\begin{definition}[Planck second]
+\label{def:planck-second}
+\lean{FUST.TimeStructure.planckSecond}
+\[
+  t_P = \frac{1}{20\sqrt{15}},
+\]
+where $20\sqrt{15}$ is the norm of the temporal eigenvalue
+($|20\sqrt{15}|^2 = 6000$).
+\end{definition}

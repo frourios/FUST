@@ -1,0 +1,85 @@
+\chapter{Thermodynamics}
+\label{ch:thermo}
+
+The three laws of thermodynamics are consequences of
+the $\Fz$ kernel structure and $\vp$-scaling time evolution.
+
+\section{Zeroth Law: Thermal Equilibrium}
+
+\begin{theorem}[Zeroth law]
+\label{thm:zeroth-law}
+\lean{FUST.Thermodynamics.zeroth_law_kernel_equilibrium}
+$\ker(\Fz)$ states share zero entropy everywhere:
+if $f,g\in\ker(\Fz)$ then $S(f)=S(g)\equiv0$.
+\end{theorem}
+
+\section{First Law: Energy Conservation}
+
+\begin{theorem}[First law]
+\label{thm:first-law}
+\lean{FUST.Thermodynamics.first_law_equivariance}
+$\vp$-equivariance gives energy conservation:
+$S(f(\vp\,\cdot))(z) = S(f)(\vp z)$.
+\end{theorem}
+
+\begin{theorem}[Vacuum energy]
+\label{thm:vacuum-energy}
+\lean{FUST.Thermodynamics.first_law_vacuum_energy}
+$\ker(\Fz)$ states have zero action: $\mathcal{A}[f](n) = 0$ for $f \in \ker(\Fz)$.
+\end{theorem}
+
+\begin{theorem}[Action monotonicity]
+\label{thm:action-monotone}
+\lean{FUST.Thermodynamics.first_law_action_monotone}
+Enlarging the scale window cannot decrease energy:
+$\mathcal{A}_N[f] \le \mathcal{A}_M[f]$ for $N \le M$.
+\end{theorem}
+
+\section{Second Law: Entropy Increase}
+
+\begin{theorem}[Reversible]
+\label{thm:second-law-reversible}
+\lean{FUST.Thermodynamics.second_law_reversible}
+$\ker(\Fz)$ is invariant under time evolution:
+$f \in \ker(\Fz) \implies f(\vp\,\cdot) \in \ker(\Fz)$.
+\end{theorem}
+
+\begin{theorem}[Irreversible]
+\label{thm:second-law-irreversible}
+\lean{FUST.Thermodynamics.second_law_irreversible}
+Non-kernel states remain non-kernel:
+$f\notin\ker(\Fz) \implies f(\vp\,\cdot)\notin\ker(\Fz)$.
+\end{theorem}
+
+\begin{theorem}[Amplification]
+\label{thm:amplification}
+\lean{FUST.Thermodynamics.second_law_amplification}
+$\vp^n > 1$ for $n \ge 1$: the amplification factor exceeds unity.
+\end{theorem}
+
+\section{Third Law: Absolute Zero Unreachable}
+
+\begin{theorem}[Positive entropy]
+\label{thm:positive-entropy}
+\lean{FUST.Thermodynamics.third_law_positive_entropy}
+$f \notin \ker(\Fz) \implies \exists z,\; S(f)(z) > 0$.
+\end{theorem}
+
+\begin{theorem}[Absolute zero characterization]
+\label{thm:absolute-zero}
+\lean{FUST.Thermodynamics.third_law_absolute_zero_iff}
+$S(f) \equiv 0 \iff f \in \ker(\Fz)$.
+\end{theorem}
+
+\begin{theorem}[Finite unreachability]
+\label{thm:finite-unreachable}
+\lean{FUST.Thermodynamics.third_law_finite_unreachable}
+If $f\notin\ker(\Fz)$, then $f(\vp^n\,\cdot)\notin\ker(\Fz)$
+for all $n\in\N$.
+\end{theorem}
+
+\begin{theorem}[Mass gap]
+\label{thm:third-law-mass-gap}
+\lean{FUST.Thermodynamics.third_law_mass_gap}
+$m^2 > 0$: the minimum energy of active states is positive.
+\end{theorem}

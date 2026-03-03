@@ -1,143 +1,40 @@
-% Chapter: Standard Gauge Group from Fζ Factorization Gauge Freedom
-\chapter{Standard Gauge Group from \texorpdfstring{$F_\zeta$}{Fζ} Factorization}
-\label{chap:gauge_groups}
+\chapter{Gauge Groups}
+\label{ch:gauge}
 
-\section{Overview: Gauge Freedom from Factorization}
-\label{sec:gauge_overview}
+The gauge group $SU(3)\times SU(2)\times U(1)$
+is determined by the Galois decomposition of $\GEI$.
+Each factor corresponds to a distinct subspace
+under the Galois automorphisms $\sigma$ and $\tau$.
 
-The gauge group arises from the \textbf{input side}: the ambiguity in factoring a state function $f = f_1 \cdot f_2 \cdots f_k$. The derivation defect
-\[
-\delta(f,g) := F_\zeta(fg) - f \cdot F_\zeta(g) - F_\zeta(f) \cdot g
-\]
-measures how $F_\zeta$ fails to be a derivation. The key gauge invariance is:
+\section{\texorpdfstring{$U(1)$}{U(1)}: Galois-Fixed Subring}
 
-\begin{theorem}[Factorization Gauge Invariance]
-\label{thm:factorization_gauge}
-\lean{FUST.FζOperator.derivDefect_const_gauge}
-\leanok
-For $c \in \mathbb{C}^\times$, $\delta(cf, c^{-1}g) = \delta(f,g)$.
-\end{theorem}
-
-This means the physics encoded in $\delta$ is invariant under $(f,g) \mapsto (cf, c^{-1}g)$, giving a $\mathrm{U}(1)$ scalar gauge. For multi-mode superpositions with $k$ modes, the mode coefficients can be mixed by $\mathrm{GL}(k)$ while preserving the product; unitarity and scalar separation then give $\mathrm{SU}(k)$. The maximum $k$ is bounded by the rank of the mode vector space.
-
-The three channels of $\mathbb{Z}[\varphi, \zeta_6]$, classified by their Galois eigenvalues under $\sigma$ and $\tau$, uniquely determine the gauge group representations as $(3, 2, 1)$.
-
-\section{SU(3) Uniqueness: SY Channel}
-\label{sec:SU3_derivation}
-
-For each active mode $s$, the $\Phi_S$ sub-operator eigenvalues give a \textbf{mode vector}:
-\[
-v(s) = (\sigma_{\mathrm{Diff}_5}(s),\; \sigma_{\mathrm{Diff}_3}(s),\; \sigma_{\mathrm{Diff}_2}(s)) \in \mathbb{R}^3
-\]
-where $\sigma_{\mathrm{Diff}_5}(s) = \varphi^{2s} + \varphi^s - 4 + \psi^s + \psi^{2s}$, $\sigma_{\mathrm{Diff}_3}(s) = \varphi^s - 2 + \psi^s$, $\sigma_{\mathrm{Diff}_2}(s) = \varphi^s - \psi^s$.
-
-The $3 \times 3$ matrix
-\[
-M_{\mathrm{SY}} = \begin{pmatrix} \sigma_{\mathrm{Diff}_5}(1) & \sigma_{\mathrm{Diff}_5}(5) & \sigma_{\mathrm{Diff}_5}(7) \\
-\sigma_{\mathrm{Diff}_3}(1) & \sigma_{\mathrm{Diff}_3}(5) & \sigma_{\mathrm{Diff}_3}(7) \\
-\sigma_{\mathrm{Diff}_2}(1) & \sigma_{\mathrm{Diff}_2}(5) & \sigma_{\mathrm{Diff}_2}(7)
-\end{pmatrix}
-\]
-has $\det M_{\mathrm{SY}} \neq 0$, so its rows are $\mathbb{R}$-linearly independent and the SY mode space has rank 3. Since $\dim \mathbb{R}^3 = 3$, any 4th mode vector is a linear combination of the first 3. Norm-preserving gauge transformations on 3 independent modes act via $\mathrm{U}(3)$. The scalar matrix $c \cdot I_3 \in \mathrm{U}(3)$ for $|c| = 1$, and $\det(c \cdot I_3) = c^3$. The Mathlib characterization $\mathrm{SU}(3) = \{M \in \mathrm{U}(3) \mid \det M = 1\}$ then gives:
-
-\begin{theorem}[SU(3) Gauge Uniqueness]
-\label{thm:SU3_gauge_uniqueness}
-\lean{FUST.SU3_gauge_uniqueness}
-\leanok
-The SY channel gauge group is uniquely $\mathrm{SU}(3) = \mathrm{specialUnitaryGroup}\;(\mathrm{Fin}\;3)\;\mathbb{C}$, established by:
-\begin{enumerate}
-\item Mode vectors are linearly independent (rank 3)
-\item Scalar unitary $c \cdot I_3 \in \mathrm{U}(3)$ (center)
-\item $\det(c \cdot I_3) = c^3$ (scalar gauge has nontrivial determinant)
-\item $\overline{\phantom{z}} \neq \mathrm{id}$ on $\mathbb{C}$ (complex conjugation is nontrivial, excludes $\mathrm{O}(3)$)
-\item Scalar gauge is already accounted for by $\delta(cf, c^{-1}g) = \delta(f,g)$
-\end{enumerate}
-\end{theorem}
-
-The logic: rank 3 $\to$ $\mathrm{U}(3)$, scalar $\mathrm{U}(1)$ center already separated by derivation defect gauge, remaining mode-mixing has $\det = 1$, giving $\mathrm{SU}(3)$. Since $F_\zeta$ acts on $\mathbb{C}$-valued functions where complex conjugation is nontrivial ($\overline{i} = -i \neq i$), the gauge group is unitary, not orthogonal: $\mathrm{O}(3)$ is excluded.
-
-\section{SU(2) Uniqueness: AF Channel}
-\label{sec:SU2_derivation}
-
-The Galois automorphism $\tau: \zeta_6 \mapsto 1 - \zeta_6$ fixes $\varphi$ and satisfies $\tau^2 = \mathrm{id}$, so its eigenvalues are $\pm 1$. The AF coefficient $\mathrm{AF\_coeff\_gei} = \langle -2, 0, 4, 0 \rangle$ has eigenvalue $-1$: $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$. Furthermore $\mathrm{AF\_coeff}^2 = -12 < 0$ in $\mathbb{Z}[\varphi, \zeta_6]$, the algebraic $J^2 < 0$ condition characterizing quaternionic structure. A 1D-over-$\mathbb{C}$ space with such an anti-involution extends to a 2D-over-$\mathbb{C}$ quaternionic representation.
-
-\begin{theorem}[SU(2) Gauge Uniqueness]
-\label{thm:SU2_gauge_uniqueness}
+\begin{theorem}[$U(1)$ uniqueness]
+\label{thm:u1-uniqueness}
 \lean{FUST.SU2_gauge_uniqueness}
-\leanok
-The AF channel gauge group is uniquely $\mathrm{SU}(2) = \mathrm{specialUnitaryGroup}\;(\mathrm{Fin}\;2)\;\mathbb{C}$, established by:
-\begin{enumerate}
-\item $\tau(\mathrm{AF\_coeff}) = -\mathrm{AF\_coeff}$ (quaternionic indicator, eigenvalue $-1$)
-\item $\tau^2 = \mathrm{id}$ (involution) and $\tau$ preserves multiplication (ring automorphism)
-\item $\mathrm{AF\_coeff}^2 = -12$ (quaternionic $J^2 < 0$ condition)
-\item $\mathrm{Im}(\mathrm{AF\_coeff}) \neq 0$ (complex structure essential, excludes $\mathrm{SO}(3)$)
-\item Scalar unitary $c \cdot I_2 \in \mathrm{U}(2)$, $\det(c \cdot I_2) = c^2$
-\end{enumerate}
+The Galois-fixed subring $\{x \in \GEI \mid \sigma(x) = x,\, \tau(x) = x\}$
+is isomorphic to $\Z$ (rank 1), yielding $U(1)$.
+Equivalently: $\sigma(x) = x$ and $\tau(x) = x$ iff $b = c = d = 0$.
 \end{theorem}
 
-The logic: $\tau$-anti-invariance $\to$ quaternionic type $\to$ $\mathrm{Sp}(1) \cong \mathrm{SU}(2)$. The 1D-over-$\mathbb{C}$ AF space with quaternionic doubling gives $\mathbb{C}^2 = \mathbb{H}^1$. Norm preservation on $\mathbb{C}^2 \to \mathrm{U}(2)$, scalar separation $\to \mathrm{SU}(2)$. The key exclusion of $\mathrm{SO}(3)$: since $\mathrm{AF\_coeff} = 2i\sqrt{3} \notin \mathbb{R}$, the AF channel requires complex structure. Over $\mathbb{R}$, $J^2 \geq 0$ always, so quaternionic structure ($J^2 < 0$) is impossible---this forces $\mathrm{SU}(2)$, not $\mathrm{SO}(3) \cong \mathrm{SU}(2)/\{\pm I\}$.
+\section{\texorpdfstring{$SU(2)$}{SU(2)}: Quaternionic AF-Channel}
 
-\section{U(1) Uniqueness: Trivial Channel}
-\label{sec:U1_derivation}
-
-The trivial channel is the Galois-fixed subspace of $\mathbb{Z}[\varphi, \zeta_6]$.
-
-\begin{theorem}[Galois-Fixed Subspace $= \mathbb{Z}$]
-\label{thm:galois_fixed}
-\lean{FUST.FrourioAlgebra.GoldenEisensteinInt.galois_fixed_iff}
-\leanok
-For $x = \langle a, b, c, d \rangle \in \mathbb{Z}[\varphi, \zeta_6]$:
-\[
-\sigma(x) = x \;\wedge\; \tau(x) = x \iff b = 0 \;\wedge\; c = 0 \;\wedge\; d = 0
-\]
-So the Galois-fixed subspace is $\{(a, 0, 0, 0)\} \cong \mathbb{Z}$, which is 1-dimensional.
+\begin{theorem}[$SU(2)$ uniqueness]
+\label{thm:su2-uniqueness}
+\lean{FUST.SU2_gauge_uniqueness}
+The $\tau$-anti-invariance $\tau(\afcoeff_{\mathrm{gei}}) = -\afcoeff_{\mathrm{gei}}$
+and $\afcoeff_{\mathrm{gei}}^2 = -12$ (negative norm squared)
+identify the AF-channel with a quaternionic structure, yielding $SU(2)$.
+The determinant $\det(c \cdot I_{2\times 2}) = c^2$ separates the $U(1)$ center.
 \end{theorem}
 
-Since $\mathrm{SU}(1)$ consists of $1 \times 1$ unitary matrices with $\det M = M_{00} = 1$, it is trivial: $\mathrm{SU}(1) = \{I\}$.
+\section{\texorpdfstring{$SU(3)$}{SU(3)}: Rank-3 SY-Channel}
 
-\begin{theorem}[U(1) Gauge Uniqueness]
-\label{thm:U1_gauge_uniqueness}
-\lean{FUST.U1_gauge_uniqueness}
-\leanok
-The trivial channel gauge group is uniquely $\mathrm{U}(1) = \mathrm{unitaryGroup}\;(\mathrm{Fin}\;1)\;\mathbb{C}$, established by:
-\begin{enumerate}
-\item Galois-fixed subspace $= \mathbb{Z}$ (1-dimensional)
-\item Scalar gauge invariance: $\delta(cf, c^{-1}g) = \delta(f,g)$
-\item Scalar unitary $c \cdot I_1 \in \mathrm{U}(1)$ for $|c| = 1$
-\item $\det(c \cdot I_1) = c^1$ (linear, not higher power)
-\item $\mathrm{SU}(1) = \{I\}$ is trivial: no $\mathrm{SU}$ reduction
-\item Galois-fixed units are $\pm 1$
-\end{enumerate}
+\begin{theorem}[$SU(3)$ uniqueness]
+\label{thm:su3-uniqueness}
+\lean{FUST.SU3_gauge_uniqueness}
+The mode vectors
+$(\sigma_{\mathrm{Diff}_5}(s),\, \sigma_{\mathrm{Diff}_3}(s),\, \sigma_{\mathrm{Diff}_2}(s))$
+for $s = 1, 5, 7$ form a linearly independent set in $\R^3$ (rank 3),
+yielding $SU(3)$.
+The determinant $\det(c \cdot I_{3\times 3}) = c^3$ separates the $U(1)$ center.
 \end{theorem}
-
-The logic: Galois-fixed $\to$ dim 1 $\to$ $\mathrm{U}(1)$. Unlike $\mathrm{SU}(3)$ and $\mathrm{SU}(2)$ where the scalar $\mathrm{U}(1)$ center is factored out, on the 1D trivial channel $\mathrm{SU}(1) = \{I\}$ is trivial, so the full gauge group is $\mathrm{U}(1)$ itself.
-
-\section{Dimension Matching}
-\label{sec:dimension_matching}
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-$F_\zeta$ channel & Galois type & Gauge mechanism & Gauge group & $\dim(G)$ \\
-\hline
-SY ($\Phi_S$, rank 3) & $\sigma$-variant, $\tau$-fixed & Mode mixing on $\mathbb{R}^3$ & $\mathrm{SU}(3)$ & 8 \\
-AF ($\Phi_A$, dim 2) & $\tau$-anti-invariant & Quaternionic structure & $\mathrm{SU}(2)$ & 3 \\
-Trivial (dim 1) & $\sigma$-fixed, $\tau$-fixed & Scalar gauge & $\mathrm{U}(1)$ & 1 \\
-\hline
-\multicolumn{4}{|r|}{Total gauge dimensions:} & 12 \\
-\hline
-\end{tabular}
-\end{center}
-
-$12 = 8 + 3 + 1$: matching the 12 gauge bosons of the Standard Model (8 gluons $+ W^\pm + Z +$ photon).
-
-\section{Summary}
-\label{sec:gauge_summary}
-
-The gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ is uniquely determined by the $F_\zeta$ factorization structure:
-\begin{itemize}
-\item \textbf{SU(3)}: SY mode space has rank 3 ($\det M_{\mathrm{SY}} \neq 0$), norm preservation $\to$ $\mathrm{U}(3)$, scalar $\mathrm{U}(1)$ center separation, $\det = 1$ $\to$ $\mathrm{SU}(3)$
-\item \textbf{SU(2)}: AF coefficient has $\tau$-eigenvalue $-1$ (quaternionic type), $\mathrm{AF\_coeff}^2 = -12 < 0$ ($J^2$ condition), quaternionic doubling $\mathbb{C}^1 \to \mathbb{C}^2 = \mathbb{H}^1$, $\mathrm{Sp}(1) \cong \mathrm{SU}(2)$
-\item \textbf{U(1)}: Galois-fixed subspace is 1-dimensional ($b = c = d = 0$), $\mathrm{SU}(1) = \{I\}$ trivial, full scalar gauge $= \mathrm{U}(1)$
-\item \textbf{Channel independence}: $\zeta_6 \neq \varphi^n$ ($\mathrm{Im}(\zeta_6) \neq 0$ while $\varphi^n \in \mathbb{R}$)
-\end{itemize}

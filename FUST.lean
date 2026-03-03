@@ -13,6 +13,7 @@ import FUST.Math.SpectralCoefficients
 import FUST.Math.SpectralGalois
 import FUST.Math.SpectralObstruction
 
+import FUST.Physics.CoarseningOperator
 import FUST.Physics.GaugeGroups
 import FUST.Physics.GravitationalCoupling
 import FUST.Physics.Gravity

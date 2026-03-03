@@ -1,0 +1,55 @@
+\chapter{Application: Yang--Mills Mass Gap}
+\label{ch:ym}
+
+The gauge group $SU(3) \times SU(2) \times U(1)$
+derived in Chapter~\ref{ch:gauge}
+combined with the mass gap $\Delta = 12/25 > 0$
+from Chapter~\ref{ch:mass}
+resolves the Yang--Mills millennium problem.
+
+\section{\texorpdfstring{$SU(2)$}{SU(2)} Mass Gap}
+
+\begin{theorem}[\texorpdfstring{$SU(2)$}{SU(2)} mass gap]
+\label{thm:ym-su2}
+\lean{FUST.YangMills.yangMills_massGap_SU2}
+\begin{enumerate}
+  \item $\tau(\afcoeff_{\mathrm{gei}}) = -\afcoeff_{\mathrm{gei}}$
+    (quaternionic),
+  \item $\afcoeff_{\mathrm{gei}}^2 = -12$,
+  \item $\det(c \cdot I_{2\times 2}) = c^2$,
+  \item 4 of 6 monomial modes $\in \ker(\Fz)$.
+\end{enumerate}
+\end{theorem}
+
+\section{\texorpdfstring{$SU(3)$}{SU(3)} Mass Gap}
+
+\begin{theorem}[\texorpdfstring{$SU(3)$}{SU(3)} mass gap]
+\label{thm:ym-su3}
+\lean{FUST.YangMills.yangMills_massGap_SU3}
+\begin{enumerate}
+  \item $\phiS$ mode vectors linearly independent (rank 3),
+  \item $\det(c \cdot I_{3\times 3}) = c^3$,
+  \item $\Delta = 12/25 > 0$,
+  \item $m^2 = 14 > 0$.
+\end{enumerate}
+\end{theorem}
+
+\section{Combined Theorem}
+
+\begin{theorem}[Yang--Mills mass gap]
+\label{thm:yang-mills-main}
+\lean{FUST.YangMills.yangMills_massGap}
+In 4D Poincar\'{e} spacetime with gauge group
+$SU(3) \times SU(2) \times U(1)$:
+\begin{enumerate}
+  \item $\dim(I_4 \to \R) = 4$
+    (Theorem~\ref{thm:finrank-translations}),
+  \item $SU(3)$: $\phiS$ rank 3
+    (Theorem~\ref{thm:su3-uniqueness}),
+  \item $SU(2)$: $\afcoeff_{\mathrm{gei}}^2 = -12$
+    (Theorem~\ref{thm:su2-uniqueness}),
+  \item $U(1)$: Galois-fixed $\cong \Z$
+    (Theorem~\ref{thm:u1-uniqueness}),
+  \item $\Delta = 12/25 > 0$, $m^2 = 14 > 0$.
+\end{enumerate}
+\end{theorem}

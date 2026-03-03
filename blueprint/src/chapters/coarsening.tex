@@ -1,0 +1,101 @@
+\chapter{Galois Coarsening}
+\label{ch:coarsening}
+
+$\Fz$ eigenvalues live in $\GEI$ with Galois group
+$\mathrm{Gal}(\Q(\sqrt5,\sqrt{-3})/\Q) \cong (\Z/2)^2$.
+The three nontrivial Galois elements define canonical projections
+with no free parameters.
+
+\section{Eigenvalues as \texorpdfstring{$\GEI$}{Z[φ,ζ₆]} Elements}
+
+\begin{definition}[Channel decomposition]
+\label{def:from-channels}
+\lean{FUST.Coarsening.fromChannels}
+Each $\Fz$ eigenvalue decomposes as
+$\lambda = \alpha \cdot \afcoeff_{\mathrm{gei}} + \beta$,
+where $\alpha, \beta \in \Z[\vp]$.
+\end{definition}
+
+\begin{theorem}[Mass formula]
+\label{thm:mass-formula}
+\lean{FUST.Coarsening.mass_formula}
+$|\lambda|^2 = \beta^2 + 12\alpha^2$,
+where $12 = |\afcoeff_{\mathrm{gei}}|^2$ and
+$\alpha, \beta$ are the channel components.
+\end{theorem}
+
+\begin{definition}[$\Fz$ eigenvalues in $\GEI$]
+\label{def:eigenGEI}
+\lean{FUST.Coarsening.eigenFζ_mod1, FUST.Coarsening.eigenFζ_mod5}
+For $n \equiv 1 \pmod{6}$:
+$\lambda_n = \mathrm{fromChannels}(5\alpha_n, 6\beta_n)$.
+For $n \equiv 5 \pmod{6}$: AF sign negated.
+\end{definition}
+
+\begin{theorem}[Eigenvalue bridge]
+\label{thm:eigenvalue-bridge}
+\lean{FUST.Coarsening.Fζ_eigenvalue_bridge_mod1, FUST.Coarsening.Fζ_eigenvalue_bridge_mod5}
+$\Fz(z^{6k+1})(1) = \mathrm{toComplex}(\lambda_{6k+1})$ and
+$\Fz(z^{6k+5})(1) = \mathrm{toComplex}(\lambda_{6k+5})$.
+\end{theorem}
+
+\section{Coarsening Projections}
+
+The three nontrivial Galois elements define canonical projections:
+\begin{align*}
+  N_\tau &: \GEI \to \Z[\vp] &\quad&\text{(remove gauge $\zs$, keep scale $\vp$)},\\
+  N_\sigma &: \GEI \to \Z[\zs] &\quad&\text{(remove scale $\vp$, keep gauge $\zs$)},\\
+  N &: \GEI \to \Z &\quad&\text{(remove both)}.
+\end{align*}
+These satisfy $N = N_{\Z[\vp]} \circ N_\tau = N_{\Z[\zs]} \circ N_\sigma$.
+
+\begin{definition}[$N_\tau$: remove gauge, keep scale]
+\label{def:tau-coarsen}
+\lean{FUST.Coarsening.tauCoarsen}
+$N_\tau: \GEI \to \Z[\vp]$, projection via $\tau$-norm.
+\end{definition}
+
+\begin{definition}[$N_\sigma$: remove scale, keep gauge]
+\label{def:sigma-coarsen}
+\lean{FUST.Coarsening.sigmaCoarsen}
+$N_\sigma: \GEI \to \Z[\zs]$, projection via $\sigma$-norm.
+\end{definition}
+
+\begin{definition}[$N$: full norm]
+\label{def:full-norm}
+\lean{FUST.Coarsening.fullNorm}
+$N: \GEI \to \Z$, projection via full Galois norm.
+\end{definition}
+
+\begin{theorem}[Factorization]
+\label{thm:norm-factors}
+\lean{FUST.Coarsening.fullNorm_factors}
+$N = N_{\Z[\vp]} \circ N_\tau$: the full norm factors through $\tau$-coarsening.
+\end{theorem}
+
+\section{Composite States}
+
+\begin{theorem}[Composite channel formula]
+\label{thm:composite-channels}
+\lean{FUST.Coarsening.composite_channels}
+For eigenvalues $\lambda_1 = (\alpha_1, \beta_1)$ and $\lambda_2 = (\alpha_2, \beta_2)$:
+\[
+  \lambda_1 \cdot \lambda_2 =
+  \mathrm{fromChannels}(\alpha_1\beta_2 + \alpha_2\beta_1,\;
+  \beta_1\beta_2 - 12\,\alpha_1\alpha_2).
+\]
+\end{theorem}
+
+\begin{theorem}[Active $\times$ active $=$ kernel]
+\label{thm:active-product-kernel}
+\lean{FUST.Coarsening.active_product_kernel}
+If $a \equiv 1$ or $5$ and $b \equiv 1$ or $5 \pmod{6}$,
+then $a + b$ is a kernel mode.
+\end{theorem}
+
+\begin{theorem}[Emergence mass]
+\label{thm:emergence-mass}
+\lean{FUST.Coarsening.emergence_massSq_matter, FUST.Coarsening.emergence_massSq_antimatter}
+$|\delta_{\Fz}(z^{6j+3}, z^{6k+4})(1)|^2 = |\lambda_{6(j+k+1)+1}|^2$ (matter),
+$|\delta_{\Fz}(z^{6j+2}, z^{6k+3})(1)|^2 = |\lambda_{6(j+k)+5}|^2$ (antimatter).
+\end{theorem}

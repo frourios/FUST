@@ -1,7 +1,4 @@
-import FUST.Physics.TimeStructure
-import FUST.Physics.GaugeGroups
 import FUST.Physics.Thermodynamics
-import FUST.Physics.Poincare
 
 /-!
 # Navier-Stokes Global Regularity via Fζ 4D Spacetime

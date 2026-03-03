@@ -1,0 +1,108 @@
+\chapter{Spacetime Uniqueness}
+\label{ch:spacetime}
+
+The $\Dz$ operator uniquely determines a 4-dimensional Lorentzian spacetime.
+The AF-channel gives 1 temporal dimension ($\re(\afcoeff) = 0$, $\im(\afcoeff) > 0$),
+the SY-channel gives 3 spatial dimensions ($\phiS$ rank 3),
+and the signature $(1,3)$ follows from
+the non-compact/compact duality $\vp\ps = -1$ vs.\ $\zs\zsc = +1$.
+
+\section{\texorpdfstring{$\so(3)$}{so(3)}: Rotation Subalgebra}
+
+\begin{definition}[$\so(3)$]
+\label{def:so3}
+\lean{FUST.Physics.Lorentz.so3_isomorphism}
+The compact part of $\zs$-structure yields the rotation algebra
+$\so(3) \cong \R^3$ with $\dim\so(3) = 3$.
+\end{definition}
+
+\section{\texorpdfstring{$\so(3,1)$}{so(3,1)}: Lorentz Algebra}
+
+\begin{definition}[$I_4$]
+\label{def:I4}
+\lean{FUST.Physics.Lorentz.I4}
+$I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$: spacetime index.
+\end{definition}
+
+\begin{theorem}[$\so(3,1)$ structure]
+\label{thm:so31}
+\lean{FUST.Physics.Lorentz.so31_isomorphism}
+$\so(3,1) \cong \R^6$ with $\dim\so(3,1) = 6$:
+3 rotations from $\so(3)$ and 3 boosts from
+the non-compact $\vp\ps = -1$ sector.
+\end{theorem}
+
+\section{\texorpdfstring{Poincar\'{e} Algebra $\iso(3,1)$}{Poincaré Algebra iso(3,1)}}
+
+\begin{theorem}[Translation dimension]
+\label{thm:finrank-translations}
+\lean{FUST.Physics.Poincare.finrank_translations}
+$\dim(I_4 \to \R) = 4$.
+\end{theorem}
+
+\begin{theorem}[Poincar\'{e} dimension]
+\label{thm:finrank-poincare}
+\lean{FUST.Physics.Poincare.finrank_poincare}
+$\dim\iso(3,1) = \dim\so(3,1) + \dim\R^4 = 6 + 4 = 10$.
+\end{theorem}
+
+\begin{definition}[Minkowski bilinear form]
+\label{def:minkowski}
+\lean{FUST.Physics.Poincare.minkowskiBilin}
+$\eta_{\mu\nu} = \mathrm{diag}(+1, -1, -1, -1)$ on $I_4$.
+\end{definition}
+
+\section{Spacetime from \texorpdfstring{$\Dz$}{Dζ}}
+
+\begin{theorem}[Spacetime uniqueness]
+\label{thm:spacetime-uniqueness}
+\lean{FUST.SpacetimeUniqueness.spacetime_from_Dζ}
+The $\Dz$ operator uniquely determines:
+\begin{enumerate}
+  \item $\re(\afcoeff) = 0$ and $\im(\afcoeff) > 0$
+    (1 temporal dimension),
+  \item $\phiS$ rank $= 3$
+    (3 spatial dimensions),
+  \item $\phiA[\mathrm{id}](1) \ne 0$
+    (temporal channel nontrivial),
+  \item Signature $(1,3)$: temporal direction gives positive norm squared,
+    spatial directions give negative norm squared,
+  \item Lorentz invariance: $\eta(\Lambda v, \Lambda w) = \eta(v,w)$
+    for all $\Lambda \in O(3,1)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Gauge--spacetime independence]
+\label{thm:gauge-spacetime-indep}
+\lean{FUST.SpacetimeUniqueness.gauge_spacetime_independence}
+Gauge symmetry ($\C$-linearity of $\Fz$, star $\ne$ id)
+and spacetime symmetry (Lorentz invariance of $\eta$, star $=$ id on $\R$)
+act on independent degrees of freedom.
+Total: $12 + 10 = 22$ symmetry dimensions.
+\end{theorem}
+
+\section{General Relativity}
+
+\begin{definition}[Lorentz connection]
+\label{def:lorentz-connection}
+\lean{FUST.Physics.Gravity.LorentzConnection}
+$\omega : I_4 \to \so(3,1)$, a field of $\so(3,1)$-valued 1-forms.
+\end{definition}
+
+\begin{definition}[Curvature]
+\label{def:curvature}
+\lean{FUST.Physics.Gravity.curvature}
+$F_{\mu\nu} = [\omega_\mu, \omega_\nu]$.
+\end{definition}
+
+\begin{theorem}[Bianchi identity]
+\label{thm:bianchi}
+\lean{FUST.Physics.Gravity.bianchi_identity}
+$F_{[\mu\nu,\rho]} = 0$.
+\end{theorem}
+
+\begin{theorem}[Vacuum Einstein equations]
+\label{thm:vacuum-einstein}
+\lean{FUST.Physics.Gravity.vacuum_einstein}
+$G_{\mu\nu} = R_{\mu\nu} - \tfrac{1}{2}R\,g_{\mu\nu} = 0$.
+\end{theorem}
