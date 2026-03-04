@@ -163,9 +163,6 @@ theorem entropy_scalar_scaling (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
     entropyAtFζ (fun t => c * f t) z = normSq c * entropyAtFζ f z := by
   simp only [entropyAtFζ, FζLagrangian, Fζ_const_smul, normSq_mul]
 
-/-- Mass scale Δ = 12/25 > 0: thermal gap from Fζ structure -/
-theorem thermal_gap : massScale > 0 := massScale_pos
-
 end EntropyStructure
 
 end FUST.Thermodynamics

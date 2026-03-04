@@ -203,12 +203,6 @@ theorem planckSecond_sq : planckSecond ^ 2 = planckSecondSq := by
   rw [div_pow, one_pow, mul_pow, show (20 : ℝ)^2 = 400 from by norm_num, sqrt15_sq]
   norm_num
 
-theorem temporalEigenNormSq_mass_formula :
-    temporalEigenNormSq = 12 * (10 * Real.sqrt 5)^2 := by
-  simp only [temporalEigenNormSq]
-  rw [mul_pow, show (10 : ℝ)^2 = 100 from by norm_num, sqrt5_sq]
-  norm_num
-
 end PlanckSecond
 
 /-! ## Planck second algebraic decomposition -/

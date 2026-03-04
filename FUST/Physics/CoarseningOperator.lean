@@ -124,7 +124,7 @@ theorem active_product_kernel (a b : ℕ)
   rw [Nat.add_mod]
   rcases ha with ha | ha <;> rcases hb with hb | hb <;> simp [ha, hb]
 
-/-! ## Mass formula: |eigenvalue|² = β² + 12α² -/
+/-! ## τ-norm formula: |eigenvalue|² = β² + 12α² -/
 
 private theorem toComplex_ofGoldenInt (x : GoldenInt) :
     GoldenEisensteinInt.toComplex (GoldenEisensteinInt.ofGoldenInt x) =
@@ -132,13 +132,13 @@ private theorem toComplex_ofGoldenInt (x : GoldenInt) :
   unfold GoldenEisensteinInt.toComplex GoldenEisensteinInt.ofGoldenInt GoldenInt.toReal
   push_cast; ring
 
-noncomputable def massSq (x : GoldenEisensteinInt) : ℝ :=
+noncomputable def tauNormSq (x : GoldenEisensteinInt) : ℝ :=
   Complex.normSq (GoldenEisensteinInt.toComplex x)
 
-theorem mass_formula (α β : GoldenInt) :
-    massSq (fromChannels α β) =
+theorem tauNormSq_formula (α β : GoldenInt) :
+    tauNormSq (fromChannels α β) =
     GoldenInt.toReal β ^ 2 + 12 * GoldenInt.toReal α ^ 2 := by
-  unfold massSq fromChannels
+  unfold tauNormSq fromChannels
   rw [GoldenEisensteinInt.toComplex_add, GoldenEisensteinInt.toComplex_mul,
       GoldenEisensteinInt.AF_coeff_gei_eq, toComplex_ofGoldenInt, toComplex_ofGoldenInt]
   rw [AF_coeff_eq]
@@ -150,7 +150,7 @@ theorem mass_formula (α β : GoldenInt) :
   have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)
   nlinarith [h3, sq_nonneg a, sq_nonneg b]
 
-/-! ## Bridge: Fζ evaluation ↔ GEI eigenvalue ↔ massSq -/
+/-! ## Bridge: Fζ evaluation ↔ GEI eigenvalue ↔ tauNormSq -/
 
 private theorem toReal_hadd (x y : GoldenInt) :
     GoldenInt.toReal (x + y) =
@@ -221,41 +221,41 @@ theorem Fζ_eigenvalue_bridge_mod5 (k : ℕ) :
     linear_combination phi_add_psi_complex
   rw [hψc]; ring
 
-/-- |Fζ(z^{6k+1})(1)|² = massSq(eigenFζ_mod1 k) -/
-theorem Fζ_normSq_eq_massSq_mod1 (k : ℕ) :
+/-- |Fζ(z^{6k+1})(1)|² = tauNormSq(eigenFζ_mod1 k) -/
+theorem Fζ_normSq_eq_tauNormSq_mod1 (k : ℕ) :
     Complex.normSq
       (FζOperator.Fζ (fun w => w ^ (6 * k + 1)) 1) =
-    massSq (eigenFζ_mod1 k) := by
+    tauNormSq (eigenFζ_mod1 k) := by
   rw [Fζ_eigenvalue_bridge_mod1]; rfl
 
-/-- |Fζ(z^{6k+5})(1)|² = massSq(eigenFζ_mod5 k) -/
-theorem Fζ_normSq_eq_massSq_mod5 (k : ℕ) :
+/-- |Fζ(z^{6k+5})(1)|² = tauNormSq(eigenFζ_mod5 k) -/
+theorem Fζ_normSq_eq_tauNormSq_mod5 (k : ℕ) :
     Complex.normSq
       (FζOperator.Fζ (fun w => w ^ (6 * k + 5)) 1) =
-    massSq (eigenFζ_mod5 k) := by
+    tauNormSq (eigenFζ_mod5 k) := by
   rw [Fζ_eigenvalue_bridge_mod5]; rfl
 
-/-- |δ(z^{6j+3}, z^{6k+4})(1)|² = massSq (matter emergence) -/
-theorem emergence_massSq_matter (j k : ℕ) :
+/-- |δ(z^{6j+3}, z^{6k+4})(1)|² = tauNormSq (matter emergence) -/
+theorem emergence_tauNormSq_matter (j k : ℕ) :
     Complex.normSq
       (FζOperator.derivDefect (fun w => w ^ (6 * j + 3))
         (fun w => w ^ (6 * k + 4)) 1) =
-    massSq (eigenFζ_mod1 (j + k + 1)) := by
+    tauNormSq (eigenFζ_mod1 (j + k + 1)) := by
   rw [FζOperator.emergence_normSq_matter,
     show 6 * j + 3 + (6 * k + 4) = 6 * (j + k + 1) + 1
       from by omega,
-    Fζ_normSq_eq_massSq_mod1]
+    Fζ_normSq_eq_tauNormSq_mod1]
 
-/-- |δ(z^{6j+2}, z^{6k+3})(1)|² = massSq (antimatter emergence) -/
-theorem emergence_massSq_antimatter (j k : ℕ) :
+/-- |δ(z^{6j+2}, z^{6k+3})(1)|² = tauNormSq (antimatter emergence) -/
+theorem emergence_tauNormSq_antimatter (j k : ℕ) :
     Complex.normSq
       (FζOperator.derivDefect (fun w => w ^ (6 * j + 2))
         (fun w => w ^ (6 * k + 3)) 1) =
-    massSq (eigenFζ_mod5 (j + k)) := by
+    tauNormSq (eigenFζ_mod5 (j + k)) := by
   rw [FζOperator.emergence_normSq_antimatter,
     show 6 * j + 2 + (6 * k + 3) = 6 * (j + k) + 5
       from by omega,
-    Fζ_normSq_eq_massSq_mod5]
+    Fζ_normSq_eq_tauNormSq_mod5]
 
 theorem factorization_assoc (x y z : GoldenEisensteinInt) :
     compositeEigenvalue (compositeEigenvalue x y) z =
@@ -317,11 +317,11 @@ theorem fullNorm_kernel {n : ℕ} (h1 : n % 6 ≠ 1) (h5 : n % 6 ≠ 5) :
   unfold GoldenEisensteinInt.norm GoldenEisensteinInt.tauNorm
     GoldenEisensteinInt.zero GoldenInt.norm; simp
 
-/-! ## N_τ preserves mass formula: |λ|² = toReal(N_τ(λ)) -/
+/-! ## N_τ preserves τ-norm: |λ|² = toReal(N_τ(λ)) -/
 
 noncomputable def eigenNormSq (n : ℕ) : ℝ :=
-  if n % 6 = 1 then massSq (eigenFζ_mod1 (n / 6))
-  else if n % 6 = 5 then massSq (eigenFζ_mod5 (n / 6))
+  if n % 6 = 1 then tauNormSq (eigenFζ_mod1 (n / 6))
+  else if n % 6 = 5 then tauNormSq (eigenFζ_mod5 (n / 6))
   else 0
 
 theorem eigenNormSq_nonneg (n : ℕ) : 0 ≤ eigenNormSq n := by
@@ -395,7 +395,163 @@ The three projections form a commutative diagram:
    ℤ[φ]  --N_{ℤ[φ]}--> ℤ
 -/
 
-theorem fullNorm_factors (n : ℕ) :
-    fullNorm n = GoldenInt.norm (tauCoarsen n) := rfl
+/-! ## Spectral decomposition: N_τ = 36·Φ_S² + 300·Φ_A² -/
+
+theorem tauNorm_fromChannels (α β : GoldenInt) :
+    GoldenEisensteinInt.tauNorm (fromChannels α β) =
+    β * β + ⟨12, 0⟩ * (α * α) := by
+  apply toReal_injective
+  rw [fromChannels_eq]
+  conv_rhs =>
+    change GoldenInt.toReal
+      (GoldenInt.add (GoldenInt.mul β β)
+        (GoldenInt.mul ⟨12, 0⟩ (GoldenInt.mul α α)))
+    rw [toReal_add, toReal_mul, toReal_mul, toReal_mul]
+  unfold GoldenEisensteinInt.tauNorm GoldenInt.toReal
+  push_cast; ring_nf
+  nlinarith [show φ * φ = φ + 1 from by
+    rw [← sq]; exact golden_ratio_property]
+
+private theorem tauCoarsen_decomp_aux
+    (sign : ℤ) (pA pS : GoldenInt) :
+    (⟨6, 0⟩ * pS) * (⟨6, 0⟩ * pS) +
+    ⟨12, 0⟩ * ((⟨sign, 0⟩ * pA) * (⟨sign, 0⟩ * pA)) =
+    ⟨36, 0⟩ * (pS * pS) +
+    ⟨sign * sign * 12, 0⟩ * (pA * pA) := by
+  apply toReal_injective
+  change GoldenInt.toReal
+    (GoldenInt.add
+      (GoldenInt.mul (GoldenInt.mul ⟨6, 0⟩ pS)
+        (GoldenInt.mul ⟨6, 0⟩ pS))
+      (GoldenInt.mul ⟨12, 0⟩
+        (GoldenInt.mul (GoldenInt.mul ⟨sign, 0⟩ pA)
+          (GoldenInt.mul ⟨sign, 0⟩ pA)))) =
+    GoldenInt.toReal
+      (GoldenInt.add
+        (GoldenInt.mul ⟨36, 0⟩ (GoldenInt.mul pS pS))
+        (GoldenInt.mul ⟨sign * sign * 12, 0⟩
+          (GoldenInt.mul pA pA)))
+  repeat rw [toReal_add]; repeat rw [toReal_mul]
+  unfold GoldenInt.toReal; push_cast; ring
+
+theorem tauCoarsen_decomp_mod1 (k : ℕ) :
+    tauCoarsen (6 * k + 1) =
+    ⟨36, 0⟩ * (phiS_goldenInt (6 * k + 1) *
+      phiS_goldenInt (6 * k + 1)) +
+    ⟨300, 0⟩ * (phiA_goldenInt (6 * k + 1) *
+      phiA_goldenInt (6 * k + 1)) := by
+  unfold tauCoarsen eigenGEI
+  rw [if_pos (show (6 * k + 1) % 6 = 1 from by omega),
+      show (6 * k + 1) / 6 = k from by omega]
+  unfold eigenFζ_mod1; rw [tauNorm_fromChannels]
+  exact tauCoarsen_decomp_aux 5 _ _
+
+theorem tauCoarsen_decomp_mod5 (k : ℕ) :
+    tauCoarsen (6 * k + 5) =
+    ⟨36, 0⟩ * (phiS_goldenInt (6 * k + 5) *
+      phiS_goldenInt (6 * k + 5)) +
+    ⟨300, 0⟩ * (phiA_goldenInt (6 * k + 5) *
+      phiA_goldenInt (6 * k + 5)) := by
+  unfold tauCoarsen eigenGEI
+  rw [if_neg (show (6 * k + 5) % 6 ≠ 1 from by omega),
+      if_pos (show (6 * k + 5) % 6 = 5 from by omega),
+      show (6 * k + 5) / 6 = k from by omega]
+  unfold eigenFζ_mod5; rw [tauNorm_fromChannels]
+  exact tauCoarsen_decomp_aux (-5) _ _
+
+/-! ## Φ_A(1) = 2√5 and Φ_A(1)² = 20 -/
+
+theorem phiA_sq_one : phiA_goldenInt 1 * phiA_goldenInt 1 = ⟨20, 0⟩ := by decide
+
+theorem phiA_one_toReal :
+    GoldenInt.toReal (phiA_goldenInt 1) = 2 * Real.sqrt 5 := by
+  rw [phiA_goldenInt_one]; unfold GoldenInt.toReal; push_cast
+  change (-2 : ℝ) + 4 * ((1 + Real.sqrt 5) / 2) =
+    2 * Real.sqrt 5
+  ring
+
+/-! ## Φ_A divisibility: Φ_A(3m+1) = k_m · Φ_A(1) for k_m ∈ ℤ -/
+
+theorem phiA_four_eq_mul :
+    phiA_goldenInt 4 = ⟨37, 0⟩ * phiA_goldenInt 1 := by decide
+
+set_option linter.style.nativeDecide false in
+theorem phiA_seven_eq_mul :
+    phiA_goldenInt 7 = ⟨4749, 0⟩ * phiA_goldenInt 1 := by
+  native_decide
+
+/-! ## tauNormSq = toReal(tauNorm) bridge -/
+
+theorem tauNormSq_eq_tauNorm_toReal (α β : GoldenInt) :
+    tauNormSq (fromChannels α β) =
+    GoldenInt.toReal (GoldenEisensteinInt.tauNorm (fromChannels α β)) := by
+  rw [tauNorm_fromChannels, tauNormSq_formula]
+  conv_rhs =>
+    change GoldenInt.toReal
+      (GoldenInt.add (GoldenInt.mul β β)
+        (GoldenInt.mul ⟨12, 0⟩ (GoldenInt.mul α α)))
+    rw [toReal_add, toReal_mul, toReal_mul, toReal_mul]
+  unfold GoldenInt.toReal; push_cast; ring
+
+/-! ## Poincaré Casimir decomposition: tauNormSq vs casimirMassSq -/
+
+open FUST.Physics.Gravity FUST.Physics.Poincare Physics.Lorentz
+open LieAlgebra.Orthogonal
+
+/-- phiS_goldenInt decomposes into Dζ spatial components -/
+theorem phiS_decomp (n : ℕ) :
+    GoldenInt.toReal (phiS_goldenInt n) =
+    10 * σ_Diff5 n + 5 * σ_Diff3 n +
+    (6 - 2 * φ) * σ_Diff2 n := by
+  rw [phiS_goldenInt_toReal]; unfold σ_Diff5 σ_Diff3 σ_Diff2
+  have hψ : ψ = 1 - φ := by linarith [phi_add_psi]
+  rw [hψ]; ring
+
+/-- phiA_goldenInt equals temporal Dζ component -/
+theorem phiA_eq_temporal (n : ℕ) :
+    GoldenInt.toReal (phiA_goldenInt n) = Φ_A_coeff n := by
+  rw [phiA_goldenInt_toReal]; unfold Φ_A_coeff
+  have hψ : ψ = 1 - φ := by linarith [phi_add_psi]
+  rw [hψ]; ring
+
+/-- casimirMassSq in terms of Dζ component functions -/
+theorem casimir_components (s : ℕ) :
+    casimirMassSq s =
+    Φ_A_coeff s ^ 2 - σ_Diff5 s ^ 2 -
+    σ_Diff3 s ^ 2 - σ_Diff2 s ^ 2 := by
+  unfold casimirMassSq poincareCasimir minkowskiBilin
+  rw [Matrix.toBilin'_apply']
+  simp only [dotProduct, Matrix.mulVec, Fintype.sum_sum_type,
+    Fin.sum_univ_three, Fin.sum_univ_one]
+  simp only [Dζ_momentum, Dζ_components, Complex.ofReal_re]
+  simp (config := { decide := true }) only [indefiniteDiagonal,
+    Matrix.diagonal_apply, Sum.elim_inl, Sum.elim_inr, ↓reduceIte]
+  ring
+
+/-- tauNormSq = 300·casimir + 300·Σσ² + 36·phiS² -/
+theorem tauNormSq_casimir_relation_mod1 (k : ℕ) :
+    eigenNormSq (6 * k + 1) =
+    300 * casimirMassSq (6 * k + 1) +
+    300 * (σ_Diff5 (6 * k + 1) ^ 2 + σ_Diff3 (6 * k + 1) ^ 2 +
+      σ_Diff2 (6 * k + 1) ^ 2) +
+    36 * (10 * σ_Diff5 (6 * k + 1) + 5 * σ_Diff3 (6 * k + 1) +
+      (6 - 2 * φ) * σ_Diff2 (6 * k + 1)) ^ 2 := by
+  rw [casimir_components]
+  unfold eigenNormSq
+  rw [if_pos (show (6 * k + 1) % 6 = 1 from by omega),
+      show (6 * k + 1) / 6 = k from by omega]
+  change tauNormSq
+    (fromChannels (⟨5, 0⟩ * phiA_goldenInt (6 * k + 1))
+      (⟨6, 0⟩ * phiS_goldenInt (6 * k + 1))) = _
+  rw [tauNormSq_formula]
+  have h6 : (⟨6, 0⟩ * phiS_goldenInt (6 * k + 1)).toReal =
+      6 * (phiS_goldenInt (6 * k + 1)).toReal := by
+    change GoldenInt.toReal (GoldenInt.mul ⟨6, 0⟩ _) = _
+    rw [toReal_mul]; unfold GoldenInt.toReal; push_cast; ring
+  have h5 : (⟨5, 0⟩ * phiA_goldenInt (6 * k + 1)).toReal =
+      5 * (phiA_goldenInt (6 * k + 1)).toReal := by
+    change GoldenInt.toReal (GoldenInt.mul ⟨5, 0⟩ _) = _
+    rw [toReal_mul]; unfold GoldenInt.toReal; push_cast; ring
+  rw [h6, h5, phiA_eq_temporal, phiS_decomp]; ring
 
 end FUST.Coarsening

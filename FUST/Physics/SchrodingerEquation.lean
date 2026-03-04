@@ -166,27 +166,6 @@ theorem critical_point_condition (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
 
 end VariationalPrinciple
 
-/-! ## Energy Spectrum
-
-Mass scale Δ = 12/25 from |AF_coeff|²/5².
-Mass gap m² = 14 from Poincaré Casimir at s = 1. -/
-
-section EnergySpectrum
-
-/-- Energy scale Δ = 12/25 from Fζ = 5z·Dζ -/
-theorem energy_scale : massScale = 12 / 25 := massScale_eq
-
-/-- Energy scale is positive -/
-theorem energy_scale_pos : massScale > 0 := massScale_pos
-
-/-- Mass gap: first excited mode has m² = 14 -/
-theorem energy_gap : casimirMassSq 1 = 14 := casimirMassSq_one
-
-/-- Mass gap is positive -/
-theorem energy_gap_pos : massGapSq > 0 := massGapSq_pos
-
-end EnergySpectrum
-
 /-! ## Spacetime Channel Decomposition
 
 Eigenvalue λ = 5·c_A·AF_coeff + 6·c_S decomposes into:

@@ -502,7 +502,7 @@ theorem emergence_antimatter (j k : ℕ) (z : ℂ) :
   ring
 
 /-- Emergence norm identity: |δ(ker,ker)(z)|² = |Fζ(z^{a+b})(z)|²
-    Combined with eigenvalue evaluation, this gives |δ|² = massSq. -/
+    Combined with eigenvalue evaluation, this gives |δ|² = tauNormSq. -/
 theorem emergence_normSq_matter (j k : ℕ) (z : ℂ) :
     Complex.normSq (derivDefect (fun w => w ^ (6 * j + 3)) (fun w => w ^ (6 * k + 4)) z) =
     Complex.normSq (Fζ (fun w => w ^ (6 * j + 3 + (6 * k + 4))) z) := by

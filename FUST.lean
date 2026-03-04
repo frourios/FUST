@@ -1,6 +1,5 @@
 import FUST.Astronomy.BlackHole
 import FUST.Astronomy.Cosmology
-import FUST.Astronomy.VacuumStability
 
 import FUST.FrourioAlgebra.GoldenEisensteinInt
 import FUST.FrourioAlgebra.GoldenIntegerRing

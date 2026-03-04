@@ -16,12 +16,13 @@ $\lambda = \alpha \cdot \afcoeff_{\mathrm{gei}} + \beta$,
 where $\alpha, \beta \in \Z[\vp]$.
 \end{definition}
 
-\begin{theorem}[Mass formula]
-\label{thm:mass-formula}
-\lean{FUST.Coarsening.mass_formula}
+\begin{theorem}[$\tau$-norm formula]
+\label{thm:tau-norm-formula}
+\lean{FUST.Coarsening.tauNormSq_formula}
 $|\lambda|^2 = \beta^2 + 12\alpha^2$,
 where $12 = |\afcoeff_{\mathrm{gei}}|^2$ and
 $\alpha, \beta$ are the channel components.
+This is the $\tau$-norm squared, not a mass.
 \end{theorem}
 
 \begin{definition}[$\Fz$ eigenvalues in $\GEI$]
@@ -67,12 +68,6 @@ $N_\sigma: \GEI \to \Z[\zs]$, projection via $\sigma$-norm.
 $N: \GEI \to \Z$, projection via full Galois norm.
 \end{definition}
 
-\begin{theorem}[Factorization]
-\label{thm:norm-factors}
-\lean{FUST.Coarsening.fullNorm_factors}
-$N = N_{\Z[\vp]} \circ N_\tau$: the full norm factors through $\tau$-coarsening.
-\end{theorem}
-
 \section{Composite States}
 
 \begin{theorem}[Composite channel formula]
@@ -93,9 +88,53 @@ If $a \equiv 1$ or $5$ and $b \equiv 1$ or $5 \pmod{6}$,
 then $a + b$ is a kernel mode.
 \end{theorem}
 
-\begin{theorem}[Emergence mass]
-\label{thm:emergence-mass}
-\lean{FUST.Coarsening.emergence_massSq_matter, FUST.Coarsening.emergence_massSq_antimatter}
+\begin{theorem}[Emergence $\tau$-norm]
+\label{thm:emergence-tau-norm}
+\lean{FUST.Coarsening.emergence_tauNormSq_matter, FUST.Coarsening.emergence_tauNormSq_antimatter}
 $|\delta_{\Fz}(z^{6j+3}, z^{6k+4})(1)|^2 = |\lambda_{6(j+k+1)+1}|^2$ (matter),
 $|\delta_{\Fz}(z^{6j+2}, z^{6k+3})(1)|^2 = |\lambda_{6(j+k)+5}|^2$ (antimatter).
+\end{theorem}
+
+\section{Poincar\'{e} Casimir Decomposition}
+
+The $\tau$-norm squared $|\lambda|^2$ decomposes into the Poincar\'{e}
+Casimir invariant $m^2 = P^\mu P_\mu$ plus spatial contributions.
+
+\begin{theorem}[$\phiS$ spatial decomposition]
+\label{thm:phiS-decomp}
+\lean{FUST.Coarsening.phiS_decomp}
+\[
+  \phiS(n) = 10\,\sigma_5(n) + 5\,\sigma_3(n) + (6 - 2\vp)\,\sigma_2(n),
+\]
+where $\sigma_5, \sigma_3, \sigma_2$ are the three spatial $\Dz$ components.
+\end{theorem}
+
+\begin{theorem}[$\phiA = \Dz$ temporal component]
+\label{thm:phiA-temporal}
+\lean{FUST.Coarsening.phiA_eq_temporal}
+$\phiA(n) = \Phi_{A\text{-coeff}}(n)$: the AF channel eigenvalue
+equals the temporal $\Dz$ component.
+\end{theorem}
+
+\begin{theorem}[Casimir component expansion]
+\label{thm:casimir-components}
+\lean{FUST.Coarsening.casimir_components}
+\[
+  m^2(s) = \Phi_{A\text{-coeff}}(s)^2 - \sigma_5(s)^2 - \sigma_3(s)^2 - \sigma_2(s)^2.
+\]
+\end{theorem}
+
+\begin{theorem}[$\tau$-norm vs Casimir]
+\label{thm:tau-norm-casimir}
+\lean{FUST.Coarsening.tauNormSq_casimir_relation_mod1}
+For $n = 6k+1$:
+\[
+  |\lambda_n|^2 = 300\,m^2(n)
+    + 300\bigl(\sigma_5(n)^2 + \sigma_3(n)^2 + \sigma_2(n)^2\bigr)
+    + 36\,\phiS(n)^2.
+\]
+The coefficient $300 = 12 \times 25 = |\afcoeff|^2 \times 5^2$
+is determined by the $\Fz$ structure.
+The Casimir $m^2$ is the physical mass squared;
+$|\lambda|^2$ includes additional spatial contributions.
 \end{theorem}
