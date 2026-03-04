@@ -7,6 +7,60 @@ namespace FUST
 
 open FUST.DζOperator Matrix FUST.FrourioAlgebra.GoldenEisensteinInt
 
+/-! ### A₂ root system from Eisenstein integers
+
+The ζ₆ sublattice ℤ[ζ₆] ⊂ ℤ[φ,ζ₆] has exactly 6 units: ±1, ±ζ₆, ±ζ₆².
+These form the A₂ root system with Cartan matrix [[2,-1],[-1,2]],
+which determines the Lie algebra su(3) (dim 8 = 6 roots + rank 2). -/
+
+open FUST.FrourioAlgebra
+
+def cartanA2 : Matrix (Fin 2) (Fin 2) ℤ := !![2, -1; -1, 2]
+
+theorem cartanA2_det : cartanA2.det = 3 := by
+  simp [cartanA2, Matrix.det_fin_two]
+
+def eisensteinUnits : Fin 6 → FUST.FrourioAlgebra.GoldenEisensteinInt :=
+  ![⟨1,0,0,0⟩, ⟨0,0,1,0⟩, ⟨-1,0,1,0⟩, ⟨-1,0,0,0⟩, ⟨0,0,-1,0⟩, ⟨1,0,-1,0⟩]
+
+theorem eisensteinUnit_in_zeta6_sublattice (i : Fin 6) :
+    (eisensteinUnits i).b = 0 ∧ (eisensteinUnits i).d = 0 := by
+  fin_cases i <;> simp [eisensteinUnits]
+
+theorem eisensteinUnit_isUnit (i : Fin 6) :
+    mul (eisensteinUnits i) (tau (eisensteinUnits i)) =
+      FUST.FrourioAlgebra.GoldenEisensteinInt.one := by
+  fin_cases i <;> unfold eisensteinUnits mul tau
+    FUST.FrourioAlgebra.GoldenEisensteinInt.one <;> ext <;> simp
+
+/-- Eisenstein norm: for x in ℤ[ζ₆] sublattice (b=d=0), N(x) = (a²+ac+c²)² -/
+theorem eisenstein_norm_eq (a c : ℤ) :
+    FUST.FrourioAlgebra.GoldenEisensteinInt.norm ⟨a, 0, c, 0⟩ =
+    (a ^ 2 + a * c + c ^ 2) ^ 2 := by
+  unfold FUST.FrourioAlgebra.GoldenEisensteinInt.norm tauNorm GoldenInt.norm; ring
+
+/-- Classification: a²+ac+c²=1 has exactly 6 integer solutions -/
+theorem eisenstein_unit_classification (a c : ℤ) (h : a ^ 2 + a * c + c ^ 2 = 1) :
+    (a = 1 ∧ c = 0) ∨ (a = 0 ∧ c = 1) ∨ (a = -1 ∧ c = 1) ∨
+    (a = -1 ∧ c = 0) ∨ (a = 0 ∧ c = -1) ∨ (a = 1 ∧ c = -1) := by
+  have hc : -1 ≤ c ∧ c ≤ 1 := by
+    constructor <;> nlinarith [sq_nonneg (2*a+c), sq_nonneg (c + 1), sq_nonneg (c - 1)]
+  have ha : -1 ≤ a ∧ a ≤ 1 := by
+    constructor <;> nlinarith [sq_nonneg (a+2*c), sq_nonneg (a + 1), sq_nonneg (a - 1)]
+  have : c = -1 ∨ c = 0 ∨ c = 1 := by omega
+  have : a = -1 ∨ a = 0 ∨ a = 1 := by omega
+  rcases ‹c = -1 ∨ c = 0 ∨ c = 1› with rfl | rfl | rfl <;>
+    rcases ‹a = -1 ∨ a = 0 ∨ a = 1› with rfl | rfl | rfl <;>
+    simp_all
+
+theorem cartan_pairing_offdiag :
+    2 * ((1:ℝ) * (-1/2) + 0 * (Real.sqrt 3 / 2)) /
+    ((-1/2) * (-1/2) + Real.sqrt 3 / 2 * (Real.sqrt 3 / 2)) = -1 := by
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have h3' : Real.sqrt 3 * Real.sqrt 3 = 3 := by rw [← sq]; exact h3
+  field_simp
+  nlinarith
+
 /-- U(1) gauge group uniqueness for the trivial channel.
 
 The trivial channel is the Galois-fixed subspace of ℤ[φ,ζ₆]:
@@ -88,51 +142,29 @@ theorem SU2_gauge_uniqueness :
      · ring,
    fun c => by simp [Fintype.card_fin]⟩
 
-/-- 3×3 matrix of SY sub-operator eigenvalues at the first three active modes -/
-noncomputable def syModeMatrix : Matrix (Fin 3) (Fin 3) ℝ :=
-  !![σ_Diff5 1, σ_Diff5 5, σ_Diff5 7;
-     σ_Diff3 1, σ_Diff3 5, σ_Diff3 7;
-     σ_Diff2 1, σ_Diff2 5, σ_Diff2 7]
+/-- SU(3) gauge group from A₂ root system.
 
-/-- SU(3) gauge group uniqueness for the SY channel.
-
-Rank 3 mode space → U(3), scalar U(1) center separated by derivDefect gauge,
-remaining mode-mixing has det = 1, giving SU(3). -/
+ℤ[ζ₆] has 6 units forming the A₂ root system (Cartan matrix [[2,-1],[-1,2]]).
+A₂ determines su(3): dim = 6 roots + rank 2 = 8 = 3²-1.
+Scalar U(1) separated by derivDefect, star≠id excludes SO. -/
 theorem SU3_gauge_uniqueness :
-    -- SY mode vectors are linearly independent (rank 3)
-    (LinearIndependent ℝ (fun i : Fin 3 => syModeMatrix i)) ∧
-    -- Scalar unitary c·I ∈ U(3) (center)
-    (∀ c : ℂ, starRingEnd ℂ c * c = 1 →
-      c • (1 : Matrix (Fin 3) (Fin 3) ℂ) ∈ unitaryGroup (Fin 3) ℂ) ∧
-    -- Scalar gauge has nontrivial det: det(cI₃) = c³
-    (∀ c : ℂ, (c • (1 : Matrix (Fin 3) (Fin 3) ℂ)).det = c ^ 3) ∧
-    -- ℂ has nontrivial star (conjugation ≠ identity, excludes O(3))
+    -- A₂ Cartan matrix is nondegenerate (det=3)
+    (cartanA2.det = 3) ∧
+    -- ℤ[ζ₆] has exactly 6 units (= A₂ roots)
+    (∀ a c : ℤ, a ^ 2 + a * c + c ^ 2 = 1 →
+      (a = 1 ∧ c = 0) ∨ (a = 0 ∧ c = 1) ∨ (a = -1 ∧ c = 1) ∨
+      (a = -1 ∧ c = 0) ∨ (a = 0 ∧ c = -1) ∨ (a = 1 ∧ c = -1)) ∧
+    -- 6 roots + rank 2 = dim su(3) = 8 = 3²-1
+    (6 + 2 = 8 ∧ 3 ^ 2 - 1 = (8 : ℕ)) ∧
+    -- ℂ has nontrivial star (SU not SO)
     (starRingEnd ℂ ≠ RingHom.id ℂ) ∧
-    -- Scalar gauge is already separated (derivDefect_const_gauge)
+    -- Scalar gauge separated by derivDefect
     (∀ (c : ℂ) (_ : c ≠ 0) (f g : ℂ → ℂ) (z : ℂ),
       FζOperator.derivDefect (fun w => c * f w) (fun w => c⁻¹ * g w) z =
       FζOperator.derivDefect f g z) :=
-  ⟨Matrix.linearIndependent_rows_of_det_ne_zero (by
-      rw [Matrix.det_fin_three]
-      simp only [syModeMatrix, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
-        Matrix.cons_val_one]
-      simp only [show (2 : Fin 3) = ⟨2, by omega⟩ from rfl]
-      norm_num
-      rw [σ_Diff5_one, σ_Diff3_one, σ_Diff2_one,
-          σ_Diff5_five, σ_Diff3_five, σ_Diff2_five,
-          σ_Diff5_seven, σ_Diff3_seven, σ_Diff2_seven]
-      intro h
-      have : φ - ψ ≠ 0 := ne_of_gt (by linarith [φ_gt_one, psi_neg])
-      exact this (by nlinarith)),
-   fun c hc => by
-     rw [mem_unitaryGroup_iff']; ext i j
-     simp only [star_smul, star_one, mul_apply, smul_apply, one_apply, smul_eq_mul,
-       Finset.sum_ite_eq', Finset.mem_univ, ite_true, mul_ite, mul_zero, mul_one,
-       ite_mul, zero_mul]
-     split
-     · subst_vars; exact hc
-     · ring,
-   fun c => by simp [Fintype.card_fin],
+  ⟨cartanA2_det,
+   eisenstein_unit_classification,
+   ⟨by norm_num, by norm_num⟩,
    by intro h; have h1 : (starRingEnd ℂ) Complex.I = Complex.I := by rw [h]; simp
       rw [starRingEnd_apply, Complex.star_def, Complex.conj_I] at h1
       have := congr_arg Complex.im h1

@@ -14,10 +14,9 @@ namespace FUST.ParticleSpectrum
 
 open FUST.StateFunctions FUST.WeinbergAngle
 
-/-! ## Fermion generations from SY channel weight
+/-! ## Fermion generations
 
-The SY channel rank = 3 determines the number of fermion flavors.
-Each flavor has lepton + quark from Fζ channel decomposition. -/
+3 flavors from the 3 active SY sub-operators (Diff5, Diff3, Diff2). -/
 
 abbrev fermionFlavorCount : ℕ := 3
 

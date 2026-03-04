@@ -1,16 +1,17 @@
 /-
-Poincaré algebra iso(3,1) = so(3,1) ⋉ ℝ⁴.
-dim iso(3,1) = C(kerDim + posRootCount, 2) + (kerDim + posRootCount) = 6 + 4 = 10.
-kerDim = 3 from ζ₆_N6 kernel, posRootCount = 1 from golden ratio root analysis.
+Poincaré algebra iso(3,1) = so(3,1) ⋉ ℝ⁴, dim = 6 + 4 = 10.
+φ-dilation z → φz becomes translation t → t + log φ in log-coordinates.
+4 independent translation vectors from φ-scaling on I4 = Fin 1 ⊕ Fin 3.
 -/
 import FUST.Physics.Lorentz
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace FUST.Physics.Poincare
 
 open LinearMap (BilinForm)
-open LieAlgebra.Orthogonal Matrix FUST Physics.Lorentz DζOperator
+open LieAlgebra.Orthogonal Matrix Physics.Lorentz DζOperator
 
 /-! ## Module.Finite instance for so(3,1) -/
 
@@ -75,179 +76,60 @@ theorem lorentz_infinitesimal_invariance
     rw [map_add]; rfl]
   rw [skewAdj_sum_zero, map_zero, LinearMap.zero_apply, LinearMap.zero_apply]
 
-/-! ## Poincaré algebra Lie brackets via 5×5 matrix representation
+/-! ## φ-Dilation as Translation in Log-Coordinates
 
-iso(3,1) embeds into gl(5,ℝ). Rotation/boost generators and translation
-generators P_μ are defined directly on Fin 5 × Fin 5 matrices.
-Indices: 0,1,2 = spatial, 3 = time, 4 = affine extension. -/
+φ-scaling z → φz is multiplicative. In log-coordinates t = log z,
+it becomes additive translation t → t + log φ. This establishes
+the translation symmetry needed for the Poincaré group. -/
 
-/-- Translation generator P_μ: (P_μ)_{ij} = δ_{i,μ}·δ_{j,4} -/
-def P5 (μ : Fin 4) : Matrix (Fin 5) (Fin 5) ℝ :=
-  fun i j => if i.val = μ.val ∧ j = 4 then 1 else 0
+theorem log_phi_pos : 0 < Real.log φ :=
+  Real.log_pos φ_gt_one
 
-/-- Rotation generator J₃(=e₀), -J₂(=e₁), J₁(=e₂) in 5×5 -/
-def Rot5 (k : Fin 3) : Matrix (Fin 5) (Fin 5) ℝ :=
-  fun i j =>
-    if k = 0 then (if i = 0 ∧ j = 1 then 1 else if i = 1 ∧ j = 0 then -1 else 0)
-    else if k = 1 then (if i = 0 ∧ j = 2 then 1 else if i = 2 ∧ j = 0 then -1 else 0)
-    else (if i = 1 ∧ j = 2 then 1 else if i = 2 ∧ j = 1 then -1 else 0)
+theorem log_phi_ne_zero : Real.log φ ≠ 0 :=
+  ne_of_gt log_phi_pos
 
-/-- Boost generator K₁(=e₃), K₂(=e₄), K₃(=e₅) in 5×5 -/
-def Boost5 (k : Fin 3) : Matrix (Fin 5) (Fin 5) ℝ :=
-  fun i j =>
-    -- k=0: K₁ = boost in 0: A₀₃=1, A₃₀=1
-    -- k=1: K₂ = boost in 1: A₁₃=1, A₃₁=1
-    -- k=2: K₃ = boost in 2: A₂₃=1, A₃₂=1
-    if i.val = k.val ∧ j = 3 then 1
-    else if i = 3 ∧ j.val = k.val then 1
-    else 0
+/-- exp conjugacy: φ-scaling = translation by log φ in log-coordinates -/
+theorem exp_log_phi_translate (t : ℝ) :
+    Real.exp (t + Real.log φ) = φ * Real.exp t := by
+  rw [Real.exp_add, Real.exp_log phi_pos, mul_comm]
 
-/-! ### Structural lemmas for P5 and Boost5 -/
+/-- Iterated φ-scaling = translation by n·log φ -/
+theorem exp_log_phi_translate_nat (n : ℕ) (t : ℝ) :
+    Real.exp (t + ↑n * Real.log φ) = φ ^ n * Real.exp t := by
+  rw [Real.exp_add, Real.exp_nat_mul, Real.exp_log phi_pos, mul_comm]
 
-private theorem P5_col (μ : Fin 4) (i : Fin 5) (j : Fin 5) (hj : j ≠ 4) :
-    P5 μ i j = 0 := by
-  simp only [P5]; split_ifs with h
-  · exact absurd h.2 hj
-  · rfl
+/-- Translation vector: log φ in the μ-th direction of I4 -/
+noncomputable def phiTranslation (μ : I4) : I4 → ℝ :=
+  fun i => if i = μ then Real.log φ else 0
 
-private theorem P5_row (ν : Fin 4) (j : Fin 5) :
-    P5 ν 4 j = 0 := by
-  simp only [P5]; split_ifs with h
-  · exact absurd h.1 (by omega)
-  · rfl
+theorem phiTranslation_apply_self (μ : I4) : phiTranslation μ μ = Real.log φ := by
+  simp [phiTranslation]
 
-private theorem Boost5_row4 (k : Fin 3) (j : Fin 5) :
-    Boost5 k 4 j = 0 := by
-  simp only [Boost5]; split_ifs with h1 h2
-  · exact absurd h1.1 (by omega)
-  · exact absurd h2.1 (by omega : (4 : Fin 5) ≠ 3)
-  · rfl
+theorem phiTranslation_apply_ne {μ ν : I4} (h : ν ≠ μ) : phiTranslation μ ν = 0 := by
+  simp [phiTranslation, h]
 
-private theorem P5_mul_zero (μ ν : Fin 4) : P5 μ * P5 ν = 0 := by
-  ext a b; simp only [mul_apply, zero_apply]
-  apply Finset.sum_eq_zero; intro k _
-  by_cases hk : k = 4
-  · rw [hk, P5_row ν b]; ring
-  · rw [P5_col μ a k hk]; ring
+/-- The 4 translation vectors span I4 → ℝ (linearly independent) -/
+theorem phiTranslation_linearIndependent :
+    LinearIndependent ℝ (fun μ : I4 => phiTranslation μ) := by
+  rw [linearIndependent_iff']
+  intro s g hg μ hμ
+  have h := congr_fun hg μ
+  simp only [Finset.sum_apply, Pi.smul_apply, Pi.zero_apply, smul_eq_mul] at h
+  have : ∀ ν ∈ s, g ν * phiTranslation ν μ = if ν = μ then g μ * Real.log φ else 0 := by
+    intro ν _
+    by_cases hνμ : ν = μ
+    · simp [hνμ, phiTranslation_apply_self]
+    · simp [phiTranslation_apply_ne (Ne.symm hνμ), hνμ]
+  rw [Finset.sum_congr rfl this, Finset.sum_ite_eq'] at h
+  simp only [hμ, ite_true] at h
+  exact mul_right_cancel₀ log_phi_ne_zero (by linarith)
 
-private theorem P5_mul_Boost5_zero (μ : Fin 4) (k : Fin 3) :
-    P5 μ * Boost5 k = 0 := by
-  ext a b; simp only [mul_apply, zero_apply]
-  apply Finset.sum_eq_zero; intro c _
-  by_cases hc : c = 4
-  · rw [hc, Boost5_row4]; ring
-  · rw [P5_col μ a c hc]; ring
-
-private theorem Boost5_col3 (k : Fin 3) (a : Fin 5) :
-    Boost5 k a 3 = if a.val = k.val then 1 else 0 := by
-  unfold Boost5
-  by_cases h : a.val = k.val
-  · simp [h]
-  · simp only [h, false_and, ite_false]
-    split_ifs with h2
-    · exfalso; omega
-    · rfl
-
-private theorem Boost5_not3 (k : Fin 3) (a j : Fin 5) (hj : j ≠ 3) :
-    Boost5 k a j = if a = 3 ∧ j.val = k.val then 1 else 0 := by
-  unfold Boost5; simp [hj]
-
-private theorem Boost5_mul_P5_apply (k : Fin 3) (μ : Fin 4) (a b : Fin 5) :
-    (Boost5 k * P5 μ) a b =
-    Boost5 k a ⟨μ.val, by omega⟩ * (if b = 4 then 1 else 0) := by
-  simp only [mul_apply]
-  by_cases hb : b = 4
-  · subst hb; simp only [ite_true]; rw [Fin.sum_univ_five]
-    simp only [P5]; fin_cases μ <;> simp
-  · simp only [hb, ite_false, mul_zero]
-    apply Finset.sum_eq_zero; intro c _; rw [P5_col μ c b hb, mul_zero]
-
-private theorem ite_mul_ite (p q : Prop) [Decidable p] [Decidable q] :
-    (if p then (1 : ℝ) else 0) * (if q then 1 else 0) =
-    if p ∧ q then 1 else 0 := by
-  split_ifs <;> simp_all
-
-/-! ### Translations commute -/
-
-theorem translations_commute (μ ν : Fin 4) :
-    P5 μ * P5 ν - P5 ν * P5 μ = 0 := by
-  rw [P5_mul_zero, P5_mul_zero, sub_self]
-
-/-! ### [K_i, P₃] = P_i (boost-energy → momentum) -/
-
-theorem boost_energy (i : Fin 3) :
-    Boost5 i * P5 3 - P5 3 * Boost5 i = P5 ⟨i, by omega⟩ := by
-  rw [P5_mul_Boost5_zero 3 i, sub_zero]
-  ext a b; rw [Boost5_mul_P5_apply]
-  change Boost5 i a 3 * (if b = 4 then 1 else 0) = P5 ⟨i, by omega⟩ a b
-  rw [Boost5_col3]; simp only [P5]
-  split_ifs <;> simp_all
-
-/-! ### [K_i, P_j] = δ_{ij} P₃ (boost-momentum → energy) -/
-
-theorem boost_momentum (i j : Fin 3) :
-    Boost5 i * P5 ⟨j, by omega⟩ - P5 ⟨j, by omega⟩ * Boost5 i =
-    if i = j then P5 3 else 0 := by
-  rw [P5_mul_Boost5_zero ⟨j, by omega⟩ i, sub_zero]
-  ext a b; rw [Boost5_mul_P5_apply]
-  have hj3 : (⟨j.val, by omega⟩ : Fin 5) ≠ 3 := by simp [Fin.ext_iff]; omega
-  rw [Boost5_not3 i a ⟨j.val, by omega⟩ hj3, ite_mul_ite]
-  by_cases hij : i = j
-  · subst hij; simp only [P5, and_true, ite_true]
-    congr 1; simp [Fin.ext_iff]
-  · simp only [hij, ite_false, zero_apply]
-    rw [if_neg]; intro ⟨⟨_, hji⟩, _⟩; exact hij (Fin.ext (by omega))
-
-/-! ### [J_i, P₃] = 0 (rotation commutes with energy) -/
-
-theorem rotation_energy (i : Fin 3) :
-    Rot5 i * P5 3 - P5 3 * Rot5 i = 0 := by
-  fin_cases i <;> {
-    ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply, zero_apply]
-    fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-  }
-
-/-! ### [J_i, P_j] (rotation acts on spatial momentum)
-
-[Rot5(0), P5(0)] = -P5(1), [Rot5(0), P5(1)] = P5(0), [Rot5(0), P5(2)] = 0
-[Rot5(1), P5(0)] = -P5(2), [Rot5(1), P5(2)] = P5(0), [Rot5(1), P5(1)] = 0
-[Rot5(2), P5(1)] = -P5(2), [Rot5(2), P5(2)] = P5(1), [Rot5(2), P5(0)] = 0 -/
-
-theorem rot0_P0 : Rot5 0 * P5 0 - P5 0 * Rot5 0 = -(P5 1) := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply, neg_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-theorem rot0_P1 : Rot5 0 * P5 1 - P5 1 * Rot5 0 = P5 0 := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-theorem rot1_P0 : Rot5 1 * P5 0 - P5 0 * Rot5 1 = -(P5 2) := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply, neg_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-theorem rot1_P2 : Rot5 1 * P5 2 - P5 2 * Rot5 1 = P5 0 := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-theorem rot2_P1 : Rot5 2 * P5 1 - P5 1 * Rot5 2 = -(P5 2) := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply, neg_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-theorem rot2_P2 : Rot5 2 * P5 2 - P5 2 * Rot5 2 = P5 1 := by
-  ext a b; simp only [P5, Rot5, mul_apply, Fin.sum_univ_five, sub_apply]
-  fin_cases a <;> fin_cases b <;> norm_num [Fin.ext_iff]
-
-/-! ### Summary: semidirect product structure
-
-iso(3,1) = so(3,1) ⋉ ℝ⁴ where:
-  [so(3,1), so(3,1)] ⊆ so(3,1) (proved in Lorentz.lean: so31_brackets)
-  [so(3,1), ℝ⁴] ⊆ ℝ⁴ (translations form an ideal: boost_energy, rotation_spatial)
-  [ℝ⁴, ℝ⁴] = 0 (abelian ideal: translations_commute)
-  [K_i, P₀] = P_i (boost-energy → momentum)
-  [K_i, P_j] = δ_{ij} P₀ (boost-momentum → energy) -/
-
-theorem poincare_algebra :
-    Module.finrank ℝ ((so' (Fin 1) (Fin 3) ℝ).toSubmodule × (I4 → ℝ)) = 10 ∧
-    (∀ μ ν : Fin 4, P5 μ * P5 ν - P5 ν * P5 μ = 0) ∧
-    (∀ i : Fin 3, Rot5 i * P5 3 - P5 3 * Rot5 i = 0) ∧
-    (∀ i : Fin 3, Boost5 i * P5 3 - P5 3 * Boost5 i = P5 ⟨i, by omega⟩) ∧
-    (∀ i j : Fin 3, Boost5 i * P5 ⟨j, by omega⟩ - P5 ⟨j, by omega⟩ * Boost5 i =
-      if i = j then P5 3 else 0) :=
-  ⟨finrank_poincare, translations_commute, rotation_energy, boost_energy, boost_momentum⟩
+/-- φ-dilation corresponds to translation in the Poincaré group -/
+theorem phi_dilation_is_translation :
+    (∀ t : ℝ, Real.exp (t + Real.log φ) = φ * Real.exp t) ∧
+    (0 < Real.log φ) ∧
+    (LinearIndependent ℝ (fun μ : I4 => phiTranslation μ)) ∧
+    (Module.finrank ℝ (I4 → ℝ) = 4) :=
+  ⟨exp_log_phi_translate, log_phi_pos, phiTranslation_linearIndependent, finrank_translations⟩
 
 end FUST.Physics.Poincare

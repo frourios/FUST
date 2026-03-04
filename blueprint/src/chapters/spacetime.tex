@@ -7,15 +7,6 @@ the SY-channel gives 3 spatial dimensions ($\phiS$ rank 3),
 and the signature $(1,3)$ follows from
 the non-compact/compact duality $\vp\ps = -1$ vs.\ $\zs\zsc = +1$.
 
-\section{\texorpdfstring{$\so(3)$}{so(3)}: Rotation Subalgebra}
-
-\begin{definition}[$\so(3)$]
-\label{def:so3}
-\lean{FUST.Physics.Lorentz.so3_isomorphism}
-The compact part of $\zs$-structure yields the rotation algebra
-$\so(3) \cong \R^3$ with $\dim\so(3) = 3$.
-\end{definition}
-
 \section{\texorpdfstring{$\so(3,1)$}{so(3,1)}: Lorentz Algebra}
 
 \begin{definition}[$I_4$]
@@ -24,12 +15,11 @@ $\so(3) \cong \R^3$ with $\dim\so(3) = 3$.
 $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$: spacetime index.
 \end{definition}
 
-\begin{theorem}[$\so(3,1)$ structure]
+\begin{theorem}[$\so(3,1)$ dimension]
 \label{thm:so31}
-\lean{FUST.Physics.Lorentz.so31_isomorphism}
+\lean{FUST.Physics.Lorentz.finrank_so31}
 $\so(3,1) \cong \R^6$ with $\dim\so(3,1) = 6$:
-3 rotations from $\so(3)$ and 3 boosts from
-the non-compact $\vp\ps = -1$ sector.
+3 rotations (spatial antisymmetric block) and 3 boosts (space-time symmetric block).
 \end{theorem}
 
 \section{\texorpdfstring{Poincar\'{e} Algebra $\iso(3,1)$}{Poincaré Algebra iso(3,1)}}
@@ -57,18 +47,17 @@ $\eta_{\mu\nu} = \mathrm{diag}(+1, -1, -1, -1)$ on $I_4$.
 \begin{theorem}[Spacetime uniqueness]
 \label{thm:spacetime-uniqueness}
 \lean{FUST.SpacetimeUniqueness.spacetime_from_Dζ}
-The $\Dz$ operator uniquely determines:
+The $\Dz$ operator determines $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$:
 \begin{enumerate}
-  \item $\re(\afcoeff) = 0$ and $\im(\afcoeff) > 0$
-    (1 temporal dimension),
-  \item $\phiS$ rank $= 3$
-    (3 spatial dimensions),
-  \item $\phiA[\mathrm{id}](1) \ne 0$
-    (temporal channel nontrivial),
-  \item Signature $(1,3)$: temporal direction gives positive norm squared,
-    spatial directions give negative norm squared,
+  \item $\re(\afcoeff) = 0$, $\im(\afcoeff) > 0$: 1 temporal channel ($\phiA$),
+  \item $\phiS$ rank $= 3$: 3 spatial channels (Diff5, Diff3, Diff2),
+  \item $\phiA[\mathrm{id}](1) \ne 0$: temporal channel nontrivial,
+  \item Signature $(1,3)$: $(6a)^2 > 0$ (temporal), $(\afcoeff \cdot b)^2 < 0$ (spatial),
   \item Lorentz invariance: $\eta(\Lambda v, \Lambda w) = \eta(v,w)$
-    for all $\Lambda \in O(3,1)$.
+    for all $\Lambda \in O(3,1)$,
+  \item $\vp$-dilation $=$ translation in log-coordinates:
+    $\exp(t + \log\vp) = \vp \cdot \exp(t)$,
+  \item 4 linearly independent translation vectors from $\vp$-scaling on $I_4$.
 \end{enumerate}
 \end{theorem}
 

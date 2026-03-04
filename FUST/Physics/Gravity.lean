@@ -1,7 +1,7 @@
 /-
 General relativity from localized Lorentz symmetry.
-Global so(3,1) invariance (Poincare.lean) → local ω : I4 → so(3,1) → gravity.
-All dimensions derived from ζ₆/φψ duality: kerDim=3, posRootCount=1, spacetime=4.
+Global so(3,1) invariance → local ω : I4 → so(3,1) → gravity.
+I4 = Fin 1 ⊕ Fin 3 justified by Dζ channels: AF_coeff_eq, Φ_S_rank_three.
 -/
 import FUST.Physics.Poincare
 
@@ -65,10 +65,10 @@ open Complex
 
 /-! ## Dζ → so(3,1) connection: algebraic 3+1 decomposition
 
-The unified Dζ operator decomposes into:
-  Re(Dζ) = 6·Φ_S (spatial, weight 3 in |Dζ|²) — 3 independent sub-operators
-  Im(Dζ) = ±2√3·Φ_A (temporal, weight 1 in |Dζ|²) — 1 independent channel
-This matches I4 = Fin 1 ⊕ Fin 3 and indexes the connection space ω : I4 → so(3,1). -/
+Dζ decomposes into (AF_coeff_eq, Φ_S_rank_three):
+  Φ_A: 1 AF channel (temporal, AF_coeff = 2i√3)
+  Φ_S: 3 SY sub-operators (spatial, rank 3)
+This determines I4 = Fin 1 ⊕ Fin 3 and indexes ω : I4 → so(3,1). -/
 
 private lemma psi_eq_c : (↑ψ : ℂ) = 1 - ↑φ := by
   have h : φ + ψ = 1 := phi_add_psi
@@ -116,12 +116,12 @@ noncomputable def Dζ_components (s : ℕ) : I4 → ℂ :=
   | Sum.inr 1 => ↑(σ_Diff3 s)
   | Sum.inr 2 => ↑(σ_Diff2 s)
 
-/-- Temporal (Fin 1) + spatial (Fin 3) = I4 -/
+/-- Temporal (Fin 1) + spatial (Fin 3) = I4, matching Dζ channel structure -/
 theorem Dζ_dim_matches_I4 :
     Fintype.card (Fin 1) + Fintype.card (Fin 3) = Fintype.card I4 := by
   simp [I4, Fintype.card_sum, Fintype.card_fin]
 
-/-- Weight ratio 3:1 from |Dζ|² matches I4 cardinality -/
+/-- Weight ratio 3:1 from |Dζ|² = 12(3a²+b²) matches I4 cardinality -/
 theorem weight_matches_I4 :
     3 + 1 = Fintype.card I4 := by
   simp [I4, Fintype.card_sum, Fintype.card_fin]

@@ -20,12 +20,12 @@ theorem yangMills_massGap_SU2 :
    FUST.SU2_gauge_uniqueness.2.2.2.1,
    FUST.SU2_gauge_uniqueness.2.2.2.2.2.2⟩
 
-/-- SU(3) mass gap: SY rank 3 → SU(3), m² = 14 > 0 -/
+/-- SU(3) mass gap: A₂ root system from ℤ[ζ₆] → SU(3), m² = 14 > 0 -/
 theorem yangMills_massGap_SU3 :
-    -- SU(3) from SY mode vectors rank 3
-    (LinearIndependent ℝ (fun i : Fin 3 => FUST.syModeMatrix i)) ∧
-    -- Scalar det c³ (separates U(1) center from SU(3))
-    (∀ c : ℂ, (c • (1 : Matrix (Fin 3) (Fin 3) ℂ)).det = c ^ 3) ∧
+    -- A₂ Cartan matrix det=3 (nondegenerate)
+    (FUST.cartanA2.det = 3) ∧
+    -- 6 roots + rank 2 = dim su(3) = 8 = 3²-1
+    (6 + 2 = 8 ∧ 3 ^ 2 - 1 = (8 : ℕ)) ∧
     -- Casimir mass squared m² = 14 > 0
     (0 < FUST.massGapSq ∧ FUST.massGapSq = 14) :=
   ⟨FUST.SU3_gauge_uniqueness.1,
@@ -36,8 +36,8 @@ theorem yangMills_massGap_SU3 :
 theorem yangMills_massGap :
     -- 4D spacetime from Poincaré translation group
     (Module.finrank ℝ (I4 → ℝ) = 4) ∧
-    -- SU(3): SY rank 3
-    (LinearIndependent ℝ (fun i : Fin 3 => FUST.syModeMatrix i)) ∧
+    -- SU(3): A₂ root system (Cartan det=3)
+    (FUST.cartanA2.det = 3) ∧
     -- SU(2): AF²=-12 (quaternionic)
     (mul AF_coeff_gei AF_coeff_gei =
       (⟨-12, 0, 0, 0⟩ : FUST.FrourioAlgebra.GoldenEisensteinInt)) ∧

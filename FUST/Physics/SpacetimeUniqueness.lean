@@ -67,22 +67,23 @@ abbrev PoincareGroup := Multiplicative (I4 → ℝ) ⋊[lorentzAction] LorentzGr
 
 noncomputable instance : Group PoincareGroup := inferInstance
 
-/-- Dζ determines O(3,1) spacetime structure and Poincaré group -/
+/-- Dζ determines spacetime structure and Poincaré group.
+Part A: Dζ channel algebra (AF_coeff_eq, Φ_S_rank_three) → 1+3, signature (1,3).
+Part B: I4 geometry justified by Part A. -/
 theorem spacetime_from_Dζ :
-    -- Dζ 3+1 decomposition
+    -- Part A: Dζ channels determine 1+3 structure
     (AF_coeff.re = 0 ∧ AF_coeff.im > 0) ∧
-    -- Spatial channel rank 3
     (σ_Diff5 1 * (σ_Diff3 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff3 7) -
      σ_Diff3 1 * (σ_Diff5 5 * σ_Diff2 7 - σ_Diff2 5 * σ_Diff5 7) +
      σ_Diff2 1 * (σ_Diff5 5 * σ_Diff3 7 - σ_Diff3 5 * σ_Diff5 7) ≠ 0) ∧
-    -- Temporal channel nontrivial
     (Φ_A id 1 ≠ 0) ∧
-    -- Signature (1,3): temporal positive, spatial negative
     (∀ a : ℝ, a ≠ 0 → ((6 * (a : ℂ) + AF_coeff * 0) ^ 2).re > 0) ∧
     (∀ b : ℝ, b ≠ 0 → ((6 * (0 : ℂ) + AF_coeff * b) ^ 2).re < 0) ∧
-    -- Lorentz group preserves Dζ-derived metric
+    -- Part B: I4 geometry justified by Part A
     (∀ (Λ : LorentzGroup 3) (v w : I4 → ℝ),
-      minkowskiBilin (Λ.1 *ᵥ v) (Λ.1 *ᵥ w) = minkowskiBilin v w) :=
+      minkowskiBilin (Λ.1 *ᵥ v) (Λ.1 *ᵥ w) = minkowskiBilin v w) ∧
+    (∀ t : ℝ, Real.exp (t + Real.log φ) = φ * Real.exp t) ∧
+    (LinearIndependent ℝ (fun μ : I4 => phiTranslation μ)) :=
   ⟨⟨by rw [AF_coeff_eq], by rw [AF_coeff_eq]; positivity⟩,
    Φ_S_rank_three,
    by simp only [Φ_A, id, mul_one]; norm_cast
@@ -95,7 +96,9 @@ theorem spacetime_from_Dζ :
      have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3:ℝ) ≥ 0)
      have hb2 : b ^ 2 > 0 := by positivity
      nlinarith,
-   lorentz_bilin_invariance⟩
+   lorentz_bilin_invariance,
+   exp_log_phi_translate,
+   phiTranslation_linearIndependent⟩
 
 /-- Gauge groups and Poincaré group use independent degrees of freedom.
 Gauge: derivDefect factorization ambiguity (ℂ-linearity of Fζ).

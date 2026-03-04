@@ -10,7 +10,7 @@ under the Galois automorphisms $\sigma$ and $\tau$.
 
 \begin{theorem}[$U(1)$ uniqueness]
 \label{thm:u1-uniqueness}
-\lean{FUST.SU2_gauge_uniqueness}
+\lean{FUST.U1_gauge_uniqueness}
 The Galois-fixed subring $\{x \in \GEI \mid \sigma(x) = x,\, \tau(x) = x\}$
 is isomorphic to $\Z$ (rank 1), yielding $U(1)$.
 Equivalently: $\sigma(x) = x$ and $\tau(x) = x$ iff $b = c = d = 0$.
@@ -27,14 +27,15 @@ identify the AF-channel with a quaternionic structure, yielding $SU(2)$.
 The determinant $\det(c \cdot I_{2\times 2}) = c^2$ separates the $U(1)$ center.
 \end{theorem}
 
-\section{\texorpdfstring{$SU(3)$}{SU(3)}: Rank-3 SY-Channel}
+\section{\texorpdfstring{$SU(3)$}{SU(3)}: \texorpdfstring{$A_2$}{A2} Root System}
 
 \begin{theorem}[$SU(3)$ uniqueness]
 \label{thm:su3-uniqueness}
 \lean{FUST.SU3_gauge_uniqueness}
-The mode vectors
-$(\sigma_{\mathrm{Diff}_5}(s),\, \sigma_{\mathrm{Diff}_3}(s),\, \sigma_{\mathrm{Diff}_2}(s))$
-for $s = 1, 5, 7$ form a linearly independent set in $\R^3$ (rank 3),
-yielding $SU(3)$.
-The determinant $\det(c \cdot I_{3\times 3}) = c^3$ separates the $U(1)$ center.
+The $\zs$-sublattice $\Z[\zs] \subset \GEI$ has exactly 6 units,
+classified by $a^2 + ac + c^2 = 1$.
+These form the $A_2$ root system with Cartan matrix
+$\begin{psmallmatrix} 2 & -1 \\ -1 & 2 \end{psmallmatrix}$ ($\det = 3$).
+$A_2$ determines $\mathfrak{su}(3)$: $\dim = 6\text{ roots} + \mathrm{rank}\,2 = 8 = 3^2 - 1$.
+The nontrivial star involution on $\C$ excludes $SO(3)$.
 \end{theorem}

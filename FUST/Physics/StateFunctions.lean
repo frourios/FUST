@@ -1,18 +1,5 @@
 import FUST.Physics.TimeStructure
 
-/-!
-# Particle State Functions
-
-1. Structural integers from ℤ[φ,ζ₆]
-2. Massless gauge state (Fζ kernel, mode 0) — photon/gluon
-3. Higgs mechanism: mode 0 → mode 1 via vacuum coupling
-4. Massive gauge bosons (W, Z, Higgs) — mode 1 with φ-scaling
-5. Leptons — electronState × timeEvolution^k
-6. Quarks — kernel modes (confined, Fζ-invisible)
-7. Baryons — EmergenceState: kernel modes fuse into active mode
-8. Binding — derivDefect interaction between active particles
--/
-
 namespace FUST.StateFunctions
 
 open FUST.FζOperator FUST.DζOperator FUST.TimeStructure Complex
@@ -244,28 +231,6 @@ theorem strangeQuark_confined : IsInKerFζ strangeQuarkState := by
   intro z; change Fζ (fun w => w ^ 4) z = 0
   have : (4 : ℕ) = 6 * 0 + 4 := by omega
   rw [this]; exact Fζ_vanish_mod6_4 0 z
-
-/-! ## Baryons: EmergenceState
-
-Kernel modes fuse into an active product mode via derivDefect.
-No mass coefficients — the emerged particle's observables are determined
-by casimirMassSq(productMode) and Dζ_momentum(productMode). -/
-
-structure EmergenceState where
-  kernelModes : List ℕ
-  allKernel : ∀ m ∈ kernelModes, m % 6 ≠ 1 ∧ m % 6 ≠ 5
-  productActive : kernelModes.sum % 6 = 1 ∨ kernelModes.sum % 6 = 5
-
-def EmergenceState.productMode (s : EmergenceState) : ℕ := s.kernelModes.sum
-
-noncomputable def EmergenceState.microstate (s : EmergenceState) : ℂ → ℂ :=
-  fun z => z ^ s.productMode
-
-/-- Proton: uud = z²·z²·z³ = z⁷ (mode 7 ≡ 1 mod 6) -/
-noncomputable def protonState : EmergenceState where
-  kernelModes := [2, 2, 3]
-  allKernel := by decide
-  productActive := by left; decide
 
 /-! ## Neutrinos: seesaw-suppressed
 
