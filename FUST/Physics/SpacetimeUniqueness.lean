@@ -86,7 +86,7 @@ theorem spacetime_from_Dζ :
     (LinearIndependent ℝ (fun μ : I4 => phiTranslation μ)) :=
   ⟨⟨by rw [AF_coeff_eq], by rw [AF_coeff_eq]; positivity⟩,
    Φ_S_rank_three,
-   by simp only [Φ_A, id, mul_one]; norm_cast
+   by simp only [Φ_A, Diff6, Diff2, Diff4, id, mul_one]; norm_cast
       have hψ : ψ = 1 - φ := by unfold ψ φ; ring
       rw [hψ]; nlinarith [φ_gt_one, golden_ratio_property],
    fun a ha => by simp only [mul_zero, add_zero]; norm_cast; positivity,

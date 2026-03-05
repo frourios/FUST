@@ -443,10 +443,7 @@ C(a,k) = AF_k·Φ_A(a) + SY_k·Φ_S(a) where:
 Half-period: C(a, k+3) = -C(a, k) from AF/SY anti-periodicity. -/
 
 /-- Φ_A: φ-numerator = Diff6 + Diff2 - Diff4, all 6 ops AF channel -/
-noncomputable def Φ_A (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  f ((↑φ : ℂ) ^ 3 * z) - 4 * f ((↑φ : ℂ) ^ 2 * z) +
-  (3 + (↑φ : ℂ)) * f (↑φ * z) - (3 + (↑ψ : ℂ)) * f (↑ψ * z) +
-  4 * f ((↑ψ : ℂ) ^ 2 * z) - f ((↑ψ : ℂ) ^ 3 * z)
+noncomputable def Φ_A (f : ℂ → ℂ) (z : ℂ) : ℂ := Diff6 f z + Diff2 f z - Diff4 f z
 
 /-- Φ_S: φ-numerator = 2·Diff5 + Diff3 + μ·Diff2, all 6 ops SY channel -/
 noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
@@ -454,8 +451,7 @@ noncomputable def Φ_S (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   2 * Diff5 f z + Diff3 f z + μ * Diff2 f z
 
 /-- Dζ: rank-2 on lattice ⟨φ,ζ₆⟩, encoding all 6 operators -/
-noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ :=
-  (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
+noncomputable def Dζ (f : ℂ → ℂ) (z : ℂ) : ℂ := (AFNum (Φ_A f) z + SymNum (Φ_S f) z) / z
 
 lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
   rw [ne_eq, ← ofReal_ofNat, ← ofReal_add, ofReal_eq_zero]
@@ -464,7 +460,10 @@ lemma phi_plus_two_ne : (↑φ : ℂ) + 2 ≠ 0 := by
 /-- Φ_A on constants: Σ = 1-4+(3+φ)-(3+ψ)+4-1 = φ-ψ (not zero, but AFNum kills it) -/
 theorem Φ_A_const (c : ℂ) (z : ℂ) :
     Φ_A (fun _ => c) z = ((↑φ : ℂ) - ↑ψ) * c := by
-  unfold Φ_A; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  rw [hφ2, hψ2]; ring
 
 /-- Φ_S annihilates constants: 2+(3+μ)-10+(3-μ)+2 = 0 -/
 theorem Φ_S_const (c : ℂ) (z : ℂ) : Φ_S (fun _ => c) z = 0 := by
@@ -480,14 +479,6 @@ theorem Dζ_const (z : ℂ) : Dζ (fun _ => 1) z = 0 := by
   have hS : ∀ w, Φ_S (fun _ => (1 : ℂ)) w = 0 := fun w => Φ_S_const 1 w
   simp only [AFNum, hA, SymNum, hS, mul_one]
   simp [sub_self]
-
-/-- Decomposition: Φ_A = Diff6 + Diff2 - Diff4 -/
-theorem Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
-    Φ_A f z = Diff6 f z + Diff2 f z - Diff4 f z := by
-  unfold Φ_A Diff6 Diff2 Diff4
-  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
-  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
-  rw [hφ2, hψ2]; ring
 
 /-! ## Fourier coefficients: AF = 2i√3, SY = 6
 
@@ -1010,7 +1001,7 @@ private lemma mul_comm_assoc' (c a z : ℂ) : c * (a * z) = a * (c * z) := by ri
 /-- Φ_A is translation-equivariant: Φ_A(f(c·))(z) = Φ_A(f)(cz) -/
 theorem Φ_A_translate (f : ℂ → ℂ) (c z : ℂ) :
     Φ_A (fun t => f (c * t)) z = Φ_A f (c * z) := by
-  simp only [Φ_A, mul_comm_assoc']
+  simp only [Φ_A, Diff6, Diff2, Diff4, mul_comm_assoc']
 
 /-- Φ_S is translation-equivariant: Φ_S(f(c·))(z) = Φ_S(f)(cz) -/
 theorem Φ_S_translate (f : ℂ → ℂ) (c z : ℂ) :
@@ -1069,57 +1060,5 @@ theorem observer_scale_independence (f : ℂ → ℂ) (n : ℤ)
     (zpow_ne_zero n (ofReal_ne_zero.mpr (ne_of_gt phi_pos))) hz
 
 end GaugeCovariance
-
-/-! ## Channel Decomposition Theorem
-
-Dζ decomposes into AF (antisymmetric) and SY (symmetric) channels:
-  Dζ = (AFNum(Φ_A) + SymNum(Φ_S)) / z
-where Φ_A = Diff6 + Diff2 - Diff4 and Φ_S = 2Diff5 + Diff3 + μDiff2 with μ = 2/(φ+2).
-
-The AF channel carries Diff6, Diff4, Diff2 (odd-rank)
-and the SY channel carries Diff5, Diff3 (even-rank). -/
-
-section ChannelDecomposition
-
-/-- AF channel linearity: AFNum distributes over Φ_A = Diff6 + Diff2 - Diff4 -/
-theorem AFNum_Φ_A_decompose (f : ℂ → ℂ) (z : ℂ) :
-    AFNum (Φ_A f) z = AFNum (Diff6 f) z + AFNum (Diff2 f) z - AFNum (Diff4 f) z := by
-  conv_lhs => rw [show Φ_A f = fun w =>
-    Diff6 f w + Diff2 f w - Diff4 f w from funext (Φ_A_decompose f)]
-  simp only [AFNum]; ring
-
-/-- SY channel linearity: SymNum distributes over Φ_S = 2Diff5 + Diff3 + μDiff2 -/
-theorem SymNum_Φ_S_decompose (f : ℂ → ℂ) (z : ℂ) :
-    SymNum (Φ_S f) z =
-    2 * SymNum (Diff5 f) z + SymNum (Diff3 f) z +
-    (2 / ((↑φ : ℂ) + 2)) * SymNum (Diff2 f) z := by
-  conv_lhs =>
-    rw [show Φ_S f = fun w => 2 * Diff5 f w + Diff3 f w + (2 / ((↑φ : ℂ) + 2)) * Diff2 f w
-        from funext (fun w => by simp only [Φ_S])]
-  simp only [SymNum]; ring
-
-/-- Dζ channel decomposition: Dζ splits into Diff_n components via Φ_A and Φ_S -/
-theorem Dζ_channel_decompose (f : ℂ → ℂ) (z : ℂ) :
-    Dζ f z =
-    (AFNum (fun w => Diff6 f w + Diff2 f w - Diff4 f w) z +
-     SymNum (fun w => 2 * Diff5 f w + Diff3 f w + (2 / ((↑φ : ℂ) + 2)) * Diff2 f w) z) / z := by
-  simp only [Dζ, show Φ_A f = fun w => Diff6 f w + Diff2 f w - Diff4 f w
-    from funext (Φ_A_decompose f), show Φ_S f = fun w => 2 * Diff5 f w + Diff3 f w +
-    (2 / ((↑φ : ℂ) + 2)) * Diff2 f w from funext (fun w => by simp only [Φ_S])]
-
-/-- AF channel of Dζ: carries Diff6, Diff2, Diff4 (odd-rank operators) -/
-theorem Dζ_AF_channel (f : ℂ → ℂ) (z : ℂ) :
-    AFNum (Φ_A f) z / z =
-    (AFNum (Diff6 f) z + AFNum (Diff2 f) z - AFNum (Diff4 f) z) / z := by
-  rw [AFNum_Φ_A_decompose]
-
-/-- SY channel of Dζ: carries Diff5, Diff3, Diff2 (even-rank operators) -/
-theorem Dζ_SY_channel (f : ℂ → ℂ) (z : ℂ) :
-    SymNum (Φ_S f) z / z =
-    (2 * SymNum (Diff5 f) z + SymNum (Diff3 f) z +
-     (2 / ((↑φ : ℂ) + 2)) * SymNum (Diff2 f) z) / z := by
-  rw [SymNum_Φ_S_decompose]
-
-end ChannelDecomposition
 
 end FUST.DζOperator

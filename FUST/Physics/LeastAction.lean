@@ -19,7 +19,7 @@ Fζ is linear, so L[f] = |Fζ f|² admits standard first variation.
 
 theorem Fζ_linear_combination (f g : ℂ → ℂ) (a b : ℂ) (z : ℂ) :
     Fζ (fun t => a * f t + b * g t) z = a * Fζ f z + b * Fζ g z := by
-  unfold Fζ AFNum SymNum Φ_A Φ_S_int; ring
+  unfold Fζ AFNum SymNum Φ_A Diff6 Diff2 Diff4 Φ_S_int; ring
 
 theorem Fζ_additive (f g : ℂ → ℂ) (z : ℂ) :
     Fζ (fun t => f t + g t) z = Fζ f z + Fζ g z := by

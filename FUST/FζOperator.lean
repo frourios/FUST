@@ -76,7 +76,7 @@ theorem Fζ_eq (f : ℂ → ℂ) (z : ℂ) (hz : z ≠ 0) :
 
 theorem Fζ_kernel_const (z : ℂ) : Fζ (fun _ => 1) z = 0 := by
   by_cases hz : z = 0
-  · subst hz; unfold Fζ AFNum SymNum Φ_A Φ_S_int; ring
+  · subst hz; unfold Fζ AFNum SymNum Φ_A Diff6 Diff2 Diff4 Φ_S_int; ring
   · rw [Fζ_eq (fun _ => 1) z hz, Dζ_const z]; ring
 
 private lemma zeta6_pow8 : ζ₆ ^ 8 = ζ₆ ^ 2 := by
@@ -110,7 +110,14 @@ private lemma five_phiA_sq (w : ℂ) :
     5 * Φ_A (fun t => t ^ 2) w =
     (5 * ((↑φ : ℂ) ^ 6 - 4 * (↑φ : ℂ) ^ 4 + (3 + ↑φ) * (↑φ : ℂ) ^ 2 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 2 + 4 * (↑ψ : ℂ) ^ 4 - (↑ψ : ℂ) ^ 6)) * w ^ 2 := by
-  unfold Φ_A; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  conv_lhs => rw [show (↑φ : ℂ) ^ 2 * ((↑φ : ℂ) * w) ^ 2 =
+    ((↑φ : ℂ) + 1) * ((↑φ : ℂ) * w) ^ 2 from by rw [hφ2]]
+  conv_lhs => rw [show (↑ψ : ℂ) ^ 2 * ((↑ψ : ℂ) * w) ^ 2 =
+    ((↑ψ : ℂ) + 1) * ((↑ψ : ℂ) * w) ^ 2 from by rw [hψ2]]
+  ring
 
 private lemma phiS_int_sq (w : ℂ) :
     Φ_S_int (fun t => t ^ 2) w =
@@ -150,7 +157,14 @@ private lemma five_phiA_cube (w : ℂ) :
     5 * Φ_A (fun t => t ^ 3) w =
     (5 * ((↑φ : ℂ) ^ 9 - 4 * (↑φ : ℂ) ^ 6 + (3 + ↑φ) * (↑φ : ℂ) ^ 3 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 3 + 4 * (↑ψ : ℂ) ^ 6 - (↑ψ : ℂ) ^ 9)) * w ^ 3 := by
-  unfold Φ_A; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  conv_lhs => rw [show (↑φ : ℂ) ^ 2 * ((↑φ : ℂ) * w) ^ 3 =
+    ((↑φ : ℂ) + 1) * ((↑φ : ℂ) * w) ^ 3 from by rw [hφ2]]
+  conv_lhs => rw [show (↑ψ : ℂ) ^ 2 * ((↑ψ : ℂ) * w) ^ 3 =
+    ((↑ψ : ℂ) + 1) * ((↑ψ : ℂ) * w) ^ 3 from by rw [hψ2]]
+  ring
 
 private lemma phiS_int_cube (w : ℂ) :
     Φ_S_int (fun t => t ^ 3) w =
@@ -185,7 +199,14 @@ private lemma five_phiA_fourth (w : ℂ) :
     5 * Φ_A (fun t => t ^ 4) w =
     (5 * ((↑φ : ℂ) ^ 12 - 4 * (↑φ : ℂ) ^ 8 + (3 + ↑φ) * (↑φ : ℂ) ^ 4 -
      (3 + ↑ψ) * (↑ψ : ℂ) ^ 4 + 4 * (↑ψ : ℂ) ^ 8 - (↑ψ : ℂ) ^ 12)) * w ^ 4 := by
-  unfold Φ_A; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  conv_lhs => rw [show (↑φ : ℂ) ^ 2 * ((↑φ : ℂ) * w) ^ 4 =
+    ((↑φ : ℂ) + 1) * ((↑φ : ℂ) * w) ^ 4 from by rw [hφ2]]
+  conv_lhs => rw [show (↑ψ : ℂ) ^ 2 * ((↑ψ : ℂ) * w) ^ 4 =
+    ((↑ψ : ℂ) + 1) * ((↑ψ : ℂ) * w) ^ 4 from by rw [hψ2]]
+  ring
 
 private lemma phiS_int_fourth (w : ℂ) :
     Φ_S_int (fun t => t ^ 4) w =
@@ -232,7 +253,14 @@ theorem phiA_monomial (n : ℕ) (w : ℂ) :
      (3 + (↑φ : ℂ)) * (↑φ : ℂ) ^ n -
      (3 + (↑ψ : ℂ)) * (↑ψ : ℂ) ^ n +
      4 * (↑ψ : ℂ) ^ (2 * n) - (↑ψ : ℂ) ^ (3 * n)) * w ^ n := by
-  unfold Φ_A; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  conv_lhs => rw [show (↑φ : ℂ) ^ 2 * ((↑φ : ℂ) * w) ^ n =
+    ((↑φ : ℂ) + 1) * ((↑φ : ℂ) * w) ^ n from by rw [hφ2]]
+  conv_lhs => rw [show (↑ψ : ℂ) ^ 2 * ((↑ψ : ℂ) * w) ^ n =
+    ((↑ψ : ℂ) + 1) * ((↑ψ : ℂ) * w) ^ n from by rw [hψ2]]
+  ring
 
 /-- Φ_S_int factors on monomials: Φ_S_int(wⁿ)(z) = c_S(n) · zⁿ -/
 theorem phiS_int_monomial (n : ℕ) (w : ℂ) :
@@ -441,7 +469,7 @@ theorem Fζ_const_smul (c : ℂ) (f : ℂ → ℂ) (z : ℂ) :
   unfold Fζ
   have hA : (fun w => 5 * Φ_A (fun t => c * f t) w) =
       fun w => c * (5 * Φ_A f w) := by
-    funext w; unfold Φ_A; ring
+    funext w; simp only [Φ_A, Diff6, Diff2, Diff4]; ring
   have hS : Φ_S_int (fun t => c * f t) = fun w => c * Φ_S_int f w := by
     funext w; unfold Φ_S_int; ring
   rw [hA, hS, AFNum_smul, SymNum_smul]; ring

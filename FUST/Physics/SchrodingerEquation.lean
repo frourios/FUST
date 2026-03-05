@@ -93,7 +93,10 @@ private noncomputable def phiA_id : ℂ :=
   (3+(↑ψ : ℂ))*(↑ψ : ℂ) + 4*(↑ψ : ℂ)^2 - (↑ψ : ℂ)^3
 
 private theorem phiA_id_eq (w : ℂ) : Φ_A (fun t => t) w = phiA_id * w := by
-  unfold Φ_A phiA_id; ring
+  simp only [Φ_A, Diff6, Diff2, Diff4, phiA_id]
+  have hφ2 : (↑φ : ℂ) ^ 2 = ↑φ + 1 := golden_ratio_property_complex
+  have hψ2 : (↑ψ : ℂ) ^ 2 = ↑ψ + 1 := psi_sq_complex
+  rw [hφ2, hψ2]; ring
 
 private noncomputable def phiS_id : ℂ :=
   10*(↑φ : ℂ)^2 + (21 - 2*(↑φ : ℂ))*(↑φ : ℂ) - 50 +
