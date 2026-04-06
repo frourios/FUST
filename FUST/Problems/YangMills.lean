@@ -27,7 +27,7 @@ theorem yangMills_massGap_SU3 :
     -- 6 roots + rank 2 = dim su(3) = 8 = 3²-1
     (6 + 2 = 8 ∧ 3 ^ 2 - 1 = (8 : ℕ)) ∧
     -- Casimir mass squared m² = 14 > 0
-    (0 < FUST.massGapSq ∧ FUST.massGapSq = 14) :=
+    (0 < FUST.massGapSq ∧ FUST.massGapSq = 144 * Real.sqrt 5 - 84) :=
   ⟨FUST.SU3_gauge_uniqueness.1,
    FUST.SU3_gauge_uniqueness.2.2.1,
    ⟨FUST.massGapSq_pos, FUST.massGapSq_eq⟩⟩
@@ -46,7 +46,7 @@ theorem yangMills_massGap :
       sigma x = x ∧ tau x = x ↔
       x.b = 0 ∧ x.c = 0 ∧ x.d = 0) ∧
     -- Casimir mass squared m² = 14 > 0
-    (0 < FUST.massGapSq ∧ FUST.massGapSq = 14) :=
+    (0 < FUST.massGapSq ∧ FUST.massGapSq = 144 * Real.sqrt 5 - 84) :=
   ⟨finrank_translations,
    FUST.SU3_gauge_uniqueness.1,
    FUST.SU2_gauge_uniqueness.2.2.2.1,

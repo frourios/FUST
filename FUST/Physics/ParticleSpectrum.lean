@@ -131,7 +131,7 @@ theorem kernel_active_disjoint :
 /-! ## Generation structure from pair counts
 
 All mass exponents are sums of C(n,2) for structural integers.
-This connects to StateFunctions: electronState → muonState → tauState. -/
+Generation exponents are sums of C(n,2) for structural integers. -/
 
 theorem lepton_generation_exponents :
     Nat.choose stencilWidth galoisOrder + Nat.choose galoisOrder galoisOrder = 11 ∧

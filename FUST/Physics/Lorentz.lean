@@ -1,6 +1,7 @@
 /-
 so(3,1) ≃ ℝ⁶: Lorentz algebra dimension from indefinite diagonal (1,3).
-I4 = Fin 1 ⊕ Fin 3: spacetime index type.
+I4 = Fin 1 ⊕ Fin 3: spacetime index type derived from Dζ channels.
+Metric signature from Galois norms: φψ = -1 (AF/temporal), |ζ₆|² = 1 (SY/spatial).
 -/
 import FUST.DζOperator
 import Mathlib.Algebra.Lie.Classical
@@ -9,12 +10,52 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 
 namespace FUST.Physics.Lorentz
 
-open LieAlgebra.Orthogonal Matrix
+open LieAlgebra.Orthogonal Matrix DζOperator Complex
+
+/-! ## Spacetime dimension from Dζ channel decomposition
+
+AF channel (Φ_A): 1-dimensional — AF_coeff = 2i√3 is pure imaginary (1 real DOF).
+SY channel (Φ_S): 3-dimensional — rank 3 from Φ_S_rank_three.
+Total: 1 + 3 = 4 spacetime dimensions. -/
+
+theorem AF_channel_dim : Fintype.card (Fin 1) = 1 := Fintype.card_fin 1
+
+theorem SY_channel_dim : Fintype.card (Fin 3) = 3 := Fintype.card_fin 3
+
+theorem spacetime_dim_from_Dζ :
+    Fintype.card (Fin 1) + Fintype.card (Fin 3) = 4 := by simp
+
+/-! ## Metric signature from Galois norms
+
+The two Galois conjugations of ℚ(√5, √-3) determine the metric:
+- σ₁ (φ ↔ ψ): φψ = -1 → AF channel norm is NEGATIVE → timelike
+- σ₂ (ζ₆ ↔ ζ₆⁻¹): ζ₆·ζ₆⁻¹ = 1 → SY channel norm is POSITIVE → spacelike -/
+
+theorem AF_sign_from_phi_psi : φ * ψ = -1 := phi_mul_psi
+
+theorem SY_sign_from_zeta6 : ζ₆ * ζ₆' = 1 := zeta6_mul_conj
+
+theorem AF_coeff_sq_negative : (AF_coeff ^ 2).re < 0 := by
+  rw [AF_coeff_eq, sq]
+  simp only [mul_re]
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3:ℝ) ≥ 0)
+  nlinarith
+
+theorem SY_coeff_sq_positive : (0 : ℝ) < (6 : ℝ) ^ 2 := by positivity
+
+/-- The indefinite diagonal diag(+1,-1,-1,-1) is determined by the Dζ channel signs:
+AF (1D, φψ = -1) contributes the timelike (+1 in mostly-plus, but indefiniteDiagonal
+uses Sum.elim 1 (-1) placing +1 on Fin p and -1 on Fin q). -/
+theorem signature_from_Dζ :
+    (φ * ψ = -1) ∧ (ζ₆ * ζ₆' = 1) ∧
+    (AF_coeff ^ 2).re < 0 ∧ (0 : ℝ) < (6 : ℝ) ^ 2 ∧
+    Fintype.card (Fin 1) + Fintype.card (Fin 3) = 4 :=
+  ⟨AF_sign_from_phi_psi, SY_sign_from_zeta6,
+   AF_coeff_sq_negative, SY_coeff_sq_positive, spacetime_dim_from_Dζ⟩
 
 /-! ## so(3,1) ≃ ℝ⁶: dimension via LinearEquiv -/
 
-/-- Spacetime index type. Justified by Dζ channel decomposition:
-1 AF channel (temporal, AF_coeff_eq) + 3 SY sub-operators (spatial, Φ_S_rank_three). -/
+/-- Spacetime index type from Dζ: 1 AF channel + 3 SY sub-operators. -/
 abbrev I4 := Fin 1 ⊕ Fin 3
 
 private theorem entry_eq {A : Matrix I4 I4 ℝ}

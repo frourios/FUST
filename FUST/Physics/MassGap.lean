@@ -39,57 +39,43 @@ theorem actionFζ_zero_iff (f : ℂ → ℂ) (n : ℤ) :
 
 end FζAction
 
-/-! ## Poincaré Mass Connection
+/-! ## Mass Invariant from Dζ Eigenvalue
 
-P^μP_μ via Minkowski bilinear form. Signature (1,3). -/
+m²(s) = Dζ_im(s)² - Dζ_re(s)² = 12·Φ_A(s)² - 36·Φ_S(s)².
+Temporal component (AF channel, imaginary) minus spatial (SY channel, real).
+Minimum active mode s=1: m² = 144√5 - 84 = 12(12√5 - 7). -/
 
-section PoincareMass
-
-noncomputable def poincareCasimir (p : I4 → ℝ) : ℝ := minkowskiBilin p p
-
-def onMassShell (p : I4 → ℝ) (m : ℝ) : Prop := poincareCasimir p = m ^ 2
-
-theorem vacuum_massless : onMassShell (fun _ => 0) 0 := by
-  simp only [onMassShell, poincareCasimir, sq, mul_zero]
-  unfold minkowskiBilin
-  simp [Matrix.toBilin'_apply', dotProduct, Matrix.mulVec]
-
-end PoincareMass
-
-/-! ## Mass Gap from Dζ Casimir Invariant
-
-m²(s) = P^μP_μ where P^μ = Re(Dζ_components(s)).
-Minimum active mode s=1: m² = 14. -/
-
-section CasimirMassGap
+section DzetaMass
 
 private lemma phi_sub_psi_sq : (φ - ψ) ^ 2 = 5 := by
   rw [phi_sub_psi, sq, Real.mul_self_sqrt (by norm_num : (5:ℝ) ≥ 0)]
 
-noncomputable def casimirMassSq (s : ℕ) : ℝ := poincareCasimir (Dζ_momentum s)
+/-- Mass² from Dζ eigenvalue: Im² - Re² = 12·Φ_A² - 36·Φ_S² -/
+noncomputable def casimirMassSq (s : ℕ) : ℝ :=
+  Dζ_im s ^ 2 - Dζ_re s ^ 2
 
-theorem casimirMassSq_one : casimirMassSq 1 = 14 := by
-  unfold casimirMassSq poincareCasimir minkowskiBilin
-  rw [Matrix.toBilin'_apply']
-  simp only [dotProduct, Matrix.mulVec, Fintype.sum_sum_type,
-    Fin.sum_univ_three, Fin.sum_univ_one]
-  simp only [Dζ_momentum_one_inl0, Dζ_momentum_one_inr0,
-    Dζ_momentum_one_inr1, Dζ_momentum_one_inr2]
-  simp (config := { decide := true }) only [indefiniteDiagonal, Matrix.diagonal_apply,
-    Sum.elim_inl, Sum.elim_inr, ↓reduceIte]
-  nlinarith [phi_sub_psi_sq]
+theorem casimirMassSq_def (s : ℕ) :
+    casimirMassSq s = 12 * Φ_A_coeff s ^ 2 - 36 * Φ_S_coeff s ^ 2 := by
+  unfold casimirMassSq Dζ_im Dζ_re
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3:ℝ) ≥ 0)
+  nlinarith [h3]
+
+theorem casimirMassSq_one : casimirMassSq 1 = 144 * Real.sqrt 5 - 84 := by
+  rw [casimirMassSq_def, Φ_A_coeff_one, Φ_S_coeff_one]
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5:ℝ) ≥ 0)
+  have hφψ : φ - ψ = Real.sqrt 5 := phi_sub_psi
+  nlinarith [h5, hφψ]
 
 noncomputable def massGapSq : ℝ := casimirMassSq 1
 
-theorem massGapSq_eq : massGapSq = 14 := casimirMassSq_one
+theorem massGapSq_eq : massGapSq = 144 * Real.sqrt 5 - 84 := casimirMassSq_one
 
-theorem massGapSq_pos : 0 < massGapSq := by rw [massGapSq_eq]; norm_num
+theorem massGapSq_pos : 0 < massGapSq := by
+  rw [massGapSq_eq]
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5:ℝ) ≥ 0)
+  nlinarith [Real.sq_sqrt (show (5:ℝ) ≥ 0 by norm_num),
+             Real.sqrt_nonneg 5, h5]
 
-theorem massGap_onMassShell : onMassShell (Dζ_momentum 1) (Real.sqrt 14) := by
-  unfold onMassShell
-  rw [sq, Real.mul_self_sqrt (by norm_num : (14:ℝ) ≥ 0)]
-  exact casimirMassSq_one
-
-end CasimirMassGap
+end DzetaMass
 
 end FUST

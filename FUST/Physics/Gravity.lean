@@ -91,11 +91,15 @@ private lemma phi_sub_psi_ne : (↑φ : ℂ) - ↑ψ ≠ 0 := by
   rw [← ofReal_sub, ne_eq, ofReal_eq_zero, sub_eq_zero]
   intro h; linarith [phi_pos, psi_neg]
 
-/-- Φ_A coefficient on monomial w^s -/
+/-- Φ_A eigenvalue on z^s: σ_{Diff6+Diff2-Diff4}(s) -/
 noncomputable def Φ_A_coeff (s : ℕ) : ℝ :=
   φ ^ (3 * s) - 4 * φ ^ (2 * s) +
   (3 + φ) * φ ^ s - (3 + ψ) * ψ ^ s +
   4 * ψ ^ (2 * s) - ψ ^ (3 * s)
+
+/-- Φ_S eigenvalue on z^s: σ_{2·Diff5+Diff3+μ·Diff2}(s) -/
+noncomputable def Φ_S_coeff (s : ℕ) : ℝ :=
+  2 * σ_Diff5 s + σ_Diff3 s + (2 / (φ + 2)) * σ_Diff2 s
 
 /-- Φ_A_coeff(1) = 2(φ-ψ) = 2√5 -/
 theorem Φ_A_coeff_one : Φ_A_coeff 1 = 2 * (φ - ψ) := by
@@ -108,22 +112,31 @@ theorem Φ_A_coeff_one : Φ_A_coeff 1 = 2 * (φ - ψ) := by
   have hψ3 : (1 - φ) ^ 3 = -(2 * φ) + 3 := by nlinarith
   rw [h2, h3, hψ2, hψ3]; ring
 
-/-- 4-component extraction: 1 temporal (from Φ_A) + 3 spatial (from Φ_S) -/
-noncomputable def Dζ_components (s : ℕ) : I4 → ℂ :=
-  fun idx => match idx with
-  | Sum.inl 0 => ↑(Φ_A_coeff s)
-  | Sum.inr 0 => ↑(σ_Diff5 s)
-  | Sum.inr 1 => ↑(σ_Diff3 s)
-  | Sum.inr 2 => ↑(σ_Diff2 s)
+/-- Φ_S_coeff(1) = √5 - 2 -/
+theorem Φ_S_coeff_one : Φ_S_coeff 1 = Real.sqrt 5 - 2 := by
+  simp only [Φ_S_coeff, σ_Diff5_one, σ_Diff3_one, σ_Diff2_one]
+  have hne : φ + 2 ≠ 0 := by linarith [phi_pos]
+  rw [phi_sub_psi]
+  have hsq : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5:ℝ) ≥ 0)
+  have hφ : φ = (1 + Real.sqrt 5) / 2 := rfl
+  suffices h : 2 / (φ + 2) * Real.sqrt 5 = Real.sqrt 5 - 1 by linarith
+  have h2 : (Real.sqrt 5 - 1) * (φ + 2) = 2 * Real.sqrt 5 := by rw [hφ]; nlinarith [hsq]
+  field_simp; linarith [h2]
+
+/-! ## Dζ eigenvalue: λ(s) = 6·Φ_S(s) + 2i√3·Φ_A(s)
+
+The Dζ eigenvalue on z^s (for active modes s ≡ 1,5 mod 6) is a single complex
+number. Re = 6·Φ_S, Im = 2√3·Φ_A. The mass invariant uses Re²-Im². -/
+
+/-- Dζ eigenvalue real part: 6·Φ_S(s) -/
+noncomputable def Dζ_re (s : ℕ) : ℝ := 6 * Φ_S_coeff s
+
+/-- Dζ eigenvalue imaginary part: 2√3·Φ_A(s) -/
+noncomputable def Dζ_im (s : ℕ) : ℝ := 2 * Real.sqrt 3 * Φ_A_coeff s
 
 /-- Temporal (Fin 1) + spatial (Fin 3) = I4, matching Dζ channel structure -/
 theorem Dζ_dim_matches_I4 :
     Fintype.card (Fin 1) + Fintype.card (Fin 3) = Fintype.card I4 := by
-  simp [I4, Fintype.card_sum, Fintype.card_fin]
-
-/-- Weight ratio 3:1 from |Dζ|² = 12(3a²+b²) matches I4 cardinality -/
-theorem weight_matches_I4 :
-    3 + 1 = Fintype.card I4 := by
   simp [I4, Fintype.card_sum, Fintype.card_fin]
 
 /-- Connection space dim = |I4| × dim so(3,1) = 4 × 6 = 24 -/
@@ -136,24 +149,6 @@ theorem Dζ_connection_dim :
 theorem Dζ_bianchi (ω : I4 → so' (Fin 1) (Fin 3) ℝ) (μ ν ρ : I4) :
     ⁅ω μ, ⁅ω ν, ω ρ⁆⁆ + ⁅ω ν, ⁅ω ρ, ω μ⁆⁆ + ⁅ω ρ, ⁅ω μ, ω ν⁆⁆ = 0 :=
   bianchi_identity ω μ ν ρ
-
-/-! ## Real 4-momentum from Dζ -/
-
-/-- Real 4-momentum: p^μ = Re(Dζ_components(s))_μ -/
-noncomputable def Dζ_momentum (s : ℕ) : I4 → ℝ :=
-  fun idx => (Dζ_components s idx).re
-
-theorem Dζ_momentum_one_inl0 : Dζ_momentum 1 (Sum.inl 0) = 2 * (φ - ψ) := by
-  simp only [Dζ_momentum, Dζ_components, Φ_A_coeff_one, Complex.ofReal_re]
-
-theorem Dζ_momentum_one_inr0 : Dζ_momentum 1 (Sum.inr 0) = 0 := by
-  simp only [Dζ_momentum, Dζ_components, σ_Diff5_one, Complex.ofReal_re]
-
-theorem Dζ_momentum_one_inr1 : Dζ_momentum 1 (Sum.inr 1) = -1 := by
-  simp only [Dζ_momentum, Dζ_components, σ_Diff3_one, Complex.ofReal_re]
-
-theorem Dζ_momentum_one_inr2 : Dζ_momentum 1 (Sum.inr 2) = φ - ψ := by
-  simp only [Dζ_momentum, Dζ_components, σ_Diff2_one, Complex.ofReal_re]
 
 end DzetaConnection
 

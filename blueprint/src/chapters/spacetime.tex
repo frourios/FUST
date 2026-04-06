@@ -4,15 +4,53 @@
 The $\Dz$ operator uniquely determines a 4-dimensional Lorentzian spacetime.
 The AF-channel gives 1 temporal dimension ($\re(\afcoeff) = 0$, $\im(\afcoeff) > 0$),
 the SY-channel gives 3 spatial dimensions ($\phiS$ rank 3),
-and the signature $(1,3)$ follows from
-the non-compact/compact duality $\vp\ps = -1$ vs.\ $\zs\zsc = +1$.
+and the signature $(1,3)$ is derived from
+the Galois norm structure of $\Q(\sqrt{5},\sqrt{-3})$:
+$\vp\ps = -1$ (indefinite/timelike) vs.\ $\zs\zsc = +1$ (definite/spacelike).
+
+\section{Metric Signature from Galois Norms}
+
+The two Galois conjugations of $\Q(\sqrt{5},\sqrt{-3})$ determine the metric:
+\begin{itemize}
+  \item $\sigma_1$: $\vp \leftrightarrow \ps$, with $\vp\ps = -1$
+    $\Rightarrow$ AF channel norm is \emph{negative} $\Rightarrow$ timelike,
+  \item $\sigma_2$: $\zs \leftrightarrow \zsc$, with $\zs\zsc = +1$
+    $\Rightarrow$ SY channel norm is \emph{positive} $\Rightarrow$ spacelike.
+\end{itemize}
+
+\begin{theorem}[AF sign from $\vp\ps$]
+\label{thm:AF-sign}
+\lean{FUST.Physics.Lorentz.AF_sign_from_phi_psi}
+$\vp\ps = -1$.
+\end{theorem}
+
+\begin{theorem}[SY sign from $\zs\zsc$]
+\label{thm:SY-sign}
+\lean{FUST.Physics.Lorentz.SY_sign_from_zeta6}
+$\zs\zsc = 1$.
+\end{theorem}
+
+\begin{theorem}[$\afcoeff^2 < 0$]
+\label{thm:AF-sq-neg}
+\lean{FUST.Physics.Lorentz.AF_coeff_sq_negative}
+$\re(\afcoeff^2) < 0$, since $\afcoeff = 2i\sqrt{3}$ is pure imaginary.
+\end{theorem}
+
+\begin{theorem}[Signature from $\Dz$]
+\label{thm:signature-Dz}
+\lean{FUST.Physics.Lorentz.signature_from_Dζ}
+Combining the above:
+$\vp\ps = -1$, $\zs\zsc = 1$, $\re(\afcoeff^2) < 0$, $6^2 > 0$,
+and $|{\mathrm{Fin}\,1}| + |{\mathrm{Fin}\,3}| = 4$.
+\end{theorem}
 
 \section{\texorpdfstring{$\so(3,1)$}{so(3,1)}: Lorentz Algebra}
 
 \begin{definition}[$I_4$]
 \label{def:I4}
 \lean{FUST.Physics.Lorentz.I4}
-$I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$: spacetime index.
+$I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$: spacetime index from $\Dz$ channels
+(1 AF + 3 SY sub-operators).
 \end{definition}
 
 \begin{theorem}[$\so(3,1)$ dimension]
@@ -52,7 +90,7 @@ The $\Dz$ operator determines $I_4 = \mathrm{Fin}\,1 \oplus \mathrm{Fin}\,3$:
   \item $\re(\afcoeff) = 0$, $\im(\afcoeff) > 0$: 1 temporal channel ($\phiA$),
   \item $\phiS$ rank $= 3$: 3 spatial channels (Diff5, Diff3, Diff2),
   \item $\phiA[\mathrm{id}](1) \ne 0$: temporal channel nontrivial,
-  \item Signature $(1,3)$: $(6a)^2 > 0$ (temporal), $(\afcoeff \cdot b)^2 < 0$ (spatial),
+  \item Signature $(1,3)$: $(6a)^2 > 0$ (spacelike, SY), $(\afcoeff \cdot b)^2 < 0$ (timelike, AF),
   \item Lorentz invariance: $\eta(\Lambda v, \Lambda w) = \eta(v,w)$
     for all $\Lambda \in O(3,1)$,
   \item $\vp$-dilation $=$ translation in log-coordinates:

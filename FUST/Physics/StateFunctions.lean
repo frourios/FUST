@@ -126,60 +126,7 @@ theorem zBosonMassCoeff_gt_wBosonMassCoeff :
   rw [gt_iff_lt, lt_div_iff₀ hsqrt_pos]
   nlinarith
 
-/-! ## Leptons: electronState × timeEvolution^k
-
-The electron IS the Higgs-coupled vacuum mode. Higher generations arise
-from timeEvolution^k, with k from Diff operator pair counts. -/
-
-private theorem timeEvolution_iterate_id (k : ℕ) :
-    (timeEvolution^[k]) (fun t => t) = fun z => (↑φ : ℂ) ^ k * z := by
-  induction k with
-  | zero => ext z; simp [Function.iterate_zero]
-  | succ n ih =>
-    ext z
-    rw [Function.iterate_succ', Function.comp_def]
-    simp only [timeEvolution, ih]; ring
-
-noncomputable def muonState : ℂ → ℂ := fun z => (↑φ : ℂ) ^ 11 * z
-
-noncomputable def tauState : ℂ → ℂ := fun z => (↑φ : ℂ) ^ 17 * z
-
-theorem muonState_from_timeEvolution :
-    muonState = (timeEvolution^[11]) electronState := by
-  rw [electronState_eq]; rw [timeEvolution_iterate_id]; ext z; simp [muonState]
-
-theorem tauState_from_timeEvolution :
-    tauState = (timeEvolution^[17]) electronState := by
-  rw [electronState_eq]; rw [timeEvolution_iterate_id]; ext z; simp [tauState]
-
 noncomputable def positronState : ℂ → ℂ := fun z => z ^ 5
-
-noncomputable def antimuonState : ℂ → ℂ := fun z => (↑φ : ℂ) ^ 11 * z ^ 5
-
-/-! ## Fζ linearity and mass ratios -/
-
-theorem Fζ_muonState (z : ℂ) :
-    Fζ muonState z = (↑φ : ℂ) ^ 11 * Fζ electronState z := by
-  unfold muonState; rw [electronState_eq]
-  exact Fζ_const_smul _ _ z
-
-theorem Fζ_tauState (z : ℂ) :
-    Fζ tauState z = (↑φ : ℂ) ^ 17 * Fζ electronState z := by
-  unfold tauState; rw [electronState_eq]
-  exact Fζ_const_smul _ _ z
-
-private theorem normSq_ofReal_pow (x : ℝ) (n : ℕ) :
-    normSq ((↑x : ℂ) ^ n) = x ^ (2 * n) := by
-  rw [map_pow, normSq_ofReal]
-  rw [show x * x = x ^ 2 from (sq x).symm, ← pow_mul]
-
-theorem muon_electron_massSq_ratio :
-    normSq (Fζ muonState 1) = φ ^ 22 * normSq (Fζ electronState 1) := by
-  rw [Fζ_muonState, map_mul, normSq_ofReal_pow, show 2 * 11 = 22 from rfl]
-
-theorem tau_electron_massSq_ratio :
-    normSq (Fζ tauState 1) = φ ^ 34 * normSq (Fζ electronState 1) := by
-  rw [Fζ_tauState, map_mul, normSq_ofReal_pow, show 2 * 17 = 34 from rfl]
 
 /-! ## Electron is lightest: Diff5/Diff6 kernel at mode 1
 

@@ -470,16 +470,6 @@ theorem phiA_one_toReal :
     2 * Real.sqrt 5
   ring
 
-/-! ## Φ_A divisibility: Φ_A(3m+1) = k_m · Φ_A(1) for k_m ∈ ℤ -/
-
-theorem phiA_four_eq_mul :
-    phiA_goldenInt 4 = ⟨37, 0⟩ * phiA_goldenInt 1 := by decide
-
-set_option linter.style.nativeDecide false in
-theorem phiA_seven_eq_mul :
-    phiA_goldenInt 7 = ⟨4749, 0⟩ * phiA_goldenInt 1 := by
-  native_decide
-
 /-! ## tauNormSq = toReal(tauNorm) bridge -/
 
 theorem tauNormSq_eq_tauNorm_toReal (α β : GoldenInt) :
@@ -498,14 +488,17 @@ theorem tauNormSq_eq_tauNorm_toReal (α β : GoldenInt) :
 open FUST.Physics.Gravity FUST.Physics.Poincare Physics.Lorentz
 open LieAlgebra.Orthogonal
 
-/-- phiS_goldenInt decomposes into Dζ spatial components -/
-theorem phiS_decomp (n : ℕ) :
-    GoldenInt.toReal (phiS_goldenInt n) =
-    10 * σ_Diff5 n + 5 * σ_Diff3 n +
-    (6 - 2 * φ) * σ_Diff2 n := by
-  rw [phiS_goldenInt_toReal]; unfold σ_Diff5 σ_Diff3 σ_Diff2
+/-- phiS_goldenInt.toReal = 5 · Φ_S_coeff -/
+theorem phiS_eq_five_phiS_coeff (n : ℕ) :
+    GoldenInt.toReal (phiS_goldenInt n) = 5 * Φ_S_coeff n := by
+  rw [phiS_goldenInt_toReal]; unfold Φ_S_coeff σ_Diff5 σ_Diff3 σ_Diff2
   have hψ : ψ = 1 - φ := by linarith [phi_add_psi]
-  rw [hψ]; ring
+  have hne : φ + 2 ≠ 0 := by linarith [phi_pos]
+  have h2 : φ ^ 2 = φ + 1 := golden_ratio_property
+  rw [hψ]; field_simp
+  have key1 : φ ^ 2 * φ ^ n = (φ + 1) * φ ^ n := by rw [h2]
+  have key2 : φ ^ 2 * (1 - φ) ^ n = (φ + 1) * (1 - φ) ^ n := by rw [h2]
+  linarith
 
 /-- phiA_goldenInt equals temporal Dζ component -/
 theorem phiA_eq_temporal (n : ℕ) :
@@ -514,29 +507,11 @@ theorem phiA_eq_temporal (n : ℕ) :
   have hψ : ψ = 1 - φ := by linarith [phi_add_psi]
   rw [hψ]; ring
 
-/-- casimirMassSq in terms of Dζ component functions -/
-theorem casimir_components (s : ℕ) :
-    casimirMassSq s =
-    Φ_A_coeff s ^ 2 - σ_Diff5 s ^ 2 -
-    σ_Diff3 s ^ 2 - σ_Diff2 s ^ 2 := by
-  unfold casimirMassSq poincareCasimir minkowskiBilin
-  rw [Matrix.toBilin'_apply']
-  simp only [dotProduct, Matrix.mulVec, Fintype.sum_sum_type,
-    Fin.sum_univ_three, Fin.sum_univ_one]
-  simp only [Dζ_momentum, Dζ_components, Complex.ofReal_re]
-  simp (config := { decide := true }) only [indefiniteDiagonal,
-    Matrix.diagonal_apply, Sum.elim_inl, Sum.elim_inr, ↓reduceIte]
-  ring
-
-/-- tauNormSq = 300·casimir + 300·Σσ² + 36·phiS² -/
-theorem tauNormSq_casimir_relation_mod1 (k : ℕ) :
+/-- eigenNormSq = 900·Φ_S² + 300·Φ_A² -/
+theorem eigenNormSq_decomp_mod1 (k : ℕ) :
     eigenNormSq (6 * k + 1) =
-    300 * casimirMassSq (6 * k + 1) +
-    300 * (σ_Diff5 (6 * k + 1) ^ 2 + σ_Diff3 (6 * k + 1) ^ 2 +
-      σ_Diff2 (6 * k + 1) ^ 2) +
-    36 * (10 * σ_Diff5 (6 * k + 1) + 5 * σ_Diff3 (6 * k + 1) +
-      (6 - 2 * φ) * σ_Diff2 (6 * k + 1)) ^ 2 := by
-  rw [casimir_components]
+    900 * Φ_S_coeff (6 * k + 1) ^ 2 +
+    300 * Φ_A_coeff (6 * k + 1) ^ 2 := by
   unfold eigenNormSq
   rw [if_pos (show (6 * k + 1) % 6 = 1 from by omega),
       show (6 * k + 1) / 6 = k from by omega]
@@ -552,6 +527,13 @@ theorem tauNormSq_casimir_relation_mod1 (k : ℕ) :
       5 * (phiA_goldenInt (6 * k + 1)).toReal := by
     change GoldenInt.toReal (GoldenInt.mul ⟨5, 0⟩ _) = _
     rw [toReal_mul]; unfold GoldenInt.toReal; push_cast; ring
-  rw [h6, h5, phiA_eq_temporal, phiS_decomp]; ring
+  rw [h6, h5, phiA_eq_temporal, phiS_eq_five_phiS_coeff]; ring
+
+/-- tauNormSq = 25·casimirMassSq + 1800·Φ_S² -/
+theorem tauNormSq_casimir_relation_mod1 (k : ℕ) :
+    eigenNormSq (6 * k + 1) =
+    25 * casimirMassSq (6 * k + 1) +
+    1800 * Φ_S_coeff (6 * k + 1) ^ 2 := by
+  rw [eigenNormSq_decomp_mod1, casimirMassSq_def]; ring
 
 end FUST.Coarsening
