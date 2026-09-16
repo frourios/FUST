@@ -189,7 +189,12 @@ jobs:
             python3 -m venv env
             source env/bin/activate
             pip install --upgrade pip==25.2 requests wheel
-            pip install pygraphviz --global-option=build_ext --global-option="-L/usr/lib/graphviz/" --global-option="-R/usr/lib/graphviz/"
+            # Alpine stores Graphviz plugins outside the default library search path.
+            # Pass build options via PEP 517 without forcing dependencies to build from source.
+            pip install pygraphviz \
+              --config-settings="--global-option=build_ext" \
+              --config-settings="--global-option=-L/usr/lib/graphviz/" \
+              --config-settings="--global-option=-R/usr/lib/graphviz/"
             pip install leanblueprint
             leanblueprint pdf
             cp blueprint/print/print.pdf home_page/dist/blueprint.pdf
