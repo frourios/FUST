@@ -28,48 +28,6 @@ function DarkModeToggle() {
   );
 }
 
-type MillenniumProblem = {
-  name: string;
-  status: 'solved' | 'unsolved';
-  description: string;
-  details?: string;
-};
-
-const millenniumProblems: MillenniumProblem[] = [
-  {
-    name: 'Yang-Mills Mass Gap',
-    status: 'solved',
-    description: 'Prove that quantum Yang-Mills theory has a mass gap > 0',
-    details: 'FUST derives mass gap = 6 from kernel dimensions: dim ker(D5) × dim ker(D6) = 2 × 3',
-  },
-  {
-    name: 'Navier-Stokes',
-    status: 'solved',
-    description: 'Prove existence and smoothness of solutions in 3D',
-    details: 'FUST proves regularity via D6 structure and energy estimates',
-  },
-  {
-    name: 'Riemann Hypothesis',
-    status: 'unsolved',
-    description: 'All non-trivial zeros of ζ(s) have real part 1/2',
-  },
-  {
-    name: 'P vs NP',
-    status: 'unsolved',
-    description: 'Does P = NP?',
-  },
-  {
-    name: 'Birch and Swinnerton-Dyer',
-    status: 'unsolved',
-    description: 'Relates rank of elliptic curves to L-functions',
-  },
-  {
-    name: 'Hodge Conjecture',
-    status: 'unsolved',
-    description: 'Algebraic cycles and cohomology classes',
-  },
-];
-
 type PhysicsResult = {
   title: string;
   formula: string;
@@ -162,29 +120,6 @@ const biologyResults: BiologyResult[] = [
   },
 ];
 
-function StatusBadge({ status }: { status: 'solved' | 'unsolved' }) {
-  return (
-    <span className={`status-badge ${status}`}>
-      {status === 'solved' ? 'SOLVED' : 'OPEN'}
-    </span>
-  );
-}
-
-function MillenniumCard({ problem }: { problem: MillenniumProblem }) {
-  return (
-    <div className={`millennium-card ${problem.status}`}>
-      <div className="card-header">
-        <h3>{problem.name}</h3>
-        <StatusBadge status={problem.status} />
-      </div>
-      <p className="card-description">{problem.description}</p>
-      {problem.details && (
-        <p className="card-details">{problem.details}</p>
-      )}
-    </div>
-  );
-}
-
 function PhysicsCard({ result }: { result: PhysicsResult }) {
   return (
     <div className="physics-card">
@@ -255,32 +190,6 @@ function App() {
       </header>
 
       <main id="content" className="main-content">
-        <section className="section millennium-section">
-          <h2 className="section-title">
-            <span className="section-icon">🏆</span>
-            Millennium Prize Problems
-          </h2>
-          <p className="section-intro">
-            Of the 7 Clay Mathematics Institute Millennium Problems, FUST has formally proven 2
-            using Lean4's type-theoretic foundation.
-          </p>
-          <div className="millennium-grid">
-            {millenniumProblems.map((problem) => (
-              <MillenniumCard key={problem.name} problem={problem} />
-            ))}
-          </div>
-          <div className="score-display">
-            <div className="score-item solved">
-              <span className="score-number">2</span>
-              <span className="score-label">Solved</span>
-            </div>
-            <div className="score-item unsolved">
-              <span className="score-number">4</span>
-              <span className="score-label">Open</span>
-            </div>
-          </div>
-        </section>
-
         <section className="section physics-section">
           <h2 className="section-title">
             <span className="section-icon">⚛️</span>
